@@ -42,6 +42,13 @@ var DIRECTION_PAIRS = [
   ['前面', '后面']
 ];
 
+// P34-14：交换观察主体后的相反方向（仅用于方位相对性讲解，取值自上面的方向词表）
+var OPPOSITE_DIRECTION = {
+  '左边': '右边', '右边': '左边', '左侧': '右侧', '右侧': '左侧',
+  '上面': '下面', '下面': '上面', '上边': '下边', '下边': '上边',
+  '前面': '后面', '后面': '前面', '前边': '后边', '后边': '前边'
+};
+
 var SCENE_OBJECTS = ['小猫', '小狗', '小鸟', '花朵', '树', '房子', '球', '书', '椅子', '桌子', '苹果', '书包'];
 
 function getPositionMeta(kp) {
@@ -144,7 +151,9 @@ function makeChoiceDirectionQuestion(plan, context, i, scene, meta) {
   var correctIndex = options.indexOf(correctDir);
   
   var prompt = obj1.name + '在' + obj2.name + '的哪一边？';
-  
+  var choiceExpl = '看图以' + obj2.name + '为参照物，' + obj1.name + '在它的' + correctDir
+    + '，正确选项是「' + correctDir + '」。';
+
   return {
     knowledgePointId: pkp(plan),
     questionType: 'choice',
@@ -153,7 +162,7 @@ function makeChoiceDirectionQuestion(plan, context, i, scene, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(correctIndex), acceptable: [] },
+    answer: { value: String(correctIndex), acceptable: [], explanation: choiceExpl },
     answerMode: 'choice',
     data: {
       mode: 'choice',
@@ -176,7 +185,8 @@ function makeFillDirectionQuestion(plan, context, i, scene, meta) {
   
   var correctDir = getRelativeDirection(obj1, obj2, 'self');
   var prompt = obj1.name + '在' + obj2.name + '的____。';
-  
+  var fillExpl = '看图以' + obj2.name + '为参照物，' + obj1.name + '在它的' + correctDir + '。';
+
   return {
     knowledgePointId: pkp(plan),
     questionType: 'fill',
@@ -185,7 +195,7 @@ function makeFillDirectionQuestion(plan, context, i, scene, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: correctDir, acceptable: [] },
+    answer: { value: correctDir, acceptable: [], explanation: fillExpl },
     answerMode: 'input',
     data: {
       mode: 'fill',
@@ -275,7 +285,9 @@ function makeTranslationQuestion(plan, context, i) {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i), prompt: prompt,
-      answer: { value: String(answer), acceptable: [] }, answerMode: 'input',
+      answer: { value: String(answer), acceptable: [],
+        explanation: '平移分两次移动，总格数是两次格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
+          + '＝' + answer + ' 格。' }, answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '平移' }
     };
   }
@@ -295,7 +307,9 @@ function makeTranslationQuestion(plan, context, i) {
       knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i), prompt: prompt,
-      answer: { value: String(ci2), acceptable: [] }, answerMode: 'choice',
+      answer: { value: String(ci2), acceptable: [],
+        explanation: '总格数是两次平移格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
+          + '＝' + answer + ' 格，正确选项是「' + answer + '」。' }, answerMode: 'choice',
       data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移' }
     };
   }
@@ -341,7 +355,9 @@ function makeRotationQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '钟表指针从 12 走到 3，是' + dir + '旋转了 ____ 度。',
-      answer: { value: '90', acceptable: [] }, answerMode: 'input',
+      answer: { value: '90', acceptable: [],
+        explanation: '钟面上指针从 12 走到 3 转过一个直角，直角是 90 度，与顺时针还是逆时针无关。' },
+      answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '旋转' }
     };
   }
@@ -352,7 +368,9 @@ function makeRotationQuestion(plan, context, i) {
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: '图形旋转后，下列哪个说法是正确的？',
-    answer: { value: '0', acceptable: [] }, answerMode: 'choice',
+    answer: { value: '0', acceptable: [],
+      explanation: '旋转只改变图形的位置和方向，不改变形状和大小，所以正确说法是「形状不变」。' },
+    answerMode: 'choice',
     data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转' }
   };
 }
@@ -370,7 +388,9 @@ function makeObserveQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '从' + correct + '观察一个正方体，看到的形状是正方形，这是从哪个方向看到的？',
-      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      answer: { value: String(ci), acceptable: [],
+        explanation: '正方体每个面都是正方形；题中描述的是从' + correct + '看到的，正确选项是「'
+          + correct + '」。' }, answerMode: 'choice',
       data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察' }
     };
   }
@@ -380,7 +400,9 @@ function makeObserveQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '从____观察正方体，看到的是正方形。',
-      answer: { value: correct, acceptable: [] }, answerMode: 'input',
+      answer: { value: correct, acceptable: [],
+        explanation: '正方体的每个面都是正方形，从' + correct + '观察看到的就是正方形。' },
+      answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '观察' }
     };
   }
@@ -408,7 +430,9 @@ function makeCoordinateQuestion(plan, context, i) {
       // P32-AS-16：原句「（____，y），它在第 x 列」在叙述中直接给出所求列数 x。
       // 改为给完整数对 + 列/行规则，由学生把第一个数解读为列（逆方向考查数对意义）。
       prompt: '在方格图中，点 A 的位置用数对（' + x + '，' + y + '）表示（数对中第一个数表示列），点 A 在第 ____ 列。',
-      answer: { value: String(x), acceptable: [] }, answerMode: 'input',
+      answer: { value: String(x), acceptable: [],
+        explanation: '数对中第一个数表示列，（' + x + '，' + y + '）的第一个数是 ' + x
+          + '，所以点 A 在第 ' + x + ' 列。' }, answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '数对' }
     };
   }
@@ -427,7 +451,9 @@ function makeCoordinateQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '点 A 在第 ' + x + ' 列第 ' + y + ' 行，用数对表示是？',
-      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      answer: { value: String(ci), acceptable: [],
+        explanation: '数对第一个数表示列、第二个数表示行，第 ' + x + ' 列第 ' + y
+          + ' 行用 ' + correct + ' 表示，正确选项是「' + correct + '」。' }, answerMode: 'choice',
       data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对' }
     };
   }
@@ -508,12 +534,15 @@ function createPositionGenerator(spec) {
             var objA = Rng.pick(rng, scene.objects);
             var objB = Rng.pick(rng, scene.objects.filter(function(o){ return o !== objA; })) || scene.objects[0];
             var dir = getRelativeDirection(objA, objB, 'self');
+            var revDir = OPPOSITE_DIRECTION[dir] || dir;
             q = {
               knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
               spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
               seed: seedFor(plan, context, i),
               prompt: objA.name + '在' + objB.name + '的' + dir + '。请再说出' + objB.name + '在' + objA.name + '的什么方向？',
-              answer: { value: dir === '左边' ? '右边' : dir === '右边' ? '左边' : dir === '上面' ? '下面' : dir === '下面' ? '上面' : dir, acceptable: [] },
+              answer: { value: revDir, acceptable: [],
+                explanation: '两个物体的位置关系是相对的：' + objA.name + '在' + objB.name + '的' + dir
+                  + '，交换观察主体后方向相反，所以' + objB.name + '在' + objA.name + '的' + revDir + '。' },
               answerMode: 'input',
               data: { mode: 'apply', steps: 1, graphic: graphic, shapeName: '方向' }
             };
@@ -530,13 +559,16 @@ function createPositionGenerator(spec) {
           var objA2 = Rng.pick(rng, scene2.objects);
           var objB2 = Rng.pick(rng, scene2.objects.filter(function(o){ return o !== objA2; })) || scene2.objects[0];
           var dir2 = getRelativeDirection(objA2, objB2, 'self');
+          var revDir2 = OPPOSITE_DIRECTION[dir2] || dir2;
           if (qt === 'geometry') {
             q = {
               knowledgePointId: pkp(plan), questionType: 'geometry', difficulty: plan.difficulty,
               spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
               seed: seedFor(plan, context, i),
               prompt: '观察下图，' + objA2.name + '在' + objB2.name + '的什么方向？',
-              answer: { value: dir2, acceptable: [] }, answerMode: 'input',
+              answer: { value: dir2, acceptable: [],
+                explanation: '看图以' + objB2.name + '为参照物，' + objA2.name + '在它的' + dir2 + '。' },
+              answerMode: 'input',
               data: { mode: 'geometry', steps: 1, graphic: graphic2, shapeName: '空间' }
             };
           } else {
@@ -545,7 +577,9 @@ function createPositionGenerator(spec) {
               spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
               seed: seedFor(plan, context, i),
               prompt: objA2.name + '在' + objB2.name + '的' + dir2 + '。请说一说' + objB2.name + '在' + objA2.name + '的什么方向？',
-              answer: { value: dir2 === '左边' ? '右边' : dir2 === '右边' ? '左边' : dir2 === '上面' ? '下面' : dir2 === '下面' ? '上面' : dir2, acceptable: [] },
+              answer: { value: revDir2, acceptable: [],
+                explanation: '两个物体的位置关系是相对的：' + objA2.name + '在' + objB2.name + '的' + dir2
+                  + '，交换观察主体后方向相反，所以' + objB2.name + '在' + objA2.name + '的' + revDir2 + '。' },
               answerMode: 'input',
               data: { mode: 'apply', steps: 1, graphic: graphic2, shapeName: '空间' }
             };

@@ -420,12 +420,17 @@
               q.semanticTarget = normalizeSemanticTarget(plan.explainability.semanticTarget);
             }
           }
-          // D004 修复：统一兜底——若 answer 是对象且缺 explanation，用 prompt+value 生成。
-          // 各 generator 可能不写 explanation；在 runPlans 汇聚层兜底保证每题有 explanation。
+          // D004 修复（P34-13 收紧）：汇聚层兜底只对真正的「算式 = ?」题面做演算补全
+          //（题面已含完整算式、缺的仅是得数，补成「算式 = 得数」是合法演算解析）。
+          // 其他题面（问句/情境/填空支架）机械拼答案只会原样抄下题面（问号尾）或生成病句，
+          // 不构成讲解——此时保持 null（提交后通道按「缺失即 null」处理，不显示解析），
+          // 也不用题面冒充 explanation；真讲解由各生成器按自身结构素材在源头写。
           if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
             var p = String(q.prompt || q.q || q.text || '');
             var v = q.answer.value != null ? String(q.answer.value) : '';
-            q.answer.explanation = (p && v) ? p.replace(/\s*=\s*\?\s*$/, ' = ' + v) : ('答案：' + v);
+            if (p && v && /\s*=\s*[?？]\s*$/.test(p)) {
+              q.answer.explanation = p.replace(/\s*=\s*[?？]\s*$/, ' = ' + v);
+            }
           }
         });
         results.push.apply(results, sqs);

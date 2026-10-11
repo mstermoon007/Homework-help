@@ -226,7 +226,12 @@ function makeCodeByKind(plan, context, i, qt) {
   var item = bank[i % bank.length];
   var q = buildBase(plan, context, i, { mode: qt, codeType: cat });
   q.prompt = item.q;
-  q.answer = { value: item.a, acceptable: [] };
+  // P34-14：答案本身即该编码规则的完整结论，讲解只复述规则结论，不引入题外信息
+  var codeWhy;
+  if (qt === 'choice') codeWhy = '按数字编码规则判断，正确选项是「' + item.a + '」。';
+  else if (qt === 'fill') codeWhy = '由题中的编码规则可知，空格填 ' + item.a + '。';
+  else codeWhy = '根据数字编码规则：' + item.a + '。';
+  q.answer = { value: item.a, acceptable: [], explanation: codeWhy };
   if (qt === 'choice') {
     var options = Rng.shuffle(rng, item.o.slice());
     q.data.options = options;

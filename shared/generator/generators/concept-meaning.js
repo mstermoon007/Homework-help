@@ -87,21 +87,28 @@ function finish(q, prompt, answer, acceptable, explanation) {
 }
 
 /** 选择题收尾：options 洗牌 + correctIndex + 答案为正确选项文本（与 selection.js 契约一致） */
-function finishChoice(q, rng, correct, wrongs) {
+function finishChoice(q, rng, correct, wrongs, explanation) {
   var seen = {}, pool = [];
   [correct].concat(wrongs).forEach(function (o) {
     o = String(o);
     if (!seen[o]) { seen[o] = 1; pool.push(o); }
   });
+  // P34-04：凑位选项用中性固定短语（正确项必在池内，两短语恒为假命题），
+  // 取代「都不是（3）」式编号占位文案；保持去重，两短语耗尽即止（4 项去重最少 2 项，必够）
+  var FILLERS = ['以上说法都不对', '以上都对'];
   while (pool.length < 4) {
-    var filler = '都不是（' + (pool.length) + '）';
-    if (!seen[filler]) { seen[filler] = 1; pool.push(filler); }
+    var filler = null;
+    for (var fi = 0; fi < FILLERS.length; fi++) {
+      if (!seen[FILLERS[fi]]) { filler = FILLERS[fi]; break; }
+    }
+    if (!filler) break;
+    seen[filler] = 1; pool.push(filler);
   }
   pool = pool.slice(0, 4);
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
   q.data.correctIndex = options.indexOf(String(correct));
-  return finish(q, q.prompt, String(correct), [], null);
+  return finish(q, q.prompt, String(correct), [], explanation || null);
 }
 
 /* ================================================================
@@ -130,7 +137,7 @@ function makeTimesCalc(plan, context, i) {
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '列式计算：' + base + ' 的 ' + times + ' 倍是多少？', String(ans), [String(ans)],
-    base + ' 的 ' + times + ' 倍：' + base + ' × ' + times + ' = ' + ans + '（' + times + ' 份，每份 ' + base + '）');
+    base + ' 的 ' + times + ' 倍：' + '求一个数的几倍是多少，用乘法：' + base + ' × ' + times + ' = ' + ans + '（' + times + ' 份，每份 ' + base + '）');
 }
 
 function makeTimesFill(plan, context, i) {
@@ -140,7 +147,7 @@ function makeTimesFill(plan, context, i) {
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '求一个数的几倍是多少，用乘法计算：' + base + ' × ' + times + ' = ____', String(ans), [String(ans)],
-    base + ' × ' + times + ' = ' + ans);
+    '求一个数的几倍是多少，用乘法：' + base + ' × ' + times + ' = ' + ans);
 }
 
 function makeTimesApply(plan, context, i) {
@@ -151,7 +158,7 @@ function makeTimesApply(plan, context, i) {
   var item = Rng.pick(rng, ['根小棒', '朵红花', '颗星星', '只纸鹤']);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   return finish(q, '第一行摆了 ' + base + ' ' + item + '，第二行摆的数量是第一行的 ' + times + ' 倍。第二行摆了多少' + item + '？',
-    String(ans), [String(ans)], base + ' × ' + times + ' = ' + ans);
+    String(ans), [String(ans)], '求一个数的几倍是多少，用乘法：' + base + ' × ' + times + ' = ' + ans);
 }
 
 function makeTimesChoice(plan, context, i) {
@@ -160,8 +167,11 @@ function makeTimesChoice(plan, context, i) {
   var times = Rng.randInt(rng, 2, 5);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   q.prompt = '下面哪个算式表示「' + base + ' 的 ' + times + ' 倍」？（  ）';
-  return finishChoice(q, rng, base + ' × ' + times,
-    [base + ' + ' + times, base + ' − ' + times, times + ' − ' + base]);
+  var correctExpr = base + ' × ' + times;
+  return finishChoice(q, rng, correctExpr,
+    [base + ' + ' + times, base + ' − ' + times, times + ' − ' + base],
+    '「' + base + ' 的 ' + times + ' 倍」就是 ' + times + ' 个 ' + base + '，用乘法表示为 '
+      + correctExpr + '，正确选项是「' + correctExpr + '」。');
 }
 
 /* ================================================================
@@ -220,8 +230,11 @@ function makeFractionChoice(plan, context, i) {
   var num = Rng.randInt(rng, 2, den - 1);
   var q = buildBase(plan, context, i, fractionData(false, den, num));
   q.prompt = '下面哪个分数的分数单位是 1/' + den + '？（  ）';
-  return finishChoice(q, rng, num + '/' + den,
-    ['1/' + (den + 1), '2/' + (den + 2), '3/' + (den + 3)]);
+  var fracAns = num + '/' + den;
+  return finishChoice(q, rng, fracAns,
+    ['1/' + (den + 1), '2/' + (den + 2), '3/' + (den + 3)],
+    '一个分数的分数单位由分母决定：分母是几，分数单位就是几分之一；' + fracAns + ' 的分母是 '
+      + den + '，分数单位是 1/' + den + '，正确选项是「' + fracAns + '」。');
 }
 
 /* ================================================================
@@ -254,8 +267,10 @@ function makeAngleChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-definition' });
   q.prompt = '下面哪个说法正确地描述了“角”？（  ）';
-  return finishChoice(q, rng, '从一点引出两条射线所组成的图形',
-    ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形']);
+  var angleDef = '从一点引出两条射线所组成的图形';
+  return finishChoice(q, rng, angleDef,
+    ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形'],
+    '角的定义是从一点引出两条射线所组成的图形，这一点是顶点、两条射线是角的两条边，正确选项是「' + angleDef + '」。');
 }
 
 function makeAngleGeometry(plan, context, i) {
@@ -301,7 +316,8 @@ function makeAreaFill(plan, context, i) {
       constructs: ['surface', 'size']
     }
   });
-  return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'], null);
+  return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'],
+    '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
 }
 
 function makeAreaApply(plan, context, i) {
@@ -316,7 +332,8 @@ function makeAreaChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area' });
   q.prompt = '下面哪个是面积单位？（  ）';
-  return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒']);
+  return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒'],
+    '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
 }
 
 function makeAreaGeometry(plan, context, i) {
@@ -707,9 +724,13 @@ function buildNegativeItem(rng, name) {
       answer: '<', options: ['>', '<', '='],
       apply: '哈尔滨 −' + b1 + '℃，北京 −' + a1 + '℃，' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，哪里更冷，即 −' + b1 + ' ○ −' + a1 + '？' };
   }
-  // 读写/认识
+  // 读写/认识 —— P34-06：读写分离。choice 问读法（answer「负五」，补第 4 个合理干扰项「减五」——
+  // 把「−」读成「减」是真实迷思）；fill/calc 问数值（input 答案 −5，不再以读法问句配读法答案
+  // 或以读法句充当列式题），fillAnswer/calcAnswer 与 makeByItem 的 applyAnswer 同型分型答案机制。
   return { stem: '读出下面的数：−5 与 +8（参考：0 − 5 = −5），−5 读作什么？',
-    answer: '负五', options: ['负五', '正五', '五'],
+    answer: '负五', options: ['负五', '正五', '五', '减五'],
+    calc: '列式计算：0 − 5 = ？', calcAnswer: '−5',
+    fill: '根据算式把答案填在横线上：0 − 5 = ____', fillAnswer: '−5',
     apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
 }
 
@@ -756,14 +777,21 @@ function buildNumberTheoryItem(rng, name) {
   if (name.indexOf('因数和倍数') !== -1) {
     var fa = ri(rng, 2, 8), fb = fa + ri(rng, 1, 9 - fa), fp = fa * fb;
     var facStmt = fa + ' 和 ' + fb;
+    // P34-05：calc 用直问式列式题面 + 数值答案（原 stem 是选择问句「哪一组数」却被 calc
+    // 消费成 input 题，答案规格错位）；stem 随之删除——calc/choice/fill/apply 各用专字段，无消费者。
+    // 第 4 干扰项 (fb+1)+' 和 '+fp 恒为假：(fb+1)>fa 且 gcd(fb+1,fb)=1，故 fb+1 不整除 fp。
+    // P34-05 补（AS-18）：calc 改求积式——原「fp ÷ fa = ？」写法把答案 fb 写进支架
+    // 「fa × fb = fp」（L1 真泄露，不可白名单）；求积式答案 fp 不在题面任一 token 中。
     return { operation: 'mult',
-      stem: '在整数乘法中，两个乘数都是积的因数：' + fa + ' × ' + fb + ' = ' + fp
-        + '（也可看作 ' + fp + ' ÷ ' + fa + ' = ' + fb + '）。下面哪一组数是 ' + fp + ' 的因数？',
+      calc: '在整数乘法中，两个乘数都是积的因数：列式计算 ' + fa + ' × ' + fb + ' = ？（积的因数就是这两个乘数）',
+      calcAnswer: String(fp),
       answer: facStmt,
-      options: [facStmt, fa + ' 和 ' + fp, fb + ' 和 ' + fp],
+      options: [facStmt, fa + ' 和 ' + fp, fb + ' 和 ' + fp, (fb + 1) + ' 和 ' + fp],
       // P30-GEN-06（P30-16）：choice 须含「因数」关键词且骨架与 calc/apply 互异。
       choice: '把 ' + fp + ' 块月饼装盒（' + fa + ' × ' + fb + ' = ' + fp + '）。' + fp + ' 的因数是哪两个？',
       fill: '根据 ' + fa + ' × ' + fb + ' = ' + fp + ' 可知，____ 和 ____ 是 ' + fp + ' 的因数。',
+      // P34-10：因数对无序——学生逆序填「fb 和 fa」数学等价，判分须接受（归一去空格后比对）。
+      fillAcceptable: [fb + ' 和 ' + fa],
       apply: '礼品店把 ' + fp + ' 块月饼装盒，每盒 ' + fa + ' 块，正好装 ' + fb + ' 盒（'
         + fa + ' × ' + fb + ' = ' + fp + '）。哪两个数是 ' + fp + ' 的因数？' };
   }
@@ -893,6 +921,9 @@ function makeByItem(plan, context, i, builder, subType) {
   var qt = plan.questionTypeId;
   var q = buildBase(plan, context, i, { subType: subType, operation: item.operation });
   var answer = item.answer;
+  // P34-10：fill 可声明语义等价答案（如因数对无序，「3 和 6」「6 和 3」均正确）；
+  // 经 finish 的 P32-AS-11 过滤（只保留与最终 value 不同的标量等价答案）。
+  var extraAcceptable = [];
 
   // P30-GEN-06（P30-16）：四题型承担不同 Assessment Target，核心骨架须两两互异
   //   calc  —— 直问式列式求值（stem，含参考算式，operation 满足 expressionPresent）
@@ -901,10 +932,15 @@ function makeByItem(plan, context, i, builder, subType) {
   //   choice—— 短语境选择问法：「{首段语境}，下面哪个选项正确？」（骨架含「下面哪个选项正确」，与 calc 不同）
   var prompt;
   if (qt === 'calc') {
-    prompt = item.stem;
+    // P34-05：item 可提供专用 calc 题面与分型答案（历史 stem 曾被写成选择问句被 calc 直接消费）；
+    // calcAnswer/fillAnswer 与下方 applyAnswer 同型（题问结论随题型切换时答案规格随之切换）
+    prompt = item.calc || item.stem;
+    if (item.calcAnswer != null) answer = item.calcAnswer;
   } else if (qt === 'fill') {
     if (item.fill) {
       prompt = item.fill;
+      if (item.fillAnswer != null) answer = item.fillAnswer;
+      if (Array.isArray(item.fillAcceptable)) extraAcceptable = item.fillAcceptable;
     } else {
       // P32-AS-16：支架算式只保留操作数，末尾「= 结果」必须换成空位——
       // extractSupport 抽出的参考式含完整答案（如「60 + 8 = 68」），直接拼「= ____」
@@ -924,9 +960,18 @@ function makeByItem(plan, context, i, builder, subType) {
     // 若 item 提供了专用 choice 题面（含 KP 关键词），优先使用。
     var ctxSrc = item.choice || (headContext(item.apply || item.stem) + '，下面哪个选项正确？');
     q.prompt = ctxSrc + '（  ）';
+    // P34-13：解析指认正确选项（选择题解析的教学职责），不再留 null 由汇聚层抄题面
+    q.answer.explanation = '正确选项是「' + item.answer + '」';
     return q;
   }
-  return finish(q, prompt, answer, [answer], prompt.replace(/（参考.*?）/, ''));
+  // P34-13：解析 = 陈述式题面（去参考括号/疑问尾）+ 明确答案；
+  // item.answer 为独立概念结论（如读法「负五」、因数对陈述）且与本题型答案不同则附上，
+  // 给出「演算结果 → 概念结论」的教学增量，不再把题面原文（含问号）当解析。
+  var stem0 = String(prompt).replace(/（参考[^）]*）/g, '').replace(/[?？]\s*$/, '');
+  var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer))
+    ? '；' + item.answer : '';
+  var explanation = stem0 + '，答案是 ' + answer + conceptConclusion;
+  return finish(q, prompt, answer, [answer].concat(extraAcceptable), explanation);
 }
 
 function makeNumberConcept(plan, context, i) { return makeByItem(plan, context, i, buildNumberConceptItem, 'number-concept'); }

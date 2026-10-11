@@ -56274,12 +56274,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "graphic-construction"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -76893,12 +76893,12 @@
         "requiredRelations": [],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "graphic-construction"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -77218,12 +77218,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "graphic-construction"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",

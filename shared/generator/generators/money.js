@@ -148,18 +148,21 @@ function makeRMBConversionQuestion(plan, context, i, meta) {
   // 随机选择目标单位
   var targetUnit = Rng.pick(rng, ['元', '角', '分']);
   var answer, prompt;
-  
+  var why;
   if (targetUnit === '元') {
     answer = (amountFen / 100).toFixed(amountFen % 100 === 0 ? 0 : 2).replace(/\.00$/, '');
     prompt = amountStr + ' = ____ 元';
+    why = '1 元 = 10 角 = 100 分，' + amountStr + ' 化成以元为单位是 ' + answer + ' 元';
   } else if (targetUnit === '角') {
     answer = String(amountFen / 10);
     prompt = amountStr + ' = ____ 角';
+    why = '1 角 = 10 分，' + amountStr + ' 化成角是 ' + answer + ' 角';
   } else {
     answer = String(amountFen);
     prompt = amountStr + ' = ____ 分';
+    why = '1 元 = 100 分、1 角 = 10 分，' + amountStr + ' 化成分是 ' + answer + ' 分';
   }
-  
+
   return {
     knowledgePointId: pkp(plan),
     questionType: 'fill',
@@ -168,7 +171,7 @@ function makeRMBConversionQuestion(plan, context, i, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: answer, acceptable: [] },
+    answer: { value: answer, acceptable: [], explanation: why + '。' },
     answerMode: 'input',
     data: {
       mode: 'fill',
@@ -199,6 +202,9 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
   var answer = formatRMB(answerFen);
+  // P34-14：人民币加减法讲解（单位相同才能直接相加减）
+  var calcWhy = (op === 'add' ? '把两部分钱合起来用加法' : '求剩余的钱用减法')
+    + '，单位相同直接相加减：' + aStr + ' ' + opChar + ' ' + bStr + ' = ' + answer;
   var qt = plan.questionTypeId;
   var result = {
     knowledgePointId: pkp(plan),
@@ -208,7 +214,8 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: answer, acceptable: [] },
+    answer: { value: answer, acceptable: [], explanation: qt === 'choice'
+      ? calcWhy + '，正确选项是「' + answer + '」。' : calcWhy + '。' },
     answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
       mode: qt === 'choice' ? 'choice' : 'fill',
@@ -230,7 +237,8 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
     }
     result.data.options = Rng.shuffle(rng, [answer].concat(distractors).slice(0, 4));
     result.data.correctIndex = result.data.options.indexOf(answer);
-    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+    result.answer = { value: String(result.data.correctIndex), acceptable: [],
+      explanation: calcWhy + '，正确选项是「' + answer + '」。' };
   }
   return result;
 }
@@ -263,6 +271,10 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var answer = baseValue * factor;
   // 消除浮点噪声：度量换算均为 10^n 进制，保留 6 位小数后去尾
   answer = Math.round(answer * 1e6) / 1e6;
+  var kindNoun = kind === 'area' ? '面积单位' : kind === 'capacity' ? '容量单位'
+    : kind === 'mass' ? '质量单位' : kind === 'time' ? '时间单位' : '长度单位';
+  var convWhy = kindNoun + '换算：1 ' + fromUnit.unit + ' = ' + factor + ' ' + toUnit.unit
+    + '，' + baseValue + ' × ' + factor + ' = ' + answer + ' ' + toUnit.unit;
   var qt = plan.questionTypeId;
   var prompt;
   // P30-GEN-06（P30-16）：fill/choice/judge/calc 共用「X 单位 = ____ Y 单位」等式会导致
@@ -285,7 +297,7 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: convWhy + '。' },
     answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
       mode: qt,
@@ -308,7 +320,8 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
     }
     result.data.options = Rng.shuffle(rng, [ansNum].concat(distr).slice(0, 4));
     result.data.correctIndex = result.data.options.indexOf(ansNum);
-    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+    result.answer = { value: String(result.data.correctIndex), acceptable: [],
+      explanation: convWhy + '，正确选项是「' + answer + ' ' + toUnit.unit + '」。' };
   }
   return result;
 }
@@ -320,7 +333,7 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
 function makeMeasurementGeometryQuestion(plan, context, i, meta) {
   var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
   var kind = meta.kind === 'area' ? 'area' : 'length';
-  var prompt, answer, graphic, modelKind;
+  var prompt, answer, graphic, modelKind, geoWhy;
 
   if (kind === 'area') {
     if (kpName.indexOf('进率') !== -1) {
@@ -329,6 +342,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       prompt = '看图想一想：边长 1 分米（也就是 10 厘米）的正方形纸，' +
         '摆满边长 1 厘米的小正方形，一共可以摆满多少个？1 平方分米 = ____ 平方厘米。';
       answer = '100';
+      geoWhy = '边长 1 分米 = 10 厘米，沿长、宽各能摆 10 个，10 × 10 = 100，所以 1 平方分米 = 100 平方厘米';
       graphic = {
         type: 'geometry', subtype: 'rectangle',
         role: 'quantity-correspondence',
@@ -339,6 +353,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       modelKind = 'area-unit';
       prompt = '看图填面积单位：边长是 1 厘米的正方形，它的面积是 1 ____（填面积单位）。';
       answer = '平方厘米';
+      geoWhy = '正方形面积 = 边长 × 边长，1 × 1 = 1，单位是平方厘米，所以填平方厘米';
       graphic = {
         type: 'geometry',
         subtype: 'square',
@@ -352,6 +367,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     prompt = '看图选择合适的长度单位填空：食指的宽大约是 1 ____，教室的长大约是 8 ____。' +
       '（两个空都填“厘米”或“米”，用顿号隔开）';
     answer = '厘米、米';
+    geoWhy = '食指宽约 1 厘米，教室长约 8 米，按实际大小选择单位，依次填厘米、米';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -362,6 +378,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     modelKind = 'length-units-order';
     prompt = '看图把学过的长度单位按从小到大的顺序写出来（用顿号隔开）。';
     answer = '毫米、厘米、分米、米、千米';
+    geoWhy = '学过的长度单位按从小到大的顺序排列是：毫米、厘米、分米、米、千米';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -372,6 +389,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     modelKind = 'length-unit-rate';
     prompt = '看图填空：把 1 米长的线段平均分成 10 份，每份长 1 分米。1 米 = ____ 分米。';
     answer = '10';
+    geoWhy = '1 米平均分成 10 份，每份是 1 分米，所以 1 米 = 10 分米';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -382,6 +400,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     modelKind = 'length-unit';
     prompt = '看图填空：米和厘米都是长度单位，量较短物体的长度用厘米，量较长物体的长度用米。1 米 = ____ 厘米。';
     answer = '100';
+    geoWhy = '把 1 米平均分成 100 份，每份是 1 厘米，所以 1 米 = 100 厘米';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -397,7 +416,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: answer, acceptable: [] },
+    answer: { value: answer, acceptable: [], explanation: geoWhy + '。' },
     answerMode: 'input',
     data: {
       mode: 'geometry',
@@ -432,6 +451,9 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       var prompt = '一本书' + aStr + '，一本笔记本' + bStr + '，买这两样东西一共需要多少钱？';
       var answer = formatRMB(aFen + bFen);
     }
+    var wordWhy = (op === 'change'
+      ? '用原有的钱减去花掉的钱：' + aStr + ' − ' + bStr + ' = ' + answer
+      : '求两样东西的总钱数用加法：' + aStr + ' + ' + bStr + ' = ' + answer);
     return {
       knowledgePointId: pkp(plan),
       questionType: 'apply',
@@ -440,12 +462,12 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: prompt,
-      answer: { value: answer, acceptable: [] },
+      answer: { value: answer, acceptable: [], explanation: wordWhy + '。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'rmb', operation: op === 'change' ? 'sub' : 'add', amountA: aFen, amountB: bFen }
     };
   }
-  
+
   // 兜底
   // P25-08：非 rmb 度量种类的应用情境题
   if (kind === 'length') {
@@ -459,7 +481,9 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       prompt: useCut
         ? '一根绳子长 ' + a + ' 厘米，剪去 ' + b + ' 厘米，还剩多少厘米？'
         : '小明身高 ' + a + ' 厘米，小红比小明矮 ' + b + ' 厘米，小红身高多少厘米？',
-      answer: { value: String(useCut ? a - b : a - b), acceptable: [] },
+      answer: { value: String(a - b), acceptable: [],
+        explanation: (useCut ? '绳子总长减去剪去的长度：' : '小明身高减去小红矮的部分：')
+          + a + ' − ' + b + ' = ' + (a - b) + '（厘米）。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'length', operation: 'sub' }
     };
@@ -472,7 +496,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '一个长方形长 ' + w + ' 厘米，宽 ' + h + ' 厘米，它的面积是多少平方厘米？',
-      answer: { value: String(w * h), acceptable: [] },
+      answer: { value: String(w * h), acceptable: [],
+        explanation: '长方形的面积 = 长 × 宽：' + w + ' × ' + h + ' = ' + (w * h) + '（平方厘米）。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'area', operation: 'mul' }
     };
@@ -485,7 +510,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '一袋大米重 ' + m1 + ' 千克，一袋面粉重 ' + m2 + ' 千克，大米比面粉重多少千克？',
-      answer: { value: String(m1 - m2), acceptable: [] },
+      answer: { value: String(m1 - m2), acceptable: [],
+        explanation: '求一个量比另一个量重多少用减法：' + m1 + ' − ' + m2 + ' = ' + (m1 - m2) + '（千克）。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'mass', operation: 'sub' }
     };
@@ -498,7 +524,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '小明做作业用了 ' + t1 + ' 分钟，看电视用了 ' + t2 + ' 分钟，一共用了多少分钟？',
-      answer: { value: String(t1 + t2), acceptable: [] },
+      answer: { value: String(t1 + t2), acceptable: [],
+        explanation: '求两段时间的总和用加法：' + t1 + ' + ' + t2 + ' = ' + (t1 + t2) + '（分钟）。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'time', operation: 'add' }
     };
@@ -511,7 +538,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '一桶油有 ' + c1 + ' 升，用去 ' + c2 + ' 升，还剩多少升？',
-      answer: { value: String(c1 - c2), acceptable: [] },
+      answer: { value: String(c1 - c2), acceptable: [],
+        explanation: '用油总量减去用去的油量：' + c1 + ' − ' + c2 + ' = ' + (c1 - c2) + '（升）。' },
       answerMode: 'input',
       data: { mode: 'apply', steps: 2, kind: 'capacity', operation: 'sub' }
     };

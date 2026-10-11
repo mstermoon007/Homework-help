@@ -57,27 +57,35 @@ function makeTable789Question(plan, context, i) {
   var p = a * b;
   var form = i % 5;
 
-  var prompt, answer, options = null, answerMode = 'input', operation;
+  var prompt, answer, options = null, answerMode = 'input', operation, tWhy;
 
   if (qt === 'calc') {
     // calc：口诀引导 + 直接算式求值
     if (i % 2 === 0) {
       prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ?';
       answer = String(p); operation = 'mult';
+      tWhy = '想乘法口诀「' + b + ' ' + a + '」得 ' + p + '，所以 ' + a + ' × ' + b + ' = ' + p;
     } else {
       prompt = '用乘法口诀求商：' + p + ' ÷ ' + a + ' = ?';
       answer = String(b); operation = 'div';
+      tWhy = '想乘法口诀求商：' + a + ' × ' + b + ' = ' + p + '，所以 ' + p + ' ÷ ' + a + ' = ' + b;
     }
   } else if (qt === 'fill') {
     // fill：空出「首位操作数」，核心骨架与 calc 的 #op# 互异
-    if (form <= 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult'; }
-    else if (form === 3) { prompt = '____ ÷ ' + a + ' = ' + b; answer = String(p); operation = 'div'; }
-    else { prompt = p + ' ÷ ____ = ' + b; answer = String(a); operation = 'div'; }
+    if (form <= 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult';
+      tWhy = '积 ÷ 已知因数 = 未知因数：' + p + ' ÷ ' + a + ' = ' + b; }
+    else if (form === 3) { prompt = '____ ÷ ' + a + ' = ' + b; answer = String(p); operation = 'div';
+      tWhy = '被除数 = 除数 × 商：' + a + ' × ' + b + ' = ' + p; }
+    else { prompt = p + ' ÷ ____ = ' + b; answer = String(a); operation = 'div';
+      tWhy = '除数 = 被除数 ÷ 商：' + p + ' ÷ ' + b + ' = ' + a; }
   } else if (qt === 'choice') {
     // choice：结果匹配——题干出得数，选项为算式
     var isMult = i % 2 === 0;
     var target = isMult ? p : b;
     var correctExpr = isMult ? (a + ' × ' + b) : (p + ' ÷ ' + a);
+    tWhy = (isMult ? '想乘法口诀「' + b + ' ' + a + '」得 ' + p
+      : '想乘法口诀，' + a + ' × ' + b + ' = ' + p)
+      + '，正确选项是「' + correctExpr + '」';
     var cand = [];
     function pushCand(e) { if (cand.indexOf(e) === -1 && cand.length < 4) cand.push(e); }
     if (isMult) {
@@ -101,12 +109,15 @@ function makeTable789Question(plan, context, i) {
     if (i % 3 === 0) {
       prompt = '每盒' + g + '有 ' + b + ' 个，买了 ' + a + ' 盒，一共有多少个' + g + '？';
       answer = String(p); operation = 'mult';
+      tWhy = '每盒个数 × 盒数 = 总数：' + b + ' × ' + a + ' = ' + p;
     } else if (i % 3 === 1) {
       prompt = '把 ' + p + ' 个' + g + '平均分给 ' + a + ' 个小组，每个小组分得多少个？';
       answer = String(b); operation = 'div';
+      tWhy = '总数 ÷ 组数 = 每组分得数：' + p + ' ÷ ' + a + ' = ' + b;
     } else {
       prompt = '有 ' + p + ' 个' + g + '，每 ' + a + ' 个装一袋，可以装多少袋？';
       answer = String(b); operation = 'div';
+      tWhy = '总数 ÷ 每袋个数 = 袋数：' + p + ' ÷ ' + a + ' = ' + b;
     }
   }
 
@@ -121,7 +132,7 @@ function makeTable789Question(plan, context, i) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: tWhy + '。' },
     answerMode: answerMode,
     data: data
   };
@@ -161,6 +172,11 @@ function makeReasoningQuestion(plan, context, i, kp) {
       cPrompt = '找规律列式：' + x + ' × ' + y + ' + ' + z + ' = ____';
       cAnswer = x * y + z;
     }
+    var calcWhy = (name.indexOf('除') !== -1)
+      ? '想乘法口诀求商：' + a + ' × ' + b + ' = ' + (a * b) + '，所以 ' + (a * b) + ' ÷ ' + a + ' = ' + b
+      : (cPrompt.indexOf('规律') !== -1
+        ? '规律题先算乘法再算加法：' + x + ' × ' + y + ' + ' + z + ' = ' + cAnswer
+        : '想乘法口诀「' + b + ' ' + a + '」得 ' + (a * b) + '，所以 ' + a + ' × ' + b + ' = ' + (a * b));
     return {
       knowledgePointId: pkp(plan),
       questionType: 'calc',
@@ -169,7 +185,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: cPrompt,
-      answer: { value: String(cAnswer), acceptable: [] },
+      answer: { value: String(cAnswer), acceptable: [], explanation: calcWhy + '。' },
       answerMode: 'input',
       data: { mode: 'calc', steps: 1, operation: 'mixed-arith', questionType: 'calc' }
     };
@@ -189,7 +205,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else type = 'logic';
 
   // P25-07：choicePool/logicOptions 供 choice 题型构建选项（值约定）；其余题型忽略。
-  var prompt, answer, steps, logicOptions = null, choicePool = null;
+  // P34-14：讲解只复述该题型自身的解题模型，答案均可由题内已知量机械验证
+  var prompt, answer, steps, logicOptions = null, choicePool = null, nativeWhy = null;
   var v = i; // 变体序号：同 KP 同题型下轮换不同结构/设问，提升语义容量（R6）
   if (type === 'drawer') {
     var DRAWER = [
@@ -201,17 +218,22 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var d = DRAWER[v % DRAWER.length];
     prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
     answer = d.ans; steps = 2;
+    nativeWhy = '抽屉原理按最不利情况算：每种颜色先各摸 ' + (d.k - 1) + ' 个，再摸 1 个就一定有 '
+      + d.k + ' 个同色，' + d.c.length + ' × ' + (d.k - 1) + ' + 1 = ' + d.ans;
   } else if (type === 'extreme') {
     if (v % 3 === 0) {
       var twoSum = Rng.randInt(rng, 10, 50);
       var half = Math.floor(twoSum / 2);
       prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
       answer = half * (twoSum - half); steps = 2;
+      nativeWhy = '和一定时，两数越接近乘积越大，取 ' + half + ' 和 ' + (twoSum - half)
+        + '：' + half + ' × ' + (twoSum - half) + ' = ' + answer;
     } else if (v % 3 === 1) {
       var twoSum2 = Rng.randInt(rng, 10, 50);
       var half2 = Math.floor(twoSum2 / 2);
       prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
       answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
+      nativeWhy = '和一定，两数最接近时相差最小（差 0 或 1），所以是 ' + half2 + ' 和 ' + (twoSum2 - half2);
     } else {
       var threeSum = Rng.randInt(rng, 12, 60);
       var base = Math.floor(threeSum / 3);
@@ -219,6 +241,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var parts = [base, base, base]; parts[2] += rem;
       prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
       answer = parts[0] * parts[1] * parts[2]; steps = 2;
+      nativeWhy = '三数尽量接近时乘积最大，' + threeSum + ' 分成 ' + parts.join('、')
+        + '，乘积 ' + parts[0] + ' × ' + parts[1] + ' × ' + parts[2] + ' = ' + answer;
     }
   } else if (type === 'chicken-rabbit') {
     if (v % 3 === 0) {
@@ -228,6 +252,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
       var r0 = (feet - heads * 2) / 2;
       answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+      nativeWhy = '假设全是鸡应有 ' + heads + ' × 2 = ' + heads * 2 + ' 只脚，多出 '
+        + (feet - heads * 2) + ' 只脚；每只兔比鸡多 2 只脚，兔有 ' + (feet - heads * 2)
+        + ' ÷ 2 = ' + r0 + ' 只，鸡有 ' + heads + ' − ' + r0 + ' = ' + (heads - r0) + ' 只';
       choicePool = ['鸡' + (heads - r0) + '只，兔' + r0 + '只',
         '鸡' + r0 + '只，兔' + (heads - r0) + '只',
         '鸡' + (heads - r0 - 1) + '只，兔' + (r0 + 1) + '只',
@@ -238,6 +265,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+      nativeWhy = '把兔先按 2 只脚算，' + (R + D) + ' 只鸡和 ' + R + ' 只兔共 ' + F + ' 只脚（2×'
+        + (R + D) + ' + 6×' + R + ' = ' + F + '），所以兔 ' + R + ' 只、鸡 ' + (R + D) + ' 只';
       choicePool = ['鸡' + (R + D) + '只，兔' + R + '只',
         '鸡' + R + '只，兔' + (R + D) + '只',
         '鸡' + (R + D - 1) + '只，兔' + (R + 1) + '只',
@@ -248,6 +277,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+      nativeWhy = '兔有 4 只脚、鸡有 2 只脚（兔是鸡的 2 倍），' + F2 + ' 只脚按鸡 ' + C
+        + ' 只、兔 ' + (C + D2) + ' 只正好：6×' + C + ' + 4×' + D2 + ' = ' + F2;
       choicePool = ['鸡' + C + '只，兔' + (C + D2) + '只',
         '鸡' + (C + D2) + '只，兔' + C + '只',
         '鸡' + (C - 1) + '只，兔' + (C + D2 + 1) + '只',
@@ -265,6 +296,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var tp = TP[v % TP.length];
     prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
     answer = tp.ans; steps = 2;
+    nativeWhy = '先算间隔数：' + L + ' ÷ ' + G + ' = ' + Math.floor(L / G) + '；'
+      + tp.desc + '，棵数 = 间隔数 ' + (tp.ans > Math.floor(L / G) ? '+ 1' : tp.ans < Math.floor(L / G) ? '− 1' : '')
+      + ' = ' + tp.ans;
   } else if (type === 'find-defect') {
     var DEFECT = [
       { n: 3, ans: 1 }, { n: 9, ans: 2 }, { n: 27, ans: 3 }, { n: 81, ans: 4 }
@@ -272,6 +306,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var df = DEFECT[v % DEFECT.length];
     prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
     answer = df.ans; steps = 2;
+    nativeWhy = '每次把待测瓶数尽量平均分成 3 份，称其中两份可把范围缩小到 1/3；'
+      + df.n + ' 在 3 的 ' + (df.ans - 1) + ' 次方到 ' + df.ans + ' 次方之间，所以至少称 ' + df.ans + ' 次';
   } else if (type === 'handshake') {
     var HSK = [
       { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
@@ -282,6 +318,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var n = Rng.randInt(rng, 4, 12);
     prompt = n + hs.w + '，一共需要多少次？';
     answer = hs.ans(n); steps = 2;
+    nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
+      + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
   } else if (type === 'sudoku') {
     var SUD = [
       { w: '请根据已知数字推理出空格中的数字。' },
@@ -291,6 +329,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var su = SUD[v % SUD.length];
     prompt = name + '：' + su.w;
     answer = '（推理过程略）'; steps = 4;
+    nativeWhy = '数独规则：每行、每列、每个宫格内的数字都不重复，从已知数最多的行、列或宫格入手，逐个排除确定空格';
   } else if (type === 'winning') {
     var WIN = [
       { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
@@ -300,28 +339,38 @@ function makeReasoningQuestion(plan, context, i, kp) {
     var win = WIN[v % WIN.length];
     prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
     answer = win.a; steps = 3;
+    nativeWhy = v % 3 === 0
+      ? '先手先取完一堆使两堆相同，此后后手从一堆取几个、先手就从另一堆取几个，先手取到最后一个'
+      : v % 3 === 1
+        ? '每回合两人取子数可凑成 5（对方取 k 个就取 5−k 个），先手按凑 5 策略取到最后一个'
+        : '三堆石子的尼姆和不为 0，先手可取子使尼姆和变为 0，之后每步维持尼姆和为 0，先手必胜';
   } else if (type === 'optimization') {
     if (v % 3 === 0) {
       var pans = Rng.randInt(rng, 2, 5);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
       answer = pans * 2; steps = 3;
+      nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
+        + ' × 2 = ' + pans * 2 + ' 个面，每锅 2 分钟烙两个面，共 ' + answer + ' 分钟';
     } else if (v % 3 === 1) {
       prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
       answer = 8; steps = 2;
+      nativeWhy = '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
     } else {
       prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
       answer = 15; steps = 2;
+      nativeWhy = '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
     }
   } else if (type === 'seq') {
     var SEQ = [
-      { s: '2, 4, 6, 8', ans: 10 },
-      { s: '1, 3, 5, 7', ans: 9 },
-      { s: '1, 2, 4, 8', ans: 16 },
-      { s: '1, 1, 2, 3, 5', ans: 8 }
+      { s: '2, 4, 6, 8', ans: 10, why: '相邻两项依次加 2，8 + 2 = 10' },
+      { s: '1, 3, 5, 7', ans: 9, why: '相邻两项依次加 2，7 + 2 = 9' },
+      { s: '1, 2, 4, 8', ans: 16, why: '后一项是前一项的 2 倍，8 × 2 = 16' },
+      { s: '1, 1, 2, 3, 5', ans: 8, why: '从第三项起每项是前两项之和，3 + 5 = 8' }
     ];
     var sq = SEQ[v % SEQ.length];
     prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
     answer = sq.ans; steps = 1;
+    nativeWhy = sq.why;
   } else {
     // P25-07：可解答的逻辑推理实例（替换原「（逻辑推理略）」不可解答桩）。
     // 三个模板均为唯一解，答案可机械验证；logicOptions 供 choice 题型构建选项。
@@ -330,15 +379,18 @@ function makeReasoningQuestion(plan, context, i, kp) {
       prompt = '甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？';
       answer = '乙'; steps = 3;
       logicOptions = ['甲', '乙', '丙'];
+      nativeWhy = '假设甲真则乙假、推出丙真，丙真则甲假，矛盾；假设丙真则甲、乙都假，由甲假推出乙真，矛盾；只有乙真时其余假设均不矛盾，所以说真话的是乙';
     } else if (LGV === 1) {
       var ageTop = Rng.randInt(rng, 9, 12);
       prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
       answer = '小明'; steps = 2;
       logicOptions = ['小明', '小红', '小刚'];
+      nativeWhy = '小明比小红大 2 岁，小红又比小刚大 3 岁，年龄关系可传递，所以小明最大';
     } else {
       prompt = '三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。应该从哪个盒子摸？';
       answer = '标着「混合」的盒子'; steps = 3;
       logicOptions = ['标着「苹果」的盒子', '标着「橘子」的盒子', '标着「混合」的盒子'];
+      nativeWhy = '三个标签全贴错，标「混合」的盒子里一定是单一水果，从中摸一个即可确定它；再由「标签全错」推出另外两个盒子';
     }
   }
 
@@ -411,11 +463,17 @@ function makeReasoningQuestion(plan, context, i, kp) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: stemPrompt,
-      answer: { value: ansText, acceptable: [] },
+      answer: { value: ansText, acceptable: [], explanation: nativeWhy + '，正确选项是「' + ansText + '」。' },
       answerMode: 'choice',
       data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId, options: opts, correctIndex: opts.indexOf(ansText) }
     };
   }
+
+  var finalWhy = nativeWhy
+    ? (plan.questionTypeId === 'fill'
+      ? nativeWhy + '，所以空格填 ' + String(answer) + '。'
+      : nativeWhy + '。')
+    : null;
 
   return {
     knowledgePointId: pkp(plan),
@@ -425,7 +483,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: stemPrompt,
-    answer: typeof answer === 'number' ? { value: String(answer), acceptable: [] } : { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: finalWhy },
     answerMode: 'input',
     data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId }
   };

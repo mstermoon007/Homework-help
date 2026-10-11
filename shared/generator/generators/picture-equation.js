@@ -46,7 +46,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
   else if (name.indexOf('小数') !== -1) type = 'decimal-context';
   else type = 'generic';
 
-  var prompt, answer, steps, graphic;
+  var prompt, answer, steps, graphic, why = null;
   if (type === 'segment') {
     var total = Rng.randInt(rng, 20, 100);
     var part = Rng.randInt(rng, 5, total - 5);
@@ -71,6 +71,9 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     }
     answer = a + b; steps = 1;
     graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: a, right: b, unit: '个' } };
+    why = '大括号图表示把左右两部分合起来求总数，用加法：' + a + ' + ' + b + ' = ' + answer + '（个）';
+    if (braceQt === 'fill') why += '，所以空格填 ' + answer;
+    if (braceQt === 'choice') why += '，正确选项是「' + answer + '」';
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;
@@ -120,7 +123,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: why ? why + '。' : null },
     answerMode: 'input',
     // P28-FORM-CONTRACT-01：声明横向算式内联（decimal-context 分支以「= ?」结尾时生效；
     // segment/scale/else 分支题干无该尾缀，渲染器回落 block，与旧正则未匹配等价）

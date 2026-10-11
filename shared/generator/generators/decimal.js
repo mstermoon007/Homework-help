@@ -169,6 +169,12 @@ function evalExpr(s) {
 }
 
 // 算式结构（addsub/addsub-mix/mult/div/mult-estimate）的四题型真分工
+// P34-14：讲解按题型承担的子目标给依据——calc 给算法、fill 给各部分关系、
+// choice 指向正确算式项、apply 给情境运算意义；素材全部来自本题已生成的 expr/answer。
+var ARITH_REASON = {
+  '+': '一个加数 = 和 − 另一个加数',
+  '×': '一个因数 = 积 ÷ 另一个因数'
+};
 function arithmeticTyped(sub, qt, rng) {
   var st;
   if (sub === 'div') st = divStructure(rng);
@@ -180,7 +186,12 @@ function arithmeticTyped(sub, qt, rng) {
   var correctVal = evalExpr(expr);
 
   if (qt === 'calc') {
-    return { prompt: '列式计算：' + expr + ' = ？', answer: answer, options: null };
+    var calcExpl;
+    if (sub === 'addsub-mix') calcExpl = '按从左到右的顺序计算：' + expr + ' = ' + answer;
+    else if (mOp === '×') calcExpl = '小数乘法先按整数乘法算出积，再点上小数点：' + expr + ' = ' + answer;
+    else if (mOp === '÷') calcExpl = '想乘法算除法：' + st.explain + '，所以 ' + expr + ' = ' + answer;
+    else calcExpl = '小数点对齐，按整数加减法计算：' + expr + ' = ' + answer;
+    return { prompt: '列式计算：' + expr + ' = ？', answer: answer, options: null, explain: calcExpl };
   }
 
   if (qt === 'fill') {
@@ -188,10 +199,20 @@ function arithmeticTyped(sub, qt, rng) {
     var parts = /^([\d.]+)\s*([+\-−×÷])\s*([\d.]+)$/.exec(expr);
     if (parts) {
       var a = parts[1], op = parts[2], b = parts[3];
-      if (rng() < 0.5) return { prompt: '在 ____ 里填上合适的数：____ ' + op + ' ' + b + ' = ' + answer, answer: a, options: null };
-      return { prompt: '在 ____ 里填上合适的数：' + a + ' ' + op + ' ____ = ' + answer, answer: b, options: null };
+      var blankFirst = rng() < 0.5;
+      var blankVal = blankFirst ? a : b;
+      var reason;
+      if (op === '+') reason = ARITH_REASON['+'];
+      else if (op === '×') reason = ARITH_REASON['×'];
+      else if (op === '−') reason = blankFirst ? '被减数 = 减数 + 差' : '减数 = 被减数 − 差';
+      else reason = blankFirst ? '被除数 = 除数 × 商' : '除数 = 被除数 ÷ 商';
+      var fillExpl = reason + '；由 ' + a + ' ' + op + ' ' + b + ' = ' + answer
+        + ' 可知空格填 ' + blankVal + '。';
+      if (blankFirst) return { prompt: '在 ____ 里填上合适的数：____ ' + op + ' ' + b + ' = ' + answer, answer: a, options: null, explain: fillExpl };
+      return { prompt: '在 ____ 里填上合适的数：' + a + ' ' + op + ' ____ = ' + answer, answer: b, options: null, explain: fillExpl };
     }
-    return { prompt: '在 ____ 里填上合适的数：' + expr + ' = ____', answer: answer, options: null };
+    return { prompt: '在 ____ 里填上合适的数：' + expr + ' = ____', answer: answer, options: null,
+      explain: '按从左到右的顺序计算：' + expr + ' = ' + answer + '，空格填 ' + answer + '。' };
   }
 
   if (qt === 'choice') {
@@ -216,24 +237,31 @@ function arithmeticTyped(sub, qt, rng) {
       var cand2 = fmt(rv) + ' ' + expr.slice(String(nums[0]).length).replace(/^\s*/, '');
       if (!seenExpr[cand2]) { seenExpr[cand2] = 1; optsArr.push(cand2); }
     }
-    return { prompt: '下面哪个算式的得数是 ' + answer + '？（  ）', answer: expr, options: Rng.shuffle(rng, optsArr.slice(0, 4)) };
+    return { prompt: '下面哪个算式的得数是 ' + answer + '？（  ）', answer: expr, options: Rng.shuffle(rng, optsArr.slice(0, 4)),
+      explain: '把四个选项分别计算，只有「' + expr + '」的得数是 ' + answer + '。' };
   }
 
   // apply：真实情境迁移（小数数量须可连续计量：乘价用「每米彩带 × 米数」，不用「买 2.3 本」）
   var goods = pick(rng, GOODS);
-  var story;
+  var story, storyWhy;
   if (nums.length === 3) {
     story = '文具店盘点：上午营业额 ' + nums[0] + ' 元，中午变化 ' + nums[1] + ' 元，下午变化 ' + nums[2] + ' 元，列式求现在的营业额';
+    storyWhy = '根据营业额的三次变化按顺序列式';
   } else if (mOp === '×') {
     story = '彩带每米 ' + nums[1] + ' 元，买 ' + nums[0] + ' 米，列式求一共要付多少元';
+    storyWhy = '单价 × 数量 = 总价，用乘法';
   } else if (mOp === '÷') {
     story = '把 ' + nums[0] + ' 米长的彩带平均分成 ' + nums[1] + ' 段，列式求每段长多少米';
+    storyWhy = '把总长平均分，求每段长用除法';
   } else if (mOp === '−') {
     story = '买' + goods + '付 ' + nums[0] + ' 元，找回 ' + nums[1] + ' 元，列式求' + goods + '多少元';
+    storyWhy = '付出的钱减去找回的钱等于商品价格，用减法';
   } else {
     story = '买' + goods + '用去 ' + nums[0] + ' 元，又买一支笔用去 ' + nums[1] + ' 元，列式求一共花了多少元';
+    storyWhy = '把两部分钱合起来求总数，用加法';
   }
-  return { prompt: story + '：' + expr + ' = ？', answer: answer, options: null };
+  return { prompt: story + '：' + expr + ' = ？', answer: answer, options: null,
+    explain: storyWhy + '：' + expr + ' = ' + answer + '。' };
 }
 
 // 乘法估算（mult-estimate）的四题型真分工：把一位小数估成最接近的整数再乘
@@ -245,42 +273,56 @@ function estimateTyped(qt, rng) {
   var n = ri(rng, 2, 9);
   var est = nearest * n;
   var exact = r2(x * n);
+  var estWhy = '把 ' + fmt(x) + ' 看成最接近的整数 ' + nearest + '，' + nearest + ' × ' + n + ' = ' + est;
   if (qt === 'calc') {
-    return { prompt: '估算（先把 ' + fmt(x) + ' 看成最接近的整数，再列式）：' + fmt(x) + ' × ' + n + ' ≈ ？', answer: String(est), options: null };
+    return { prompt: '估算（先把 ' + fmt(x) + ' 看成最接近的整数，再列式）：' + fmt(x) + ' × ' + n + ' ≈ ？', answer: String(est), options: null,
+      explain: estWhy + '。' };
   }
   if (qt === 'fill') {
-    return { prompt: '估算填空：把 ' + fmt(x) + ' 看成最接近的整数，____ × ' + n + ' ≈ ' + est, answer: String(nearest), options: null };
+    return { prompt: '估算填空：把 ' + fmt(x) + ' 看成最接近的整数，____ × ' + n + ' ≈ ' + est, answer: String(nearest), options: null,
+      explain: estWhy + '，所以空格填 ' + nearest + '。' };
   }
   if (qt === 'choice') {
     var optsE = Rng.shuffle(rng, [String(est), fmt(exact), String((nearest + 1) * n), String((nearest - 1) * n)]);
-    return { prompt: '估算 ' + fmt(x) + ' × ' + n + '，下面哪个得数最合理？（  ）', answer: String(est), options: optsE };
+    return { prompt: '估算 ' + fmt(x) + ' × ' + n + '，下面哪个得数最合理？（  ）', answer: String(est), options: optsE,
+      explain: estWhy + '，正确选项是「' + est + '」。' };
   }
-  return { prompt: '彩带每米 ' + fmt(x) + ' 元，买 ' + n + ' 米，先估成整数再算，大约要带多少元？', answer: String(est), options: null };
+  return { prompt: '彩带每米 ' + fmt(x) + ' 元，买 ' + n + ' 米，先估成整数再算，大约要带多少元？', answer: String(est), options: null,
+    explain: '估算带的钱要够用：' + estWhy + '（元）。' };
 }
 
 // 概念子类型的四题型真分工
 function conceptTyped(sub, qt, rng) {
   if (sub === 'readwrite') {
     var n = ri(rng, 2, 9), dec = r1(n / 10);
-    if (qt === 'calc') return { prompt: '列式（十分之几就是零点几）：' + n + '/10 = ？', answer: fmt(dec), options: null };
-    if (qt === 'fill') return { prompt: fmt(dec) + ' 写成分数是 ____/10（填分子）', answer: String(n), options: null };
+    if (qt === 'calc') return { prompt: '列式（十分之几就是零点几）：' + n + '/10 = ？', answer: fmt(dec), options: null,
+      explain: '十分之几就是零点几：' + n + '/10 = ' + fmt(dec) + '。' };
+    if (qt === 'fill') return { prompt: fmt(dec) + ' 写成分数是 ____/10（填分子）', answer: String(n), options: null,
+      explain: fmt(dec) + ' 表示十分之' + n + '，写成分数是 ' + n + '/10，所以分子填 ' + n + '。' };
     if (qt === 'choice') {
       var opts = numOpt(rng, fmt(dec), [r1((n === 9 ? 8 : n + 1) / 10), r1(Math.max(1, n - 1) / 10), r1(n / 100), n]);
-      return { prompt: '下面哪个小数表示 ' + n + '/10 ？（  ）', answer: fmt(dec), options: opts };
+      return { prompt: '下面哪个小数表示 ' + n + '/10 ？（  ）', answer: fmt(dec), options: opts,
+        explain: '十分之几就是零点几，' + n + '/10 = ' + fmt(dec) + '，正确选项是「' + fmt(dec) + '」。' };
     }
-    return { prompt: '把 1 米平均分成 10 份，取其中 ' + n + ' 份，这 ' + n + ' 份一共长多少米？', answer: fmt(dec), options: null };
+    return { prompt: '把 1 米平均分成 10 份，取其中 ' + n + ' 份，这 ' + n + ' 份一共长多少米？', answer: fmt(dec), options: null,
+      explain: '1 米平均分成 10 份，每份是 0.1 米；取 ' + n + ' 份就是 ' + n + '/10 米 = ' + fmt(dec) + ' 米。' };
   }
 
   if (sub === 'nature') {
     var base = r1(ri(rng, 12, 85) / 10);
     var full = base.toFixed(1) + '0';   // 2.0 → '2.00'，不能用 '2'+'0'（会变成 20）
-    if (qt === 'calc') return { prompt: '根据小数的性质化简，列式：' + full + ' − 0 = ？', answer: fmt(base), options: null };
-    if (qt === 'fill') return { prompt: '小数的性质：在 ____ 里填上合适的数，' + full + ' = ____', answer: fmt(base), options: null };
+    var natureWhy = '小数的末尾添上 0 或去掉 0，小数的大小不变，' + full + ' = ' + fmt(base);
+    if (qt === 'calc') return { prompt: '根据小数的性质化简，列式：' + full + ' − 0 = ？', answer: fmt(base), options: null,
+      explain: natureWhy + '，所以 ' + full + ' − 0 = ' + fmt(base) + '。' };
+    if (qt === 'fill') return { prompt: '小数的性质：在 ____ 里填上合适的数，' + full + ' = ____', answer: fmt(base), options: null,
+      explain: natureWhy + '，所以空格填 ' + fmt(base) + '。' };
     if (qt === 'choice') {
       var opts2 = numOpt(rng, fmt(base), [fmt(r1(base / 10)), String(Math.round(base * 10)), fmt(r1(base + 1))]);
-      return { prompt: '下面各数中，与 ' + full + ' 大小相等的是？（  ）', answer: fmt(base), options: opts2 };
+      return { prompt: '下面各数中，与 ' + full + ' 大小相等的是？（  ）', answer: fmt(base), options: opts2,
+        explain: natureWhy + '，正确选项是「' + fmt(base) + '」。' };
     }
-    return { prompt: '一块橡皮标价 ' + full + ' 元，根据小数的性质去掉末尾不影响大小的零，它可以写成多少元？', answer: fmt(base), options: null };
+    return { prompt: '一块橡皮标价 ' + full + ' 元，根据小数的性质去掉末尾不影响大小的零，它可以写成多少元？', answer: fmt(base), options: null,
+      explain: natureWhy + '，所以可以写成 ' + fmt(base) + ' 元。' };
   }
 
   if (sub === 'approx') {
@@ -293,15 +335,19 @@ function conceptTyped(sub, qt, rng) {
       while (fmt(raw) === fmt(rounded) && guardAp++ < 20) {
         v2 = r2(ri(rng, 105, 499) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
       }
-      return { prompt: '列式计算（得数用四舍五入法保留一位小数）：' + fmt(u) + ' + ' + fmt(v2) + ' = ？', answer: fmt(rounded), options: null };
+      return { prompt: '列式计算（得数用四舍五入法保留一位小数）：' + fmt(u) + ' + ' + fmt(v2) + ' = ？', answer: fmt(rounded), options: null,
+        explain: '先算 ' + fmt(u) + ' + ' + fmt(v2) + ' = ' + fmt(raw) + '，再用四舍五入法保留一位小数，约是 ' + fmt(rounded) + '。' };
     }
-    if (qt === 'fill') return { prompt: '一个两位小数保留一位小数后是 ' + fmt(one) + '，这个两位小数可能是 ____（写出一个即可）', answer: fmt(x), options: null };
+    if (qt === 'fill') return { prompt: '一个两位小数保留一位小数后是 ' + fmt(one) + '，这个两位小数可能是 ____（写出一个即可）', answer: fmt(x), options: null,
+      explain: fmt(x) + ' 的百分位四舍五入后保留一位小数约是 ' + fmt(one) + '，所以可填 ' + fmt(x) + '（答案不唯一）。' };
     if (qt === 'choice') {
       // 干扰项保留一位小数后必须是不同的近似值（one±0.1/0.2），避免出现第二个正确选项
       var opts3 = Rng.shuffle(rng, [fmt(x), fmt(r2(one + 0.12)), fmt(r2(one - 0.08)), fmt(r1(one + 0.2))]);
-      return { prompt: '下面哪个数保留一位小数约是 ' + fmt(one) + ' ？（  ）', answer: fmt(x), options: opts3 };
+      return { prompt: '下面哪个数保留一位小数约是 ' + fmt(one) + ' ？（  ）', answer: fmt(x), options: opts3,
+        explain: fmt(x) + ' 用四舍五入法保留一位小数约是 ' + fmt(one) + '，正确选项是「' + fmt(x) + '」。' };
     }
-    return { prompt: '小华量得身高 ' + fmt(x) + ' 米，保留一位小数，他的身高大约是多少米？', answer: fmt(one), options: null };
+    return { prompt: '小华量得身高 ' + fmt(x) + ' 米，保留一位小数，他的身高大约是多少米？', answer: fmt(one), options: null,
+      explain: fmt(x) + ' 米用四舍五入法保留一位小数，大约是 ' + fmt(one) + ' 米。' };
   }
 
   if (sub === 'point-move') {
@@ -309,34 +355,49 @@ function conceptTyped(sub, qt, rng) {
     var right = rng() < 0.5;
     if (right) {
       var after = r2(p * 10);
-      if (qt === 'calc') return { prompt: '列式计算（小数点向右移动一位）：' + fmt(p) + ' × 10 = ？', answer: fmt(after), options: null };
-      if (qt === 'fill') return { prompt: '小数点向右移动一位，在 ____ 里填数：' + fmt(p) + ' × ____ = ' + fmt(after), answer: '10', options: null };
+      if (qt === 'calc') return { prompt: '列式计算（小数点向右移动一位）：' + fmt(p) + ' × 10 = ？', answer: fmt(after), options: null,
+        explain: '小数点向右移动一位，原数扩大到原来的 10 倍：' + fmt(p) + ' × 10 = ' + fmt(after) + '。' };
+      if (qt === 'fill') return { prompt: '小数点向右移动一位，在 ____ 里填数：' + fmt(p) + ' × ____ = ' + fmt(after), answer: '10', options: null,
+        explain: '小数点向右移动一位就是乘 10：' + fmt(p) + ' × 10 = ' + fmt(after) + '，所以填 10。' };
       if (qt === 'choice') {
         var opts4 = numOpt(rng, fmt(after), [fmt(r2(p * 100)), fmt(r2(p)), fmt(r2(p + 1))]);
-        return { prompt: '把 ' + fmt(p) + ' 扩大到原来的 10 倍，得到多少？（  ）', answer: fmt(after), options: opts4 };
+        return { prompt: '把 ' + fmt(p) + ' 扩大到原来的 10 倍，得到多少？（  ）', answer: fmt(after), options: opts4,
+          explain: '扩大到原来的 10 倍，小数点向右移动一位：' + fmt(p) + ' × 10 = ' + fmt(after)
+            + '，正确选项是「' + fmt(after) + '」。' };
       }
-      return { prompt: '1 米 = 10 分米，' + fmt(p) + ' 米是多少分米？', answer: fmt(after), options: null };
+      return { prompt: '1 米 = 10 分米，' + fmt(p) + ' 米是多少分米？', answer: fmt(after), options: null,
+        explain: '1 米 = 10 分米，' + fmt(p) + ' 米 = ' + fmt(p) + ' × 10 = ' + fmt(after) + ' 分米。' };
     }
     var xi = ri(rng, 11, 99);
     var afterL = r1(xi / 10);
-    if (qt === 'calc') return { prompt: '列式计算（小数点向左移动一位）：' + xi + ' ÷ 10 = ？', answer: fmt(afterL), options: null };
-    if (qt === 'fill') return { prompt: '小数点向左移动一位，在 ____ 里填数：' + xi + ' ÷ ____ = ' + fmt(afterL), answer: '10', options: null };
+    if (qt === 'calc') return { prompt: '列式计算（小数点向左移动一位）：' + xi + ' ÷ 10 = ？', answer: fmt(afterL), options: null,
+      explain: '小数点向左移动一位，原数缩小到原来的 1/10：' + xi + ' ÷ 10 = ' + fmt(afterL) + '。' };
+    if (qt === 'fill') return { prompt: '小数点向左移动一位，在 ____ 里填数：' + xi + ' ÷ ____ = ' + fmt(afterL), answer: '10', options: null,
+      explain: '小数点向左移动一位就是除以 10：' + xi + ' ÷ 10 = ' + fmt(afterL) + '，所以填 10。' };
     if (qt === 'choice') {
       var opts5 = numOpt(rng, fmt(afterL), [fmt(r1(xi / 100)), String(xi), fmt(r1(xi / 10 + 1))]);
-      return { prompt: '把 ' + xi + ' 缩小到原来的 1/10，得到多少？（  ）', answer: fmt(afterL), options: opts5 };
+      return { prompt: '把 ' + xi + ' 缩小到原来的 1/10，得到多少？（  ）', answer: fmt(afterL), options: opts5,
+        explain: '缩小到原来的 1/10，小数点向左移动一位：' + xi + ' ÷ 10 = ' + fmt(afterL)
+          + '，正确选项是「' + fmt(afterL) + '」。' };
     }
-    return { prompt: '计算器上显示 ' + xi + '，把这个数缩小到原来的十分之一，屏幕上变成多少？', answer: fmt(afterL), options: null };
+    return { prompt: '计算器上显示 ' + xi + '，把这个数缩小到原来的十分之一，屏幕上变成多少？', answer: fmt(afterL), options: null,
+      explain: '缩小到原来的十分之一，小数点向左移动一位：' + xi + ' ÷ 10 = ' + fmt(afterL) + '。' };
   }
 
   if (sub === 'unit') {
     var m = ri(rng, 2, 9), dm = m * 10;
-    if (qt === 'calc') return { prompt: '列式换算：' + m + ' × 10 = ？（分米）', answer: String(dm), options: null };
-    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + m + ' 米 = ____ 分米', answer: String(dm), options: null };
+    var unitWhy = '1 米 = 10 分米，' + m + ' 米 = ' + m + ' × 10 = ' + dm + ' 分米';
+    if (qt === 'calc') return { prompt: '列式换算：' + m + ' × 10 = ？（分米）', answer: String(dm), options: null,
+      explain: unitWhy + '，所以得数是 ' + dm + '。' };
+    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + m + ' 米 = ____ 分米', answer: String(dm), options: null,
+      explain: unitWhy + '，所以空格填 ' + dm + '。' };
     if (qt === 'choice') {
       var opts6 = numOpt(rng, String(dm), [String(m), String(dm * 10), String(dm + 10), String(dm - 10)]);
-      return { prompt: m + ' 米等于多少分米？（  ）', answer: String(dm), options: opts6 };
+      return { prompt: m + ' 米等于多少分米？（  ）', answer: String(dm), options: opts6,
+        explain: unitWhy + '，正确选项是「' + dm + '」。' };
     }
-    return { prompt: '做一条彩带用布 ' + m + ' 米，合多少分米？', answer: String(dm), options: null };
+    return { prompt: '做一条彩带用布 ' + m + ' 米，合多少分米？', answer: String(dm), options: null,
+      explain: unitWhy + '。' };
   }
 
   // compare：比较大小（calc 求差比较 / fill 填符号 / choice 比较式辨析 / apply 跳远情境）
@@ -344,8 +405,10 @@ function conceptTyped(sub, qt, rng) {
   while (b === a) b = r1(ri(rng, 11, 88) / 10);
   var sign = a > b ? '>' : '<';
   var hi = fmt(Math.max(a, b)), lo = fmt(Math.min(a, b)), diff = fmt(r1(Math.abs(a - b)));
-  if (qt === 'calc') return { prompt: '列式比一比：' + hi + ' − ' + lo + ' = ？（差大于 0，说明前者大）', answer: diff, options: null };
-  if (qt === 'fill') return { prompt: '比较大小，在 ____ 里填上合适的符号（>、< 或 =）：' + fmt(a) + ' ____ ' + fmt(b), answer: sign, options: null };
+  if (qt === 'calc') return { prompt: '列式比一比：' + hi + ' − ' + lo + ' = ？（差大于 0，说明前者大）', answer: diff, options: null,
+    explain: hi + ' − ' + lo + ' = ' + diff + '，差大于 0，说明 ' + hi + ' > ' + lo + '。' };
+  if (qt === 'fill') return { prompt: '比较大小，在 ____ 里填上合适的符号（>、< 或 =）：' + fmt(a) + ' ____ ' + fmt(b), answer: sign, options: null,
+    explain: '比较小数大小，从高位到低位逐位比较：' + fmt(a) + ' ' + sign + ' ' + fmt(b) + '，所以填 ' + sign + '。' };
   if (qt === 'choice') {
     // 比较式辨析：四个大小关系中只有一个成立
     var opp = sign === '>' ? '<' : '>';
@@ -356,10 +419,13 @@ function conceptTyped(sub, qt, rng) {
       fmt(a) + ' = ' + fmt(b),
       fmt(b) + ' ' + sign + ' ' + fmt(a)
     ]);
-    return { prompt: '下面大小关系正确的是？（  ）', answer: correct, options: opts7 };
+    return { prompt: '下面大小关系正确的是？（  ）', answer: correct, options: opts7,
+      explain: '从高位到低位逐位比较两个小数，' + fmt(a) + ' ' + sign + ' ' + fmt(b)
+        + ' 成立，正确选项是「' + correct + '」。' };
   }
   var ming = sign === '>' ? '小明' : '小红';
-  return { prompt: '跳远比赛，小明跳了 ' + fmt(a) + ' 米，小红跳了 ' + fmt(b) + ' 米，谁跳得更远？', answer: ming, options: null };
+  return { prompt: '跳远比赛，小明跳了 ' + fmt(a) + ' 米，小红跳了 ' + fmt(b) + ' 米，谁跳得更远？', answer: ming, options: null,
+    explain: '比较两个成绩：' + fmt(a) + ' ' + sign + ' ' + fmt(b) + '，' + ming + '跳得更远。' };
 }
 
 /* ------------------------------------------------------------------ *
@@ -395,7 +461,7 @@ function buildQuestion(plan, context, i) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: typed.explain || null },
     answerMode: 'input',
     data: data
   };

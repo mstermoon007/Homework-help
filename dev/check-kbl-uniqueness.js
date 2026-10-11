@@ -160,7 +160,10 @@ function scanBundles() {
       .replace(/STAT_THEMES\s*=\s*\{[\s\S]*?\n\};/g, '')
       // P28-HOLLOW-02：shape 的 SHAPE_THEME 同为「ID 引用键查表」（键=kpId；
       // 值=生成器自有教学素材，非 canonical 载荷），一并剥离。
-      .replace(/SHAPE_THEME\s*=\s*\{[\s\S]*?\n\};/g, '');
+      // P34-H1：shape 的 NO_GRAPHIC_VIEW_KPS 同为「ID 引用键查表」（键=kpId；
+      // 值=1 去图标记，无 name/semantic/unitName 载荷；人工数据请求 H6 签批），一并剥离。
+      .replace(/SHAPE_THEME\s*=\s*\{[\s\S]*?\n\};/g, '')
+      .replace(/NO_GRAPHIC_VIEW_KPS\s*=\s*\{[\s\S]*?\n\};/g, '');
     var rec = {
       file: rel,
       // 副本判定：内联 KC/Runtime 会挂载全局（shim 委托不会）

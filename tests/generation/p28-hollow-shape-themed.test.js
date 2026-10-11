@@ -48,6 +48,13 @@ const PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-se
 const SHAPE = 'generator:shape-recognition';
 const THEMED_QTS = ['choice', 'judge', 'fill', 'geometry', 'apply'];
 
+// P34-H1（人工数据请求 H6 签批）：三视图/搭建推算 3 KP 纯文字形态，graphic 显式 null
+const NO_GRAPHIC_VIEW_KPS = new Set([
+  'math-g4-down-u02-k002', // 由平面到立体
+  'math-g5-down-u01-k001', // 从不同角度观察立体图形
+  'math-g5-down-u01-k002'  // 根据平面视图搭建立体图形
+]);
+
 // 探针同款 flat 模板指纹（修复后必须零命中）
 const SHAPE_FLAT = /请写出该图形的名称|观察图中的图形，写出它的名称|图中画了一个图形，它叫什么名字|图中共有几个|下列哪个图形属于|下列哪个是.{0,6}的特征|的特征是：|图中显示的是什么角|下列哪个图形属于角|在教室里找一找|先说一说它是谁/;
 
@@ -110,14 +117,28 @@ test('maker：不落 flat 模板、含 KP 名、契约通过、指纹互异、ju
       assert.equal(q.questionType, qt, tag + ' 题型回显');
       assert.equal(q.knowledgePointId, kp, tag + ' KP 回显');
 
-      // 不落 flat 模板 + 题面含 KP 名语义
+      // 不落 flat 模板 + 题面无 KP 名机械前缀（P34-07）+ 含概念要素
       assert.ok(!SHAPE_FLAT.test(String(q.prompt)), tag + ' 不得命中 flat 模板: ' + q.prompt);
-      assert.ok(kpName && String(q.prompt).indexOf(kpName) !== -1, tag + ' 题面应含 KP 名「' + kpName + '」: ' + q.prompt);
+      // P34-07：KP 名只可在特征/图形标签语义中按需出现，禁止 name+'：' 机械前缀
+      assert.ok(!String(q.prompt).startsWith(kpName + '：'), tag + ' 题面不得含 KP 名机械前缀「' + kpName + '：」: ' + q.prompt);
+      // 概念要素在场（图形/特征/场景/物品词至少其一）
+      assert.ok(/[\u4e00-\u9fa5]{2,}/.test(String(q.prompt).replace(/判断对错——|[「」。？（）\d\s×＋＝____]/g, '')),
+        tag + ' 题面应含概念要素: ' + q.prompt);
       assert.ok(q.answer && q.answer.value !== '' && q.answer.value != null, tag + ' 答案非空');
 
       // 证据包络：mode/graphic/shapeName/steps 保持，不挂算术 operation
       assert.ok(q.data && q.data.mode === qt, tag + ' data.mode 回显');
-      assert.ok(q.data.graphic && q.data.graphic.type, tag + ' graphic 在场');
+      // P34-H1（人工数据请求 H6，2026-10-08 签批）：三视图/搭建推算 3 KP 题面文字自含，
+      // 去图后 graphic 必须显式为 null、shapeName 保留（geometry 经 graphicOrInstruction）；
+      // 其余 67 KP 图形仍必须在场。
+      if (NO_GRAPHIC_VIEW_KPS.has(kp)) {
+        assert.equal(q.data.graphic, null, tag + ' H6 签批去图：graphic 必须为 null');
+        if (qt === 'geometry') {
+          assert.ok(!/观察下图/.test(String(q.prompt)), tag + ' 去图 geometry 不得再有「观察下图」引导: ' + q.prompt);
+        }
+      } else {
+        assert.ok(q.data.graphic && q.data.graphic.type, tag + ' graphic 在场');
+      }
       assert.ok(q.data.shapeName, tag + ' shapeName 在场');
       assert.equal(q.data.steps, qt === 'apply' ? 2 : 1, tag + ' steps');
       assert.ok(q.data.operation === undefined, tag + ' 不得挂 data.operation');

@@ -34,6 +34,16 @@ var FAMILY = {
   'mixed-calculation': { op: 'mixed' }
 };
 
+// P34-12：解析必须讲清「为什么这样算」，不再用题面复述（问号尾）或裸算式冒充 explanation。
+// 运算意义词为各运算的教学含义（与 buildApplyStory 的情境语义一一对应），按生成器运算取。
+var OP_MEANING = {
+  add: '把两部分合起来求总数，用加法',
+  sub: '从总数里去掉一部分求剩余，用减法',
+  mult: '求几个相同加数的和，用乘法',
+  div: '把总数平均分成几份、求每份是多少，用除法',
+  mixed: '按照先乘除后加减的运算顺序计算'
+};
+
 // P28-GEO-NATIVE-02：分数乘法单元 geometry 原生 maker（g6-up-u02-k002/k003/k004）。
 // 源 Excel 将该单元标在「图形与几何」域，三 KP 各有 geometry ALLOW 行，此前被 shape
 // kp=0 泛型兜底成无关认图题。mixed 生成器 kp=1 且声明 geometry 后自然承接，
@@ -41,7 +51,7 @@ var FAMILY = {
 function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
   var rng = Rng.createSeededRandom(seedFn(plan, context, i));
   var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
-  var prompt, answer, graphic, modelKind;
+  var prompt, answer, graphic, modelKind, geoWhy = null;
 
   if (kpName.indexOf('混合') !== -1) {
     // k003：运算律——乘法分配律的线段模型 (1/4 + 2/4) × 8
@@ -51,6 +61,8 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     prompt = '看图用乘法分配律简便计算：一条线段长 ' + total3 + ' 米，先取它的 1/4，' +
       '再取它的 2/4，两次一共取了多少米？(1/4 + 2/4) × ' + total3 + ' = ____';
     answer = String(part3);
+    geoWhy = '两次共取全长的 1/4 + 2/4 = 3/4，用乘法分配律：(1/4 + 2/4) × ' + total3
+      + ' = 3/4 × ' + total3 + ' = ' + part3 + '（米）';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -65,6 +77,8 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     prompt = '看图解决问题：果园里共有 ' + total4 + ' 棵果树，苹果树占 3/4，' +
       '红富士苹果树又占苹果树的 2/3。红富士苹果树有多少棵？____';
     answer = String(answer4);
+    geoWhy = '连续求一个数的几分之几要找准单位「1」：先求苹果树 ' + total4 + ' × 3/4 = '
+      + first4 + '（棵），再求红富士 ' + first4 + ' × 2/3 = ' + answer4 + '（棵）';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -80,6 +94,8 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     prompt = '看图列式计算：一袋面粉重 ' + whole + ' 千克，做点心用去了它的 ' +
       num + '/' + den + '，用去了多少千克？' + whole + ' × ' + num + '/' + den + ' = ____';
     answer = String(part);
+    geoWhy = '求一个数的几分之几是多少，用单位「1」的量乘对应分率：' + whole + ' × '
+      + num + '/' + den + ' = ' + answer + '（千克）';
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
@@ -95,7 +111,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     context: plan.contextType || 'standard',
     seed: seedFn(plan, context, i),
     prompt: prompt,
-    answer: { value: answer, acceptable: [] },
+    answer: { value: answer, acceptable: [], explanation: geoWhy + '。' },
     answerMode: 'input',
     data: {
       mode: 'geometry',
@@ -264,6 +280,9 @@ function createArithmeticGenerator(spec) {
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var qt = plan.questionTypeId;
         var prompt, outAnswer = answer, options = null;
+        // P34-12：题型分型讲解（运算意义 + 完整演算），统一在各分支赋值
+        var fullExpr = Arith.formatExpression(structure.operands, structure.operators);
+        var explanationText;
 
         if (qt === 'fill') {
           // P30-GEN-06（P30-16）：fill = 逆推填空（空出一个操作数，已知得数求操作数），
@@ -280,10 +299,14 @@ function createArithmeticGenerator(spec) {
           }
           prompt = '填空：' + fillParts.join(' ') + ' = ' + answer;
           outAnswer = ops[blankIdx];
+          // 解析：先指认空格应填的数，再代入验证等式成立
+          explanationText = '空格里填 ' + outAnswer + '：' + fullExpr + ' = ' + answer + '，等式成立';
         } else if (qt === 'apply') {
           // P30-GEN-06：apply = 真实情境迁移，直接生成情境题面（不依赖 finisher 包装，
           // 避免「= ?」被 contextPresent 短路而退化为裸算式）。
           prompt = buildApplyStory(structure, op);
+          // 解析：情境 → 运算意义 → 列式演算
+          explanationText = OP_MEANING[op] + '，列式 ' + fullExpr + ' = ' + answer;
         } else if (qt === 'choice') {
           // P30-GEN-06：choice = 结果匹配。题干给出得数，选项为算式，选出结果等于该
           // 数的算式。题干不含符号算式，核心骨架与 calc/fill/apply 互异。
@@ -292,8 +315,13 @@ function createArithmeticGenerator(spec) {
           var distractorExprs = buildDistractorExpressions(structure, answer);
           options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
           outAnswer = correctExpr;
+          // 解析：指认正确算式并验算
+          explanationText = '结果等于 ' + answer + ' 的算式是 ' + correctExpr +
+            '（验算：' + correctExpr + ' = ' + answer + '）';
         } else {
-          prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
+          prompt = fullExpr + ' = ?';
+          // 解析：运算意义 + 完整演算
+          explanationText = OP_MEANING[op] + '：' + fullExpr + ' = ' + answer;
         }
 
         questions.push({
@@ -312,8 +340,8 @@ function createArithmeticGenerator(spec) {
           context: plan.contextType != null ? plan.contextType : 'standard',
           seed: seedFor(plan, context, i),
           prompt: prompt,
-          // D004 修复：补 answer.explanation，包含运算表达式与结果，供答题页显示解题步骤
-          answer: { value: String(outAnswer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
+          // P34-12：explanation 为题型分型真讲解（运算意义+演算），不再 prompt.replace 抄题面
+          answer: { value: String(outAnswer), acceptable: [], explanation: explanationText },
           answerMode: 'input',
           // P28-FORM-CONTRACT-01：声明横向算式作答框内联到等号后（替代渲染器正则识别）
           response: { layout: 'inline-after-equals' },

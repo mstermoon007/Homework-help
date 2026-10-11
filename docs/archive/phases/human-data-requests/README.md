@@ -59,6 +59,24 @@
 
 ---
 
+## H6｜P34-H1：三视图/搭建立体 15 行证据规则图形锚定删除授权（需教学评审 + 授权决策）
+
+> **状态：已签批并执行完成（2026-10-08，用户「批准，按请求单执行」）。check-all 30/0/1。**
+
+| 项 | 内容 |
+|---|---|
+| **需要** | 授权对 3 个 KP × 5 题型共 **15 行** evidence-rules 的 `required` 删除全部 `data.graphic.*` 锚定（type/subtype/params.labelSides/params.unit/params.unitPx），保留 `data.mode`、`data.steps`、`data.shapeName=立体图形`。**执行时配套发现（2026-10-08 已执行）**：同一图形强制还存在于 `qt-intent.json` 3 行 geometry 的 `assessment`（graphicRole=carrier 且 allowedRepresentations=["graphic"]，KpSemantic checkIntentAlignment 对 carrier 强制有图）——已按同一签批意图改为 graphicRole=null、allowedRepresentations=["numeric"]；其余 12 行 graphicRole=auxiliary（图可选，与无图不冲突）保持不动 |
+| **涉及 KP** | `math-g4-down-u02-k002`（由平面到立体）、`math-g5-down-u01-k001`（从不同角度观察立体图形）、`math-g5-down-u01-k002`（根据平面视图搭建立体图形） |
+| **为什么** | 这 15 行题目全部由文字自含视图数据（「从正面看是 3 个正方形、从上面看是 4 个正方形……」），现行锚定强制配 `cuboid` 长方体盒子图——既非题设的小正方体组合体，也不承载任何解题信息，属图文错配；且**不能改为画组合体**（学生数方块即得「至少几个」答案，摧毁空间推理考点），画三视图则与文字完全重复。标准练习册形态即「文字三视图 + 无图」 |
+| **契约可行性** | 已核实：仅 geometry 题型受 `graphicOrInstruction` 约束，该不变式在有 `data.shapeName` 时即通过；choice/judge/fill/apply 契约不要求图。去图后 shapeName 保留，契约全满足 |
+| **不涉及的 3 个同族 KP** | g3-up-u01-k002（反推观察角，无图形锚定，单体观察配图正确）、g3-up-u01-k003（观察正方体，cube 锚定且配图正确）、g4-down-u02-k001（无图形锚定；其 2 条组合体条目的去图属生成器侧改动，不涉及 T2，另立任务） |
+| **数据文件** | `p34-h1-view-graphic-anchor-removal-15.csv`（kp_id, kp_name, question_type, current_graphic_required_fields, requested_change, kept_fields, rationale, sample_prompt） |
+| **禁止** | AI 自行手编 T2 证据规则；新增 cube-assembly/three-view 渲染器（教学上泄题/冗余，已否决）；改题面/答案文案（本请求只动证据锚定，题面零变化） |
+| **评审后动作（须评审通过方启动）** | ① 按签批定稿改 `kbl/teaching/evidence-rules.json` 15 行并同步 T3 运行时副本；② shape.js 对这 3 KP 的 themed 分支去 `data.graphic` 输出、geometry 引导语由「观察下图（长方体），想一想——」改为纯文字形态（题面设问本体不动）；③ 重建 bundle → 重跑 variation/misconception 派生器 → 金题集两段式重建 → 三矩阵 --write 重冻 → npm test/6a/6g/check-all（30/0/1）→ 追加 `docs/P34/change-log.md` |
+| **风险** | 低：题面/答案零变化，6b/6a 生成指纹预期不变；变化的仅是 KpSemantic 对 graphic 字段的要求与 SVG 渲染数（553 → 减少 15 个图形），6g L2 图形扫描面同步缩小 |
+
+---
+
 ## 汇总表
 
 | # | 事项 | 类型 | 阻塞发布 | 提供方 |
@@ -68,3 +86,4 @@
 | H3 | 58 KP 状态 | 产品决策 | 否 | 产品 |
 | H4 | F-TYPE-2 Frozen 修复授权 | 授权 | 否 | 项目负责人 |
 | H5 | adaptive/favicon/低容量文案 | 可选 | 否 | 产品 |
+| H6 | P34-H1 三视图 15 行图形锚定删除 | 教学评审+授权 | 否（阻塞 P34 挂账②收口） | 项目负责人/教研 |

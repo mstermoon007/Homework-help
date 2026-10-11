@@ -221,6 +221,7 @@ var WHITELIST = [
   ['math-g3-up-u03-k002', 'geometry', '10', 'L2', 'C-UNIT', 'AS-16C #6 延伸：题面已述「平均分成 10 份」，图形未新增信息（用户裁决白名单）'],
   ['math-g3-up-u07-k004', 'choice', '1', 'L2', 'GRAPHIC-COINCIDENCE', '图形标注数值与答案数值巧合，图形承载结构信息非数量信息（逐行取证）'],
   ['math-g3-up-u07-k004', 'geometry', '1', 'L2', 'GRAPHIC-COINCIDENCE', '图形标注数值与答案数值巧合，图形承载结构信息非数量信息（逐行取证）'],
+  ['math-g4-down-u02-k001', 'fill', '3', 'L2', 'GRAPHIC-COINCIDENCE', '巧合：答案 3=同时看到的面数；SVG 边长标签 3cm=cuboid 边长，语义无关（逐行取证）'],
   ['math-g4-down-u02-k002', 'fill', '3', 'L2', 'GRAPHIC-COINCIDENCE', '图形标注数值与答案数值巧合，图形承载结构信息非数量信息（逐行取证）'],
   ['math-g4-down-u02-k002', 'geometry', '3', 'L2', 'GRAPHIC-COINCIDENCE', '图形标注数值与答案数值巧合，图形承载结构信息非数量信息（逐行取证）'],
   ['math-g4-down-u08-k004', 'fill', '755', 'L2', 'GRAPHIC-DATA', '图表读数目标本身，图形承载读数教学目标（逐行取证）'],

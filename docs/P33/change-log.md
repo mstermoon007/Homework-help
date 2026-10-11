@@ -32,6 +32,26 @@
 
 ## 记录（新 → 旧）
 
+### P33-17｜百度收录主动推送首批 9 URL + 每日配额受限登记（2026-10-08）
+
+- modified:
+  - 无（纯 API 调用运维操作，零文件改动）。
+- deleted:
+  - 无。
+- reason: 用户指令「帮我部署百度验证文件」后直接提供推送接口地址（含 token，已注册站点 `home.modouyu.top`，验证已完成；token 为敏感凭据，本日志脱敏不记原文）。执行百度主动推送：①sitemap 提取 382 URL 一次性提交 → HTTP 400 `over quota`（整批拒绝，未消耗配额）；②改分批：核心 8 页（faq / index / knowledge-index / 5 条 g1-down 知识页）→ HTTP 200 `{"remain":1,"success":8}`（今日配额 9 条）；③最后 1 条配额推送 SEO 入口页 select.html → `{"remain":0,"success":1}`。今日累计成功 9 条。剩余 373 条（practice / contact / math-types / subject-types 4 个根页 + 369 知识页）待明日配额重置后继续推送；Baiduspider 仍会经 robots.txt 的 Sitemap 指令自行发现全站，推送仅为加速器。
+- tests: ①382 条整批提交返回 400 over quota（响应体解析确认）；②8 条核心页 200 + success:8 + remain:1；③select.html 200 + success:1 + remain:0；④被拒批次零消耗（后续 8 条成功证明配额未被 382 批次占用）；⑤零文件改动，无门禁影响面。
+- risk: 低。①推送接口为官方加速通道，不改变收录判定（内容质量仍由百度评估）；②每日配额约 9 条（百度按站点质量动态调整），剩余 373 条需多日分批推送或依赖 Baiduspider 的 sitemap 自发现；③token 已进入会话与命令历史，若怀疑泄露可在百度站长平台重新生成（旧 token 即失效）；④本条为纯运维记录，无 git 改动。
+
+### P33-16｜IndexNow 收录提交（Bing）+ key 文件落地（2026-10-08）
+
+- modified:
+  - 新增根目录 `f50aaf9fa36f1f4482b665214f418996.txt`（IndexNow key 文件，32 字节 hex；同时已部署到服务器 `/var/www/Homework-help/`，owner www-data:www-data）。
+- deleted:
+  - 无。
+- reason: 用户指令「执行收录提交」。前置诊断（同日）：DeepSeek 搜索称站点「无法从公网访问」，实测证实站点公网可达（模拟 DeepSeekBot UA 200 / 海外 Google 云段 IP 历史访问 200 / robots.txt 全开放），nginx 日志零真实 AI 爬虫访问——根因是 Bing/DeepSeek 索引空白（新域名无外链、未提交收录），非站点宕机。最小闭环走 IndexNow 协议（Bing 官方收录通道，无需账号）：①`openssl rand -hex 16` 生成 key `f50aaf9fa36f1f4482b665214f418996`；②key 文件落仓库根 + 服务器站点根；③公网核验 `https://home.modouyu.top/f50aaf9fa36f1f4482b665214f418996.txt` 返回 200 text/plain 内容一致；④从 sitemap 提取 382 URL 构建 POST 载荷（host / key / keyLocation / urlList）；⑤`api.indexnow.org` 返回 403 SiteVerificationNotCompleted（key 异步核验未完成）→ 改用 `www.bing.com/indexnow` 端点 **HTTP 200 提交成功**；⑥服务器日志取证：提交后 30 秒 bingbot（40.77.167.7）已主动核验 key 文件 200 OK，所有权验证闭环。百度站长平台需用户账号 token（`data.zz.baidu.com/urls` 接口），无法自动化，待人工办理。
+- tests: ①key 文件公网 curl 200 且内容与本地一致；②Bing 端点 POST 返回 HTTP 200（382 URL 全部受理）；③nginx access.log 出现 bingbot 核验记录（200 32）；④sitemap URL 数 382 与 5.1.0 部署 L1 验证口径一致；⑤零生产代码改动——不改页面/SW/robots.txt/生产 JS，key 文件不进 SW 缓存清单、不进 DOM，门禁影响面为零。
+- risk: 低。①key 文件为静态 SEO 资产，无运行时逻辑；②**下次发布必做**：git archive 白名单须追加 `f50aaf9fa36f1f4482b665214f418996.txt`，否则下次原子切换部署会丢失 key 文件导致 IndexNow 失效（本记录即留痕）；③百度收录未完成（需账号），AI 搜索可见性改善仅覆盖 Bing/Yandex/Seznam/Naver 系；④key 文件当前未 git commit，等用户显式指令；⑤文件名含 key 本身属 IndexNow 协议设计（key 文件名即验证凭据），非泄露。
+
 ### P33-15｜architecture/layers.json 归档 + 根目录 architecture/ 物理清零（2026-10-08）
 
 - modified:

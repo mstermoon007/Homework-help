@@ -87,13 +87,16 @@ function finish(q, prompt, answer, acceptable, explanation) {
     acceptable: (Array.isArray(acceptable) ? acceptable : []).filter(function (x) {
       return (typeof x === 'string' || typeof x === 'number') && String(x) !== value;
     }),
-    explanation: explanation || (prompt.replace(/[？?]\s*$/, '') + ' = ' + answer)
+    // P34-13：不再用「题面 + = + 答案」机械拼解析（对情境/周期/比例题会拼出病句或抄题面）。
+    // 各 maker 有真讲解时显式传入；缺省 null——汇聚层仅对完整「算式 = ？」题面补演算，
+    // 其余按缺失处理，不用题面冒充 explanation（语义关系说理待各 maker 按需补，登记不遮盖）。
+    explanation: explanation || null
   };
   return q;
 }
 
 /** 选择题收尾：options 洗牌 + correctIndex + 答案为正确选项文本（与 selection.js 契约一致） */
-function finishChoice(q, rng, correct, wrongs) {
+function finishChoice(q, rng, correct, wrongs, explanation) {
   var seen = {}, pool = [];
   [correct].concat(wrongs).forEach(function (o) {
     o = String(o);
@@ -107,7 +110,7 @@ function finishChoice(q, rng, correct, wrongs) {
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
   q.data.correctIndex = options.indexOf(String(correct));
-  return finish(q, q.prompt, String(correct), [], null);
+  return finish(q, q.prompt, String(correct), [], explanation || null);
 }
 
 /* ================================================================
@@ -160,7 +163,7 @@ function makeAddRelFill(plan, context, i) {
   });
   return finish(q, '看线段图填空：第一条线段表示 ' + a + '，第二条线段表示 ' + b
     + '，两条线段合起来表示（  ）。', a + b, [String(a + b)],
-    a + ' + ' + b + ' = ' + (a + b));
+    '两条线段合起来的总数 = 第一条 + 第二条：' + a + ' + ' + b + ' = ' + (a + b));
 }
 
 function makeAddRelApply(plan, context, i) {
@@ -205,8 +208,11 @@ function makeAddRelChoice(plan, context, i) {
   });
   q.prompt = '线段图把总数分成两部分：第一部分是 ' + a + '，第二部分是 ' + b
     + '。求总数应该用下面哪个算式？（  ）';
-  return finishChoice(q, rng, a + ' + ' + b,
-    [a + ' − ' + b, b + ' − ' + a, a + ' × ' + b]);
+  var addExpr = a + ' + ' + b;
+  return finishChoice(q, rng, addExpr,
+    [a + ' − ' + b, b + ' − ' + a, a + ' × ' + b],
+    '线段图两部分合起来求总数，用加法：' + a + ' + ' + b + ' = ' + (a + b)
+      + '，正确选项是「' + addExpr + '」。');
 }
 
 function makeAddRelGeometry(plan, context, i) {
@@ -275,7 +281,7 @@ function makePeriodFill(plan, context, i) {
   // 第 k 个图形唯一解为 p.shape，无等价答案，acceptable 必须为空。
   return finish(q, '找规律：「' + p.shapes.join('') + '」依次重复出现，第 ' + p.period
     + ' 个图形是 ____。', p.shape, [],
-    p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
+    '用有余数的除法找周期中的位置：' + p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
       + '，余数 ' + (p.rem === 0 ? '0（取末位）' : p.rem) + ' → 「' + p.shape + '」');
 }
 
@@ -293,7 +299,7 @@ function makePeriodApply(plan, context, i) {
   });
   return finish(q, '学校大门前按「' + set.join('、') + '」的顺序循环挂彩旗，第 ' + k
     + ' 面彩旗是什么颜色？', which, [which],
-    k + ' ÷ ' + n + ' = ' + Math.floor(k / n) + '……' + rem
+    '用有余数的除法找周期中的位置：' + k + ' ÷ ' + n + ' = ' + Math.floor(k / n) + '……' + rem
       + '，余数 ' + (rem === 0 ? '0（取每组最后）' : rem) + ' → ' + which);
 }
 
@@ -307,7 +313,10 @@ function makePeriodChoice(plan, context, i) {
   q.prompt = '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
     + ' 个图形是哪个？（  ）';
   var distractors = PATTERN_SHAPES.filter(function (s) { return s !== p.shape; }).slice(0, 3);
-  return finishChoice(q, rng, p.shape, distractors);
+  var periodWhy = '用有余数的除法找周期位置：' + p.period + ' ÷ ' + p.n + ' = ' + p.quotient
+    + '……' + p.rem + '，余数 ' + (p.rem === 0 ? '0 取每组最后一个' : p.rem + ' 对应每组第 ' + p.rem + ' 个')
+    + '图形「' + p.shape + '」，正确选项是「' + p.shape + '」。';
+  return finishChoice(q, rng, p.shape, distractors, periodWhy);
 }
 
 function makePeriodGeometry(plan, context, i) {
@@ -373,7 +382,8 @@ function makeScaleFill(plan, context, i) {
   });
   return finish(q, '把一个边长 ' + s.orig + ' 厘米的正方形按 ' + ratio + ' 的比'
     + (s.enlarge ? '放大' : '缩小') + '，变换后正方形的边长是（  ）厘米。', s.next, [String(s.next)],
-    s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next);
+    (s.enlarge ? '放大到原来的 ' + s.k + ' 倍：' : '缩小到原来的 1/' + s.k + '：')
+      + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next + ' 厘米');
 }
 
 function makeScaleApply(plan, context, i) {
@@ -404,8 +414,12 @@ function makeScaleChoice(plan, context, i) {
   });
   q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
     + '，原长 ' + s.orig + ' 厘米，变换后的长是多少厘米？（  ）';
+  var scaleWhy = (s.enlarge
+    ? '按 ' + ratio + ' 放大，长扩大到原来的 ' + s.k + ' 倍：' + s.orig + ' × ' + s.k + ' = ' + s.next
+    : '按 ' + ratio + ' 缩小，长缩小到原来的 1/' + s.k + '：' + s.orig + ' ÷ ' + s.k + ' = ' + s.next)
+    + ' 厘米，正确选项是「' + s.next + '」。';
   return finishChoice(q, rng, String(s.next),
-    [String(s.orig), String(s.next + s.k), String(Math.max(1, s.next - 1))]);
+    [String(s.orig), String(s.next + s.k), String(Math.max(1, s.next - 1))], scaleWhy);
 }
 
 function makeScaleGeometry(plan, context, i) {
@@ -492,8 +506,11 @@ function makePropChoice(plan, context, i) {
   });
   q.prompt = '买 ' + a + ' 千克苹果付了 ' + (a * unit) + ' 元，买 ' + b
     + ' 千克同样的苹果要付多少元？（  ）';
+  var propAns = b * unit + ' 元';
   return finishChoice(q, rng, String(b * unit) + ' 元',
-    [String((a * unit) + b) + ' 元', String(a * b) + ' 元', String(a + b + unit) + ' 元']);
+    [String((a * unit) + b) + ' 元', String(a * b) + ' 元', String(a + b + unit) + ' 元'],
+    '单价一定，总价与数量成正比例：先归一求单价 ' + (a * unit) + ' ÷ ' + a + ' = ' + unit
+      + ' 元，再算 ' + b + ' 千克 ' + b + ' × ' + unit + ' = ' + (b * unit) + ' 元，正确选项是「' + propAns + '」。');
 }
 
 function makePropGeometry(plan, context, i) {
@@ -562,11 +579,11 @@ function makeMapFill(plan, context, i) {
   if (i % 2 === 0) {
     return finish(q, '在比例尺是 ' + m.label + ' 的地图上，量得两地间的图上距离是 ' + m.mapCm
       + ' 厘米，两地的实际距离是（  ）米。', m.realM, [String(m.realM)],
-      m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+      '实际距离 = 图上距离 × 比例尺后项：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
   }
   return finish(q, '在比例尺是 ' + m.label + ' 的地图上，实际距离 ' + m.realM + ' 米（' + m.realCm
     + ' 厘米）的两地，图上距离是（  ）厘米。', m.mapCm, [String(m.mapCm)],
-    m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
+    '图上距离 = 实际距离 ÷ 比例尺后项：' + m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
 }
 
 function makeMapApply(plan, context, i) {
@@ -579,7 +596,7 @@ function makeMapApply(plan, context, i) {
   return finish(q, '小明要从' + places[0] + '走到' + places[1] + '，他在比例尺为 ' + m.label
     + ' 的地图上量得两地相距 ' + m.mapCm + ' 厘米。照这样计算，' + places[0] + '到' + places[1]
     + '实际要走多少米？', m.realM, [String(m.realM)],
-    '实际距离 ' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+    '实际距离 = 图上距离 × 比例尺后项：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
 }
 
 function makeMapChoice(plan, context, i) {
@@ -590,7 +607,9 @@ function makeMapChoice(plan, context, i) {
   });
   q.prompt = '一幅地图的比例尺是 ' + m.label + '，图上距离 ' + m.mapCm + ' 厘米表示的实际距离是多少米？（  ）';
   var wrongs = [m.realM + m.factor / 100, m.realM + 100, m.mapCm * m.factor];
-  return finishChoice(q, rng, String(m.realM), wrongs.map(String));
+  var mapWhy = '实际距离 = 图上距离 × 比例尺后项：' + m.mapCm + ' × ' + m.factor + ' = '
+    + m.realCm + ' 厘米 = ' + m.realM + ' 米，正确选项是「' + m.realM + '」。';
+  return finishChoice(q, rng, String(m.realM), wrongs.map(String), mapWhy);
 }
 
 /* ================================================================
@@ -673,7 +692,7 @@ function makeRatioFill(plan, context, i) {
   var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
   return finish(q1, '根据比例的基本性质填空：x∶' + s.b + ' = ' + s.c + '∶' + s.d + '，'
     + 'x × ' + s.d + ' = ' + s.b + ' × ' + s.c + ' = ' + (s.b * s.c) + '，x =（  ）。',
-    s.x, [String(s.x)], 'x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
+    s.x, [String(s.x)], '比例中两个内项的积等于两个外项的积：x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
 }
 
 function makeRatioApply(plan, context, i) {
@@ -704,7 +723,9 @@ function makeRatioChoice(plan, context, i) {
     var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
     q0.prompt = '根据比例的基本性质解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d
       + '（x × ' + s.d + ' = ' + s.b + ' × ' + s.c + '），x = ？（  ）';
-    return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)]);
+    var ratioSolveWhy = '比例中两个内项的积等于两个外项的积：x = ' + s.b + ' × ' + s.c + ' ÷ '
+      + s.d + ' = ' + s.x + '，正确选项是「' + s.x + '」。';
+    return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)], ratioSolveWhy);
   }
   var p = equalRatiosPick(rng);
   var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
@@ -716,7 +737,10 @@ function makeRatioChoice(plan, context, i) {
     p.a + '∶' + (p.b + 1) + ' 和 ' + p.c + '∶' + p.d,
     (p.a + 1) + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
   ];
-  return finishChoice(q1, rng, correct, wrongs);
+  var ratioMeanWhy = '比例的基本性质：两外项积 ' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d)
+    + '，两内项积 ' + p.b + ' × ' + p.c + ' = ' + (p.b * p.c) + '，两积相等（比值也相等），可以组成比例，正确选项是「'
+    + correct + '」。';
+  return finishChoice(q1, rng, correct, wrongs, ratioMeanWhy);
 }
 
 /* ================================================================

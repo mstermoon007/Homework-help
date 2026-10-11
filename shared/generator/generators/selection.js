@@ -106,12 +106,22 @@ function createSelectionGenerator(spec) {
     var expr = Arith.formatExpression(base.structure.operands, base.structure.operators);
     var qt = plan.questionTypeId;
 
+    // P34-14：算式讲解只复述该运算自身的意义与计算结果，不引入题外信息
+    var OPS_WORD = { '+': '加法是把两个数合起来', '−': '减法是从一个数里去掉一部分', '-': '减法是从一个数里去掉一部分',
+      '×': '乘法是求几个相同加数的和', '*': '乘法是求几个相同加数的和',
+      '÷': '除法想乘法口诀求商', '/': '除法想乘法口诀求商' };
+    var opsArr = base.structure.operators || [];
+    var lead = opsArr.length > 1
+      ? '按从左到右的顺序逐步计算'
+      : (OPS_WORD[opsArr[0]] || '直接计算');
+    var whyCore = lead + '：' + expr + ' = ' + base.answer;
+
     // P30-GEN-06（P30-16）：selection-* 生成器可能被 KP 绑定承接多题型（fill/choice/judge/apply/calc），
     // 题面须按 qt 分化骨架，不能恒用创建时的 mode。
     if (qt === 'fill') {
       var qFill = buildBase(plan, context, i, { mode: 'fill', operation: base.operation, steps: base.structure.steps });
       qFill.prompt = '计算：' + expr + ' = ____';
-      qFill.answer = { value: String(base.answer), acceptable: [] };
+      qFill.answer = { value: String(base.answer), acceptable: [], explanation: whyCore + '，所以空格填 ' + base.answer + '。' };
       return qFill;
     }
 
@@ -123,7 +133,7 @@ function createSelectionGenerator(spec) {
       var options = Rng.shuffle(base.rng, distractors.concat([base.answer]).map(String));
       var qChoice = buildBase(plan, context, i, { mode: 'choice', operation: base.operation, steps: base.structure.steps });
       qChoice.prompt = '请选择正确答案：' + expr + ' = ？';
-      qChoice.answer = { value: String(base.answer), acceptable: [] };
+      qChoice.answer = { value: String(base.answer), acceptable: [], explanation: whyCore + '，正确选项是「' + base.answer + '」。' };
       qChoice.data.options = options;
       qChoice.data.correctIndex = options.indexOf(String(base.answer));
       return qChoice;
@@ -153,7 +163,7 @@ function createSelectionGenerator(spec) {
     // apply / calc：直接写得数形态，前缀与 fill/choice/judge 区分
     var qOther = buildBase(plan, context, i, { mode: mode, operation: base.operation, steps: base.structure.steps });
     qOther.prompt = '直接写得数：' + expr + ' = ____';
-    qOther.answer = { value: String(base.answer), acceptable: [] };
+    qOther.answer = { value: String(base.answer), acceptable: [], explanation: whyCore + '。' };
     return qOther;
   }
 

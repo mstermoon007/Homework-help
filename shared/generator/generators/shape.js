@@ -69,7 +69,9 @@ var SHAPE_FEATURES = {
   'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '对角线相等且互相垂直平分'], examples: ['手帕', '棋盘格'] },
   'triangle': { name: '三角形', features: ['3条边', '3个角', '内角和180度'], examples: ['三角尺', '屋顶'] },
   'circle': { name: '圆', features: ['没有直线边', '到圆心距离相等', '周长=2πr'], examples: ['硬币', '时钟面'] },
-  'parallelogram': { name: '平行四边形', features: ['对边平行且相等', '对角互补'], examples: ['推拉窗'] },
+  // P34-01：「对角互补」是初中性质，非平行四边形认识（一年级下直观认识）年级适切特征，
+  // 换为低年级可感知的真特征（原特征句会作为 judge 真命题/choice 正确项直接出给学生）
+  'parallelogram': { name: '平行四边形', features: ['对边平行且相等', '有四条边和四个角'], examples: ['推拉窗'] },
   'trapezoid': { name: '梯形', features: ['一组对边平行', '腰不等长'], examples: ['裙子', '灯罩'] },
   'line-segment': { name: '线段', features: ['有两个端点', '可以度量长度', '是直线的一部分'], examples: ['尺子的边', '桌子棱'] },
   'angle': { name: '角', features: ['有一个顶点', '两条边是射线', '有大小（度）'], examples: ['三角尺的角', '墙角'] },
@@ -317,13 +319,12 @@ function generateGraphicParams(subtype, difficulty, rng) {
 function makeRecognitionQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var feature = Rng.pick(rng, shapeMeta.meta.features);
-  var examples = shapeMeta.meta.examples;
   var prompt = '下列哪个是' + shapeMeta.meta.name + '的特征？';
   var correct = feature;
-  var distractors = examples.filter(function(e){ return e !== feature; }).slice(0, 3);
-  if (distractors.length < 3) {
-    distractors = distractors.concat(['无棱无面', '只有长宽', '不能滚动', '面是圆形'].filter(function(d){ return distractors.indexOf(d) === -1 && d !== feature; }));
-  }
+  // P34-11：干扰项必须与正确项同为「特征陈述」——examples 是物品名（如平行四边形→「推拉窗」），
+  // 拿物品名当特征选项属类型错误；恒假特征池对 flat 族五种图形均为假，类型一致。
+  var distractors = Rng.shuffle(rng,
+    FALSE_FEATURE_POOL.filter(function (d) { return d !== feature; })).slice(0, 3);
   var options = Rng.shuffle(rng, [correct].concat(distractors).slice(0, 4));
   var correctIndex = options.indexOf(correct);
 
@@ -335,7 +336,8 @@ function makeRecognitionQuestion(plan, context, i, shapeMeta, graphic) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(correctIndex), acceptable: [] },
+    answer: { value: String(correctIndex), acceptable: [],
+      explanation: '正确选项是「' + correct + '」——这是' + shapeMeta.meta.name + '的特征。' },
     answerMode: 'choice',
     data: {
       mode: 'choice',
@@ -374,7 +376,9 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(correctIndex), acceptable: [] },
+    answer: { value: String(correctIndex), acceptable: [],
+      explanation: '正确选项是「' + correct + '」；' + correct + '的特征：'
+        + SHAPE_FEATURES[target].features.slice(0, 2).join('，') + '。' },
     answerMode: 'choice',
     data: {
       mode: 'choice',
@@ -388,7 +392,12 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
-var FALSE_FEATURE_POOL = ['无棱无面', '只有长和宽', '不能滚动', '面是圆形', '有棱有角'];
+// P34-02：judge 假命题池。旧池（无棱无面/只有长和宽/不能滚动/面是圆形/有棱有角）存在真值歧义：
+// 「不能滚动」对平面图形为真、「无棱无面」对球为真、「只有长和宽」与 flat 特征同义，
+// 作为「×的特征」假命题出示会形成真值矛盾题。新池为边/角计数句——17 族图形中
+// 无任何图形有 5/7/10 条边或 5/7 个角（平面 0/3/4，立体 12 棱 8 顶点，圆/球无边角），
+// 对所有图形恒为假，且与各图形 features 字符串零重合（排除过滤恒有效）。
+var FALSE_FEATURE_POOL = ['有5条边', '有5个角', '有7条边', '有7个角', '有10条边'];
 
 function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
@@ -434,7 +443,8 @@ function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
 
 function makeNamingQuestion(plan, context, i, shapeMeta, graphic) {
   var prompt = '请写出该图形的名称：';
-  var answer = shapeMeta.meta.name; var answerObj = { value: answer, acceptable: [] };
+  var answer = shapeMeta.meta.name; var answerObj = { value: answer, acceptable: [],
+    explanation: '这个图形是' + answer + '，它的特征：' + shapeMeta.meta.features.slice(0, 2).join('；') + '。' };
 
   return {
     knowledgePointId: pkp(plan),
@@ -460,7 +470,8 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var count = Rng.randInt(rng, 3, 6);
   var prompt = '图中共有几个' + shapeMeta.meta.name + '？';
-  var answer = String(count); var answerObj = { value: answer, acceptable: [] };
+  var answer = String(count); var answerObj = { value: answer, acceptable: [],
+    explanation: '按一定顺序逐个点数，做到不重复、不遗漏，图中共有 ' + count + ' 个' + shapeMeta.meta.name + '。' };
 
   return {
     knowledgePointId: pkp(plan),
@@ -521,16 +532,18 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     times: times
   };
   var prompt, answerObj, answerMode = 'input';
+  // P34-14：分数乘整数的方法讲解（素材仅取该题 num/den/times/answer）
+  var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + answerStr;
 
   if (qt === 'geometry') {
     prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
       ' 份表示 ' + num + '/' + den + '。这样的 ' + times + ' 份，一共是单位“1”的几分之几？' +
       expr + ' = ____';
-    answerObj = { value: answerStr, acceptable: acceptable };
+    answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'fill') {
     prompt = '看图填空：分数条把单位“1”平均分成 ' + den + ' 份，涂色部分表示 ' + num + '/' + den
       + '。同样的涂色部分有 ' + times + ' 条，合起来是 ' + expr + ' = ____。';
-    answerObj = { value: answerStr, acceptable: acceptable };
+    answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'choice') {
     // 四个互异分数选项（同分母，含正确值），correctIndex 随洗牌定位
     var pool = [answerStr];
@@ -543,7 +556,8 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     data.correctIndex = options.indexOf(answerStr);
     prompt = '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times
       + ' 条同样的涂色部分。' + expr + ' 的结果是哪个？';
-    answerObj = { value: answerStr, acceptable: acceptable };
+    answerObj = { value: answerStr, acceptable: acceptable,
+      explanation: '正确选项是「' + answerStr + '」。' + fracExpl };
     answerMode = 'choice';
   } else if (qt === 'judge') {
     var isTrue = rng() < 0.5;
@@ -565,7 +579,7 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     prompt = '看图解决问题：一根彩带长 ' + num + '/' + den + ' 米（分数条平均分成 ' + den
       + ' 份、涂色 ' + num + ' 份）。先说出一根彩带的长度，再列式计算 ' + times
       + ' 根这样的彩带一共长多少米：' + expr + ' = ？（米）';
-    answerObj = { value: answerStr, acceptable: acceptable };
+    answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   }
 
   return {
@@ -597,7 +611,12 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
     // 角度识别
     var angleType = rng() < 0.33 ? '直角' : (rng() < 0.5 ? '锐角' : '钝角');
     prompt = '图中显示的是什么角？';
-    answer = { value: angleType, acceptable: ['90度', '90°'] };
+    var ANGLE_EXPL = {
+      '直角': '直角等于 90°，和三角尺上的直角完全重合。',
+      '锐角': '锐角比直角小，也就是小于 90°。',
+      '钝角': '钝角比直角大、比平角小，也就是大于 90° 且小于 180°。'
+    };
+    answer = { value: angleType, acceptable: ['90度', '90°'], explanation: ANGLE_EXPL[angleType] };
     answerMode = 'input';
   } else {
     // 通用几何图形识别——P28-GEN-SHAPE-FLAT-SAMPLE-01：题干多表达方案，按该题 rng
@@ -611,7 +630,9 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
       '图中画了一个图形，它叫什么名字？'
     ];
     prompt = GEOMETRY_PROMPTS[Math.floor(rng() * GEOMETRY_PROMPTS.length)];
-    answer = { value: shapeMeta.meta.name, acceptable: [] };
+    answer = { value: shapeMeta.meta.name, acceptable: [],
+      explanation: '图中画的是' + shapeMeta.meta.name + '，它的特征：'
+        + shapeMeta.meta.features.slice(0, 2).join('；') + '。' };
     answerMode = 'input';
   }
 
@@ -647,6 +668,7 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
   var isSolid = name.indexOf('正方') !== -1 || name.indexOf('长方') !== -1 ||
     name.indexOf('圆柱') !== -1 || name.indexOf('圆锥') !== -1 || name.indexOf('球') !== -1;
   var prompt, answer, answerMode;
+  var expl = null; // P34-14：各分支按自身公式/特征写方法讲解
 
   if (isFeature && isSolid) {
     // 立体图形特征：面/棱/顶点数量
@@ -664,20 +686,23 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     } else {
       featPrompt = '球没有平面，只有一个曲面。';
     }
-    prompt = name + '：' + featPrompt + ' 请说出它有几个面？';
+    prompt = featPrompt + ' 请说出它有几个面？';
     answer = { value: String(faces), acceptable: [faces + '个'] };
+    expl = featPrompt;
     answerMode = 'input';
   } else if (isCircle && name.indexOf('周长') !== -1) {
     var r = Rng.randInt(rng, 3, 10);
     var circ = Math.round(2 * 3.14 * r * 100) / 100;
     prompt = '一个圆的半径是 ' + r + ' 厘米，求它的周长。（π取3.14）';
     answer = { value: String(circ), acceptable: [circ + '厘米'] };
+    expl = '圆的周长公式 C = 2πr：2 × 3.14 × ' + r + ' = ' + circ + ' 厘米。';
     answerMode = 'input';
   } else if (isCircle && name.indexOf('面积') !== -1) {
     var rc = Rng.randInt(rng, 3, 10);
     var areaC = Math.round(3.14 * rc * rc * 100) / 100;
     prompt = '一个圆的半径是 ' + rc + ' 厘米，求它的面积。（π取3.14）';
     answer = { value: String(areaC), acceptable: [areaC + '平方厘米'] };
+    expl = '圆的面积公式 S = πr²：3.14 × ' + rc + ' × ' + rc + ' = ' + areaC + ' 平方厘米。';
     answerMode = 'input';
   } else if (name.indexOf('周长') !== -1) {
     var pw = Rng.randInt(rng, 4, 15);
@@ -685,6 +710,7 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     var peri = 2 * (pw + ph);
     prompt = '一个长方形，长' + pw + '厘米，宽' + ph + '厘米，求它的周长。';
     answer = { value: String(peri), acceptable: [peri + '厘米'] };
+    expl = '长方形周长 =（长 + 宽）× 2：（' + pw + ' + ' + ph + '）× 2 = ' + peri + ' 厘米。';
     answerMode = 'input';
   } else if (name.indexOf('表面积') !== -1) {
     var sw = Rng.randInt(rng, 3, 8);
@@ -693,6 +719,8 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     var surf = 2 * (sw * sh + sw * sd + sh * sd);
     prompt = '一个长方体，长' + sw + '厘米，宽' + sd + '厘米，高' + sh + '厘米，求它的表面积。';
     answer = { value: String(surf), acceptable: [surf + '平方厘米'] };
+    expl = '长方体表面积 =（长×宽 + 长×高 + 宽×高）× 2：2 × (' + sw + '×' + sh + ' + '
+      + sw + '×' + sd + ' + ' + sh + '×' + sd + ') = ' + surf + ' 平方厘米。';
     answerMode = 'input';
   } else if (name.indexOf('圆锥') !== -1 && name.indexOf('体积') !== -1) {
     var vr = Rng.randInt(rng, 2, 6);
@@ -700,6 +728,8 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     var vol = Math.round(3.14 * vr * vr * vh / 3 * 100) / 100;
     prompt = '一个圆锥，底面半径' + vr + '厘米，高' + vh + '厘米，求它的体积。（π取3.14）';
     answer = { value: String(vol), acceptable: [vol + '立方厘米'] };
+    expl = '圆锥体积 = ⅓ × 底面积 × 高（V = ⅓πr²h）：3.14 × ' + vr + ' × ' + vr + ' × '
+      + vh + ' ÷ 3 = ' + vol + ' 立方厘米。';
     answerMode = 'input';
   } else if (isArea) {
     var width = Rng.randInt(rng, 4, 15);
@@ -707,20 +737,25 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     var area = width * height;
     prompt = '一个长方形，长' + width + '厘米，宽' + height + '厘米，求它的面积。';
     answer = { value: String(area), acceptable: [String(area) + '平方厘米'] };
+    expl = '长方形面积 = 长 × 宽：' + width + ' × ' + height + ' = ' + area + ' 平方厘米。';
     answerMode = 'input';
   } else if (isVolume) {
     var r = Rng.randInt(rng, 3, 8);
     var h = Rng.randInt(rng, 5, 15);
     prompt = '一个圆柱，底面半径' + r + '厘米，高' + h + '厘米，求它的体积。（π取3.14）';
     answer = { value: String(Math.round(3.14 * r * r * h)), acceptable: [] };
+    expl = '圆柱体积 = 底面积 × 高（V = πr²h）：3.14 × ' + r + ' × ' + r + ' × ' + h
+      + ' = ' + Math.round(3.14 * r * r * h) + ' 立方厘米。';
     answerMode = 'input';
   } else if (isCoord) {
     prompt = name + '：请在方格纸上标出点的位置，说一说你是怎样确定位置的？';
     answer = { value: '已标注', acceptable: [] };
+    expl = '用数对确定位置：先看列数、再看行数，写成（列，行）就能唯一确定点的位置。';
     answerMode = 'input';
   } else if (isMotion) {
     prompt = name + '：请说一说图形变换的三要素是什么？';
     answer = { value: '旋转中心、旋转方向、旋转角度', acceptable: [] };
+    expl = '图形旋转的三要素是旋转中心、旋转方向和旋转角度，三者确定后旋转后的图形就唯一确定。';
     answerMode = 'input';
   } else {
     // FINAL-138：非度量类 KP（图形认识/分类/长度单位等）不得套用面积计算模板，
@@ -730,9 +765,12 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     var scenes = ['教室里', '家里', '操场上', '上学的路上', '文具盒里', '积木堆里', '超市里', '公园中'];
     prompt = name + '：请在' + scenes[i % scenes.length] + '找一找与它有关的例子，说一说你是怎样想的？';
     answer = { value: '举例合理即可', acceptable: [] };
+    expl = '只要举出的物体具有' + shapeMeta.meta.name + '的特征（'
+      + shapeMeta.meta.features[0] + '），举例就合理。';
     answerMode = 'input';
   }
 
+  answer.explanation = expl;
   return {
     knowledgePointId: pkp(plan),
     questionType: 'apply',
@@ -844,7 +882,7 @@ function shapeTheme(facts, wrongs, nums, scenes) {
   return {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
-    nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2] }; }),
+    nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
     scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; })
   };
 }
@@ -912,7 +950,7 @@ var SHAPE_THEME = {
     [['看到一个圆，观察者一定是从正面看的', '看到圆可能是从上面看圆柱或球，要结合物体各面特征反推，不能武断。'],
      ['从上面看物体，能看到它的侧面', '从上面只能看到顶面，看不到侧面。'],
      ['知道看到的形状，就能唯一确定观察方向', '同一种形状可能对应多个方向，要结合物体各面的特征判断。']],
-    [['从正上方看桌上的正方体，能看到____个面', '1', 1], ['从一个方向观察一个长方体，最多能同时看到____个面', '3', 3], ['一个长方体有____个面，反推观察方向时要想清每个面的朝向', '6', 6]],
+    [['从正上方看桌上的正方体，能看到____个面', '1', 1, 'cube'], ['从一个方向观察一个长方体，最多能同时看到____个面', '3', 3, 'cuboid'], ['一个长方体有____个面，反推观察方向时要想清每个面的朝向', '6', 6, 'cuboid']],
     [['小明看桌上的茶叶筒是一个圆，先猜一猜它是哪种立体图形，再说说小明是从哪个方向观察的？', '茶叶筒是圆柱；小明从上面观察，看到的是圆形的底面'],
      ['先从一个方向观察你的文具盒并画出看到的形状，再让同桌根据你画的形状猜你站的方向？', '如画出长方形是正面或侧面，结合文具盒各面特征反推'],
      ['先观察一个物体的上面是正方形、侧面是长方形，再猜它是什么立体图形，说说根据？', '长方体（底面是正方形）；从上面看是正方形、从侧面看是长方形']]),
@@ -921,7 +959,7 @@ var SHAPE_THEME = {
     [['从任何方向看正方体，看到的形状都不同', '正方体每个面都是正方形，从前面、上面、左面看都是正方形。'],
      ['数正方体个数时，看不见的一定不存在', '被挡住的正方体也要数——按层推算，不能只数看得见的。'],
      ['从上面看正方体看到的是长方形', '正方体每个面都是正方形，从上面看也是正方形。']],
-    [['站在一个位置观察正方体，最多能同时看到____个面', '3', 3], ['正对着正方体的一个面看，只能看到____个面', '1', 1], ['用 2 个同样的正方体排成一行，从上面看能看到____个正方形', '2', 2]],
+    [['站在一个位置观察正方体，最多能同时看到____个面', '3', 3, 'cube'], ['正对着正方体的一个面看，只能看到____个面', '1', 1, 'cube'], ['用 2 个同样的正方体排成一行，从上面看能看到____个正方形', '2', 2, 'cube']],
     [['把 4 个同样的正方体摆成 2×2 的方阵，先从上面看一看，再说出看到了几个正方形', '从上面看是 4 个正方形组成的大正方形'],
      ['用 3 个正方体搭一个「L」形，先从上面看，再说出看到了几个正方形', '从上面看到 2 个正方形（L 形占两格）'],
      ['先观察桌上的粉笔盒（正方体），再说说你最多能同时看到几个面、各是什么形状', '最多同时看到 3 个面，每个面都是正方形']]),
@@ -930,7 +968,7 @@ var SHAPE_THEME = {
     [['从哪个方向看，看到的形状都一样', '观察方向不同，看到的形状可能不同，要逐方向确认。'],
      ['从上面看到的列数一定和从前面看到的一样', '上面看到的是前后排列，前面看到的是左右排列，两者不一定相同。'],
      ['从前面看是 3 个正方形，这个立体就只有 3 个小正方体', '前面看不到被挡住的正方体，实际个数可能更多。']],
-    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3], ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2], ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8]],
+    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3, 'cuboid'], ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2, 'cube'], ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8, 'cube']],
     [['把 4 个小正方体摆成一排，先画出从上面看到的形状，再画出从前面看到的形状？', '从上面看是 4 个正方形排一行；从前面看是 1 个正方形（或 4 个排一行，取决于摆的方向）'],
      ['用 4 个小正方体搭成 2×2 方阵，先从左面看，再说出看到的形状？', '从左面看是 2 个正方形并排'],
      ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']]),
@@ -939,6 +977,7 @@ var SHAPE_THEME = {
     [['只看从一个方向看到的图形，就能确定立体的样子', '一个方向只能看到一部分，必须结合多个方向的视图才能确定。'],
      ['从上面看是 4 个正方形，立体就只有一层', '从上面看只能确定底层占位，上面还可能叠着正方体。'],
      ['三个方向看到的正方形个数一定相同', '三个方向的视图分别反映长、宽、高，个数一般不同。']],
+    // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
     [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3], ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2], ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1]],
     [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
      ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
@@ -948,6 +987,7 @@ var SHAPE_THEME = {
     [['从正面看到的形状就是立体本身的样子', '正面视图只是一个方向的样子，还要结合其他方向。'],
      ['从上面看到的正方形个数就是立体的总个数', '上面只能看到最上层的占位，被压在下面的数不清。'],
      ['同一立体从不同方向看，正方形个数一定相同', '方向不同，看到的个数和排列可能不同。']],
+    // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
     [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4], ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3], ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2]],
     [['用 4 个小正方体搭一个立体，先画出从正面看到的形状，再画出从上面看到的形状？', '视图取决于搭法，如排一行：正面 1 个或 4 个、上面 4 个排一行'],
      ['先观察由 5 个小正方体搭成的立体，再说出从哪个方向看到的正方形最多？', '比较正面、左面、上面的视图，个数可能不同'],
@@ -957,6 +997,7 @@ var SHAPE_THEME = {
     [['按一个方向的视图摆出的立体是唯一的', '一个方向的视图挡不住的部分看不见，摆法不唯一。'],
      ['还原时可以不数被挡住的正方体', '被挡住的正方体要根据三个方向的视图推算。'],
      ['从上面看到的图形决定立体的高', '从上面看到的是底面占位；高由正面和左面视图决定。']],
+    // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
     [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4], ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3], ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2]],
     [['先根据「从上面看是 3 个正方形排一行」摆好底层，再根据「从正面看最高 2 层」补上第二层？', '底层 3 个排一行，某一列上再叠 1 个'],
      ['给出三个方向的视图，先摆一摆，再数一数一共用了几个小正方体', '按上→正→左顺序核对，个数由视图推算'],
@@ -1044,7 +1085,10 @@ var SHAPE_THEME = {
     [['对折后两边差不多的图形就是轴对称图形', '必须完全重合才是轴对称图形，「差不多」不行。'],
      ['平行四边形是轴对称图形', '一般平行四边形沿任何直线对折都不能完全重合，不是轴对称图形。'],
      ['轴对称图形只能有一条对称轴', '可以有多条，如正方形有 4 条、圆有无数条。']],
-    [['长方形有____条对称轴', '2', 2], ['正方形有____条对称轴', '4', 4], ['等腰三角形有____条对称轴', '1', 1]],
+    // P34-09：三行证据规则均锚定 data.graphic.subtype=rectangle，配图恒为长方形；
+    // 每条设问均以长方形起句与配图锚定（后两条为对比延伸），消除原「正方形/等腰三角形」
+    // 条目与长方形配图的图文矛盾；答案 2/4/1 互异，保 count=3 指纹互异。
+    [['长方形有____条对称轴', '2', 2], ['长方形有 2 条对称轴，正方形有____条对称轴', '4', 4], ['长方形有 2 条对称轴，等腰三角形有____条对称轴', '1', 1]],
     [['先剪出一个长方形纸片对折，再数一数它有几条对称轴、说说它是不是轴对称图形', '2 条对称轴，对折能完全重合，是轴对称图形'],
      ['先数一数树叶一半轮廓上有几个关键点，再沿对称轴补画出另一半', '按关键点到对称轴距离相等补画，两边完全重合'],
      ['先找出几个轴对称的字母（如 A、H、M），再数一数每个字母有几条对称轴', 'A、H、M 各有 1 条竖直对称轴']]),
@@ -1519,6 +1563,13 @@ var SHAPE_THEME = {
 
 // 数值选项干扰项：由正确数值确定性派生 3 个互异干扰数
 // （去重防 part===rest 重复；非整数统一保留两位小数，避免浮点尾巴）
+// P34-14：把填空式设问（含 ____）按该题已知答案还原为陈述句，用作解析；
+// 设问不含空格时回退为「去疑问尾 + 答案是 X」。素材只取自题面与该题答案，不引入新语义。
+function blankStatement(q, a) {
+  var s = String(q);
+  if (/_{2,}/.test(s)) return s.replace(/_{2,}/g, String(a));
+  return s.replace(/[？?。.\s]*$/, '') + '，答案是 ' + a;
+}
 function numClean(x) { return Math.round(x * 100) / 100; }
 function numDistractors(n) {
   var cands = [n + 1, n - 1, n + 2, n - 2, n * 2, n + 10, Math.round(n / 2), n + 3, n - 3, n * 3];
@@ -1536,25 +1587,64 @@ function numDistractors(n) {
 // choice/fill 用 nums 数值变式保证去重指纹互异（data.operands），
 // judge/geometry/apply 用 v=i%3 变式设问保证题面哈希互异；
 // judge 假命题必带 data.misconception（p25-07 教学闭环断言）。
+// P34-03：主题条目自声明图形（nums 第 4 元 shape，可选）——choice/fill/geometry 消费条目时，
+// 图形与「观察下图（…）」标签从条目自身派生，不再沿用 KP 名正则兜底/flat 取样的图形
+//（修复观察物体族「观察下图（圆）」问长方体的图形-题面错位；条目未声明 shape 时行为不变）。
+function themedItemMeta(item, qMeta, plan, rng) {
+  if (!item || !item.shape || !SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
+  var m = { legacyType: item.shape, subtype: item.shape, category: qMeta.category, meta: SHAPE_FEATURES[item.shape] };
+  m.graphic = generateGraphicParams(item.shape, plan.difficulty, rng);
+  return m;
+}
+
+// P34-H1（人工数据请求 H6，用户 2026-10-08 签批）：三视图/搭建推算 3 KP 的题面由文字
+// 自含视图数据（各方向看到的正方形个数/排列），cuboid 配图既非题设小正方体组合体、
+// 也不承载解题信息（画组合体更会让学生数方块直接得到「至少几个」答案，摧毁空间推理考点）。
+// 这 3 KP × 5 题型共 15 行 evidence-rules 已删 data.graphic.* 锚定；maker 对应不出图，
+// shapeName 保留（geometry 的 graphicOrInstruction 由 shapeName 满足），geometry 走纯文字引导。
+var NO_GRAPHIC_VIEW_KPS = {
+  'math-g4-down-u02-k002': 1,  // 由平面到立体
+  'math-g5-down-u01-k001': 1,  // 从不同角度观察立体图形
+  'math-g5-down-u01-k002': 1   // 根据平面视图搭建立体图形
+};
+
 function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
   var qt = plan.questionTypeId;
+  var kpId = pkp(plan);
+  var noGraphic = !!NO_GRAPHIC_VIEW_KPS[kpId];
   var name = (plan.semanticParams && plan.semanticParams.name) || '图形';
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var v = ((i % 3) + 3) % 3;
   var facts = theme.facts;
   var wrongs = theme.wrongs;
   var nums = theme.nums;
-  var data = { mode: qt, steps: 1, graphic: graphic, shapeName: qMeta.meta.name };
+  var data = { mode: qt, steps: 1, graphic: noGraphic ? null : graphic, shapeName: qMeta.meta.name };
+  // P34-07/08：去 KP 名机械前缀（KP 名只在图形标签/特征语义中按需出现）；
+  // geometry 标签在抽象概念 KP（symmetry/solid）时回退为配图实例名（generateGraphicParams 实际渲染图形），
+  // 避免「观察下图（轴对称图形）」配图却是长方形的图文错位。
   var prompt, answer, answerMode = 'input';
+  // P34-14：填空陈述过短（如「直角是90°。」）时，补一条本 KP facts 表中的完整事实，
+  // 保证解析有教学内容；facts 与 KP 同源，非新语义。
+  function themedExpl(q0, a0) {
+    var st = blankStatement(q0, a0) + '。';
+    if ((st.match(/[\u4e00-\u9fa5]/g) || []).length < 4) {
+      var f0 = facts[i % facts.length];
+      if (f0 && st.indexOf(f0) === -1) st += f0;
+    }
+    return st;
+  }
 
   if (qt === 'choice') {
     var cItem = nums[v % nums.length];
+    var cMeta = themedItemMeta(cItem, qMeta, plan, rng);
+    if (cMeta && !noGraphic) data.graphic = cMeta.graphic;
     var options = Rng.shuffle(rng, [cItem.a].concat(numDistractors(cItem.n)));
     data.options = options;
     data.correctIndex = options.indexOf(cItem.a);
     data.operands = [cItem.n];
-    prompt = name + '：' + cItem.q + '（选出正确答案）';
-    answer = { value: String(data.correctIndex), acceptable: [] };
+    prompt = cItem.q + '（选出正确答案）';
+    answer = { value: String(data.correctIndex), acceptable: [],
+      explanation: '正确选项是「' + cItem.a + '」。' + themedExpl(cItem.q, cItem.a) };
     answerMode = 'choice';
   } else if (qt === 'judge') {
     var isTrue = rng() < 0.5;
@@ -1569,27 +1659,47 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       data.misconception = w.m;
     }
     data.shownStatement = shown;
-    prompt = name + '：判断对错——「' + shown + '」。这个说法对吗？';
+    prompt = '判断对错——「' + shown + '」。这个说法对吗？';
     answer = { value: isTrue, acceptable: [], explanation: explanation };
     answerMode = 'judge';
   } else if (qt === 'fill') {
     var fItem = nums[v % nums.length];
+    var fMeta = themedItemMeta(fItem, qMeta, plan, rng);
+    if (fMeta && !noGraphic) data.graphic = fMeta.graphic;
     data.operands = [fItem.n];
-    prompt = name + '：' + fItem.q;
-    answer = { value: fItem.a, acceptable: [] };
+    prompt = fItem.q;
+    answer = { value: fItem.a, acceptable: [], explanation: themedExpl(fItem.q, fItem.a) };
   } else if (qt === 'geometry') {
     var gItem = nums[v % nums.length];
-    data.operands = [gItem.n];
-    prompt = name + '：观察下图（' + qMeta.meta.name + '），想一想——' + gItem.q;
-    answer = { value: gItem.a, acceptable: [] };
+    if (noGraphic) {
+      // P34-H1：三视图推算题无图（H6 签批），纯文字引导，设问本体不动
+      data.operands = [gItem.n];
+      prompt = '想一想，填一填：' + gItem.q;
+      answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
+    } else {
+      var gMeta = themedItemMeta(gItem, qMeta, plan, rng);
+      if (gMeta) data.graphic = gMeta.graphic;
+      data.operands = [gItem.n];
+      var graphicName = (gMeta ? gMeta.meta.name : qMeta.meta.name);
+      if (qMeta.legacyType === 'symmetry' || qMeta.legacyType === 'solid') {
+        graphicName = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'].name;
+      }
+      prompt = '观察下图（' + graphicName + '），想一想——' + gItem.q;
+      answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
+    }
   } else { // apply，steps=2
     var sList = theme.scenes.length
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
     var sItem = sList[v % sList.length];
     data.steps = 2;
-    prompt = name + '：' + sItem.t;
-    answer = { value: sItem.a, acceptable: [] };
+    prompt = sItem.t;
+    // scenes 的答案本身是解题过程陈述（如「8 个，都在顶点处」），直接用作解析；
+    // 数值型兜底答案则把设问中的空格还原为陈述句。
+    var sA = String(sItem.a);
+    var applyExpl = (sA.match(/[\u4e00-\u9fa5]/g) || []).length >= 4
+      ? sA : blankStatement(sItem.t, sA);
+    answer = { value: sItem.a, acceptable: [], explanation: applyExpl };
   }
 
   return {

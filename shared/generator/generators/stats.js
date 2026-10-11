@@ -234,14 +234,19 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类整理：' + list
         + '。请写出分类结果。';
       answer = statPartitionText(theme);
+      explanation = '逐个按「' + theme.criterion + '」判断每个事物，把同类的写在一起，'
+        + '得到：' + answer + '。';
     } else if (v === 1) {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
         + '。分好后数一数，每一类各有多少项？';
       answer = countsText;
+      explanation = '先按「' + theme.criterion + '」分好类，再逐类点数，' + answer + '。';
     } else {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
         + '。一共分成几类？哪一类包含的事物最多？';
       answer = '一共 ' + groupsArr.length + ' 类，「' + gMax.label + '」最多，有 ' + gMax.members.length + ' 项';
+      explanation = '分类后一共有 ' + groupsArr.length + ' 个类；逐类点数后比较，'
+        + '「' + gMax.label + '」数量最多，有 ' + gMax.members.length + ' 项。';
     }
   } else if (qt === 'fill') {
     // P30-GEN-06（P30-16）：去掉与 classify 共享的「把下面的事物按 criterion 分类」引导前缀，
@@ -250,14 +255,19 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：已知下列事物：' + list
         + '。按「' + theme.criterion + '」划分，「' + groupsArr[0].label + '」这一类有 ____ 项。';
       answer = String(groupsArr[0].members.length);
+      explanation = '按「' + theme.criterion + '」分类后，逐个数「' + groupsArr[0].label
+        + '」这一类，共 ' + answer + ' 项。';
     } else if (v === 1) {
       prompt = name + '：已知下列事物：' + list
         + '。按「' + theme.criterion + '」划分，「' + groupsArr[1].label + '」这一类有 ____ 项。';
       answer = String(groupsArr[1].members.length);
+      explanation = '按「' + theme.criterion + '」分类后，逐个数「' + groupsArr[1].label
+        + '」这一类，共 ' + answer + ' 项。';
     } else {
       prompt = name + '：已知下列事物：' + list
         + '。全部参与划分的事物合起来共有 ____ 项。';
       answer = String(theme.items.length);
+      explanation = '清单中每个事物都参与划分，总数就是全部事物的个数，共 ' + answer + ' 项。';
     }
   } else if (qt === 'apply') {
     data.steps = 2;
@@ -267,16 +277,20 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
         + '。先写出分类结果，再说一说按这个标准分类说明了什么。';
       answer = statPartitionText(theme) + '。' + theme.conclusion;
+      explanation = '逐个按「' + theme.criterion + '」归类后，得到：'
+        + statPartitionText(theme) + '。' + theme.conclusion;
     } else if (v === 1) {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
         + '。先完成分类，再数出每一类各有多少项。';
       answer = countsText;
+      explanation = '分类完成后逐类点数，' + answer + '。';
     } else {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
         + '。哪一类包含的事物最多？比最少的一类多几项？';
       var gMin = groupsArr.slice().sort(function (a, b) { return a.members.length - b.members.length; })[0];
       answer = '「' + gMax.label + '」最多（' + gMax.members.length + ' 项），比「' + gMin.label
         + '」多 ' + (gMax.members.length - gMin.members.length) + ' 项';
+      explanation = '逐类点数后比较数量：' + answer + '。';
     }
   } else if (qt === 'judge') {
     var flat = [];
@@ -308,6 +322,8 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：小明把下面的事物分成了几组（' + partition + '）：' + list
         + '。他最可能是按哪个标准分类的？';
       answer = theme.criterion;
+      explanation = '各组划分恰好与「' + theme.criterion + '」一致，所以他是按「'
+        + theme.criterion + '」分类，正确选项是「' + theme.criterion + '」。';
     } else if (v === 1) {
       var opts1 = [theme.altCriteria[0]].concat(theme.altCriteria.slice(1, 3), [theme.criterion]);
       data.options = opts1;
@@ -315,6 +331,8 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：对下面的事物做分类：' + list
         + '。下面四个标准中，哪一个最不适合用来给这组事物分类？';
       answer = theme.altCriteria[0];
+      explanation = '「' + theme.altCriteria[0] + '」无法把这组事物分成不同的组，'
+        + '而其余标准都能区分，所以最不适合的是「' + theme.altCriteria[0] + '」。';
     } else {
       // 同组配对：锚点取最大类的首个成员，正确项=同类另一成员，干扰项取其他类成员
       var anchorGroup = gMax;
@@ -331,6 +349,8 @@ function makeClassifyShape(plan, context, i, name, theme) {
       prompt = name + '：按「' + theme.criterion + '」分类时，「' + anchor
         + '」所在的那一类还有哪个事物？';
       answer = partner;
+      explanation = '「' + anchor + '」按「' + theme.criterion + '」属于「' + anchorGroup.label
+        + '」一类，这一类中还有「' + partner + '」，所以正确选项是「' + partner + '」。';
     }
   }
   return statSq(plan, context, i, prompt, answer, mode, data, explanation);
@@ -377,6 +397,7 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
     prompt = name + '：看图，按「' + theme.criterion + '」把事物分成两段，「' + gMax.label
       + '」的事物在第一段。事物：' + list + '。' + t.label + '表示 ____ 个。';
     answer = String(t.n);
+    explanation = '对照线段图逐个数出' + t.label + '对应的事物，共有 ' + t.n + ' 个。';
   } else if (qt === 'choice') {
     var numPool = [part];
     [rest, total, part - 1, part + 2, rest + 1, total + 1].forEach(function (n) {
@@ -390,6 +411,7 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
     data.options = numericOpts;
     data.correctIndex = numericOpts.indexOf(tc.n + '个');
     mode = 'choice';
+    explanation = '从线段图读出' + tc.label + '对应 ' + tc.n + ' 个，正确选项是「' + tc.n + '个」。';
   } else if (qt === 'judge') {
     var tj = targets[v];
     var isTrue = v !== 1;
@@ -410,15 +432,21 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
       prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
         + gMax.label + '」的事物。事物：' + list + '。先数出另一类有几个，再求两类事物一共多少个。';
       answer = String(total);
+      explanation = '先数出另一类有 ' + rest + ' 个，第一段有 ' + part + ' 个，'
+        + part + '＋' + rest + '＝' + total + '，两类一共 ' + total + ' 个。';
     } else if (v === 1) {
       prompt = name + '：看图，整条线段表示 ' + total + ' 个事物，第一段表示「' + gMax.label
         + '」的 ' + part + ' 个。两段表示的数量相差几个？';
       answer = String(Math.abs(part - rest));
+      explanation = '另一段有 ' + total + '－' + part + '＝' + rest + ' 个，'
+        + '两段相差 ' + part + '－' + rest + '＝' + answer + ' 个。';
     } else {
       // P32-AS-16：原句直接给出第一段数量 part（答案前半），同上改由清单/线段图承载
       prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
         + gMax.label + '」的事物。事物：' + list + '。两段分别表示多少个？';
       answer = part + '个和' + rest + '个';
+      explanation = '第一段对应「' + gMax.label + '」有 ' + part + ' 个，'
+        + '另一类有 ' + rest + ' 个，所以两段分别是 ' + part + ' 个和 ' + rest + ' 个。';
     }
   }
   return statSq(plan, context, i, prompt, answer, mode, data, explanation);
@@ -450,12 +478,16 @@ function makeBarSingleShape(plan, context, i, name, theme) {
     if (v === 0) {
       prompt = name + '：观察条形统计图，哪个月借出的图书最多？借出多少本？';
       answer = max.label + '，' + max.value + '本';
+      explanation = '条形图中' + max.label + '的柱子最高，对应 ' + max.value + ' 本。';
     } else if (v === 1) {
       prompt = name + '：观察条形统计图，哪个月借出的图书最少？借出多少本？';
       answer = min.label + '，' + min.value + '本';
+      explanation = '条形图中' + min.label + '的柱子最矮，对应 ' + min.value + ' 本。';
     } else {
       prompt = name + '：观察条形统计图，这四个月一共借出图书多少本？';
       answer = sum + '本';
+      explanation = '把四个月的借阅量相加：' + series.map(function (s) { return s.value; }).join('＋')
+        + '＝' + sum + '，一共借出 ' + sum + ' 本。';
     }
   } else if (qt === 'choice') {
     if (v === 2) {
@@ -464,6 +496,8 @@ function makeBarSingleShape(plan, context, i, name, theme) {
       answer = mar.label;
       data.options = optsN;
       data.correctIndex = optsN.indexOf(mar.label);
+      explanation = '高度为 ' + mar.value + ' 本的柱子对应的月份是' + mar.label
+        + '，正确选项是「' + mar.label + '」。';
     } else {
       var target = v === 0 ? max : min;
       var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
@@ -471,18 +505,23 @@ function makeBarSingleShape(plan, context, i, name, theme) {
       answer = target.label;
       data.options = opts;
       data.correctIndex = opts.indexOf(target.label);
+      explanation = '柱子最' + (v === 0 ? '高' : '矮') + '的月份是' + target.label
+        + '，正确选项是「' + target.label + '」。';
     }
     mode = 'choice';
   } else if (qt === 'fill') {
     if (v === 0) {
       prompt = name + '：观察条形统计图，借出图书最多的月份是____，这个月借出 ____ 本。';
       answer = max.label + '，' + max.value + '本';
+      explanation = '条形图中' + max.label + '的柱子最高，对应 ' + max.value + ' 本。';
     } else if (v === 1) {
       prompt = name + '：观察条形统计图，借出图书最少的月份是____，这个月借出 ____ 本。';
       answer = min.label + '，' + min.value + '本';
+      explanation = '条形图中' + min.label + '的柱子最矮，对应 ' + min.value + ' 本。';
     } else {
       prompt = name + '：观察条形统计图，四月借出图书 ____ 本。';
       answer = String(apr.value);
+      explanation = '四月对应的柱子高度是 ' + apr.value + '，所以四月借出 ' + apr.value + ' 本。';
     }
   } else { // judge：三个确定性读数断言
     var claims = [
@@ -549,13 +588,19 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
     if (v === 0) {
       prompt = name + '：复式条形图显示篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b + ' 人，合计 ____ 人';
       answer = String(basketball.a + basketball.b);
+      explanation = '把篮球项目的男女生人数相加：' + basketball.a + '＋' + basketball.b
+        + '＝' + answer + ' 人。';
     } else if (v === 1) {
       prompt = name + '：复式条形图显示跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b + ' 人，合计 ____ 人';
       answer = String(rope.a + rope.b);
+      explanation = '把跳绳项目的男女生人数相加：' + rope.a + '＋' + rope.b
+        + '＝' + answer + ' 人。';
     } else {
       var boysTwo = run.a + kick.a;
       prompt = name + '：复式条形图显示跑步男生 ' + run.a + ' 人、踢毽男生 ' + kick.a + ' 人，合计 ____ 人';
       answer = String(boysTwo);
+      explanation = '把两个项目的男生人数相加：' + run.a + '＋' + kick.a
+        + '＝' + answer + ' 人。';
     }
   } else if (qt === 'choice') {
     mode = 'choice';
@@ -565,12 +610,16 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
       answer = girlMax.label;
       data.options = opts;
       data.correctIndex = opts.indexOf(girlMax.label);
+      explanation = '比较各项目女生人数的柱子，' + girlMax.label + '最高（' + girlMax.b
+        + ' 人），正确选项是「' + girlMax.label + '」。';
     } else if (v === 1) {
       var optsB = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
       prompt = name + '：看复式条形统计图，男生参加人数最多的是哪个项目？';
       answer = boyMax.label;
       data.options = optsB;
       data.correctIndex = optsB.indexOf(boyMax.label);
+      explanation = '比较各项目男生人数的柱子，' + boyMax.label + '最高（' + boyMax.a
+        + ' 人），正确选项是「' + boyMax.label + '」。';
     } else {
       var totalB = basketball.a + basketball.b;
       var numOpts = Rng.shuffle(rng, [totalB, totalB - 2, totalB + 2, totalB + 4].map(function (n) { return n + '人'; }));
@@ -578,6 +627,8 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
       answer = totalB + '人';
       data.options = numOpts;
       data.correctIndex = numOpts.indexOf(totalB + '人');
+      explanation = '篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b + ' 人，'
+        + basketball.a + '＋' + basketball.b + '＝' + totalB + ' 人，正确选项是「' + totalB + '人」。';
     }
   } else { // judge：三个确定性断言；data.template + data.shownAnswer
     var gap = basketball.a - basketball.b;
@@ -619,20 +670,26 @@ function makeLunchChartShape(plan, context, i, name, theme) {
     role: 'data-comparison',
     params: { title: '常见菜热量（千焦）', yLabel: '千焦', data: series } };
   var data = { mode: 'apply', steps: 1, questionType: qt, graphic: graphic };
-  var prompt, answer, mode = 'input';
+  var prompt, answer, explanation, mode = 'input';
 
   if (qt === 'apply') {
     if (v === 0) {
       prompt = name + '：条形图给出了四种菜每份的热量。搭配一份套餐，选炸鸡排和香菇油菜，'
         + '这两个菜一共有多少千焦？';
       answer = String(fry.value + veg.value);
+      explanation = '从条形图读出炸鸡排 ' + fry.value + ' 千焦、香菇油菜 ' + veg.value + ' 千焦，'
+        + fry.value + '＋' + veg.value + '＝' + answer + ' 千焦。';
     } else if (v === 1) {
       prompt = name + '：条形图给出了四种菜每份的热量。一份猪肉炖粉条加一份韭菜豆芽，'
         + '这两个菜一共有多少千焦？';
       answer = String(pork.value + bean.value);
+      explanation = '从条形图读出猪肉炖粉条 ' + pork.value + ' 千焦、韭菜豆芽 ' + bean.value + ' 千焦，'
+        + pork.value + '＋' + bean.value + '＝' + answer + ' 千焦。';
     } else {
       prompt = name + '：条形图给出了四种菜每份的热量。热量最高的菜比热量最低的菜多多少千焦？';
       answer = String(max.value - min.value);
+      explanation = '热量最高的是' + max.label + '（' + max.value + ' 千焦），最低的是' + min.label
+        + '（' + min.value + ' 千焦），' + max.value + '－' + min.value + '＝' + answer + ' 千焦。';
     }
   } else if (qt === 'choice') {
     mode = 'choice';
@@ -642,18 +699,22 @@ function makeLunchChartShape(plan, context, i, name, theme) {
       answer = max.label;
       data.options = opts;
       data.correctIndex = opts.indexOf(max.label);
+      explanation = max.label + '的柱子最高，有 ' + max.value + ' 千焦，正确选项是「' + max.label + '」。';
     } else if (v === 1) {
       var optsMin = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
       prompt = name + '：看条形图，四种菜中热量最低的是哪一种？';
       answer = min.label;
       data.options = optsMin;
       data.correctIndex = optsMin.indexOf(min.label);
+      explanation = min.label + '的柱子最矮，有 ' + min.value + ' 千焦，正确选项是「' + min.label + '」。';
     } else {
       var optsV = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
       prompt = name + '：看条形图，每份热量是 ' + fry.value + ' 千焦的是哪一种菜？';
       answer = fry.label;
       data.options = optsV;
       data.correctIndex = optsV.indexOf(fry.label);
+      explanation = '高度为 ' + fry.value + ' 千焦的柱子对应' + fry.label
+        + '，正确选项是「' + fry.label + '」。';
     }
     data.choiceForm = true;
   } else { // fill
@@ -665,8 +726,9 @@ function makeLunchChartShape(plan, context, i, name, theme) {
     var f = fills[v];
     prompt = name + '：看条形图，' + f.ask + '每份的热量是 ____ 千焦。';
     answer = String(f.dish.value);
+    explanation = '从条形图读出' + f.ask + '对应的柱子高度是 ' + f.dish.value + ' 千焦。';
   }
-  return statSq(plan, context, i, prompt, answer, mode, data);
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
 }
 
 /** 组 G：折线统计图（apply/choice/fill 行 mode=apply + questionType + chart；judge/classify 走分类） */
@@ -691,7 +753,7 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
     params: { title: isDouble ? '一周最高气温与最低气温' : '一周气温变化', data: series } };
   var applySteps = isDouble ? 2 : 1;
   var data = { mode: 'apply', steps: applySteps, questionType: qt, graphic: graphic };
-  var prompt, answer, mode = 'input';
+  var prompt, answer, explanation, mode = 'input';
   var highSum = LINE_HIGH.reduce(function (acc, s) { return acc + s.value; }, 0); // 182
   var fri = LINE_HIGH[4]; // 周五 25
 
@@ -702,37 +764,50 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
         prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
           + '先读出周六的两个气温，再算周六最高气温比最低气温高多少℃？';
         answer = (satA - satB) + '℃';
+        explanation = '周六实线读 ' + satA + '℃、虚线读 ' + satB + '℃，'
+          + satA + '－' + satB + '＝' + answer + '。';
       } else if (v === 1) {
         prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
           + '周六的最高气温和最低气温分别是多少℃？这两个气温一共是多少℃？';
         answer = satA + '℃和' + satB + '℃，一共' + (satA + satB) + '℃';
+        explanation = '周六最高气温是 ' + satA + '℃、最低气温是 ' + satB + '℃，'
+          + '两数相加 ' + satA + '＋' + satB + '＝' + (satA + satB) + '℃。';
       } else {
         prompt = name + '：看复式折线统计图，这一周出现过的最高气温和最低气温各是多少℃？相差多少℃？';
         var wHi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0].value;
         var wLo = LINE_LOW.slice().sort(function (x, y) { return x - y; })[0];
         answer = '最高 ' + wHi + '℃，最低 ' + wLo + '℃，相差 ' + (wHi - wLo) + '℃';
+        explanation = '实线最高点是 ' + wHi + '℃，虚线最低点是 ' + wLo + '℃，'
+          + '相差 ' + wHi + '－' + wLo + '＝' + (wHi - wLo) + '℃。';
       }
     } else if (isAnalyze) {
       if (v === 0) {
         prompt = name + '：看折线统计图，说一说这一周气温整体怎样变化？最高、最低分别出现在哪天、是多少℃？';
         answer = '周二降到最低 ' + lo.value + '℃，随后波动上升，周六最高 ' + hi.value + '℃';
+        explanation = answer + '：折线先降到' + lo.label + '的最低点，之后波动上升，到' + hi.label + '达到最高。';
       } else if (v === 1) {
         prompt = name + '：看折线统计图，这一周气温最高的是星期几？是多少℃？';
         answer = hi.label + '，' + hi.value + '℃';
+        explanation = '折线的最高点在' + hi.label + '，对应 ' + hi.value + '℃。';
       } else {
         prompt = name + '：看折线统计图，这一周气温最低的是星期几？是多少℃？';
         answer = lo.label + '，' + lo.value + '℃';
+        explanation = '折线的最低点在' + lo.label + '，对应 ' + lo.value + '℃。';
       }
     } else {
       if (v === 0) {
         prompt = name + '：看折线统计图，气温最高的是星期几？是多少℃？';
         answer = hi.label + '，' + hi.value + '℃';
+        explanation = '折线最高点对应' + hi.label + '，气温是 ' + hi.value + '℃。';
       } else if (v === 1) {
         prompt = name + '：看折线统计图，气温最低的是星期几？是多少℃？';
         answer = lo.label + '，' + lo.value + '℃';
+        explanation = '折线最低点对应' + lo.label + '，气温是 ' + lo.value + '℃。';
       } else {
         prompt = name + '：看折线统计图，这一周的最高气温（每天一个）加起来一共是多少℃？';
         answer = highSum + '℃';
+        explanation = '把每天的最高气温相加：' + LINE_HIGH.map(function (s) { return s.value; }).join('＋')
+          + '＝' + highSum + '℃。';
       }
     }
   } else if (qt === 'choice') {
@@ -749,19 +824,26 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
     answer = target.label;
     data.options = opts;
     data.correctIndex = opts.indexOf(target.label);
+    explanation = v === 2
+      ? '气温为 ' + fri.value + '℃ 的折线上的点对应' + fri.label + '，正确选项是「' + fri.label + '」。'
+      : '折线' + (v === 0 ? '最高' : '最低') + '点对应' + target.label
+        + '（' + target.value + '℃），正确选项是「' + target.label + '」。';
   } else { // fill
     if (v === 0) {
       prompt = name + '：看折线统计图填空：这一周的最高气温是 ____ ℃，出现在星期____。';
       answer = hi.value + '℃，' + hi.label;
+      explanation = '折线最高点在' + hi.label + '，读数是 ' + hi.value + '℃。';
     } else if (v === 1) {
       prompt = name + '：看折线统计图填空：这一周的最低气温是 ____ ℃，出现在星期____。';
       answer = lo.value + '℃，' + lo.label;
+      explanation = '折线最低点在' + lo.label + '，读数是 ' + lo.value + '℃。';
     } else {
       prompt = name + '：看折线统计图填空：周四的最高气温是 ____ ℃。';
       answer = LINE_HIGH[3].value + '℃';
+      explanation = '周四折线上的点对应 ' + LINE_HIGH[3].value + '℃。';
     }
   }
-  return statSq(plan, context, i, prompt, answer, mode, data);
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
 }
 
 /** 组 H：可能性的大小（apply/choice/fill 行 mode=apply + questionType；judge/classify 走分类） */
@@ -775,7 +857,7 @@ function makeProbabilitySizeShape(plan, context, i, name, theme) {
   var maxColor = colors.slice().sort(function (a, b) { return bag[b] - bag[a]; })[0];
   var minColor = colors.slice().sort(function (a, b) { return bag[a] - bag[b]; })[0];
   var data = { mode: 'apply', steps: 1, questionType: qt };
-  var prompt, answer, mode = 'input';
+  var prompt, answer, explanation, mode = 'input';
   var desc = colors.map(function (c) { return bag[c] + '个' + c; }).join('、');
   var total = colors.reduce(function (acc, c) { return acc + bag[c]; }, 0);
   // P30-GEN-06（P30-16）：同 KP 跨题型共享「盒子里有…」长前缀会导致 sim≥0.85，
@@ -788,14 +870,20 @@ function makeProbabilitySizeShape(plan, context, i, name, theme) {
       prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到哪种颜色球的可能性最大？为什么？';
       answer = maxColor + '；' + maxColor + '数量最多，所以摸到的可能性最大';
+      explanation = '可能性大小与数量多少有关：' + maxColor + '有 ' + bag[maxColor]
+        + ' 个，数量最多，所以摸到' + maxColor + '的可能性最大。';
     } else if (v === 1) {
       prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到哪种颜色球的可能性最小？为什么？';
       answer = minColor + '；' + minColor + '数量最少，所以摸到的可能性最小';
+      explanation = '可能性大小与数量多少有关：' + minColor + '只有 ' + bag[minColor]
+        + ' 个，数量最少，所以摸到' + minColor + '的可能性最小。';
     } else {
       prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到可能性最大的球和可能性最小的球各是什么颜色？';
       answer = '可能性最大的是' + maxColor + '，可能性最小的是' + minColor;
+      explanation = '比较三种球的数量：' + maxColor + '有 ' + bag[maxColor] + ' 个最多，'
+        + minColor + '只有 ' + bag[minColor] + ' 个最少。';
     }
   } else if (qt === 'choice') {
     mode = 'choice';
@@ -806,32 +894,42 @@ function makeProbabilitySizeShape(plan, context, i, name, theme) {
       answer = maxColor;
       data.options = opts;
       data.correctIndex = opts.indexOf(maxColor);
+      explanation = maxColor + '有 ' + bag[maxColor] + ' 个，数量最多，摸到的可能性最大，正确选项是「'
+        + maxColor + '」。';
     } else if (v === 1) {
       var optsMin = Rng.shuffle(rng, colors.slice());
       prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到哪种球的可能性最小？';
       answer = minColor;
       data.options = optsMin;
       data.correctIndex = optsMin.indexOf(minColor);
+      explanation = minColor + '只有 ' + bag[minColor] + ' 个，数量最少，摸到的可能性最小，正确选项是「'
+        + minColor + '」。';
     } else {
       var optsN = Rng.shuffle(rng, colors.slice());
       prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到数量有 ' + bag['白球'] + ' 个的是哪种球？';
       answer = '白球';
       data.options = optsN;
       data.correctIndex = optsN.indexOf('白球');
+      explanation = '白球有 ' + bag['白球'] + ' 个，数量为 ' + bag['白球']
+        + ' 个的就是白球，正确选项是「白球」。';
     }
   } else { // fill
     if (v === 0) {
       prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到____球的可能性最大。';
       answer = maxColor;
+      explanation = maxColor + '有 ' + bag[maxColor] + ' 个，在三种球中数量最多，摸到的可能性最大。';
     } else if (v === 1) {
       prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到____球的可能性最小。';
       answer = minColor;
+      explanation = minColor + '只有 ' + bag[minColor] + ' 个，在三种球中数量最少，摸到的可能性最小。';
     } else {
       prompt = name + '：' + boxLead + desc + '，一共有 ____ 个球。';
       answer = String(total);
+      explanation = '球的总数是三种球数量之和：' + colors.map(function (c) { return bag[c]; }).join('＋')
+        + '＝' + total + ' 个。';
     }
   }
-  return statSq(plan, context, i, prompt, answer, mode, data);
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
 }
 
 /** 组 I：根据可能性推测——apply 行要 diagram 图（unit=个）；其余走分类形态；v=i%3 三变式 */
@@ -847,18 +945,21 @@ function makeProbabilityInferShape(plan, context, i, name, theme) {
   var intro = name + '：盒子里装有红球和白球（每组小球表示 1 个，左组●是红球 ' + red
     + ' 个，右组○是白球 ' + white + ' 个，见下图）。小组做摸球试验，每次摸一个、记下颜色后放回，'
     + '重复 20 次，结果摸到红球 16 次、白球 4 次。';
-  var prompt, answer;
+  var prompt, answer, explanation;
   if (v === 0) {
     prompt = intro + '根据试验结果推测：盒中哪种球可能更多？再摸一次最可能摸到什么球？';
     answer = '红球可能更多，再摸一次最可能摸到红球';
+    explanation = '20 次有放回试验中摸到红球 16 次、白球只有 4 次，频率高说明红球数量可能更多，再摸一次最可能摸到红球。';
   } else if (v === 1) {
     prompt = intro + '根据试验结果推测：盒中红球和白球哪种可能更少？为什么？';
     answer = '白球可能更少；试验中摸到白球只有 4 次，明显少于红球的 16 次';
+    explanation = answer;
   } else {
     prompt = intro + '20 次试验中摸到红球的次数比白球多几次？据此推测盒中哪种球可能更多？';
     answer = '多 ' + (red - white) + ' 次；推测红球可能更多';
+    explanation = '16－4＝' + (red - white) + ' 次，红球被摸到的次数远多于白球，据此推测红球可能更多。';
   }
-  return statSq(plan, context, i, prompt, answer, 'input', data);
+  return statSq(plan, context, i, prompt, answer, 'input', data, explanation);
 }
 
 function makeShapedStatsQuestion(plan, context, i) {
@@ -964,6 +1065,7 @@ function makeStatsQuestion(plan, context, i, kp) {
 
   var prompt, answer, steps, graphic;
   var judgeExplanation = null;
+  var nativeExpl = null; // P34-14：钟面/时间换算/经过时间 native 常量表自带的解题依据
   var chOpts = null;
   var data = { mode: 'apply', steps: steps, questionType: qt };
   if (type === 'average') {
@@ -1053,6 +1155,12 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：看条形统计图，' + bq.q;
       answer = chAns;
       data.choiceForm = true;
+      nativeExpl = (i % 3 === 2)
+        ? '人数最多的' + hiBar.label + '有 ' + hiBar.value + ' 人，最少的' + loBar.label + '有 '
+          + loBar.value + ' 人，相差 ' + hiBar.value + '－' + loBar.value + '＝' + (hiBar.value - loBar.value)
+          + ' 人，正确选项是「' + chAns + '」。'
+        : '柱子最' + (i % 3 === 0 ? '高' : '矮') + '的是' + targetC.label + '，有 '
+          + targetC.value + ' 人，正确选项是「' + chAns + '」。';
     } else if (plan.questionTypeId === 'judge') {
       var targetJ = (i % 3 === 0) ? hiBar : loBar;
       var isTrueJ = rng() < 0.5;
@@ -1073,6 +1181,16 @@ function makeStatsQuestion(plan, context, i, kp) {
         + '列式：' + hiBar.value + ' − ' + loBar.value + ' = ？';
       answer = hiBar.value - loBar.value;
       data.calcForm = true;
+    } else if (i % 3 === 0) {
+      nativeExpl = '条形图中柱子最高的是' + hiBar.label + '，有 ' + hiBar.value + ' 人；'
+        + '比最少的' + loBar.label + '多 ' + (hiBar.value - loBar.value) + ' 人。';
+    } else if (i % 3 === 1) {
+      nativeExpl = '条形图中柱子最矮的是' + loBar.label + '，有 ' + loBar.value + ' 人；'
+        + '比最多的' + hiBar.label + '少 ' + (hiBar.value - loBar.value) + ' 人。';
+    } else {
+      nativeExpl = '人数最多的' + hiBar.label + '有 ' + hiBar.value + ' 人，最少的' + loBar.label
+        + '有 ' + loBar.value + ' 人，相差 ' + hiBar.value + '－' + loBar.value + '＝'
+        + (hiBar.value - loBar.value) + ' 人。';
     }
   } else if (type === 'pie-chart') {
     var PIE = [
@@ -1162,14 +1280,22 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：调查记录整理成统计表后，数量' + (dcAskMax ? '最多' : '最少') + '的是哪一类？';
       data.choiceForm = true;
       steps = 2;
+      var dcPickVal = dcAskMax ? dcMax.value : dcMin.value;
+      nativeExpl = '统计表中「' + answer + '」有 ' + dcPickVal + tv.unit
+        + (dcAskMax ? '，比其他各类都多' : '，比其他各类都少') + '，正确选项是「' + answer + '」。';
     } else if (qt === 'fill') {
       answer = dcTotal;
       prompt = name + '：' + tv.ask + '表中各类数量一共有多少' + tv.unit + '？（合计：____）';
       steps = 2;
+      nativeExpl = '合计就是把各类数量相加：'
+        + series.map(function (s) { return s.value; }).join('＋')
+        + '＝' + dcTotal + '，所以一共有 ' + dcTotal + tv.unit + '。';
     } else {
       answer = dcMax.label + '（' + dcMax.value + tv.unit + '）';
       prompt = name + '：' + tv.ask + '并回答：数量最多的是哪一类，有多少' + tv.unit + '？';
       steps = 2;
+      nativeExpl = '整理成统计表后逐类比较数量，「' + dcMax.label + '」最多，有 '
+        + dcMax.value + tv.unit + '。';
     }
   } else if (type === 'clock') {
     // P25-09：钟面结构 native maker（g2-down-u01-k001，calc/fill/choice/apply）
@@ -1184,23 +1310,33 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + clkC.q; answer = clkC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var CLK_OPTS = [
-        { q: '钟面上一共有多少个大格？', a: '12个', o: ['10个', '11个', '12个', '24个'] },
-        { q: '分针走1个大格是多少分钟？', a: '5分钟', o: ['1分钟', '5分钟', '15分钟', '60分钟'] },
-        { q: '时针从3走到7，经过了几小时？', a: '4小时', o: ['3小时', '4小时', '5小时', '7小时'] },
-        { q: '时针指向8、分针指向12，这时是几时？', a: '8时', o: ['7时', '8时', '9时', '12时'] }
+        { q: '钟面上一共有多少个大格？', a: '12个', o: ['10个', '11个', '12个', '24个'],
+          e: '钟面一圈均匀分成 12 个大格，正确选项是「12个」。' },
+        { q: '分针走1个大格是多少分钟？', a: '5分钟', o: ['1分钟', '5分钟', '15分钟', '60分钟'],
+          e: '分针走 1 个大格是 5 分钟，正确选项是「5分钟」。' },
+        { q: '时针从3走到7，经过了几小时？', a: '4小时', o: ['3小时', '4小时', '5小时', '7小时'],
+          e: '时针每走 1 个大格经过 1 小时，7－3＝4，经过 4 小时，正确选项是「4小时」。' },
+        { q: '时针指向8、分针指向12，这时是几时？', a: '8时', o: ['7时', '8时', '9时', '12时'],
+          e: '分针指向 12 表示整点，时针指向几就是几时，所以是 8 时，正确选项是「8时」。' }
       ];
       var clkO = CLK_OPTS[i % CLK_OPTS.length];
       prompt = name + '：' + clkO.q; answer = clkO.a;
       chOpts = Rng.shuffle(rng, clkO.o); data.choiceForm = true;
+      nativeExpl = clkO.e;
     } else {
       var CLK_FILL = [
-        { q: '看钟面：时针指向9、分针指向12，现在是几时？', a: '9时' },
-        { q: '看钟面：时针走过3、分针指向6，现在是几时几分？', a: '3时30分' },
-        { q: '分针从12走到4，走了几个大格？是多少分钟？', a: '4个大格，20分钟' },
-        { q: '钟面上一共有多少个大格？每个大格分成几个小格？', a: '12个大格，每个大格5个小格' }
+        { q: '看钟面：时针指向9、分针指向12，现在是几时？', a: '9时',
+          e: '分针指向 12 是整点，时针指向 9，所以是 9 时。' },
+        { q: '看钟面：时针走过3、分针指向6，现在是几时几分？', a: '3时30分',
+          e: '时针走过 3 是 3 时多；分针指向 6，6×5＝30，所以是 3 时 30 分。' },
+        { q: '分针从12走到4，走了几个大格？是多少分钟？', a: '4个大格，20分钟',
+          e: '分针走 1 大格是 5 分钟，走 4 个大格就是 4×5＝20 分钟。' },
+        { q: '钟面上一共有多少个大格？每个大格分成几个小格？', a: '12个大格，每个大格5个小格',
+          e: '钟面一圈有 12 个大格，每个大格又平均分成 5 个小格。' }
       ];
       var clkF = CLK_FILL[i % CLK_FILL.length];
       prompt = name + '：' + (qt === 'fill' ? fillStem(clkF.q) : applyStem(clkF.q)); answer = clkF.a;
+      nativeExpl = clkF.e;
     }
   } else if (type === 'time-convert') {
     // P25-09：时、分、秒单位换算 native maker（g2-down-u01-k002）
@@ -1216,23 +1352,33 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + tcC.q; answer = tcC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var TC_OPTS = [
-        { q: '3时换算成分是多少？', a: '180分', o: ['30分', '60分', '180分', '300分'] },
-        { q: '2分换算成秒是多少？', a: '120秒', o: ['12秒', '60秒', '120秒', '200秒'] },
-        { q: '180秒换算成分是多少？', a: '3分', o: ['2分', '3分', '4分', '18分'] },
-        { q: '1时15分换算成分是多少？', a: '75分', o: ['60分', '75分', '115分', '150分'] }
+        { q: '3时换算成分是多少？', a: '180分', o: ['30分', '60分', '180分', '300分'],
+          e: '1 时＝60 分，3 时就是 3×60＝180 分，正确选项是「180分」。' },
+        { q: '2分换算成秒是多少？', a: '120秒', o: ['12秒', '60秒', '120秒', '200秒'],
+          e: '1 分＝60 秒，2 分就是 2×60＝120 秒，正确选项是「120秒」。' },
+        { q: '180秒换算成分是多少？', a: '3分', o: ['2分', '3分', '4分', '18分'],
+          e: '60 秒＝1 分，180÷60＝3，所以 180 秒＝3 分，正确选项是「3分」。' },
+        { q: '1时15分换算成分是多少？', a: '75分', o: ['60分', '75分', '115分', '150分'],
+          e: '1 时＝60 分，60＋15＝75，所以 1 时 15 分＝75 分，正确选项是「75分」。' }
       ];
       var tcO = TC_OPTS[i % TC_OPTS.length];
       prompt = name + '：' + tcO.q; answer = tcO.a;
       chOpts = Rng.shuffle(rng, tcO.o); data.choiceForm = true;
+      nativeExpl = tcO.e;
     } else {
       var TC_FILL = [
-        { q: '4时 = （ ）分', a: '240分' },
-        { q: '5分 = （ ）秒', a: '300秒' },
-        { q: '120秒 = （ ）分', a: '2分' },
-        { q: '1分40秒 = （ ）秒', a: '100秒' }
+        { q: '4时 = （ ）分', a: '240分',
+          e: '1 时＝60 分，4×60＝240，所以 4 时＝240 分。' },
+        { q: '5分 = （ ）秒', a: '300秒',
+          e: '1 分＝60 秒，5×60＝300，所以 5 分＝300 秒。' },
+        { q: '120秒 = （ ）分', a: '2分',
+          e: '60 秒＝1 分，120÷60＝2，所以 120 秒＝2 分。' },
+        { q: '1分40秒 = （ ）秒', a: '100秒',
+          e: '1 分＝60 秒，60＋40＝100，所以 1 分 40 秒＝100 秒。' }
       ];
       var tcF = TC_FILL[i % TC_FILL.length];
       prompt = name + '：' + (qt === 'fill' ? fillStem(tcF.q) : applyStem(tcF.q)); answer = tcF.a;
+      nativeExpl = tcF.e;
     }
   } else if (type === 'elapsed-time') {
     // P25-09：计算简单经过时间 native maker（g2-down-u01-k003）
@@ -1247,26 +1393,36 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + etC.q; answer = etC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var ET_OPTS = [
-        { q: '小明7:30从家出发，7:45到达学校，他路上用了多长时间？', a: '15分钟', o: ['10分钟', '15分钟', '20分钟', '25分钟'] },
-        { q: '一节课8:50开始，9:30结束，这节课有多少分钟？', a: '40分钟', o: ['30分钟', '40分钟', '50分钟', '60分钟'] },
-        { q: '一场电影下午2:00开始，下午4:00结束，放映了几小时？', a: '2小时', o: ['1小时', '2小时', '3小时', '4小时'] },
-        { q: '小红晚上8:00睡觉，第二天早上6:00起床，她睡了几小时？', a: '10小时', o: ['8小时', '9小时', '10小时', '12小时'] }
+        { q: '小明7:30从家出发，7:45到达学校，他路上用了多长时间？', a: '15分钟', o: ['10分钟', '15分钟', '20分钟', '25分钟'],
+          e: '都在 7 点这一小时内，用结束分钟减开始分钟：45－30＝15，路上用了 15 分钟，正确选项是「15分钟」。' },
+        { q: '一节课8:50开始，9:30结束，这节课有多少分钟？', a: '40分钟', o: ['30分钟', '40分钟', '50分钟', '60分钟'],
+          e: '跨整点分段算：8:50 到 9:00 是 10 分钟，9:00 到 9:30 是 30 分钟，合起来 40 分钟，正确选项是「40分钟」。' },
+        { q: '一场电影下午2:00开始，下午4:00结束，放映了几小时？', a: '2小时', o: ['1小时', '2小时', '3小时', '4小时'],
+          e: '4－2＝2，电影放映了 2 小时，正确选项是「2小时」。' },
+        { q: '小红晚上8:00睡觉，第二天早上6:00起床，她睡了几小时？', a: '10小时', o: ['8小时', '9小时', '10小时', '12小时'],
+          e: '晚上 8 时到夜里 12 时是 4 小时，夜里 12 时到早上 6 时是 6 小时，4＋6＝10，正确选项是「10小时」。' }
       ];
       var etO = ET_OPTS[i % ET_OPTS.length];
       prompt = name + '：' + etO.q; answer = etO.a;
       chOpts = Rng.shuffle(rng, etO.o); data.choiceForm = true;
+      nativeExpl = etO.e;
     } else {
       var ET_FILL = [
-        { q: '小明7:30由家动身，7:45抵达学校，路上经过了多少分钟？', a: '15分钟' },
-        { q: '一节课8:50开始，9:30结束，这节课上了多少分钟？', a: '40分钟' },
-        { q: '妈妈上午8:00上班，在公司工作8小时，妈妈下午几时下班？', a: '下午4:00（16:00）' },
-        { q: '一列火车9:10进站，9:55开出，在车站停靠了多少分钟？', a: '45分钟' }
+        { q: '小明7:30由家动身，7:45抵达学校，路上经过了多少分钟？', a: '15分钟',
+          e: '都在 7 点这一小时内，用结束分钟减开始分钟：45－30＝15，路上经过 15 分钟。' },
+        { q: '一节课8:50开始，9:30结束，这节课上了多少分钟？', a: '40分钟',
+          e: '跨整点分段算：8:50 到 9:00 是 10 分钟，9:00 到 9:30 是 30 分钟，一共 40 分钟。' },
+        { q: '妈妈上午8:00上班，在公司工作8小时，妈妈下午几时下班？', a: '下午4:00（16:00）',
+          e: '从 8 时起经过 8 小时：8＋8＝16，妈妈 16:00 下班，也就是下午 4:00。' },
+        { q: '一列火车9:10进站，9:55开出，在车站停靠了多少分钟？', a: '45分钟',
+          e: '都在 9 点这一小时内，55－10＝45，火车在车站停靠了 45 分钟。' }
       ];
       var etF = ET_FILL[i % ET_FILL.length];
       // P30-GEN-06（P30-16）：apply 与 fill 共享同一段故事题干会导致 sim≥0.85，
       // apply 单独换词（由家动身→离家、抵达→到达）打散共享 3-gram。
       var etApply = String(etF.q).replace(/由家动身/g, '离家').replace(/抵达/g, '到达');
       prompt = name + '：' + (qt === 'fill' ? fillStem(etF.q) : applyStem(etApply)); answer = etF.a;
+      nativeExpl = etF.e;
     }
   } else if (type === 'calendar') {
     // P25-09：年、月、日基本知识 native maker（g3-down-u06-k001）
@@ -1281,23 +1437,33 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + calC.q; answer = calC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var CAL_OPTS = [
-        { q: '下面的月份中，哪个月是有31天的大月？', a: '7月', o: ['4月', '6月', '7月', '11月'] },
-        { q: '一年一共有多少个月？', a: '12个月', o: ['10个月', '11个月', '12个月', '24个月'] },
-        { q: '11月一共有多少天？', a: '30天', o: ['28天', '29天', '30天', '31天'] },
-        { q: '平年全年一共有多少天？', a: '365天', o: ['364天', '365天', '366天', '400天'] }
+        { q: '下面的月份中，哪个月是有31天的大月？', a: '7月', o: ['4月', '6月', '7月', '11月'],
+          e: '有 31 天的月份是大月，7 月有 31 天，正确选项是「7月」。' },
+        { q: '一年一共有多少个月？', a: '12个月', o: ['10个月', '11个月', '12个月', '24个月'],
+          e: '一年有 12 个月，正确选项是「12个月」。' },
+        { q: '11月一共有多少天？', a: '30天', o: ['28天', '29天', '30天', '31天'],
+          e: '11 月是小月，有 30 天，正确选项是「30天」。' },
+        { q: '平年全年一共有多少天？', a: '365天', o: ['364天', '365天', '366天', '400天'],
+          e: '平年全年有 365 天，正确选项是「365天」。' }
       ];
       var calO = CAL_OPTS[i % CAL_OPTS.length];
       prompt = name + '：' + calO.q; answer = calO.a;
       chOpts = Rng.shuffle(rng, calO.o); data.choiceForm = true;
+      nativeExpl = calO.e;
     } else {
       var CAL_FILL = [
-        { q: '一年有多少个月？哪几个月是有31天的大月？', a: '12个月；1月、3月、5月、7月、8月、10月、12月是大月' },
-        { q: '4月有多少天？它是大月还是小月？', a: '30天，是小月' },
-        { q: '6月1日的前一天是几月几日？', a: '5月31日' },
-        { q: '7月和8月是连续的两个大月，两个月一共有多少天？', a: '62天' }
+        { q: '一年有多少个月？哪几个月是有31天的大月？', a: '12个月；1月、3月、5月、7月、8月、10月、12月是大月',
+          e: '一年有 12 个月，其中 1、3、5、7、8、10、12 月是有 31 天的大月。' },
+        { q: '4月有多少天？它是大月还是小月？', a: '30天，是小月',
+          e: '4 月有 30 天，30 天的月份是小月。' },
+        { q: '6月1日的前一天是几月几日？', a: '5月31日',
+          e: '5 月是大月有 31 天，所以 6 月 1 日的前一天是 5 月 31 日。' },
+        { q: '7月和8月是连续的两个大月，两个月一共有多少天？', a: '62天',
+          e: '7 月和 8 月各有 31 天，31＋31＝62 天。' }
       ];
       var calF = CAL_FILL[i % CAL_FILL.length];
       prompt = name + '：' + (qt === 'fill' ? fillStem(calF.q) : applyStem(calF.q)); answer = calF.a;
+      nativeExpl = calF.e;
     }
   } else if (type === 'leap-year') {
     // P25-09：平年与闰年判断 native maker（g3-down-u06-k002）
@@ -1312,14 +1478,19 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + lyC.q; answer = lyC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var LY_OPTS = [
-        { q: '下面哪一年是闰年？', a: '2024年', o: ['2021年', '2022年', '2023年', '2024年'] },
-        { q: '下面哪一年是平年？', a: '2023年', o: ['2016年', '2020年', '2023年', '2024年'] },
-        { q: '下面哪个整百年份是闰年？', a: '2000年', o: ['1900年', '2000年', '2100年', '2200年'] },
-        { q: '闰年的2月有多少天？', a: '29天', o: ['28天', '29天', '30天', '31天'] }
+        { q: '下面哪一年是闰年？', a: '2024年', o: ['2021年', '2022年', '2023年', '2024年'],
+          e: '公历年份是 4 的倍数的一般是闰年，2024÷4＝506 没有余数，正确选项是「2024年」。' },
+        { q: '下面哪一年是平年？', a: '2023年', o: ['2016年', '2020年', '2023年', '2024年'],
+          e: '2023÷4 有余数，不是 4 的倍数，所以 2023 年是平年，正确选项是「2023年」。' },
+        { q: '下面哪个整百年份是闰年？', a: '2000年', o: ['1900年', '2000年', '2100年', '2200年'],
+          e: '整百年份必须是 400 的倍数才是闰年，2000÷400＝5 没有余数，正确选项是「2000年」。' },
+        { q: '闰年的2月有多少天？', a: '29天', o: ['28天', '29天', '30天', '31天'],
+          e: '闰年的 2 月有 29 天，比平年的 2 月多 1 天，正确选项是「29天」。' }
       ];
       var lyO = LY_OPTS[i % LY_OPTS.length];
       prompt = name + '：' + lyO.q; answer = lyO.a;
       chOpts = Rng.shuffle(rng, lyO.o); data.choiceForm = true;
+      nativeExpl = lyO.e;
     } else {
       // P32-AS-14：fill 只判可判短答（short/acc），完整说理放 explanation（提交后通道）；
       // apply 保留完整参考答案（说理开放题，gradeUserAnswer 依长文本边界返回 null→家长检查）。
@@ -1338,6 +1509,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         var lyExplain = lyF.a;
       } else {
         answer = lyF.a;
+        nativeExpl = lyF.a; // P34-14：apply 参考答案本身即完整判断理由
       }
     }
   } else {
@@ -1358,6 +1530,15 @@ function makeStatsQuestion(plan, context, i, kp) {
     prompt = name + '：' + readStem;
     answer = rq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+    if (i % READ_Q.length === 0) {
+      nativeExpl = '条形图中柱子最高的是' + hiRead.label + '，对应 ' + hiRead.value + ' 人。';
+    } else if (i % READ_Q.length === 1) {
+      nativeExpl = '条形图中柱子最矮的是' + loRead.label + '，对应 ' + loRead.value + ' 人。';
+    } else {
+      nativeExpl = '最多的' + hiRead.label + '有 ' + hiRead.value + ' 人，最少的' + loRead.label
+        + '有 ' + loRead.value + ' 人，相差 ' + hiRead.value + '－' + loRead.value + '＝'
+        + (hiRead.value - loRead.value) + ' 人。';
+    }
   }
 
   if (graphic) data.graphic = graphic;
@@ -1371,6 +1552,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     ? { value: answer, acceptable: [] }
     : { value: String(answer), acceptable: lyAcceptable || [] };
   if (judgeExplanation) answerObj.explanation = judgeExplanation;
+  if (nativeExpl) answerObj.explanation = nativeExpl; // P34-14
   if (lyExplain) answerObj.explanation = lyExplain; // P32-AS-14：说理 fill 的完整理由走解析通道
 
   return {

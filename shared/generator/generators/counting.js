@@ -220,7 +220,12 @@ function makeCountingQuestion(plan, context, i, kp) {
     }
     answer = a * b;
     steps = 2;
+    var countingWhy = '搭配问题用乘法原理：每种水果都能分别和 ' + b + ' 种饮料搭配，'
+      + a + ' × ' + b + ' = ' + answer + ' 种';
+    if (cQt === 'fill') countingWhy += '，所以空格填 ' + answer;
+    if (cQt === 'choice') countingWhy += '，正确选项是「' + answer + '」';
   }
+  var finalExpl = (typeof countingWhy !== 'undefined' && countingWhy) ? countingWhy + '。' : null;
 
   return {
     knowledgePointId: pkp(plan),
@@ -230,7 +235,7 @@ function makeCountingQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
+    answer: { value: String(answer), acceptable: [], explanation: finalExpl },
     answerMode: 'input',
     data: {
       mode: 'apply',

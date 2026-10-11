@@ -110,6 +110,14 @@ var PROBLEM_TEMPLATES = {
 
 var TEMPLATE_KEYS = Object.keys(PROBLEM_TEMPLATES);
 
+// P34-13：calc 题型的运算意义讲解（按模板主运算映射，教学口径与 arithmetic 族一致）。
+var OP_MEANING = {
+  add: '这是把两部分合起来求总数，用加法',
+  sub: '这是从总数里去掉一部分求剩余（或比较多少），用减法',
+  mult: '这是求几个相同加数的和（或求一个数的几倍），用乘法',
+  div: '这是把总数平均分求每份（或求能分几份），用除法'
+};
+
 // FINAL-31c：KP 运算约束——模板运算必须 ⊆ KP 语义允许运算，杜绝「加法 KP 产出减法应用题」。
 // 运算真源：plan.semanticParams.operations（SemanticParameters.attachToPlan 注入的 KBL
 // semantic.operations，token 为 addition/subtraction/multiplication/division）。
@@ -363,6 +371,11 @@ function makeApplicationQuestion(plan, context, i, meta) {
     // 值约定：options 字符串化（optionsPresent 要求 string 元素），answer.value ∈ options
     var options = Rng.shuffle(rng, [ans].concat(distractors).slice(0, 4)).map(function (n) { return String(n); });
     var correctIndex = options.indexOf(String(ans));
+    // P34-14：讲解只取本题模板的运算意义与本题数字，列式与得数均可由题目自身确定
+    var choiceExpr = buildExpression(template, nums);
+    var choiceExpl = OP_MEANING[PROBLEM_TEMPLATES[template].ops[0]]
+      + '，列式 ' + formatExpr(choiceExpr) + ' = ' + ans
+      + '，正确选项是「' + ans + '」。';
     return {
       knowledgePointId: pkp(plan),
       questionType: 'choice',
@@ -371,7 +384,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: choicePrompt,
-      answer: String(ans),
+      answer: { value: String(ans), acceptable: [], explanation: choiceExpl },
       answerMode: 'choice',
       data: {
         mode: 'choice',
@@ -430,6 +443,29 @@ function makeApplicationQuestion(plan, context, i, meta) {
     stemPrompt = '____ ' + appExpr.ops[0] + ' ' + appExpr.operands[1] + ' = ' + answer;
     stemAnswer = String(appExpr.operands[0]);
   }
+  // P34-13：calc 用模板主运算给运算意义讲解（素材取自该题 PROBLEM_TEMPLATES.ops），
+  // 不再让汇聚层只补「算式 = 得数」的裸演算。
+  // P34-14：apply/fill 补同口径讲解——运算意义 + 由本题数字确定的列式与得数，
+  // 不引入题目以外的信息；fill 还原完整算式并指出空格值。
+  var answerField = stemAnswer;
+  var stemOpMeaning = OP_MEANING[PROBLEM_TEMPLATES[template].ops[0]];
+  if (qt === 'calc') {
+    answerField = {
+      value: stemAnswer, acceptable: [],
+      explanation: stemOpMeaning + '：' + formatExpr(appExpr) + ' = ' + stemAnswer
+    };
+  } else if (qt === 'apply') {
+    answerField = {
+      value: stemAnswer, acceptable: [],
+      explanation: stemOpMeaning + '，列式 ' + formatExpr(appExpr) + ' = ' + stemAnswer + '。'
+    };
+  } else if (qt === 'fill') {
+    answerField = {
+      value: stemAnswer, acceptable: [],
+      explanation: stemOpMeaning + '，完整算式是 ' + formatExpr(appExpr) + ' = ' + answer
+        + '，所以空格填 ' + stemAnswer + '。'
+    };
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -439,7 +475,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: stemPrompt,
-    answer: stemAnswer,
+    answer: answerField,
     answerMode: 'input',
     data: {
       mode: qt,
