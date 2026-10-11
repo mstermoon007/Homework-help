@@ -271,22 +271,26 @@ function makeClassifyShape(plan, context, i, name, theme) {
     }
   } else if (qt === 'apply') {
     data.steps = 2;
+    // P35-FMT（DEBT-5）：apply 与 classify 同核骨架（共享「按 criterion 分类 + 清单」连续 3-gram）
+    // 被判 format 债务。改为「待整理材料 + 编号记录 + 应用任务」形态：材料用编号呈现，
+    // 任务落在「用分类结果解决问题」上，与 classify 的纯分类操作分工；答案/解析不变。
+    var numberedList = theme.items.map(function (it, idx) { return (idx + 1) + '）' + it; }).join('；');
     if (v === 0) {
       // P32-AS-16：原句把结论 theme.conclusion 直接写在题面（自问自答）。改为只给任务，
       // 结论作为参考答案/解析在提交后通道呈现；说理任务经 AS-14 边界走家长检查（grade=null）。
-      prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。先写出分类结果，再说一说按这个标准分类说明了什么。';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。请按「' + theme.criterion + '」分类整理这些材料，再说一说整理结果说明了什么。';
       answer = statPartitionText(theme) + '。' + theme.conclusion;
       explanation = '逐个按「' + theme.criterion + '」归类后，得到：'
         + statPartitionText(theme) + '。' + theme.conclusion;
     } else if (v === 1) {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。先完成分类，再数出每一类各有多少项。';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。按「' + theme.criterion + '」分类后，向大家汇报每一类各有多少项。';
       answer = countsText;
       explanation = '分类完成后逐类点数，' + answer + '。';
     } else {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。哪一类包含的事物最多？比最少的一类多几项？';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。按「' + theme.criterion + '」分类后比较一下：哪一类包含的事物最多？比最少的一类多几项？';
       var gMin = groupsArr.slice().sort(function (a, b) { return a.members.length - b.members.length; })[0];
       answer = '「' + gMax.label + '」最多（' + gMax.members.length + ' 项），比「' + gMin.label
         + '」多 ' + (gMax.members.length - gMin.members.length) + ' 项';

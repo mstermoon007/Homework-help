@@ -132,8 +132,9 @@ function timesData(base, times) {
 
 function makeTimesCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 2, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 2, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '列式计算：' + base + ' 的 ' + times + ' 倍是多少？', String(ans), [String(ans)],
@@ -142,8 +143,9 @@ function makeTimesCalc(plan, context, i) {
 
 function makeTimesFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 2, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 2, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '求一个数的几倍是多少，用乘法计算：' + base + ' × ' + times + ' = ____', String(ans), [String(ans)],
@@ -152,8 +154,9 @@ function makeTimesFill(plan, context, i) {
 
 function makeTimesApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 3, 9);
-  var times = Rng.randInt(rng, 2, 4);
+  var nr = nrOf(plan);
+  var base = riC(rng, 3, 9, nr);
+  var times = riC(rng, 2, 4, nr);
   var ans = base * times;
   var item = Rng.pick(rng, ['根小棒', '朵红花', '颗星星', '只纸鹤']);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
@@ -163,8 +166,9 @@ function makeTimesApply(plan, context, i) {
 
 function makeTimesChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 3, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 3, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   q.prompt = '下面哪个算式表示「' + base + ' 的 ' + times + ' 倍」？（  ）';
   var correctExpr = base + ' × ' + times;
@@ -198,7 +202,8 @@ function fractionData(withOperation, parts, taken) {
 
 function makeFractionCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 4, 9);
+  var nr = nrOf(plan);
+  var den = riC(rng, 4, 9, nr);
   var ans = '1/' + den;
   var q = buildBase(plan, context, i, fractionData(true, den, 1));
   return finish(q, '列式计算：把单位“1”平均分成 ' + den + ' 份，每份是单位“1”的几分之几？', ans, [ans],
@@ -207,8 +212,9 @@ function makeFractionCalc(plan, context, i) {
 
 function makeFractionFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 4, 9);
-  var num = Rng.randInt(rng, 2, den - 1);
+  var nr = nrOf(plan);
+  var den = riC(rng, 4, 9, nr);
+  var num = riC(rng, 2, Math.max(2, den - 1), nr);
   var ans = num + '/' + den;
   var q = buildBase(plan, context, i, fractionData(false, den, num));
   return finish(q, '把单位“1”平均分成 ' + den + ' 份，表示这样 ' + num + ' 份的数是 ____。', ans, [ans],
@@ -226,8 +232,9 @@ function makeFractionApply(plan, context, i) {
 
 function makeFractionChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 5, 9);
-  var num = Rng.randInt(rng, 2, den - 1);
+  var nr = nrOf(plan);
+  var den = riC(rng, 5, 9, nr);
+  var num = riC(rng, 2, Math.max(2, den - 1), nr);
   var q = buildBase(plan, context, i, fractionData(false, den, num));
   q.prompt = '下面哪个分数的分数单位是 1/' + den + '？（  ）';
   var fracAns = num + '/' + den;
@@ -338,8 +345,9 @@ function makeAreaChoice(plan, context, i) {
 
 function makeAreaGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 6, 9);
-  var b = Rng.randInt(rng, 3, a - 2);
+  var nr = nrOf(plan);
+  var a = riC(rng, 6, 9, nr);
+  var b = riC(rng, 3, Math.max(3, a - 2), nr);
   var winner = Rng.pick(rng, [['甲', a], ['乙', b]]);
   var q = buildBase(plan, context, i, { subType: 'area-compare', quantityKind: 'area', gridA: a, gridB: b });
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
@@ -379,6 +387,18 @@ function makeAreaJudge(plan, context, i) {
  * ================================================================ */
 
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+
+/* P35-DEBT-1：难度执行端消费——用语义边界 [lo,hi] 与 plan.constraints.numberRange 取交集，
+ * 让数值范围随难度分化；语义边界仍为硬地板/天花板，numberRange 在此范围内伸缩。 */
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return ri(rng, min, max);
+}
 
 /* ================================================================
  * P28-COMPOSITION-DIVERSIFY-01：「数的组成」纯代码多样化生成
@@ -476,8 +496,8 @@ function validateCompositionItem(item, t, o, n) {
   if (/参考/.test(item.stem + item.apply + item.fill)) throw new Error('composition: 题干仍含答案显示');
 }
 
-function buildCompositionItem(rng) {
-  var t = ri(rng, 1, 9), o = ri(rng, 1, 9);
+function buildCompositionItem(rng, name, nr) {
+  var t = riC(rng, 1, 9, nr), o = riC(rng, 1, 9, nr);
   var n = t * 10 + o;
   var reverse = rng() < 0.5;
 
@@ -527,12 +547,12 @@ function buildCompositionItem(rng) {
   return item;
 }
 
-function buildNumberConceptItem(rng, name) {
+function buildNumberConceptItem(rng, name, nr) {
   // P28-FIX6：g1-down-u03-k001「数数」——一个一个地数/十个十个地数，10个一是十、10个十是一百
   // （数=逐次加一/加十，operation 如实标 add 并内嵌加法参考式，承载 calc expressionPresent）
   if (name.indexOf('数数') !== -1) {
     if (rng() < 0.5) {
-      var ct = ri(rng, 2, 10);
+      var ct = riC(rng, 2, 10, nr);
       var tensTotal = ct * 10;
       // P32-AS-16：参考式含完整得数（…= tensTotal），删得数保留加法支架（末步 = ？），
       // 同时满足 calc expressionPresent（type-contract 要求题面含可求值算式）。
@@ -549,7 +569,7 @@ function buildNumberConceptItem(rng, name) {
         apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数，' + ct + ' 个十是多少根？',
         operation: 'add' };
     }
-    var co = ri(rng, 2, 9);
+    var co = riC(rng, 2, 9, nr);
     var onesExpr;
     if (co <= 5) {
       onesExpr = [];
@@ -566,7 +586,7 @@ function buildNumberConceptItem(rng, name) {
   // P28-FIX6：g1-up-u04-k001「11—20数的认识」——素材限定 11~19（1 个十和几个一）
   if (name.indexOf('11—20') !== -1 || name.indexOf('11-20') !== -1 ||
       name.indexOf('11～20') !== -1 || name.indexOf('11~20') !== -1) {
-    var o2 = ri(rng, 1, 9);
+    var o2 = riC(rng, 1, 9, nr);
     var n2 = 10 + o2;
     if (rng() < 0.5) {
       return { stem: n2 + ' 里面有几个十和几个一？（10 + ' + o2 + ' = ？）',
@@ -583,19 +603,19 @@ function buildNumberConceptItem(rng, name) {
   // P25-09：g1-up-u01-k001「1-5数的认识」——素材必须限定在 1~5，
   // 不能落默认分支的两位数（off-grade）；n∈2..5 保证 n−1 ≥ 1。
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
-    var n5 = ri(rng, 2, 5);
+    var n5 = riC(rng, 2, 5, nr);
     return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
       apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
-    var x0 = ri(rng, 12, 88);
+    var x0 = riC(rng, 12, 88, nr);
     return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（' + x0 + ' + 1 = ？）',
       answer: String(x0 + 1), options: [String(x0 + 1), String(x0 + 10), String(x0 - 1)],
       apply: '在百数表（每行10个数）里圈出 ' + x0 + '，它右边一格的数是多少？（' + x0 + ' + 1 = ？）' };
   }
   if (name.indexOf('近似') !== -1 || name.indexOf('改写') !== -1) {
-    var n0 = ri(rng, 2, 8) * 10000;
+    var n0 = riC(rng, 2, 8, nr) * 10000;
     return { stem: '把 ' + n0 + ' 改写成用「万」作单位的数：' + n0 + ' = ' + (n0 / 10000) + ' × 10000，等于多少万？',
       answer: String(n0 / 10000) + '万', options: [n0 / 10000 + '万', n0 / 1000 + '万', n0 + '万'],
       fill: '' + n0 + ' = ____ 万',
@@ -615,20 +635,20 @@ function buildNumberConceptItem(rng, name) {
   }
   if (name.indexOf('数位') !== -1) {
     // FINAL-139：位值用「几个十几个一」语言 + 整十数加一位数（G1 已学），不用未教学的 ×10
-    var tens = ri(rng, 1, 9), ones = ri(rng, 1, 9);
+    var tens = riC(rng, 1, 9, nr), ones = riC(rng, 1, 9, nr);
     var num0 = tens * 10 + ones;
     return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
       apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
-    var cur = ri(rng, 11, 88);
+    var cur = riC(rng, 11, 88, nr);
     return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
       answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
       apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '（' + cur + ' − 1 = ' + (cur - 1) + '），后一个数是多少？' };
   }
   if (name.indexOf('比较') !== -1) {
-    var a0 = ri(rng, 12, 98), b0 = a0 + ri(rng, 1, 9) * (rng() < 0.5 ? 1 : -1);
+    var a0 = riC(rng, 12, 98, nr), b0 = a0 + riC(rng, 1, 9, nr) * (rng() < 0.5 ? 1 : -1);
     if (b0 <= 10) b0 = a0 + 5;
     return { stem: '比较大小：' + Math.min(a0, b0) + ' ○ ' + Math.max(a0, b0) + '（参考：' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '）',
       answer: '<', options: ['>', '<', '='],
@@ -637,7 +657,7 @@ function buildNumberConceptItem(rng, name) {
   if (name.indexOf('组成') !== -1) {
     // P28-COMPOSITION-DIVERSIFY-01：纯代码多样化生成（正向/逆向 × 问答/填空/6类语境），
     // 题干不再内嵌答案；详见 buildCompositionItem。
-    return buildCompositionItem(rng);
+    return buildCompositionItem(rng, name, nr);
   }
   if (name.indexOf('算盘') !== -1) {
     // P25-09：算盘认数（g2-down-u04-k004）——一个上珠表示5、一个下珠表示1
@@ -660,7 +680,7 @@ function buildNumberConceptItem(rng, name) {
   }
   // 读写/认识（默认）
   // FINAL-139：同上，计数器位值用「几个十和几个一」+ 整十数加一位数，不用 ×10
-  var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
+  var t1 = riC(rng, 1, 9, nr), o1 = riC(rng, 1, 9, nr);
   // P32-AS-16：删括号内完整算式（t1×10 + o1 = 结果直接写出写作答案），珠数组成保留；
   // 支架式保留「整十数 + 一位数 = ？」承载 expressionPresent
   return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ？），写作多少？',
@@ -670,10 +690,10 @@ function buildNumberConceptItem(rng, name) {
 
 // P28-FIX6：g1-up-u05-k001「凑十法」——拆小数凑十再算（题面是加法，operation 如实标 add；
 // KP semantic.operations=[]，attach 会把关系过滤为空，不产生越界声明）
-function buildMakeTenItem(rng) {
-  var a = ri(rng, 8, 9);
+function buildMakeTenItem(rng, name, nr) {
+  var a = riC(rng, 8, 9, nr);
   var need = 10 - a;
-  var b = ri(rng, need + 1, 9);
+  var b = riC(rng, need + 1, 9, nr);
   var rest = b - need;
   var sum = a + b;
   // P32-AS-16：删括号内「10 + rest = sum」末步得数；分解式保留（最终 = ？ 承担求答）
@@ -685,8 +705,8 @@ function buildMakeTenItem(rng) {
 }
 
 // P28-FIX6：g3-up-u02-k003「有括号运算顺序」——先算小括号里面的，再算括号外面的
-function buildBracketOrderItem(rng) {
-  var x = ri(rng, 2, 9), y = ri(rng, 2, 9), z = ri(rng, 2, 5);
+function buildBracketOrderItem(rng, name, nr) {
+  var x = riC(rng, 2, 9, nr), y = riC(rng, 2, 9, nr), z = riC(rng, 2, 5, nr);
   var inner = x + y;
   var ans = inner * z;
   return { stem: '先算小括号里面的：(' + x + ' + ' + y + ') × ' + z + ' = ' + inner + ' × ' + z + ' = ？（先算 ' + x + ' + ' + y + ' = ' + inner + '）',
@@ -697,10 +717,10 @@ function buildBracketOrderItem(rng) {
 }
 
 // P28-FIX6：g3-up-u02-k004「脱式计算规范」——等号上下对齐，一步一计算，不跳步
-function buildStepwiseItem(rng) {
-  var a = ri(rng, 12, 49), b = ri(rng, 11, 39);
+function buildStepwiseItem(rng, name, nr) {
+  var a = riC(rng, 12, 49, nr), b = riC(rng, 11, 39, nr);
   var s1 = a + b;
-  var c = ri(rng, 2, s1 - 1);
+  var c = riC(rng, 2, Math.max(2, s1 - 1), nr);
   var ans = s1 - c;
   return { stem: '按脱式计算规范一步一步算：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + ' = ？（第一步 ' + a + ' + ' + b + ' = ' + s1 + '）',
     answer: String(ans), options: [String(ans), String(s1), String(a + b + c)],
@@ -709,9 +729,9 @@ function buildStepwiseItem(rng) {
     operation: 'mixed' };
 }
 
-function buildNegativeItem(rng, name) {
+function buildNegativeItem(rng, name, nr) {
   if (name.indexOf('数轴') !== -1) {
-    var k0 = ri(rng, 2, 6);
+    var k0 = riC(rng, 2, 6, nr);
     // P32-AS-16：删「0 − k = −k」参考式的得数（直接写出所求负数）；
     // 减法支架保留「0 − k = ？」承载 expressionPresent，0 左边第 k 格即推导线索
     return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（0 − ' + k0 + ' = ？）',
@@ -719,7 +739,7 @@ function buildNegativeItem(rng, name) {
       apply: '温度计以 0℃ 为分界，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
   }
   if (name.indexOf('比较') !== -1) {
-    var a1 = ri(rng, 2, 8), b1 = a1 + ri(rng, 1, 5);
+    var a1 = riC(rng, 2, 8, nr), b1 = a1 + riC(rng, 1, 5, nr);
     return { stem: '比较大小：−' + b1 + ' ○ −' + a1 + '（参考：' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，负号后越大数越小）',
       answer: '<', options: ['>', '<', '='],
       apply: '哈尔滨 −' + b1 + '℃，北京 −' + a1 + '℃，' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，哪里更冷，即 −' + b1 + ' ○ −' + a1 + '？' };
@@ -734,21 +754,21 @@ function buildNegativeItem(rng, name) {
     apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
 }
 
-function buildMultDivRelationItem(rng, name) {
+function buildMultDivRelationItem(rng, name, nr) {
   if (name.indexOf('平均分') !== -1) {
-    var total0 = ri(rng, 2, 9) * ri(rng, 2, 9), groups0 = ri(rng, 2, 6);
+    var total0 = riC(rng, 2, 9, nr) * riC(rng, 2, 9, nr), groups0 = riC(rng, 2, 6, nr);
     while (total0 % groups0 !== 0) total0 += 1;
     return { stem: '把 ' + total0 + ' 平均分成 ' + groups0 + ' 份，每份多少？（' + total0 + ' ÷ ' + groups0 + ' = ？）',
       answer: String(total0 / groups0), options: [String(total0 / groups0), String(groups0), String(total0)],
       apply: '把 ' + total0 + ' 块糖平均分给 ' + groups0 + ' 个小朋友，' + total0 + ' ÷ ' + groups0 + ' = ？，每人几块？' };
   }
-  var a2 = ri(rng, 2, 9), b2 = ri(rng, 2, 9), p2 = a2 * b2;
+  var a2 = riC(rng, 2, 9, nr), b2 = riC(rng, 2, 9, nr), p2 = a2 * b2;
   return { stem: '因为 ' + a2 + ' × ' + b2 + ' = ' + p2 + '，所以 ' + p2 + ' ÷ ' + a2 + ' = 多少？',
     answer: String(b2), options: [String(b2), String(a2), String(p2)],
     apply: '每盒有 ' + a2 + ' 支笔，' + b2 + ' 盒共 ' + p2 + ' 支（' + a2 + ' × ' + b2 + ' = ' + p2 + '）。反过来 ' + p2 + ' ÷ ' + a2 + ' = ？，是多少盒？' };
 }
 
-function buildAlgebraLetterItem(rng, name) {
+function buildAlgebraLetterItem(rng, name, nr) {
   if (name.indexOf('数量关系') !== -1) {
     return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（参考：80 × 2 = 160）',
       answer: 's = v × t', options: ['s = v × t', 's = v + t', 's = v − t'],
@@ -756,14 +776,14 @@ function buildAlgebraLetterItem(rng, name) {
       apply: '汽车每小时行 v 千米，行了 t 小时（如 80 × 2 = 160），路程 s 用字母怎样表示？' };
   }
   if (name.indexOf('值') !== -1) {
-    var a3 = ri(rng, 2, 6), k3 = ri(rng, 2, 5);
+    var a3 = riC(rng, 2, 6, nr), k3 = riC(rng, 2, 5, nr);
     return { stem: '当 a = ' + a3 + ' 时，' + k3 + 'a + 1 = ' + k3 + ' × ' + a3 + ' + 1 = 多少？',
       answer: String(k3 * a3 + 1), options: [String(k3 * a3 + 1), String(k3 * a3), String(a3 + 1)],
       fill: '当 a = ' + a3 + ' 时，' + k3 + ' × a + 1 = ____',
       apply: '文具店有 a 盒彩笔，每盒 ' + k3 + ' 支还多 1 支样品。当 a = ' + a3 + ' 时，' + k3 + ' × ' + a3 + ' + 1 = ？，共多少支？' };
   }
   // 用字母表示数
-  var d0 = ri(rng, 4, 20);
+  var d0 = riC(rng, 4, 20, nr);
   return { stem: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁。当 a = 10 时，10 + ' + d0 + ' = 多少，爸爸岁数用字母怎样表示？',
     answer: 'a + ' + d0 + '（岁）', options: ['a + ' + d0, 'a − ' + d0, 'a × ' + d0],
     fill: '爸爸比小明大 ' + d0 + ' 岁，用含字母的式子表示爸爸的岁数：____',
@@ -771,11 +791,11 @@ function buildAlgebraLetterItem(rng, name) {
 }
 
 /* g5-down-u02-k001~k006：因数倍数概念 / 因数倍数特征 / 倍数特征 / 奇偶数 / 质合数 / 和的奇偶性 */
-function buildNumberTheoryItem(rng, name) {
+function buildNumberTheoryItem(rng, name, nr) {
   // P28-HOLLOW-03：k001 因数和倍数的概念（operations=[multiplication,division]，
   // 证据行要 data.operation + relationAny[multiply-by-times|divide-share] + constructAny）
   if (name.indexOf('因数和倍数') !== -1) {
-    var fa = ri(rng, 2, 8), fb = fa + ri(rng, 1, 9 - fa), fp = fa * fb;
+    var fa = riC(rng, 2, 8, nr), fb = fa + riC(rng, 1, Math.max(1, 9 - fa), nr), fp = fa * fb;
     var facStmt = fa + ' 和 ' + fb;
     // P34-05：calc 用直问式列式题面 + 数值答案（原 stem 是选择问句「哪一组数」却被 calc
     // 消费成 input 题，答案规格错位）；stem 随之删除——calc/choice/fill/apply 各用专字段，无消费者。
@@ -798,7 +818,7 @@ function buildNumberTheoryItem(rng, name) {
   // P28-HOLLOW-03：k002 因数与倍数的特征（operations=[multiplication]，
   // 证据行要 data.operation + multiply-by-times + multiplication）
   if (name.indexOf('因数与倍数') !== -1) {
-    var fn2 = ri(rng, 3, 9);
+    var fn2 = riC(rng, 3, 9, nr);
     // P32-AS-16：删首句「fn2 × 1 = fn2」（直接写出最小倍数即答案），保留 ×2、×3 找倍数支架
     return { operation: 'mult',
       stem: '用一个数依次乘 1、2、3……可以找它的倍数：'
@@ -819,8 +839,8 @@ function buildNumberTheoryItem(rng, name) {
       { oddA: true, oddB: false, res: '奇数', rule: '奇数 + 偶数 = 奇数' }
     ];
     var pt = patterns[ri(rng, 0, patterns.length - 1)];
-    var pa = pt.oddA ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
-    var pb = pt.oddB ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
+    var pa = pt.oddA ? riC(rng, 1, 9, nr) * 2 - 1 : riC(rng, 1, 9, nr) * 2;
+    var pb = pt.oddB ? riC(rng, 1, 9, nr) * 2 - 1 : riC(rng, 1, 9, nr) * 2;
     // P32-AS-16：规则结论（偶数+偶数=偶数）与已算和 16+8=24 都直接给出答案，
     // 题面只留加法式与「奇数还是偶数」之问，由学生先判两个加数的奇偶再下结论。
     return { stem: '不计算，判断：' + pa + ' + ' + pb + ' = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）',
@@ -849,7 +869,7 @@ function buildNumberTheoryItem(rng, name) {
   }
   // 奇数与偶数
   if (name.indexOf('奇数') !== -1 || name.indexOf('偶数') !== -1) {
-    var en = ri(rng, 2, 24) * 2;
+    var en = riC(rng, 2, 24, nr) * 2;
     var askEven = rng() < 0.5;
     if (askEven) {
       return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
@@ -861,7 +881,7 @@ function buildNumberTheoryItem(rng, name) {
         // P32-AS-16：删「en ÷ 2 = … 没有余数」证明（直接推出偶/奇结论），奇偶由学生判
         apply: '门牌号按单双号排列，' + en + ' 号是奇数还是偶数？' };
     }
-    var on = ri(rng, 2, 24) * 2 - 1;
+    var on = riC(rng, 2, 24, nr) * 2 - 1;
     return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
       answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
       fill: '' + on + ' ÷ 2 余 1，____ 不是 2 的倍数',
@@ -871,15 +891,15 @@ function buildNumberTheoryItem(rng, name) {
   }
   // 2、5、3 的倍数的特征（默认）
   var feats = [
-    { f: 2, text: '个位上是 0、2、4、6、8', build: function () { var x = ri(rng, 6, 49) * 2; return x; },
+    { f: 2, text: '个位上是 0、2、4、6、8', build: function () { var x = riC(rng, 6, 49, nr) * 2; return x; },
       bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 2 === 0 ? b + 1 : b; } },
-    { f: 5, text: '个位上是 0 或 5', build: function () { return ri(rng, 2, 19) * 5; },
+    { f: 5, text: '个位上是 0 或 5', build: function () { return riC(rng, 2, 19, nr) * 5; },
       bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 5 === 0 ? b + 1 : b; } },
     { f: 3, text: '各位上数字之和是 3 的倍数', build: function () {
-        for (var t = 0; t < 30; t++) { var x = ri(rng, 12, 99); var s = Math.floor(x / 10) + x % 10; if (s % 3 === 0) return x; }
+        for (var t = 0; t < 30; t++) { var x = riC(rng, 12, 99, nr); var s = Math.floor(x / 10) + x % 10; if (s % 3 === 0) return x; }
         return 12;
       }, bad: function (x) {
-        for (var t = 0; t < 30; t++) { var b = ri(rng, 12, 99); var s = Math.floor(b / 10) + b % 10; if (s % 3 !== 0 && b !== x) return b; }
+        for (var t = 0; t < 30; t++) { var b = riC(rng, 12, 99, nr); var s = Math.floor(b / 10) + b % 10; if (s % 3 !== 0 && b !== x) return b; }
         return x + 1;
       } }
   ];
@@ -917,7 +937,7 @@ function headContext(stem) {
 function makeByItem(plan, context, i, builder, subType) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var params = plan.semanticParams || {};
-  var item = builder(rng, params.name || '');
+  var item = builder(rng, params.name || '', nrOf(plan));
   var qt = plan.questionTypeId;
   var q = buildBase(plan, context, i, { subType: subType, operation: item.operation });
   var answer = item.answer;

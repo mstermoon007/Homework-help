@@ -10,7 +10,8 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '../..');
 global.window = global;
 
-['shared/svg/svg-core.js', 'shared/presentation/svg-sanitizer.js', 'shared/presentation/svg-registry.js'].forEach(function (rel) {
+['shared/svg/svg-core.js', 'shared/presentation/svg-sanitizer.js', 'shared/presentation/svg-registry.js',
+ 'shared/svg/svg-geometry.js'].forEach(function (rel) {
   require(ROOT + '/' + rel);
 });
 
@@ -211,4 +212,18 @@ test('FINAL-72 结构性禁令：SVG 链源文件不得存在 catch→\'\' 吞�
     var re = /catch\s*\([^)]*\)\s*\{[\s\S]*?return\s+(?:''|"")\s*;?/;
     assert.ok(!re.test(src), rel + ' 存在 catch→\'\' 吞错，违反 FINAL-72');
   });
+});
+test('P35-CLOSE-01 view-cards descriptor → SUCCESS（题设视图方格数与方向标注正确）', function () {
+  const result = SVGRegistry.renderFor({
+    type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+    params: { views: [
+      { direction: 'front', grid: [[1, 1]] },
+      { direction: 'top', grid: [[1, 1]] }
+    ], unit: 'cm', unitPx: 25 }
+  });
+  assert.strictEqual(result.status, 'SUCCESS');
+  // 2 视图 × 2 方格 = 4 个 rect；画题设视图（非组合体成品），不泄题
+  assert.strictEqual((result.svg.match(/<rect/g) || []).length, 4);
+  assert.ok(result.svg.indexOf('从前面看') !== -1, '含「从前面看」方向标注');
+  assert.ok(result.svg.indexOf('从上面看') !== -1, '含「从上面看」方向标注');
 });

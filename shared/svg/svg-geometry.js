@@ -390,6 +390,32 @@
     return U.svgWrap(inner, { padding: 14 });
   }
 
+  // ============ 视图卡片（观察物体：从某方向看到的方格阵列） ============
+  /** 视图卡片：{views:[{direction:'front'|'top'|'left', grid:[[1,1],...]}], unitPx}
+   *  每个视图画题设方格阵列（grid 中 1=有正方形，浅填充）+ 下方方向中文标注；多视图横向排列。
+   *  P35-CLOSE-01：画题设视图（非组合体成品）——学生须据此推算小正方体个数，
+   *  若画组合体成品则直接数出答案、摧毁空间推理考点（H6 论证）。 */
+  function viewCards(o) {
+    var DIR_LABEL = { front: '从前面看', top: '从上面看', left: '从左面看' };
+    var cell = o.unitPx || 25;
+    var gap = 24, labelH = 20;
+    var inner = '', x0 = 0;
+    (o.views || []).forEach(function (v) {
+      var grid = (v && v.grid) || [];
+      var rows = grid.length, cols = rows ? grid[0].length : 0;
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          if (!grid[r][c]) continue;
+          inner += U.svgRect(x0 + c * cell, r * cell, cell, cell, { fill: '#eaf0fb', strokeWidth: 1.5 });
+        }
+      }
+      var label = DIR_LABEL[v && v.direction] || (v && v.direction) || '';
+      if (label && cols) inner += U.svgText(x0 + cols * cell / 2, rows * cell + labelH - 6, label, { fontSize: 12 });
+      x0 += cols * cell + gap;
+    });
+    return finish(inner, o);
+  }
+
   // ============ 导出 ============
   var SVGGeometry = {
     rectangle: rectangle, square: square, triangle: triangle,
@@ -400,6 +426,7 @@
     translationDemo: translationDemo, rotationDemo: rotationDemo, reflectionDemo: reflectionDemo,
     tickMark: tickMark,
     positionGrid: positionGrid,
+    viewCards: viewCards,
     _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
 
@@ -410,6 +437,8 @@
 
   // kebab 别名：schema/描述符使用 'position-grid'，SVGRenderer 为精确键索引
   SVGGeometry['position-grid'] = positionGrid;
+  // kebab 别名：描述符使用 'view-cards'（P35-CLOSE-01）
+  SVGGeometry['view-cards'] = viewCards;
   if (SVGDiagram && typeof SVGDiagram.segment === 'function') {
     SVGGeometry.segment = SVGDiagram.segment;
   }

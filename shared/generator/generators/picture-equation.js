@@ -25,8 +25,19 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':picture:' + i;
 }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function makePictureEquationQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   // FINAL-32 注：variant 分派按 name 关键词（线段/大括号/看图列/天平/数阵/幻方/植树/比例尺/小数）
   // 匹配；不匹配时 fallback '看图列式' 自身命中 '看图列' → 进 brace 分支（含 calc 公式分支与
   // data.graphic.subtype=brace+params.unit='个'），让证据规则 required subtype=brace / unit='个'
@@ -48,14 +59,14 @@ function makePictureEquationQuestion(plan, context, i, kp) {
 
   var prompt, answer, steps, graphic, why = null;
   if (type === 'segment') {
-    var total = Rng.randInt(rng, 20, 100);
-    var part = Rng.randInt(rng, 5, total - 5);
+    var total = riC(rng, 20, 100, nr);
+    var part = riC(rng, 5, total - 5, nr);
     prompt = '根据线段图：总长' + total + '，其中一部分是' + part + '，求另一部分是多少？';
     answer = total - part; steps = 1;
     graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: total, part: part, unit: '' } };
   } else if (type === 'brace') {
-    var a = Rng.randInt(rng, 5, 30);
-    var b = Rng.randInt(rng, 5, 30);
+    var a = riC(rng, 5, 30, nr);
+    var b = riC(rng, 5, 30, nr);
     var braceQt = plan.questionTypeId;
     // P30-GEN-06（P30-16）：brace 题型按 Assessment Target 分化骨架，
     // 避免 fill/choice 经 finisher 包装后与 apply 共享同一 coreStem。
@@ -75,9 +86,9 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     if (braceQt === 'fill') why += '，所以空格填 ' + answer;
     if (braceQt === 'choice') why += '，正确选项是「' + answer + '」';
   } else if (type === 'balance') {
-    var left = Rng.randInt(rng, 5, 20);
+    var left = riC(rng, 5, 20, nr);
     var right = left;
-    var unknown = Rng.randInt(rng, 2, 8);
+    var unknown = riC(rng, 2, 8, nr);
     prompt = '天平平衡：左边有' + left + '，右边有' + unknown + ' + ?。求?的值。';
     answer = left - unknown; steps = 2;
     graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support', params: { left: left, rightUnknown: unknown, unit: '' } };
@@ -88,25 +99,25 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     prompt = name + '：请完成三阶幻方，使每行、每列、每条对角线上三个数的和都相等。';
     answer = '（幻方解略）'; steps = 4;
   } else if (type === 'tree') {
-    var roadLen = Rng.randInt(rng, 100, 500);
-    var gap = Rng.randInt(rng, 5, 15);
+    var roadLen = riC(rng, 100, 500, nr);
+    var gap = riC(rng, 5, 15, nr);
     prompt = name + '：线段图表示一条长' + roadLen + '米的公路，每隔' + gap + '米种一棵树（两端都栽），一共种多少棵？';
     answer = Math.floor(roadLen / gap) + 1; steps = 2;
     graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
   } else if (type === 'scale') {
-    var scale = Rng.randInt(rng, 1000, 50000);
-    var mapDist = Rng.randInt(rng, 2, 10);
+    var scale = riC(rng, 1000, 50000, nr);
+    var mapDist = riC(rng, 2, 10, nr);
     prompt = name + '：比例尺1:' + scale + '，地图上量得距离' + mapDist + 'cm，求实际距离（单位：km）。';
     answer = (mapDist * scale / 100000).toFixed(2); steps = 2;
     graphic = { type: 'diagram', subtype: 'scale', role: 'calculation-support', params: { scale: scale, mapDist: mapDist } };
   } else if (type === 'decimal-context') {
-    var w = Rng.randInt(rng, 1, 9);
-    var d = Rng.randInt(rng, 1, 9);
+    var w = riC(rng, 1, 9, nr);
+    var d = riC(rng, 1, 9, nr);
     prompt = name + '：根据情境图列式计算：' + w + '.' + d + ' + ' + (w + 1) + '.' + (d + 1) + ' = ?';
     answer = (parseFloat(w + '.' + d) + parseFloat((w + 1) + '.' + (d + 1))).toFixed(2); steps = 1;
   } else {
-    var x = Rng.randInt(rng, 3, 20);
-    var y = Rng.randInt(rng, 3, 20);
+    var x = riC(rng, 3, 20, nr);
+    var y = riC(rng, 3, 20, nr);
     prompt = name + '：根据图示信息列式并计算。';
     answer = x + y; steps = 1;
     graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: x, right: y, unit: '' } };

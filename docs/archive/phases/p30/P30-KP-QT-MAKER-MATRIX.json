@@ -9,8 +9,8 @@
   "counts": {
     "rows": 1570,
     "byLevel": {
-      "target": 1228,
-      "format": 8,
+      "target": 1236,
+      "format": 0,
       "target-frozen": 334
     },
     "byIntentStatus": {
@@ -19,15 +19,13 @@
       "needs-review": 284
     },
     "kpClass": {
-      "pure-target": 301,
+      "pure-target": 305,
       "pure-format": 0,
-      "mixed": 4,
+      "mixed": 0,
       "frozen-only": 70
     },
-    "formatKps": 4,
-    "formatByGenerator": {
-      "generator:stats": 8
-    }
+    "formatKps": 0,
+    "formatByGenerator": {}
   },
   "rows": [
     {
@@ -742,7 +740,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "41 + 10 = ?"
+      "sample": "16 + 3 = ?"
     },
     {
       "kp": "math-g1-up-u05-k003",
@@ -756,7 +754,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 23 = 69"
+      "sample": "____ + 9 = 26"
     },
     {
       "kp": "math-g1-up-u05-k003",
@@ -770,7 +768,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 43，B 比 A 多 6。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 16，B 比 A 多 2。\n问题：B 有多少？"
     },
     {
       "kp": "math-g1-up-u05-k003",
@@ -784,7 +782,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "6 与 4 相加，和是多少？"
+      "sample": "2 与 2 相加，和是多少？"
     },
     {
       "kp": "math-g1-up-u06-k001",
@@ -798,7 +796,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件一共#其中#",
-      "sample": "已知条件：一共 31，其中 2。\n问题：剩下多少？"
+      "sample": "已知条件：一共 12，其中 1。\n问题：剩下多少？"
     },
     {
       "kp": "math-g1-up-u06-k001",
@@ -812,7 +810,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 46 = 54"
+      "sample": "____ + 16 = 20"
     },
     {
       "kp": "math-g1-up-u06-k001",
@@ -826,7 +824,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 28 里去掉 9，还剩多少？"
+      "sample": "从 11 里去掉 4，还剩多少？"
     },
     {
       "kp": "math-g1-down-u01-k001",
@@ -1022,7 +1020,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "55 + 1 = ?"
+      "sample": "20 + 1 = ?"
     },
     {
       "kp": "math-g1-down-u02-k003",
@@ -1036,7 +1034,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 46 = 98"
+      "sample": "____ + 17 = 36"
     },
     {
       "kp": "math-g1-down-u02-k003",
@@ -1302,7 +1300,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "与#相邻的两个数是多少",
-      "sample": "与 25 相邻的两个数是多少？（参考：25 − 1 = 24）"
+      "sample": "与 12 相邻的两个数是多少？（参考：12 − 1 = 11）"
     },
     {
       "kp": "math-g1-down-u03-k005",
@@ -1316,7 +1314,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "根据算式把案填在横线上参考#−#",
-      "sample": "根据算式把答案填在横线上：参考：65 − 1 = ____"
+      "sample": "根据算式把答案填在横线上：参考：17 − 1 = ____"
     },
     {
       "kp": "math-g1-down-u03-k005",
@@ -1330,7 +1328,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "发牌时数到#它前一个是#后一个数是多少",
-      "sample": "发牌时数到 29，它前一个是 28（29 − 1 = 28），后一个数是多少？"
+      "sample": "发牌时数到 13，它前一个是 12（13 − 1 = 12），后一个数是多少？"
     },
     {
       "kp": "math-g1-down-u03-k005",
@@ -1344,7 +1342,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "发牌时数到#下面哪个选项正确",
-      "sample": "发牌时数到 74，下面哪个选项正确？（  ）"
+      "sample": "发牌时数到 19，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g1-down-u03-k006",
@@ -1358,7 +1356,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "比较大小##",
-      "sample": "比较大小：17 ○ 24（参考：24 − 17 = 7）"
+      "sample": "比较大小：12 ○ 19（参考：19 − 12 = 7）"
     },
     {
       "kp": "math-g1-down-u03-k006",
@@ -1372,7 +1370,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "根据算式把案填在横线上参考#−#",
-      "sample": "根据算式把答案填在横线上：参考：61 − 57 = ____"
+      "sample": "根据算式把答案填在横线上：参考：20 − 16 = ____"
     },
     {
       "kp": "math-g1-down-u03-k006",
@@ -1386,7 +1384,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人二年级有#人#−##哪个年级人数多",
-      "sample": "一年级有 98 人，二年级有 105 人，105 − 98 = 7，哪个年级人数多（填 > 或 "
+      "sample": "一年级有 20 人，二年级有 27 人，27 − 20 = 7，哪个年级人数多（填 > 或 <）"
     },
     {
       "kp": "math-g1-down-u03-k006",
@@ -1400,7 +1398,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人下面哪个选项正确",
-      "sample": "一年级有 87 人，下面哪个选项正确？（  ）"
+      "sample": "一年级有 19 人，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g1-down-u04-k001",
@@ -1638,7 +1636,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#−#",
-      "sample": "51 − 25 = ?"
+      "sample": "19 − 9 = ?"
     },
     {
       "kp": "math-g1-down-u04-k005",
@@ -1652,7 +1650,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 4 = 43"
+      "sample": "____ + 2 = 17"
     },
     {
       "kp": "math-g1-down-u04-k005",
@@ -1666,7 +1664,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 29，B 比 A 少 15。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 12，B 比 A 少 6。\n问题：B 有多少？"
     },
     {
       "kp": "math-g1-down-u04-k005",
@@ -1680,7 +1678,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 26 里去掉 25，还剩多少？"
+      "sample": "从 11 里去掉 10，还剩多少？"
     },
     {
       "kp": "math-g1-down-u05-k001",
@@ -1806,7 +1804,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#−#",
-      "sample": "17 − 15 = ?"
+      "sample": "7 − 6 = ?"
     },
     {
       "kp": "math-g1-down-u05-k003",
@@ -1834,7 +1832,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 36，B 比 A 多 15。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 14，B 比 A 多 5。\n问题：B 有多少？"
     },
     {
       "kp": "math-g1-down-u05-k003",
@@ -1848,7 +1846,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 38 里去掉 26，还剩多少？"
+      "sample": "从 14 里去掉 9，还剩多少？"
     },
     {
       "kp": "math-g1-down-u06-k001",
@@ -1988,7 +1986,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "51 + 4 = ?"
+      "sample": "19 + 1 = ?"
     },
     {
       "kp": "math-g1-down-u06-k003",
@@ -2002,7 +2000,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 3 = 6"
+      "sample": "____ − 2 = 3"
     },
     {
       "kp": "math-g1-down-u06-k003",
@@ -2016,7 +2014,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 34，B 比 A 多 2。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 13，B 比 A 多 1。\n问题：B 有多少？"
     },
     {
       "kp": "math-g1-down-u06-k003",
@@ -2030,7 +2028,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "11 减少 1 后是多少？"
+      "sample": "5 减少 1 后是多少？"
     },
     {
       "kp": "math-g1-down-u07-k001",
@@ -2170,7 +2168,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 51，B 比 A 多 4。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 19，B 比 A 多 1。\n问题：B 有多少？"
     },
     {
       "kp": "math-g1-down-u08-k001",
@@ -2184,7 +2182,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 12 = 20"
+      "sample": "____ − 5 = 8"
     },
     {
       "kp": "math-g1-down-u08-k001",
@@ -2198,7 +2196,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "51 减少 32 后是多少？"
+      "sample": "19 减少 12 后是多少？"
     },
     {
       "kp": "math-g2-up-u01-k001",
@@ -2379,8 +2377,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "不同标准分类先把下面的事物按「颜色」分类红圆扣红方扣蓝圆扣蓝方扣黄圆扣黄方扣先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "不同标准分类：先把下面的事物按「颜色」分类：红圆扣、红方扣、蓝圆扣、蓝方扣、黄圆扣、黄方扣。先写"
+      "core": "不同标准分类下面是待整理的材料#红圆扣#红方扣#蓝圆扣#蓝方扣#黄圆扣#黄方扣请按「颜色」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "不同标准分类：下面是待整理的材料：1）红圆扣；2）红方扣；3）蓝圆扣；4）蓝方扣；5）黄圆扣；6"
     },
     {
       "kp": "math-g2-up-u01-k003",
@@ -2449,8 +2447,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "逐层分类先把下面的事物按「先分动物和植物再分鱼类和鸟类」分类鲫鱼麻雀杨树鲤鱼柳树老鹰先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "逐层分类：先把下面的事物按「先分动物和植物、再分鱼类和鸟类」分类：鲫鱼、麻雀、杨树、鲤鱼、柳树、"
+      "core": "逐层分类下面是待整理的材料#鲫鱼#麻雀#杨树#鲤鱼#柳树#老鹰请按「先分动物和植物再分鱼类和鸟类」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "逐层分类：下面是待整理的材料：1）鲫鱼；2）麻雀；3）杨树；4）鲤鱼；5）柳树；6）老鹰。请按「"
     },
     {
       "kp": "math-g2-up-u01-k004",
@@ -2519,8 +2517,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "统计方法先把下面的事物按「调查的场合」分类举手计数画正字记录投票表决逐个询问问卷调查先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "统计方法：先把下面的事物按「调查的场合」分类：举手计数、画正字记录、投票表决、逐个询问、问卷调查"
+      "core": "统计方法下面是待整理的材料#举手计数#画正字记录#投票表决#逐个询问#问卷调查请按「调查的场合」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "统计方法：下面是待整理的材料：1）举手计数；2）画正字记录；3）投票表决；4）逐个询问；5）问卷"
     },
     {
       "kp": "math-g2-up-u01-k005",
@@ -2589,8 +2587,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "简单统计表先把下面的事物按「天气情况」分类周一晴周二阴周三晴周四雨周五晴周六阴先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "简单统计表：先把下面的事物按「天气情况」分类：周一晴、周二阴、周三晴、周四雨、周五晴、周六阴。先"
+      "core": "简单统计表下面是待整理的材料#周一晴#周二阴#周三晴#周四雨#周五晴#周六阴请按「天气情况」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "简单统计表：下面是待整理的材料：1）周一晴；2）周二阴；3）周三晴；4）周四雨；5）周五晴；6）"
     },
     {
       "kp": "math-g2-up-u01-k006",
@@ -3430,7 +3428,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#厘米千米",
-      "sample": "单位换算填空：6厘米 = ____ 千米"
+      "sample": "单位换算填空：18厘米 = ____ 千米"
     },
     {
       "kp": "math-g2-up-u05-k001",
@@ -3444,7 +3442,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "小明身高#厘米小红比小明矮#厘米小红身高多少厘米",
-      "sample": "小明身高 40 厘米，小红比小明矮 2 厘米，小红身高多少厘米？"
+      "sample": "小明身高 17 厘米，小红比小明矮 2 厘米，小红身高多少厘米？"
     },
     {
       "kp": "math-g2-up-u05-k001",
@@ -3458,7 +3456,7 @@
       "isJudge": true,
       "hasBlank": true,
       "core": "判断对错#厘米米有人说结果是#对还是错",
-      "sample": "判断对错：1厘米 = ____ 米。有人说结果是 1.01，对还是错？"
+      "sample": "判断对错：2厘米 = ____ 米。有人说结果是 1.02，对还是错？"
     },
     {
       "kp": "math-g2-up-u05-k001",
@@ -3472,7 +3470,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#厘米换算成毫米是多少",
-      "sample": "3厘米 换算成 毫米 是多少？"
+      "sample": "8厘米 换算成 毫米 是多少？"
     },
     {
       "kp": "math-g2-up-u05-k002",
@@ -3724,7 +3722,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一根绳子长#厘米剪去#厘米还剩多少厘米",
-      "sample": "一根绳子长 44 厘米，剪去 17 厘米，还剩多少厘米？"
+      "sample": "一根绳子长 18 厘米，剪去 17 厘米，还剩多少厘米？"
     },
     {
       "kp": "math-g2-up-u05-k005",
@@ -3738,7 +3736,7 @@
       "isJudge": true,
       "hasBlank": true,
       "core": "判断对错#千米毫米有人说结果是#对还是错",
-      "sample": "判断对错：3千米 = ____ 毫米。有人说结果是 3000000，对还是错？"
+      "sample": "判断对错：9千米 = ____ 毫米。有人说结果是 9000000，对还是错？"
     },
     {
       "kp": "math-g2-up-u05-k005",
@@ -3752,7 +3750,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#千米换算成厘米是多少",
-      "sample": "3千米 换算成 厘米 是多少？"
+      "sample": "10千米 换算成 厘米 是多少？"
     },
     {
       "kp": "math-g2-up-u06-k001",
@@ -3948,7 +3946,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 52，B 比 A 少 7。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 19，B 比 A 少 3。\n问题：B 有多少？"
     },
     {
       "kp": "math-g2-up-u08-k001",
@@ -3962,7 +3960,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 35 = 6"
+      "sample": "____ − 13 = 3"
     },
     {
       "kp": "math-g2-up-u08-k001",
@@ -3976,7 +3974,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "15 减少 12 后是多少？"
+      "sample": "7 减少 5 后是多少？"
     },
     {
       "kp": "math-g2-down-u01-k001",
@@ -5012,7 +5010,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "比较大小##",
-      "sample": "比较大小：53 ○ 58（参考：58 − 53 = 5）"
+      "sample": "比较大小：11 ○ 16（参考：16 − 11 = 5）"
     },
     {
       "kp": "math-g2-down-u04-k005",
@@ -5026,7 +5024,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "根据算式把案填在横线上参考#−#",
-      "sample": "根据算式把答案填在横线上：参考：59 − 56 = ____"
+      "sample": "根据算式把答案填在横线上：参考：19 − 16 = ____"
     },
     {
       "kp": "math-g2-down-u04-k005",
@@ -5040,7 +5038,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人二年级有#人#−##哪个年级人数多",
-      "sample": "一年级有 79 人，二年级有 87 人，87 − 79 = 8，哪个年级人数多（填 > 或 <）"
+      "sample": "一年级有 19 人，二年级有 27 人，27 − 19 = 8，哪个年级人数多（填 > 或 <）"
     },
     {
       "kp": "math-g2-down-u04-k005",
@@ -5054,7 +5052,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人下面哪个选项正确",
-      "sample": "一年级有 55 人，下面哪个选项正确？（  ）"
+      "sample": "一年级有 11 人，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g2-down-u04-k006",
@@ -5348,7 +5346,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "47 + 1 = ?"
+      "sample": "17 + 1 = ?"
     },
     {
       "kp": "math-g2-down-u05-k004",
@@ -5362,7 +5360,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 8 = 3"
+      "sample": "____ − 4 = 1"
     },
     {
       "kp": "math-g2-down-u05-k004",
@@ -5376,7 +5374,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 27，B 比 A 少 23。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 11，B 比 A 少 9。\n问题：B 有多少？"
     },
     {
       "kp": "math-g2-down-u05-k004",
@@ -5390,7 +5388,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 20 里去掉 11，还剩多少？"
+      "sample": "从 9 里去掉 5，还剩多少？"
     },
     {
       "kp": "math-g2-down-u06-k001",
@@ -5404,7 +5402,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 45，B 比 A 少 7。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 17，B 比 A 少 3。\n问题：B 有多少？"
     },
     {
       "kp": "math-g2-down-u06-k001",
@@ -5432,7 +5430,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 12 里去掉 2，还剩多少？"
+      "sample": "从 6 里去掉 1，还剩多少？"
     },
     {
       "kp": "math-g2-down-u06-k002",
@@ -5446,7 +5444,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 30，B 比 A 少 21。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 12，B 比 A 少 8。\n问题：B 有多少？"
     },
     {
       "kp": "math-g2-down-u06-k002",
@@ -5460,7 +5458,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 5 = 40"
+      "sample": "____ + 2 = 15"
     },
     {
       "kp": "math-g2-down-u06-k002",
@@ -5474,7 +5472,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "51 与 13 相加，和是多少？"
+      "sample": "19 与 5 相加，和是多少？"
     },
     {
       "kp": "math-g2-down-u06-k003",
@@ -5488,7 +5486,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：51 和 19。\n问题：一共多少？"
+      "sample": "已知条件：19 和 7。\n问题：一共多少？"
     },
     {
       "kp": "math-g2-down-u06-k003",
@@ -5502,7 +5500,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 3 = 40"
+      "sample": "____ + 2 = 16"
     },
     {
       "kp": "math-g2-down-u06-k003",
@@ -5516,7 +5514,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "39 减少 31 后是多少？"
+      "sample": "15 减少 12 后是多少？"
     },
     {
       "kp": "math-g2-down-u06-k004",
@@ -5530,7 +5528,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：25 和 50。\n问题：一共多少？"
+      "sample": "已知条件：9 和 18。\n问题：一共多少？"
     },
     {
       "kp": "math-g2-down-u06-k004",
@@ -5558,7 +5556,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "53 减少 48 后是多少？"
+      "sample": "20 减少 18 后是多少？"
     },
     {
       "kp": "math-g2-down-u07-k001",
@@ -5572,7 +5570,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：24 和 17。\n问题：一共多少？"
+      "sample": "已知条件：9 和 6。\n问题：一共多少？"
     },
     {
       "kp": "math-g2-down-u07-k001",
@@ -5586,7 +5584,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 50 = 4"
+      "sample": "____ − 18 = 2"
     },
     {
       "kp": "math-g2-down-u07-k001",
@@ -5600,7 +5598,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 51 里去掉 23，还剩多少？"
+      "sample": "从 19 里去掉 9，还剩多少？"
     },
     {
       "kp": "math-g2-down-u07-k002",
@@ -5656,7 +5654,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：52 和 20。\n问题：一共多少？"
+      "sample": "已知条件：19 和 8。\n问题：一共多少？"
     },
     {
       "kp": "math-g2-down-u07-k003",
@@ -5670,7 +5668,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 1 = 44"
+      "sample": "____ + 1 = 17"
     },
     {
       "kp": "math-g2-down-u07-k003",
@@ -5684,7 +5682,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "17 与 19 相加，和是多少？"
+      "sample": "7 与 7 相加，和是多少？"
     },
     {
       "kp": "math-g3-up-u01-k001",
@@ -6076,7 +6074,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "按脱式计算规范一步一步算#+#−##−#",
-      "sample": "按脱式计算规范一步一步算：15 + 17 − 20 = 32 − 20 = ？（第一步 15 +"
+      "sample": "按脱式计算规范一步一步算：12 + 13 − 13 = 25 − 13 = ？（第一步 12 +"
     },
     {
       "kp": "math-g3-up-u02-k004",
@@ -6104,7 +6102,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "图书角原有#本书又买来#本借出#本脱式#+#−##−#还剩多少本",
-      "sample": "图书角原有 24 本书，又买来 18 本，借出 21 本。脱式：24 + 18 − 21 = 4"
+      "sample": "图书角原有 15 本书，又买来 13 本，借出 11 本。脱式：15 + 13 − 11 = 2"
     },
     {
       "kp": "math-g3-up-u02-k004",
@@ -6118,7 +6116,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "图书角原有#本书下面哪个选项正确",
-      "sample": "图书角原有 39 本书，下面哪个选项正确？（  ）"
+      "sample": "图书角原有 18 本书，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g3-up-u02-k005",
@@ -6132,7 +6130,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#−#",
-      "sample": "35 − 28 = ?"
+      "sample": "14 − 11 = ?"
     },
     {
       "kp": "math-g3-up-u02-k005",
@@ -6160,7 +6158,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 49，B 比 A 多 4。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 18，B 比 A 多 2。\n问题：B 有多少？"
     },
     {
       "kp": "math-g3-up-u02-k005",
@@ -6174,7 +6172,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "37 减少 2 后是多少？"
+      "sample": "14 减少 1 后是多少？"
     },
     {
       "kp": "math-g3-up-u03-k001",
@@ -6202,7 +6200,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#厘米千米",
-      "sample": "单位换算填空：6厘米 = ____ 千米"
+      "sample": "单位换算填空：20厘米 = ____ 千米"
     },
     {
       "kp": "math-g3-up-u03-k001",
@@ -6216,7 +6214,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一根绳子长#厘米剪去#厘米还剩多少厘米",
-      "sample": "一根绳子长 39 厘米，剪去 8 厘米，还剩多少厘米？"
+      "sample": "一根绳子长 17 厘米，剪去 8 厘米，还剩多少厘米？"
     },
     {
       "kp": "math-g3-up-u03-k001",
@@ -6272,7 +6270,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#千米厘米",
-      "sample": "单位换算填空：1千米 = ____ 厘米"
+      "sample": "单位换算填空：3千米 = ____ 厘米"
     },
     {
       "kp": "math-g3-up-u03-k002",
@@ -6286,7 +6284,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一根绳子长#厘米剪去#厘米还剩多少厘米",
-      "sample": "一根绳子长 20 厘米，剪去 13 厘米，还剩多少厘米？"
+      "sample": "一根绳子长 10 厘米，剪去 13 厘米，还剩多少厘米？"
     },
     {
       "kp": "math-g3-up-u03-k002",
@@ -6300,7 +6298,7 @@
       "isJudge": true,
       "hasBlank": true,
       "core": "判断对错#千米毫米有人说结果是#对还是错",
-      "sample": "判断对错：5千米 = ____ 毫米。有人说结果是 5000001，对还是错？"
+      "sample": "判断对错：14千米 = ____ 毫米。有人说结果是 14000001，对还是错？"
     },
     {
       "kp": "math-g3-up-u03-k002",
@@ -6314,7 +6312,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#厘米换算成千米是多少",
-      "sample": "3厘米 换算成 千米 是多少？"
+      "sample": "10厘米 换算成 千米 是多少？"
     },
     {
       "kp": "math-g3-up-u03-k003",
@@ -6468,7 +6466,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "24 + 19 = ?"
+      "sample": "10 + 7 = ?"
     },
     {
       "kp": "math-g3-up-u04-k001",
@@ -6482,7 +6480,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 50 = 68"
+      "sample": "____ + 19 = 26"
     },
     {
       "kp": "math-g3-up-u04-k001",
@@ -6496,7 +6494,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 16，B 比 A 少 9。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 7，B 比 A 少 4。\n问题：B 有多少？"
     },
     {
       "kp": "math-g3-up-u04-k001",
@@ -6510,7 +6508,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "22 减少 3 后是多少？"
+      "sample": "9 减少 1 后是多少？"
     },
     {
       "kp": "math-g3-up-u04-k002",
@@ -6524,7 +6522,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "#千克#×#克",
-      "sample": "2千克 = 2 × 1000 = ____ 克"
+      "sample": "5千克 = 5 × 1000 = ____ 克"
     },
     {
       "kp": "math-g3-up-u04-k002",
@@ -6538,7 +6536,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#吨克",
-      "sample": "单位换算填空：2吨 = ____ 克"
+      "sample": "单位换算填空：5吨 = ____ 克"
     },
     {
       "kp": "math-g3-up-u04-k002",
@@ -6580,7 +6578,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "#千克#×#克",
-      "sample": "6千克 = 6 × 1000 = ____ 克"
+      "sample": "20千克 = 20 × 1000 = ____ 克"
     },
     {
       "kp": "math-g3-up-u04-k003",
@@ -6594,7 +6592,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#吨克",
-      "sample": "单位换算填空：2吨 = ____ 克"
+      "sample": "单位换算填空：6吨 = ____ 克"
     },
     {
       "kp": "math-g3-up-u04-k003",
@@ -6622,7 +6620,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#千克换算成克是多少",
-      "sample": "1千克 换算成 克 是多少？"
+      "sample": "3千克 换算成 克 是多少？"
     },
     {
       "kp": "math-g3-up-u04-k004",
@@ -6664,7 +6662,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#吨换算成千克是多少",
-      "sample": "4吨 换算成 千克 是多少？"
+      "sample": "12吨 换算成 千克 是多少？"
     },
     {
       "kp": "math-g3-up-u05-k001",
@@ -7728,7 +7726,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件一共#其中#",
-      "sample": "已知条件：一共 52，其中 24。\n问题：剩下多少？"
+      "sample": "已知条件：一共 19，其中 9。\n问题：剩下多少？"
     },
     {
       "kp": "math-g3-up-u09-k001",
@@ -7742,7 +7740,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 34 = 3"
+      "sample": "____ − 13 = 1"
     },
     {
       "kp": "math-g3-up-u09-k001",
@@ -8750,7 +8748,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#平方米平方分米",
-      "sample": "单位换算填空：4平方米 = ____ 平方分米"
+      "sample": "单位换算填空：12平方米 = ____ 平方分米"
     },
     {
       "kp": "math-g3-down-u04-k002",
@@ -8778,7 +8776,7 @@
       "isJudge": true,
       "hasBlank": true,
       "core": "判断对错#平方厘米平方分米有人说结果是#对还是错",
-      "sample": "判断对错：6平方厘米 = ____ 平方分米。有人说结果是 1.06，对还是错？"
+      "sample": "判断对错：18平方厘米 = ____ 平方分米。有人说结果是 1.18，对还是错？"
     },
     {
       "kp": "math-g3-down-u04-k002",
@@ -8792,7 +8790,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#平方分米换算成平方米是多少",
-      "sample": "5平方分米 换算成 平方米 是多少？"
+      "sample": "15平方分米 换算成 平方米 是多少？"
     },
     {
       "kp": "math-g3-down-u04-k003",
@@ -8890,7 +8888,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "单位换算填空#平方分米平方米",
-      "sample": "单位换算填空：2平方分米 = ____ 平方米"
+      "sample": "单位换算填空：5平方分米 = ____ 平方米"
     },
     {
       "kp": "math-g3-down-u04-k004",
@@ -8918,7 +8916,7 @@
       "isJudge": true,
       "hasBlank": true,
       "core": "判断对错#平方厘米平方分米有人说结果是#对还是错",
-      "sample": "判断对错：6平方厘米 = ____ 平方分米。有人说结果是 0.06，对还是错？"
+      "sample": "判断对错：18平方厘米 = ____ 平方分米。有人说结果是 0.18，对还是错？"
     },
     {
       "kp": "math-g3-down-u04-k004",
@@ -8932,7 +8930,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#平方米换算成平方分米是多少",
-      "sample": "3平方米 换算成 平方分米 是多少？"
+      "sample": "9平方米 换算成 平方分米 是多少？"
     },
     {
       "kp": "math-g3-down-u04-k005",
@@ -9109,12 +9107,12 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "application",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "数据的整理方法先把下面的事物按「喜欢的水果类别」分类小红喜欢苹果小明喜欢香蕉小丽喜欢苹果小强喜欢葡萄小美喜欢香蕉小军喜欢苹果先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "数据的整理方法：先把下面的事物按「喜欢的水果类别」分类：小红喜欢苹果、小明喜欢香蕉、小丽喜欢苹果"
+      "core": "数据的整理方法下面是待整理的材料#小红喜欢苹果#小明喜欢香蕉#小丽喜欢苹果#小强喜欢葡萄#小美喜欢香蕉#小军喜欢苹果请按「喜欢的水果类别」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "数据的整理方法：下面是待整理的材料：1）小红喜欢苹果；2）小明喜欢香蕉；3）小丽喜欢苹果；4）小"
     },
     {
       "kp": "math-g3-down-u05-k002",
@@ -9123,7 +9121,7 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "classification",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
@@ -9183,8 +9181,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "复式统计表先把下面的事物按「性别加运动项目」分类男生跳绳女生跳绳男生跑步女生踢毽男生篮球女生跑步先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "复式统计表：先把下面的事物按「性别加运动项目」分类：男生跳绳、女生跳绳、男生跑步、女生踢毽、男生"
+      "core": "复式统计表下面是待整理的材料#男生跳绳#女生跳绳#男生跑步#女生踢毽#男生篮球#女生跑步请按「性别加运动项目」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "复式统计表：下面是待整理的材料：1）男生跳绳；2）女生跳绳；3）男生跑步；4）女生踢毽；5）男生"
     },
     {
       "kp": "math-g3-down-u05-k003",
@@ -9249,12 +9247,12 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "application",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "统计的应用先把下面的事物按「问题是否需要统计」分类全班最爱吃什么水果#加#等于几一个月里雨天有几天自己的名字先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "统计的应用：先把下面的事物按「问题是否需要统计」分类：全班最爱吃什么水果、1加1等于几、一个月里"
+      "core": "统计的应用下面是待整理的材料#全班最爱吃什么水果##加#等于几#一个月里雨天有几天#自己的名字请按「问题是否需要统计」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "统计的应用：下面是待整理的材料：1）全班最爱吃什么水果；2）1加1等于几；3）一个月里雨天有几天"
     },
     {
       "kp": "math-g3-down-u05-k004",
@@ -9263,7 +9261,7 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "classification",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
@@ -9464,7 +9462,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式比一比#−#",
-      "sample": "列式比一比：7.1 − 4.5 = ？（差大于 0，说明前者大）"
+      "sample": "列式比一比：1.8 − 1.5 = ？（差大于 0，说明前者大）"
     },
     {
       "kp": "math-g3-down-u07-k002",
@@ -9478,7 +9476,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "比较大小在里填上合适的符号##",
-      "sample": "比较大小，在 ____ 里填上合适的符号（>、< 或 =）：3.8 ____ 3.5"
+      "sample": "比较大小，在 ____ 里填上合适的符号（>、< 或 =）：1.4 ____ 1.3"
     },
     {
       "kp": "math-g3-down-u07-k002",
@@ -9492,7 +9490,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "跳远比赛小明跳了#米小红跳了#米谁跳得更远",
-      "sample": "跳远比赛，小明跳了 8.8 米，小红跳了 3.6 米，谁跳得更远？"
+      "sample": "跳远比赛，小明跳了 2 米，小红跳了 1.4 米，谁跳得更远？"
     },
     {
       "kp": "math-g3-down-u07-k002",
@@ -9520,7 +9518,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#−#",
-      "sample": "列式计算：4 − 1.5 = ？"
+      "sample": "列式计算：1.4 − 1.1 = ？"
     },
     {
       "kp": "math-g3-down-u07-k003",
@@ -9534,7 +9532,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#+#",
-      "sample": "在 ____ 里填上合适的数：5 + ____ = 6.6"
+      "sample": "在 ____ 里填上合适的数：1.5 + ____ = 2.6"
     },
     {
       "kp": "math-g3-down-u07-k003",
@@ -9548,7 +9546,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "买笔记本用去#元又买一支笔用去#元列式求一共花了多少元#+#",
-      "sample": "买笔记本用去 8.1 元，又买一支笔用去 5 元，列式求一共花了多少元：8.1 + 5 = ？"
+      "sample": "买笔记本用去 1.8 元，又买一支笔用去 1.4 元，列式求一共花了多少元：1.8 + 1.4 "
     },
     {
       "kp": "math-g3-down-u07-k003",
@@ -9562,7 +9560,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 1？（  ）"
+      "sample": "下面哪个算式的得数是 0.1？（  ）"
     },
     {
       "kp": "math-g3-down-u07-k004",
@@ -9576,7 +9574,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算：2.6 × 2.1 = ？"
+      "sample": "列式计算：1.7 × 1.4 = ？"
     },
     {
       "kp": "math-g3-down-u07-k004",
@@ -9590,7 +9588,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#×#",
-      "sample": "在 ____ 里填上合适的数：5.8 × ____ = 17.4"
+      "sample": "在 ____ 里填上合适的数：1.7 × ____ = 5.1"
     },
     {
       "kp": "math-g3-down-u07-k004",
@@ -9604,7 +9602,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "彩带每米#元买#米列式求一共要付多少元#×#",
-      "sample": "彩带每米 1.2 元，买 2.3 米，列式求一共要付多少元：2.3 × 1.2 = ？"
+      "sample": "彩带每米 1.2 元，买 1.6 米，列式求一共要付多少元：1.6 × 1.2 = ？"
     },
     {
       "kp": "math-g3-down-u07-k004",
@@ -9618,7 +9616,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 1.44？（  ）"
+      "sample": "下面哪个算式的得数是 1.32？（  ）"
     },
     {
       "kp": "math-g3-down-u08-k001",
@@ -9800,7 +9798,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件一共#其中#",
-      "sample": "已知条件：一共 26，其中 8。\n问题：剩下多少？"
+      "sample": "已知条件：一共 10，其中 3。\n问题：剩下多少？"
     },
     {
       "kp": "math-g3-down-u08-k005",
@@ -9814,7 +9812,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "−##",
-      "sample": "____ − 12 = 20"
+      "sample": "____ − 5 = 8"
     },
     {
       "kp": "math-g3-down-u08-k005",
@@ -10108,7 +10106,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "比较大小##",
-      "sample": "比较大小：34 ○ 42（参考：42 − 34 = 8）"
+      "sample": "比较大小：14 ○ 22（参考：22 − 14 = 8）"
     },
     {
       "kp": "math-g4-up-u01-k005",
@@ -10122,7 +10120,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "根据算式把案填在横线上参考#−#",
-      "sample": "根据算式把答案填在横线上：参考：75 − 71 = ____"
+      "sample": "根据算式把答案填在横线上：参考：18 − 14 = ____"
     },
     {
       "kp": "math-g4-up-u01-k005",
@@ -10136,7 +10134,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人二年级有#人#−##哪个年级人数多",
-      "sample": "一年级有 42 人，二年级有 48 人，48 − 42 = 6，哪个年级人数多（填 > 或 <）"
+      "sample": "一年级有 15 人，二年级有 20 人，20 − 15 = 5，哪个年级人数多（填 > 或 <）"
     },
     {
       "kp": "math-g4-up-u01-k005",
@@ -10150,7 +10148,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一年级有#人下面哪个选项正确",
-      "sample": "一年级有 41 人，下面哪个选项正确？（  ）"
+      "sample": "一年级有 15 人，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g4-up-u01-k006",
@@ -11279,12 +11277,12 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "application",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "读图与数据分析先把下面的事物按「统计图能否回」分类喜欢苹果的有多少人明天谁会来买水果香蕉比梨多几人下周气温是多少先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "读图与数据分析：先把下面的事物按「统计图能否回答」分类：喜欢苹果的有多少人、明天谁会来买水果、香"
+      "core": "读图与数据分析下面是待整理的材料#喜欢苹果的有多少人#明天谁会来买水果#香蕉比梨多几人#下周气温是多少请按「统计图能否回」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "读图与数据分析：下面是待整理的材料：1）喜欢苹果的有多少人；2）明天谁会来买水果；3）香蕉比梨多"
     },
     {
       "kp": "math-g4-up-u06-k004",
@@ -11293,7 +11291,7 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "needs-review",
       "focus": "classification",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
@@ -11494,7 +11492,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：5 和 9。\n问题：一共多少？"
+      "sample": "已知条件：2 和 4。\n问题：一共多少？"
     },
     {
       "kp": "math-g4-up-u09-k001",
@@ -11508,7 +11506,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 2 = 49"
+      "sample": "____ + 1 = 18"
     },
     {
       "kp": "math-g4-up-u09-k001",
@@ -11522,7 +11520,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "39 与 25 相加，和是多少？"
+      "sample": "14 与 9 相加，和是多少？"
     },
     {
       "kp": "math-g4-down-u01-k001",
@@ -11536,7 +11534,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "看图列式大括号图左边有#个苹果右边有#个苹果列式计算一共有多少个#+#",
-      "sample": "看图列式：大括号图左边有 17 个苹果，右边有 18 个苹果。列式计算一共有多少个：17 + 1"
+      "sample": "看图列式：大括号图左边有 12 个苹果，右边有 13 个苹果。列式计算一共有多少个：12 + 1"
     },
     {
       "kp": "math-g4-down-u01-k001",
@@ -11550,7 +11548,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "大括号图左边#个右边#个苹果合起来是个",
-      "sample": "大括号图：左边 14 个、右边 22 个苹果，合起来是 ____ 个。"
+      "sample": "大括号图：左边 11 个、右边 16 个苹果，合起来是 ____ 个。"
     },
     {
       "kp": "math-g4-down-u01-k001",
@@ -11564,7 +11562,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "根据大括号图左边有#个苹果右边有#个苹果一共有多少个",
-      "sample": "根据大括号图：左边有30个苹果，右边有8个苹果，一共有多少个？"
+      "sample": "根据大括号图：左边有20个苹果，右边有7个苹果，一共有多少个？"
     },
     {
       "kp": "math-g4-down-u01-k001",
@@ -11578,7 +11576,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "看大括号图左边#个苹果右边#个总数是多少",
-      "sample": "看大括号图，左边 12 个苹果、右边 8 个，总数是多少？"
+      "sample": "看大括号图，左边 9 个苹果、右边 7 个，总数是多少？"
     },
     {
       "kp": "math-g4-down-u01-k002",
@@ -11704,7 +11702,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#−#",
-      "sample": "13 − 2 = ?"
+      "sample": "6 − 1 = ?"
     },
     {
       "kp": "math-g4-down-u01-k004",
@@ -11732,7 +11730,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 52，B 比 A 少 45。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 19，B 比 A 少 16。\n问题：B 有多少？"
     },
     {
       "kp": "math-g4-down-u01-k004",
@@ -11746,7 +11744,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "8 减少 2 后是多少？"
+      "sample": "4 减少 1 后是多少？"
     },
     {
       "kp": "math-g4-down-u02-k001",
@@ -12306,7 +12304,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "根据小数的性质化简列式#−#",
-      "sample": "根据小数的性质化简，列式：2.00 − 0 = ？"
+      "sample": "根据小数的性质化简，列式：1.30 − 0 = ？"
     },
     {
       "kp": "math-g4-down-u04-k003",
@@ -12320,7 +12318,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "小数的性质在里填上合适的数#",
-      "sample": "小数的性质：在 ____ 里填上合适的数，6.30 = ____"
+      "sample": "小数的性质：在 ____ 里填上合适的数，1.80 = ____"
     },
     {
       "kp": "math-g4-down-u04-k003",
@@ -12334,7 +12332,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "一块橡皮标价#元根据小数的性质去掉末尾不影响大小的零它可以写成多少元",
-      "sample": "一块橡皮标价 7.00 元，根据小数的性质去掉末尾不影响大小的零，它可以写成多少元？"
+      "sample": "一块橡皮标价 1.90 元，根据小数的性质去掉末尾不影响大小的零，它可以写成多少元？"
     },
     {
       "kp": "math-g4-down-u04-k003",
@@ -12348,7 +12346,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面各数中与#大小相等的是",
-      "sample": "下面各数中，与 2.20 大小相等的是？（  ）"
+      "sample": "下面各数中，与 1.30 大小相等的是？（  ）"
     },
     {
       "kp": "math-g4-down-u04-k004",
@@ -12362,7 +12360,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式比一比#−#",
-      "sample": "列式比一比：5.7 − 2.5 = ？（差大于 0，说明前者大）"
+      "sample": "列式比一比：1.6 − 1.2 = ？（差大于 0，说明前者大）"
     },
     {
       "kp": "math-g4-down-u04-k004",
@@ -12376,7 +12374,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "比较大小在里填上合适的符号##",
-      "sample": "比较大小，在 ____ 里填上合适的符号（>、< 或 =）：3.9 ____ 6.9"
+      "sample": "比较大小，在 ____ 里填上合适的符号（>、< 或 =）：1.4 ____ 1.8"
     },
     {
       "kp": "math-g4-down-u04-k004",
@@ -12390,7 +12388,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "跳远比赛小明跳了#米小红跳了#米谁跳得更远",
-      "sample": "跳远比赛，小明跳了 5.2 米，小红跳了 5.3 米，谁跳得更远？"
+      "sample": "跳远比赛，小明跳了 1.6 米，小红跳了 1.1 米，谁跳得更远？"
     },
     {
       "kp": "math-g4-down-u04-k004",
@@ -12418,7 +12416,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算（小数点向右移动一位）：0.31 × 10 = ？"
+      "sample": "列式计算（小数点向右移动一位）：0.13 × 10 = ？"
     },
     {
       "kp": "math-g4-down-u04-k005",
@@ -12432,7 +12430,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "小数点向左移动一位在里填数#÷#",
-      "sample": "小数点向左移动一位，在 ____ 里填数：97 ÷ ____ = 9.7"
+      "sample": "小数点向左移动一位，在 ____ 里填数：20 ÷ ____ = 2"
     },
     {
       "kp": "math-g4-down-u04-k005",
@@ -12446,7 +12444,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#米#分米#米是多少分米",
-      "sample": "1 米 = 10 分米，0.65 米是多少分米？"
+      "sample": "1 米 = 10 分米，0.17 米是多少分米？"
     },
     {
       "kp": "math-g4-down-u04-k005",
@@ -12460,7 +12458,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "把#缩小到原来的#/#得到多少",
-      "sample": "把 54 缩小到原来的 1/10，得到多少？（  ）"
+      "sample": "把 15 缩小到原来的 1/10，得到多少？（  ）"
     },
     {
       "kp": "math-g4-down-u04-k006",
@@ -13006,7 +13004,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#−#",
-      "sample": "列式计算：1.5 − 1.3 = ？"
+      "sample": "列式计算：1.1 − 1.2 = ？"
     },
     {
       "kp": "math-g4-down-u06-k001",
@@ -13020,7 +13018,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#−#",
-      "sample": "在 ____ 里填上合适的数：2.3 − ____ = 0.4"
+      "sample": "在 ____ 里填上合适的数：1.2 − ____ = 0"
     },
     {
       "kp": "math-g4-down-u06-k001",
@@ -13034,7 +13032,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "买橡皮付#元找回#元列式求橡皮多少元#−#",
-      "sample": "买橡皮付 1.5 元，找回 1.1 元，列式求橡皮多少元：1.5 − 1.1 = ？"
+      "sample": "买橡皮付 1.1 元，找回 1.1 元，列式求橡皮多少元：1.1 − 1.1 = ？"
     },
     {
       "kp": "math-g4-down-u06-k001",
@@ -13048,7 +13046,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 2.4？（  ）"
+      "sample": "下面哪个算式的得数是 2.2？（  ）"
     },
     {
       "kp": "math-g4-down-u06-k002",
@@ -13062,7 +13060,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#+#",
-      "sample": "列式计算：1.6 + 1.4 = ？"
+      "sample": "列式计算：1.1 + 1.2 = ？"
     },
     {
       "kp": "math-g4-down-u06-k002",
@@ -13076,7 +13074,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#+#",
-      "sample": "在 ____ 里填上合适的数：3.3 + ____ = 6.5"
+      "sample": "在 ____ 里填上合适的数：1.3 + ____ = 2.5"
     },
     {
       "kp": "math-g4-down-u06-k002",
@@ -13090,7 +13088,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "买布料用去#元又买一支笔用去#元列式求一共花了多少元#+#",
-      "sample": "买布料用去 1.6 元，又买一支笔用去 1.5 元，列式求一共花了多少元：1.6 + 1.5 ="
+      "sample": "买布料用去 1.1 元，又买一支笔用去 1.2 元，列式求一共花了多少元：1.1 + 1.2 ="
     },
     {
       "kp": "math-g4-down-u06-k002",
@@ -13104,7 +13102,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 4.3？（  ）"
+      "sample": "下面哪个算式的得数是 0.5？（  ）"
     },
     {
       "kp": "math-g4-down-u06-k003",
@@ -13118,7 +13116,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#−#+#",
-      "sample": "列式计算：2.9 − 2.1 + 4.4 = ？"
+      "sample": "列式计算：1.3 − 1.2 + 1.9 = ？"
     },
     {
       "kp": "math-g4-down-u06-k003",
@@ -13132,7 +13130,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#−#+#",
-      "sample": "在 ____ 里填上合适的数：5.5 − 2.6 + 2.8 = ____"
+      "sample": "在 ____ 里填上合适的数：1.6 − 1.2 + 1.5 = ____"
     },
     {
       "kp": "math-g4-down-u06-k003",
@@ -13146,7 +13144,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "文具店盘点上午营业额#元中午变化#元下午变化#元列式求现在的营业额#−#+#",
-      "sample": "文具店盘点：上午营业额 1.9 元，中午变化 1.2 元，下午变化 4.8 元，列式求现在的营业"
+      "sample": "文具店盘点：上午营业额 1.1 元，中午变化 1.1 元，下午变化 2 元，列式求现在的营业额："
     },
     {
       "kp": "math-g4-down-u06-k003",
@@ -13160,7 +13158,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 4.9？（  ）"
+      "sample": "下面哪个算式的得数是 1.9？（  ）"
     },
     {
       "kp": "math-g4-down-u06-k004",
@@ -13174,7 +13172,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#+#",
-      "sample": "列式计算：5.6 + 3.8 = ？"
+      "sample": "列式计算：1.6 + 1.4 = ？"
     },
     {
       "kp": "math-g4-down-u06-k004",
@@ -13188,7 +13186,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#−#",
-      "sample": "在 ____ 里填上合适的数：9.1 − ____ = 2"
+      "sample": "在 ____ 里填上合适的数：2 − ____ = 0.3"
     },
     {
       "kp": "math-g4-down-u06-k004",
@@ -13202,7 +13200,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "买笔记本付#元找回#元列式求笔记本多少元#−#",
-      "sample": "买笔记本付 7.4 元，找回 2.9 元，列式求笔记本多少元：7.4 − 2.9 = ？"
+      "sample": "买笔记本付 1.8 元，找回 1.3 元，列式求笔记本多少元：1.8 − 1.3 = ？"
     },
     {
       "kp": "math-g4-down-u06-k004",
@@ -13216,7 +13214,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 7.4？（  ）"
+      "sample": "下面哪个算式的得数是 2.7？（  ）"
     },
     {
       "kp": "math-g4-down-u07-k001",
@@ -13607,8 +13605,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "平均数的意义先把下面的事物按「与平均身高#cm比较」分类身高#cm身高#cm身高#cm身高#cm身高#cm先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "平均数的意义：先把下面的事物按「与平均身高130cm比较」分类：身高125cm、身高130cm、"
+      "core": "平均数的意义下面是待整理的材料#身高#cm#身高#cm#身高#cm#身高#cm#身高#cm请按「与平均身高#cm比较」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "平均数的意义：下面是待整理的材料：1）身高125cm；2）身高130cm；3）身高135cm；4"
     },
     {
       "kp": "math-g4-down-u08-k001",
@@ -13677,8 +13675,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "求平均数的方法先把下面的事物按「分数段」分类#分#分#分#分#分先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "求平均数的方法：先把下面的事物按「分数段」分类：85分、90分、95分、80分、100分。先写出"
+      "core": "求平均数的方法下面是待整理的材料##分##分##分##分##分请按「分数段」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "求平均数的方法：下面是待整理的材料：1）85分；2）90分；3）95分；4）80分；5）100分"
     },
     {
       "kp": "math-g4-down-u08-k002",
@@ -13747,8 +13745,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "复式条形统计图先把下面的事物按「性别加图书类别」分类男生借故事书#本女生借故事书#本男生借科普书#本女生借科普书#本先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "复式条形统计图：先把下面的事物按「性别加图书类别」分类：男生借故事书8本、女生借故事书10本、男"
+      "core": "复式条形统计图下面是待整理的材料#男生借故事书#本#女生借故事书#本#男生借科普书#本#女生借科普书#本请按「性别加图书类别」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "复式条形统计图：下面是待整理的材料：1）男生借故事书8本；2）女生借故事书10本；3）男生借科普"
     },
     {
       "kp": "math-g4-down-u08-k003",
@@ -13944,7 +13942,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A多#",
-      "sample": "已知条件：A 有 41，B 比 A 多 9。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 16，B 比 A 多 3。\n问题：B 有多少？"
     },
     {
       "kp": "math-g4-down-u09-k003",
@@ -13958,7 +13956,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 46 = 51"
+      "sample": "____ + 17 = 19"
     },
     {
       "kp": "math-g4-down-u09-k003",
@@ -13972,7 +13970,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "27 减少 24 后是多少？"
+      "sample": "11 减少 10 后是多少？"
     },
     {
       "kp": "math-g4-down-u10-k001",
@@ -13986,7 +13984,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件一共#其中#",
-      "sample": "已知条件：一共 21，其中 12。\n问题：剩下多少？"
+      "sample": "已知条件：一共 9，其中 5。\n问题：剩下多少？"
     },
     {
       "kp": "math-g4-down-u10-k001",
@@ -14000,7 +13998,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 33 = 61"
+      "sample": "____ + 12 = 22"
     },
     {
       "kp": "math-g4-down-u10-k001",
@@ -14014,7 +14012,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "从#里去掉#还剩多少",
-      "sample": "从 22 里去掉 10，还剩多少？"
+      "sample": "从 9 里去掉 4，还剩多少？"
     },
     {
       "kp": "math-g5-up-u01-k001",
@@ -14238,7 +14236,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算：8 × 8 = ？"
+      "sample": "列式计算：2 × 8 = ？"
     },
     {
       "kp": "math-g5-up-u02-k001",
@@ -14266,7 +14264,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "彩带每米#元买#米列式求一共要付多少元#×#",
-      "sample": "彩带每米 2.9 元，买 3.1 米，列式求一共要付多少元：3.1 × 2.9 = ？"
+      "sample": "彩带每米 1.7 元，买 1.9 米，列式求一共要付多少元：1.9 × 1.7 = ？"
     },
     {
       "kp": "math-g5-up-u02-k001",
@@ -14280,7 +14278,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 8？（  ）"
+      "sample": "下面哪个算式的得数是 3.04？（  ）"
     },
     {
       "kp": "math-g5-up-u02-k002",
@@ -14294,7 +14292,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算：7 × 5 = ？"
+      "sample": "列式计算：1.8 × 5 = ？"
     },
     {
       "kp": "math-g5-up-u02-k002",
@@ -14308,7 +14306,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#×#",
-      "sample": "在 ____ 里填上合适的数：6.9 × ____ = 13.8"
+      "sample": "在 ____ 里填上合适的数：1.8 × ____ = 3.6"
     },
     {
       "kp": "math-g5-up-u02-k002",
@@ -14322,7 +14320,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "彩带每米#元买#米列式求一共要付多少元#×#",
-      "sample": "彩带每米 3 元，买 5.1 米，列式求一共要付多少元：5.1 × 3 = ？"
+      "sample": "彩带每米 3 元，买 1.6 米，列式求一共要付多少元：1.6 × 3 = ？"
     },
     {
       "kp": "math-g5-up-u02-k002",
@@ -14336,7 +14334,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 1.82？（  ）"
+      "sample": "下面哪个算式的得数是 1.56？（  ）"
     },
     {
       "kp": "math-g5-up-u02-k003",
@@ -14350,7 +14348,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算：2.3 × 1.8 = ？"
+      "sample": "列式计算：1.5 × 1.3 = ？"
     },
     {
       "kp": "math-g5-up-u02-k003",
@@ -14364,7 +14362,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#×#",
-      "sample": "在 ____ 里填上合适的数：1.9 × ____ = 3.23"
+      "sample": "在 ____ 里填上合适的数：1.4 × ____ = 1.82"
     },
     {
       "kp": "math-g5-up-u02-k003",
@@ -14378,7 +14376,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "彩带每米#元买#米列式求一共要付多少元#×#",
-      "sample": "彩带每米 5 元，买 8.7 米，列式求一共要付多少元：8.7 × 5 = ？"
+      "sample": "彩带每米 5 元，买 2 米，列式求一共要付多少元：2 × 5 = ？"
     },
     {
       "kp": "math-g5-up-u02-k003",
@@ -14392,7 +14390,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 12.6？（  ）"
+      "sample": "下面哪个算式的得数是 8.4？（  ）"
     },
     {
       "kp": "math-g5-up-u02-k004",
@@ -14462,7 +14460,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#",
-      "sample": "列式计算：2 × 5 = ？"
+      "sample": "列式计算：1.3 × 5 = ？"
     },
     {
       "kp": "math-g5-up-u02-k005",
@@ -14476,7 +14474,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数×##",
-      "sample": "在 ____ 里填上合适的数：____ × 2.3 = 7.13"
+      "sample": "在 ____ 里填上合适的数：____ × 1.5 = 2.85"
     },
     {
       "kp": "math-g5-up-u02-k005",
@@ -14490,7 +14488,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "彩带每米#元买#米列式求一共要付多少元#×#",
-      "sample": "彩带每米 4 元，买 4.4 米，列式求一共要付多少元：4.4 × 4 = ？"
+      "sample": "彩带每米 4 元，买 1.5 米，列式求一共要付多少元：1.5 × 4 = ？"
     },
     {
       "kp": "math-g5-up-u02-k005",
@@ -14504,7 +14502,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 3.96？（  ）"
+      "sample": "下面哪个算式的得数是 1.95？（  ）"
     },
     {
       "kp": "math-g5-up-u03-k001",
@@ -14518,7 +14516,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#÷#",
-      "sample": "列式计算：15.6 ÷ 4 = ？"
+      "sample": "列式计算：6 ÷ 4 = ？"
     },
     {
       "kp": "math-g5-up-u03-k001",
@@ -14532,7 +14530,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数÷##",
-      "sample": "在 ____ 里填上合适的数：____ ÷ 1.8 = 7"
+      "sample": "在 ____ 里填上合适的数：____ ÷ 1.6 = 7"
     },
     {
       "kp": "math-g5-up-u03-k001",
@@ -14546,7 +14544,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "把#米长的彩带平均分成#段列式求每段长多少米#÷#",
-      "sample": "把 34.3 米长的彩带平均分成 7 段，列式求每段长多少米：34.3 ÷ 7 = ？"
+      "sample": "把 11.2 米长的彩带平均分成 7 段，列式求每段长多少米：11.2 ÷ 7 = ？"
     },
     {
       "kp": "math-g5-up-u03-k001",
@@ -14560,7 +14558,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 7.9？（  ）"
+      "sample": "下面哪个算式的得数是 2？（  ）"
     },
     {
       "kp": "math-g5-up-u03-k002",
@@ -14574,7 +14572,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#÷#",
-      "sample": "列式计算：10.5 ÷ 2.1 = ？"
+      "sample": "列式计算：9 ÷ 1.8 = ？"
     },
     {
       "kp": "math-g5-up-u03-k002",
@@ -14588,7 +14586,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#÷#",
-      "sample": "在 ____ 里填上合适的数：15.2 ÷ ____ = 8"
+      "sample": "在 ____ 里填上合适的数：12.8 ÷ ____ = 8"
     },
     {
       "kp": "math-g5-up-u03-k002",
@@ -14602,7 +14600,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "把#米长的彩带平均分成#段列式求每段长多少米#÷#",
-      "sample": "把 19.5 米长的彩带平均分成 5 段，列式求每段长多少米：19.5 ÷ 5 = ？"
+      "sample": "把 7.5 米长的彩带平均分成 5 段，列式求每段长多少米：7.5 ÷ 5 = ？"
     },
     {
       "kp": "math-g5-up-u03-k002",
@@ -14686,7 +14684,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#÷#",
-      "sample": "列式计算：5 ÷ 2.5 = ？"
+      "sample": "列式计算：4 ÷ 2 = ？"
     },
     {
       "kp": "math-g5-up-u03-k004",
@@ -14700,7 +14698,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#÷#",
-      "sample": "在 ____ 里填上合适的数：8.4 ÷ ____ = 4.2"
+      "sample": "在 ____ 里填上合适的数：3 ÷ ____ = 1.5"
     },
     {
       "kp": "math-g5-up-u03-k004",
@@ -14714,7 +14712,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "把#米长的彩带平均分成#段列式求每段长多少米#÷#",
-      "sample": "把 39.6 米长的彩带平均分成 9 段，列式求每段长多少米：39.6 ÷ 9 = ？"
+      "sample": "把 14.4 米长的彩带平均分成 9 段，列式求每段长多少米：14.4 ÷ 9 = ？"
     },
     {
       "kp": "math-g5-up-u03-k004",
@@ -14728,7 +14726,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式的得数是#",
-      "sample": "下面哪个算式的得数是 5.4？（  ）"
+      "sample": "下面哪个算式的得数是 1.7？（  ）"
     },
     {
       "kp": "math-g5-up-u03-k005",
@@ -14756,7 +14754,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "在里填上合适的数#÷#",
-      "sample": "在 ____ 里填上合适的数：40.8 ÷ ____ = 5.1"
+      "sample": "在 ____ 里填上合适的数：12.8 ÷ ____ = 1.6"
     },
     {
       "kp": "math-g5-up-u03-k005",
@@ -14770,7 +14768,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "把#米长的彩带平均分成#段列式求每段长多少米#÷#",
-      "sample": "把 43.4 米长的彩带平均分成 7 段，列式求每段长多少米：43.4 ÷ 7 = ？"
+      "sample": "把 12.6 米长的彩带平均分成 7 段，列式求每段长多少米：12.6 ÷ 7 = ？"
     },
     {
       "kp": "math-g5-up-u03-k005",
@@ -14812,7 +14810,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 12 = 43"
+      "sample": "____ + 4 = 16"
     },
     {
       "kp": "math-g5-up-u03-k006",
@@ -14826,7 +14824,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件#和#",
-      "sample": "已知条件：31 和 46。\n问题：一共多少？"
+      "sample": "已知条件：12 和 17。\n问题：一共多少？"
     },
     {
       "kp": "math-g5-up-u03-k006",
@@ -14840,7 +14838,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "4 与 12 相加，和是多少？"
+      "sample": "2 与 5 相加，和是多少？"
     },
     {
       "kp": "math-g5-up-u04-k001",
@@ -15232,7 +15230,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "百数表中#右边一个数是多少",
-      "sample": "百数表中，57 右边一个数是多少？（57 + 1 = ？）"
+      "sample": "百数表中，17 右边一个数是多少？（17 + 1 = ？）"
     },
     {
       "kp": "math-g5-up-u05-k004",
@@ -15246,7 +15244,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "根据算式把案填在横线上#+#",
-      "sample": "根据算式把答案填在横线上：26 + 1 = ____"
+      "sample": "根据算式把答案填在横线上：13 + 1 = ____"
     },
     {
       "kp": "math-g5-up-u05-k004",
@@ -15260,7 +15258,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "在百数表里圈出#它右边一格的数是多少",
-      "sample": "在百数表（每行10个数）里圈出 76，它右边一格的数是多少？（76 + 1 = ？）"
+      "sample": "在百数表（每行10个数）里圈出 19，它右边一格的数是多少？（19 + 1 = ？）"
     },
     {
       "kp": "math-g5-up-u05-k004",
@@ -15274,7 +15272,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "在百数表里圈出#下面哪个选项正确",
-      "sample": "在百数表里圈出 45，下面哪个选项正确？（  ）"
+      "sample": "在百数表里圈出 15，下面哪个选项正确？（  ）"
     },
     {
       "kp": "math-g5-up-u06-k001",
@@ -15731,12 +15729,12 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "application",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "事件发生的确定性与不确定性先把下面的事物按「事件发生的可能性」分类太阳从东方升起明天本地会下雨掷一枚硬币正面朝上标准大气压下水加热到#℃沸腾买彩票中一等奖先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "事件发生的确定性与不确定性：先把下面的事物按「事件发生的可能性」分类：太阳从东方升起、明天本地会"
+      "core": "事件发生的确定性与不确定性下面是待整理的材料#太阳从东方升起#明天本地会下雨#掷一枚硬币正面朝上#标准大气压下水加热到#℃沸腾#买彩票中一等奖请按「事件发生的可能性」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "事件发生的确定性与不确定性：下面是待整理的材料：1）太阳从东方升起；2）明天本地会下雨；3）掷一"
     },
     {
       "kp": "math-g5-up-u07-k001",
@@ -15745,7 +15743,7 @@
       "makerKey": "generator:stats|classify",
       "intentStatus": "ai-verified",
       "focus": "classification",
-      "level": "format",
+      "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
@@ -15945,8 +15943,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "掷一掷先把下面的事物按「点数和的可能性大小」分类点数和是#点数和是#点数和是#点数和是#点数和是#点数和是#先写出分类结果再说一说按这个标准分类说明了什么",
-      "sample": "掷一掷（选学）：先把下面的事物按「点数和的可能性大小」分类：点数和是2、点数和是3、点数和是5、"
+      "core": "掷一掷下面是待整理的材料#点数和是##点数和是##点数和是##点数和是##点数和是##点数和是#请按「点数和的可能性大小」分类整理这些材料再说一说整理结果说明了什么",
+      "sample": "掷一掷（选学）：下面是待整理的材料：1）点数和是2；2）点数和是3；3）点数和是5；4）点数和是"
     },
     {
       "kp": "math-g5-up-u07-k004",
@@ -16548,7 +16546,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "体育分组每组#人正好分完人数须是#的倍数班级人数#哪个班能正好分完",
-      "sample": "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 30，哪个班能正好分完？"
+      "sample": "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 18，哪个班能正好分完？"
     },
     {
       "kp": "math-g5-down-u02-k003",
@@ -16576,7 +16574,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "不是#的倍数的数是奇数如#÷##……#下面哪个数是奇数",
-      "sample": "不是 2 的倍数的数是奇数，如 25 ÷ 2 = 12……1。下面哪个数是奇数？"
+      "sample": "不是 2 的倍数的数是奇数，如 21 ÷ 2 = 10……1。下面哪个数是奇数？"
     },
     {
       "kp": "math-g5-down-u02-k004",
@@ -16590,7 +16588,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "#÷##没有余数是#的倍数",
-      "sample": "48 ÷ 2 = 24 没有余数，____ 是 2 的倍数"
+      "sample": "40 ÷ 2 = 20 没有余数，____ 是 2 的倍数"
     },
     {
       "kp": "math-g5-down-u02-k004",
@@ -16604,7 +16602,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "门牌号按单双号排列#号是奇数还是偶数",
-      "sample": "门牌号按单双号排列，44 号是奇数还是偶数？"
+      "sample": "门牌号按单双号排列，36 号是奇数还是偶数？"
     },
     {
       "kp": "math-g5-down-u02-k004",
@@ -17122,7 +17120,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 25，B 比 A 少 1。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 10，B 比 A 少 1。\n问题：B 有多少？"
     },
     {
       "kp": "math-g5-down-u03-k006",
@@ -17136,7 +17134,7 @@
       "isJudge": true,
       "hasBlank": false,
       "core": "#与#相加和是多少案是#——对还是错",
-      "sample": "23 与 20 相加，和是多少？ 答案是 43 —— 对还是错？"
+      "sample": "9 与 8 相加，和是多少？ 答案是 17 —— 对还是错？"
     },
     {
       "kp": "math-g5-down-u03-k006",
@@ -17150,7 +17148,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#增加#后是多少",
-      "sample": "48 增加 5 后是多少？"
+      "sample": "18 增加 2 后是多少？"
     },
     {
       "kp": "math-g5-down-u04-k001",
@@ -18690,7 +18688,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件A有#B比A少#",
-      "sample": "已知条件：A 有 7，B 比 A 少 5。\n问题：B 有多少？"
+      "sample": "已知条件：A 有 4，B 比 A 少 3。\n问题：B 有多少？"
     },
     {
       "kp": "math-g5-down-u11-k001",
@@ -18718,7 +18716,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#与#相加和是多少",
-      "sample": "48 与 33 相加，和是多少？"
+      "sample": "18 与 12 相加，和是多少？"
     },
     {
       "kp": "math-g6-up-u01-k001",
@@ -19852,7 +19850,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#×#%",
-      "sample": "列式计算：500 × 75% = ？"
+      "sample": "列式计算：100 × 75% = ？"
     },
     {
       "kp": "math-g6-up-u05-k001",
@@ -19880,7 +19878,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "图书室有#本图书其中#%是故事书故事书有多少本",
-      "sample": "图书室有 500 本图书，其中 90% 是故事书。故事书有多少本？"
+      "sample": "图书室有 100 本图书，其中 90% 是故事书。故事书有多少本？"
     },
     {
       "kp": "math-g6-up-u05-k001",
@@ -19894,7 +19892,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#的#%是多少",
-      "sample": "300 的 10% 是多少？"
+      "sample": "100 的 10% 是多少？"
     },
     {
       "kp": "math-g6-up-u05-k002",
@@ -19964,7 +19962,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算一件商品原价#元现在八五折出售现价是多少元列式#×#%",
-      "sample": "列式计算：一件商品原价 500 元，现在八五折出售，现价是多少元？列式：500 × 85% = "
+      "sample": "列式计算：一件商品原价 100 元，现在八五折出售，现价是多少元？列式：100 × 85% = "
     },
     {
       "kp": "math-g6-up-u05-k003",
@@ -19978,7 +19976,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "商品原价#元八折出售现价是元",
-      "sample": "商品原价 300 元，八折出售，现价是 ____ 元"
+      "sample": "商品原价 100 元，八折出售，现价是 ____ 元"
     },
     {
       "kp": "math-g6-up-u05-k003",
@@ -19992,7 +19990,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "某商品原价#元打六五折销售现价多少元",
-      "sample": "某商品原价 200 元，打六五折销售，现价多少元？"
+      "sample": "某商品原价 100 元，打六五折销售，现价多少元？"
     },
     {
       "kp": "math-g6-up-u05-k003",
@@ -20006,7 +20004,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "原价#元六五折出售现价是多少元",
-      "sample": "原价 500 元，六五折出售，现价是多少元？"
+      "sample": "原价 100 元，六五折出售，现价是多少元？"
     },
     {
       "kp": "math-g6-up-u05-k004",
@@ -20020,7 +20018,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#元存入银行年利率#%存期#年列式求到期利息#×#%×#",
-      "sample": "列式计算：3000 元存入银行，年利率 4%，存期 1 年。列式求到期利息：3000 × 4% "
+      "sample": "列式计算：5000 元存入银行，年利率 4%，存期 1 年。列式求到期利息：5000 × 4% "
     },
     {
       "kp": "math-g6-up-u05-k004",
@@ -20048,7 +20046,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "小明把#元存入银行年利率#%存期#年到期可得利息多少元",
-      "sample": "小明把 8000 元存入银行，年利率 3%，存期 1 年。到期可得利息多少元？"
+      "sample": "小明把 7000 元存入银行，年利率 3%，存期 1 年。到期可得利息多少元？"
     },
     {
       "kp": "math-g6-up-u05-k004",
@@ -20062,7 +20060,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "本金#元年利率#%存期#年利息是多少元",
-      "sample": "本金 3000 元，年利率 2%，存期 2 年，利息是多少元？"
+      "sample": "本金 5000 元，年利率 2%，存期 2 年，利息是多少元？"
     },
     {
       "kp": "math-g6-up-u05-k005",
@@ -20076,7 +20074,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算六年级共有#人体育达标#人列式求达标率#÷#×#%",
-      "sample": "列式计算：六年级共有 250 人，体育达标 200 人。列式求达标率：200 ÷ 250 × 1"
+      "sample": "列式计算：六年级共有 100 人，体育达标 80 人。列式求达标率：80 ÷ 100 × 100"
     },
     {
       "kp": "math-g6-up-u05-k005",
@@ -20104,7 +20102,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "六年级共有#人体育达标#人达标率是多少",
-      "sample": "六年级共有 250 人，体育达标 100 人。达标率是多少？（只填数字）"
+      "sample": "六年级共有 100 人，体育达标 40 人。达标率是多少？（只填数字）"
     },
     {
       "kp": "math-g6-up-u05-k005",
@@ -20118,7 +20116,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "总人数#人达标#人达标率是多少",
-      "sample": "总人数 50 人，达标 30 人，达标率是多少？（只填数字）"
+      "sample": "总人数 60 人，达标 36 人，达标率是多少？（只填数字）"
     },
     {
       "kp": "math-g6-up-u05-k006",
@@ -20132,7 +20130,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#+#×#%",
-      "sample": "列式计算：250 + 250 × 75% = ？"
+      "sample": "列式计算：100 + 100 × 75% = ？"
     },
     {
       "kp": "math-g6-up-u05-k006",
@@ -20146,7 +20144,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "千克是#千克增产#%后的产量",
-      "sample": "____ 千克是 200 千克增产 80% 后的产量"
+      "sample": "____ 千克是 100 千克增产 80% 后的产量"
     },
     {
       "kp": "math-g6-up-u05-k006",
@@ -20160,7 +20158,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "果园去年收苹果#千克今年比去年增产#%今年收苹果多少千克",
-      "sample": "果园去年收苹果 200 千克，今年比去年增产 90%，今年收苹果多少千克？"
+      "sample": "果园去年收苹果 100 千克，今年比去年增产 90%，今年收苹果多少千克？"
     },
     {
       "kp": "math-g6-up-u05-k006",
@@ -20174,7 +20172,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#千克增产#%后是多少千克",
-      "sample": "250 千克增产 80% 后是多少千克？"
+      "sample": "100 千克增产 80% 后是多少千克？"
     },
     {
       "kp": "math-g6-up-u06-k001",
@@ -20188,7 +20186,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "已知条件一共#其中#",
-      "sample": "已知条件：一共 14，其中 5。\n问题：剩下多少？"
+      "sample": "已知条件：一共 6，其中 2。\n问题：剩下多少？"
     },
     {
       "kp": "math-g6-up-u06-k001",
@@ -20216,7 +20214,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#减少#后是多少",
-      "sample": "27 减少 19 后是多少？"
+      "sample": "11 减少 8 后是多少？"
     },
     {
       "kp": "math-g6-up-u07-k001",
@@ -20580,7 +20578,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "#+#",
-      "sample": "32 + 50 = ?"
+      "sample": "12 + 19 = ?"
     },
     {
       "kp": "math-g6-down-u01-k005",
@@ -20594,7 +20592,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "+##",
-      "sample": "____ + 3 = 20"
+      "sample": "____ + 1 = 8"
     },
     {
       "kp": "math-g6-down-u01-k005",
@@ -20636,7 +20634,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算一件商品原价#元现在七五折出售现价是多少元列式#×#%",
-      "sample": "列式计算：一件商品原价 400 元，现在七五折出售，现价是多少元？列式：400 × 75% = "
+      "sample": "列式计算：一件商品原价 100 元，现在七五折出售，现价是多少元？列式：100 × 75% = "
     },
     {
       "kp": "math-g6-down-u02-k001",
@@ -20650,7 +20648,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "商品原价#元九折出售现价是元",
-      "sample": "商品原价 600 元，九折出售，现价是 ____ 元"
+      "sample": "商品原价 100 元，九折出售，现价是 ____ 元"
     },
     {
       "kp": "math-g6-down-u02-k001",
@@ -20664,7 +20662,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "某商品原价#元打七五折销售现价多少元",
-      "sample": "某商品原价 200 元，打七五折销售，现价多少元？"
+      "sample": "某商品原价 100 元，打七五折销售，现价多少元？"
     },
     {
       "kp": "math-g6-down-u02-k001",
@@ -20678,7 +20676,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "原价#元八折出售现价是多少元",
-      "sample": "原价 400 元，八折出售，现价是多少元？"
+      "sample": "原价 100 元，八折出售，现价是多少元？"
     },
     {
       "kp": "math-g6-down-u02-k002",
@@ -20748,7 +20746,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算商店某月的营业额是#元按#%的税率缴纳税款应缴纳税款多少元列式#×#%",
-      "sample": "列式计算：商店某月的营业额是 50000 元，按 3% 的税率缴纳税款，应缴纳税款多少元？列式："
+      "sample": "列式计算：商店某月的营业额是 48000 元，按 3% 的税率缴纳税款，应缴纳税款多少元？列式："
     },
     {
       "kp": "math-g6-down-u02-k003",
@@ -20762,7 +20760,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "元是#元营业额按#%税率缴纳的税款",
-      "sample": "____ 元是 3000 元营业额按 6% 税率缴纳的税款"
+      "sample": "____ 元是 8000 元营业额按 6% 税率缴纳的税款"
     },
     {
       "kp": "math-g6-down-u02-k003",
@@ -20776,7 +20774,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "商店某月的营业额是#元按规定要按#%的税率缴纳税款这家应缴纳税款多少元",
-      "sample": "商店某月的营业额是 5000 元，按规定要按 5% 的税率缴纳税款。这家应缴纳税款多少元？"
+      "sample": "商店某月的营业额是 15000 元，按规定要按 5% 的税率缴纳税款。这家应缴纳税款多少元？"
     },
     {
       "kp": "math-g6-down-u02-k003",
@@ -20790,7 +20788,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "营业额#元税率#%应纳税多少元",
-      "sample": "营业额 3000 元，税率 3%，应纳税多少元？"
+      "sample": "营业额 8000 元，税率 3%，应纳税多少元？"
     },
     {
       "kp": "math-g6-down-u02-k004",
@@ -20804,7 +20802,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算#元存入银行年利率#%存期#年列式求到期利息#×#%×#",
-      "sample": "列式计算：5000 元存入银行，年利率 5%，存期 3 年。列式求到期利息：5000 × 5% "
+      "sample": "列式计算：6000 元存入银行，年利率 5%，存期 3 年。列式求到期利息：6000 × 5% "
     },
     {
       "kp": "math-g6-down-u02-k004",
@@ -20818,7 +20816,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "元是#元本金按#%年利率存#年的利息",
-      "sample": "____ 元是 8000 元本金按 3% 年利率存 3 年的利息"
+      "sample": "____ 元是 7000 元本金按 3% 年利率存 3 年的利息"
     },
     {
       "kp": "math-g6-down-u02-k004",
@@ -20846,7 +20844,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "本金#元年利率#%存期#年利息是多少元",
-      "sample": "本金 2000 元，年利率 2%，存期 3 年，利息是多少元？"
+      "sample": "本金 3000 元，年利率 2%，存期 3 年，利息是多少元？"
     },
     {
       "kp": "math-g6-down-u02-k005",
@@ -20860,7 +20858,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "列式计算学校学生共#户其中#%是每天坚持阅读的学生每天坚持阅读的学生有多少户列式#×#%",
-      "sample": "列式计算：学校学生共 1000 户（人），其中 90% 是每天坚持阅读的学生。每天坚持阅读的学生"
+      "sample": "列式计算：学校学生共 1400 户（人），其中 90% 是每天坚持阅读的学生。每天坚持阅读的学生"
     },
     {
       "kp": "math-g6-down-u02-k005",
@@ -20874,7 +20872,7 @@
       "isJudge": false,
       "hasBlank": true,
       "core": "#的#%等于",
-      "sample": "800 的 80% 等于 ____"
+      "sample": "1000 的 80% 等于 ____"
     },
     {
       "kp": "math-g6-down-u02-k005",
@@ -20888,7 +20886,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "全村农户共#户其中#%是参加了新农合的农户参加了新农合的农户有多少户",
-      "sample": "全村农户共 300 户（人），其中 96% 是参加了新农合的农户。参加了新农合的农户有多少户（人"
+      "sample": "全村农户共 500 户（人），其中 96% 是参加了新农合的农户。参加了新农合的农户有多少户（人"
     },
     {
       "kp": "math-g6-down-u02-k005",
@@ -20902,7 +20900,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "求#×#%的结果是多少",
-      "sample": "求 800 × 90% 的结果是多少？"
+      "sample": "求 1300 × 90% 的结果是多少？"
     },
     {
       "kp": "math-g6-down-u03-k001",

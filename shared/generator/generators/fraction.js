@@ -32,6 +32,16 @@ function fs(f) { return f.n + '/' + f.d; }
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
 function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
 // 顺序敏感
 var NAME_RULES = [
   { sub: 'word', re: /解决问题/ },
@@ -58,24 +68,24 @@ function deriveSubtype(name) {
  * 分数运算结构
  * ------------------------------------------------------------------ */
 
-function diffDenomAdd(rng) {
+function diffDenomAdd(rng, nr) {
   var d1 = pick(rng, [2, 3, 4, 6]), d2 = pick(rng, [3, 5, 4, 6].filter(function (x) { return x !== d1; }));
-  var n1 = ri(rng, 1, d1 - 1), n2 = ri(rng, 1, d2 - 1);
+  var n1 = riC(rng, 1, d1 - 1, nr), n2 = riC(rng, 1, d2 - 1, nr);
   var lcm = d1 * d2 / gcd(d1, d2);
   var num = n1 * (lcm / d1) + n2 * (lcm / d2);
   return { d1: d1, d2: d2, n1: n1, n2: n2, lcm: lcm,
     expr: n1 + '/' + d1 + ' + ' + n2 + '/' + d2, ans: simp(num, lcm) };
 }
 
-function fracDiv(rng) {
-  var n1 = ri(rng, 1, 5), d1 = ri(rng, 2, 8);
-  var n2 = ri(rng, 1, 5), d2 = ri(rng, 2, 8);
+function fracDiv(rng, nr) {
+  var n1 = riC(rng, 1, 5, nr), d1 = riC(rng, 2, 8, nr);
+  var n2 = riC(rng, 1, 5, nr), d2 = riC(rng, 2, 8, nr);
   return { n1: n1, d1: d1, n2: n2, d2: d2,
     expr: n1 + '/' + d1 + ' ÷ ' + n2 + '/' + d2, ans: simp(n1 * d2, d1 * n2) };
 }
 
-function fracDivInt(rng) {
-  var d = ri(rng, 2, 8), n = ri(rng, 1, d - 1), k = ri(rng, 2, 6);
+function fracDivInt(rng, nr) {
+  var d = riC(rng, 2, 8, nr), n = riC(rng, 1, d - 1, nr), k = riC(rng, 2, 6, nr);
   return { n: n, d: d, k: k,
     expr: n + '/' + d + ' ÷ ' + k, ans: simp(n, d * k) };
 }
@@ -156,9 +166,9 @@ function applyItem(story, expr, ansF, why) {
 }
 
 // 运算类子类型（word/addsub/addsub-diff/mix/div）的四题型真分工
-function arithmeticTyped(sub, qt, rng) {
+function arithmeticTyped(sub, qt, rng, nr) {
   if (sub === 'word') {
-    var wd = ri(rng, 3, 9), wa = ri(rng, 1, wd - 2), wb = ri(rng, 1, wd - wa - 1);
+    var wd = riC(rng, 3, 9, nr), wa = riC(rng, 1, wd - 2, nr), wb = riC(rng, 1, wd - wa - 1, nr);
     var wexpr = wa + '/' + wd + ' + ' + wb + '/' + wd, wans = simp(wa + wb, wd);
     if (qt === 'calc') return calcItem(wexpr, wans, null,
       '同分母分数相加，分母不变、分子相加：');
@@ -181,9 +191,9 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'addsub') {
-    var d = ri(rng, 3, 9), add = rng() < 0.5;
+    var d = riC(rng, 3, 9, nr), add = rng() < 0.5;
     if (add) {
-      var a = ri(rng, 1, d - 2), b = ri(rng, 1, d - a);
+      var a = riC(rng, 1, d - 2, nr), b = riC(rng, 1, d - a, nr);
       var ae = a + '/' + d + ' + ' + b + '/' + d, aa = simp(a + b, d);
       if (qt === 'calc') return calcItem(ae, aa, null,
         '同分母分数相加，分母不变、分子相加：');
@@ -195,12 +205,12 @@ function arithmeticTyped(sub, qt, rng) {
       return applyItem('一根彩带，第一次用去这根彩带的 ' + a + '/' + d + '，第二次又用去 ' + b + '/' + d +
         '，列式求两次一共用去这根彩带的几分之几', ae, aa);
     }
-    var hi = ri(rng, 2, d - 1), lo = ri(rng, 1, hi - 1);
+    var hi = riC(rng, 2, d - 1, nr), lo = riC(rng, 1, hi - 1, nr);
     // P32-AS-16：fill 形式「hi/d − ____ = (hi−lo)/d」，当 hi−lo=lo 时 RHS 恰为答案
     // （如 2/3 − ____ = 1/3，v=1/3），排除该巧合。注意 d=3 时 (hi,lo) 只能取 (2,1)
     // 且必然命中，故 d 也要重抽，否则在固定 rng 区间内死循环。
     while (hi - lo === lo) {
-      d = ri(rng, 3, 9); hi = ri(rng, 2, d - 1); lo = ri(rng, 1, hi - 1);
+      d = riC(rng, 3, 9, nr); hi = riC(rng, 2, d - 1, nr); lo = riC(rng, 1, hi - 1, nr);
     }
     var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
     if (qt === 'calc') return calcItem(se, sa, null,
@@ -215,7 +225,7 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'addsub-diff') {
-    var s2 = diffDenomAdd(rng);
+    var s2 = diffDenomAdd(rng, nr);
     var de = s2.expr, da = s2.ans;
     if (qt === 'calc') return calcItem(de, da, '列式计算（先通分）',
       '异分母分数相加，先通分化成同分母分数，再按同分母加法计算：');
@@ -232,8 +242,8 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'mix') {
-    var md = ri(rng, 4, 9);
-    var m1 = ri(rng, 1, md - 3), m2 = ri(rng, 1, md - m1 - 2), m3 = ri(rng, 1, md - m1 - m2 - 1);
+    var md = riC(rng, 4, 9, nr);
+    var m1 = riC(rng, 1, md - 3, nr), m2 = riC(rng, 1, md - m1 - 2, nr), m3 = riC(rng, 1, md - m1 - m2 - 1, nr);
     var me = m1 + '/' + md + ' + ' + m2 + '/' + md + ' + ' + m3 + '/' + md, ma = simp(m1 + m2 + m3, md);
     if (qt === 'calc') return calcItem(me, ma, null,
       '同分母分数连加，分母不变、分子连加：');
@@ -248,10 +258,10 @@ function arithmeticTyped(sub, qt, rng) {
 
   // div
   if (rng() < 0.5) {
-    var dv = fracDiv(rng);
+    var dv = fracDiv(rng, nr);
     // P32-AS-16：fill 形式「____ ÷ n2/d2 = 商」求被除数；除数=1（n2=d2，如 2/2）时
     // 被除数与商相等，RHS 即答案，排除。
-    while (dv.n2 === dv.d2) dv = fracDiv(rng);
+    while (dv.n2 === dv.d2) dv = fracDiv(rng, nr);
     var de2 = dv.expr, da2 = dv.ans;
     if (qt === 'calc') return calcItem(de2, da2, null,
       '除以一个不为零的分数，等于乘这个分数的倒数：');
@@ -263,7 +273,7 @@ function arithmeticTyped(sub, qt, rng) {
     return applyItem('把 ' + dv.n1 + '/' + dv.d1 + ' 米长的彩带剪成每段 ' + dv.n2 + '/' + dv.d2 +
       ' 米的小段，列式求能剪多少段', de2, da2);
   }
-  var di = fracDivInt(rng), ie = di.expr, ia = di.ans;
+  var di = fracDivInt(rng, nr), ie = di.expr, ia = di.ans;
   if (qt === 'calc') return calcItem(ie, ia, null,
     '分数除以一个不为零的整数，等于分数乘这个整数的倒数：');
   if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + di.n + '/' + di.d + ' ÷ ____ = ' + fs(ia),
@@ -274,9 +284,9 @@ function arithmeticTyped(sub, qt, rng) {
 }
 
 // 概念类子类型（meaning/nature/compare/relation/proper/reciprocal）的四题型真分工
-function conceptTyped(sub, qt, rng) {
+function conceptTyped(sub, qt, rng, nr) {
   if (sub === 'meaning') {
-    var d0 = ri(rng, 4, 9), n0 = ri(rng, 2, d0 - 2);
+    var d0 = riC(rng, 4, 9, nr), n0 = riC(rng, 2, d0 - 2, nr);
     if (qt === 'calc') {
       return { prompt: '分数单位累加，列式：1/' + d0 + ' + 1/' + d0 + ' + 1/' + d0 + ' = ？',
         answer: '3/' + d0, options: null,
@@ -299,28 +309,28 @@ function conceptTyped(sub, qt, rng) {
 
   if (sub === 'nature') {
     if (qt === 'calc') {
-      var g2 = ri(rng, 2, 5), ca = ri(rng, 1, 4), cb = ca + ri(rng, 1, 3);
+      var g2 = riC(rng, 2, 5, nr), ca = riC(rng, 1, 4, nr), cb = ca + riC(rng, 1, 3, nr);
       var cn = g2 * ca, cd = g2 * cb, cr = simp(cn, cd);
       return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + cr.n + '）：' +
         cn + '/' + cd + ' = ？', answer: fs(cr), options: null,
         explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fs(cr) + '。' };
     }
     if (qt === 'fill') {
-      var bd = ri(rng, 3, 8), bk = ri(rng, 2, 5);
+      var bd = riC(rng, 3, 8, nr), bk = riC(rng, 2, 5, nr);
       return { prompt: '分数的基本性质，在 ____ 里填数：1/' + bd + ' = ____/' + (bd * bk),
         answer: String(bk), options: null,
         explain: '分数的基本性质：分子分母同时乘 ' + bk + '，1/' + bd + ' = ' + bk + '/' + (bd * bk)
           + '，所以填 ' + bk + '。' };
     }
     if (qt === 'choice') {
-      var g3 = ri(rng, 2, 4), rn3 = ri(rng, 1, 4), rd3 = rn3 + ri(rng, 1, 3);
+      var g3 = riC(rng, 2, 4, nr), rn3 = riC(rng, 1, 4, nr), rd3 = rn3 + riC(rng, 1, 3, nr);
       var en = g3 * rn3, ed = g3 * rd3, rr = simp(en, ed);
       var optsN = Rng.shuffle(rng, [fs(rr), (en + 1) + '/' + ed, en + '/' + (ed + 1), (rr.n + 1) + '/' + rr.d]);
       return { prompt: '下面哪个分数与 ' + en + '/' + ed + ' 大小相等？（  ）', answer: fs(rr), options: optsN,
         explain: en + '/' + ed + ' 的分子分母同除以公因数 ' + g3 + '，约成 ' + fs(rr)
           + '，正确选项是「' + fs(rr) + '」。' };
     }
-    var ag = ri(rng, 2, 5), ab = ag + ri(rng, 1, 3), an = ag * ri(rng, 1, ab - 1);
+    var ag = riC(rng, 2, 5, nr), ab = ag + riC(rng, 1, 3, nr), an = ag * riC(rng, 1, ab - 1, nr);
     var ar = simp(an, ab * ag);
     return { prompt: '合唱队有 ' + (ab * ag) + ' 人，其中男生 ' + an + ' 人，列式求男生占全队人数的几分之几（约成最简分数）：' +
       an + '/' + (ab * ag) + ' = ？', answer: fs(ar), options: null,
@@ -328,7 +338,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'compare') {
-    var cd2 = ri(rng, 4, 9), clo = ri(rng, 1, cd2 - 2), chi = ri(rng, clo + 1, cd2 - 1);
+    var cd2 = riC(rng, 4, 9, nr), clo = riC(rng, 1, cd2 - 2, nr), chi = riC(rng, clo + 1, cd2 - 1, nr);
     var lf = clo + '/' + cd2, hf = chi + '/' + cd2;
     if (qt === 'calc') {
       return { prompt: '列式比一比：' + hf + ' − ' + lf + ' = ？（差大于 0，说明同分母时分子大的分数大）',
@@ -352,7 +362,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'relation') {
-    var rn1 = ri(rng, 2, 6), rd1 = rn1 + ri(rng, 1, 4);
+    var rn1 = riC(rng, 2, 6, nr), rd1 = rn1 + riC(rng, 1, 4, nr);
     var relationExpr = rn1 + ' ÷ ' + rd1, relationAns = rn1 + '/' + rd1;
     if (qt === 'calc') return { prompt: '用分数表示除法的商，列式：' + relationExpr + ' = ？',
       answer: relationAns, options: null,
@@ -377,8 +387,8 @@ function conceptTyped(sub, qt, rng) {
     if (qt === 'calc') {
       var improper = rng() < 0.5;
       var pq, qq;
-      if (improper) { qq = ri(rng, 2, 5); pq = qq + ri(rng, 1, 4); }
-      else { pq = ri(rng, 1, 4); qq = pq + ri(rng, 2, 5); }
+      if (improper) { qq = riC(rng, 2, 5, nr); pq = qq + riC(rng, 1, 4, nr); }
+      else { pq = riC(rng, 1, 4, nr); qq = pq + riC(rng, 2, 5, nr); }
       return { prompt: '比较分子与分母（列式：' + pq + ' − ' + qq + ' = ？）：分数 ' + pq + '/' + qq +
         ' 的分子减去分母，得数是多少？', answer: String(pq - qq), options: null,
         explain: improper
@@ -388,8 +398,8 @@ function conceptTyped(sub, qt, rng) {
     if (qt === 'fill') {
       var imp2 = rng() < 0.5;
       var p2, q2;
-      if (imp2) { q2 = ri(rng, 2, 6); p2 = q2 + ri(rng, 1, 3); }
-      else { p2 = ri(rng, 1, 5); q2 = p2 + ri(rng, 1, 4); }
+      if (imp2) { q2 = riC(rng, 2, 6, nr); p2 = q2 + riC(rng, 1, 3, nr); }
+      else { p2 = riC(rng, 1, 5, nr); q2 = p2 + riC(rng, 1, 4, nr); }
       return { prompt: '分数 ' + p2 + '/' + q2 + ' 的分子' + (imp2 ? '大于分母' : '小于分母') + '，它是 ____ 分数',
         answer: imp2 ? '假分数' : '真分数', options: null,
         explain: '分子大于分母（或等于分母）的分数叫假分数，分子小于分母的叫真分数；'
@@ -397,14 +407,14 @@ function conceptTyped(sub, qt, rng) {
           + (imp2 ? '假' : '真') + '分数。' };
     }
     if (qt === 'choice') {
-      var bd3 = ri(rng, 4, 7), impN = bd3 + ri(rng, 1, 3);
+      var bd3 = riC(rng, 4, 7, nr), impN = bd3 + riC(rng, 1, 3, nr);
       var impFrac = impN + '/' + bd3;
       var optsP = Rng.shuffle(rng, ['1/' + bd3, '2/' + bd3, '3/' + bd3, impFrac]);
       return { prompt: '下面四个分数中，哪个是假分数？（  ）', answer: impFrac, options: optsP,
         explain: '假分数的分子大于或等于分母，' + impFrac + ' 的分子 ' + impN + ' 大于分母 '
           + bd3 + '，正确选项是「' + impFrac + '」。' };
     }
-    var pg = ri(rng, 2, 6), qg = pg + ri(rng, 1, 3);
+    var pg = riC(rng, 2, 6, nr), qg = pg + riC(rng, 1, 3, nr);
     return { prompt: '把 ' + pg + ' 个同样大的面包平均分给 ' + qg + ' 个小组，每个小组分得多少个面包？（用分数表示）',
       answer: pg + '/' + qg, options: null,
       explain: '把 ' + pg + ' 个面包平均分给 ' + qg + ' 个小组，用除法：' + pg + ' ÷ ' + qg
@@ -412,7 +422,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   // reciprocal
-  var ra = ri(rng, 2, 7), rb = ra + ri(rng, 1, 3);
+  var ra = riC(rng, 2, 7, nr), rb = ra + riC(rng, 1, 3, nr);
   var orig = ra + '/' + rb, recip = rb + '/' + ra;
   if (qt === 'calc') {
     return { prompt: '写出 ' + orig + ' 的倒数，再列式检验乘积：' + orig + ' × ' + recip + ' = ？',
@@ -442,9 +452,10 @@ function buildQuestion(plan, context, i) {
   var name = (plan.semanticParams && plan.semanticParams.name) || '分数';
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
+  var nr = nrOf(plan);
 
   var ARITH_SUBS = { word: 1, addsub: 1, 'addsub-diff': 1, mix: 1, div: 1 };
-  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng) : conceptTyped(sub, qt, rng);
+  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr);
 
   var prompt = typed.prompt;
   var answer = typed.answer;

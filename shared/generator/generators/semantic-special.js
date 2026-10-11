@@ -227,10 +227,18 @@ function makeCodeByKind(plan, context, i, qt) {
   var q = buildBase(plan, context, i, { mode: qt, codeType: cat });
   q.prompt = item.q;
   // P34-14：答案本身即该编码规则的完整结论，讲解只复述规则结论，不引入题外信息
+  // P36-02：开放设计类（apply）讲解「规则内重组」——答案均为「直接作答；依据/好处」
+  // 两分结构且题面为多任务设问，按既有素材重组为「按题面任务逐项作答：①…②…」；
+  // 单段答案回落「依据题中的编码规则作答」。不新增教学支架、不编造逐步解析。
   var codeWhy;
   if (qt === 'choice') codeWhy = '按数字编码规则判断，正确选项是「' + item.a + '」。';
   else if (qt === 'fill') codeWhy = '由题中的编码规则可知，空格填 ' + item.a + '。';
-  else codeWhy = '根据数字编码规则：' + item.a + '。';
+  else {
+    var aParts = String(item.a).split('；');
+    codeWhy = aParts.length >= 2
+      ? '按题面任务逐项作答：① ' + aParts.join('；② ') + '。'
+      : '依据题中的编码规则作答：' + item.a + '。';
+  }
   q.answer = { value: item.a, acceptable: [], explanation: codeWhy };
   if (qt === 'choice') {
     var options = Rng.shuffle(rng, item.o.slice());

@@ -30,6 +30,16 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':money:' + i;
 }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 // 货币面值（分为单位）
 var RMB_DENOMS = [1, 2, 5, 10, 20, 50, 100]; // 分
 var RMB_UNITS = { yuan: 100, jiao: 10, fen: 1 };
@@ -141,7 +151,8 @@ function parseRMB(str) {
 
 function makeRMBConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var maxYuan = Math.min(10, 2 + plan.difficulty);
+  var nr = nrOf(plan);
+  var maxYuan = Math.min(10, Math.max(1, nr.max));
   var amountFen = randDenom(rng, maxYuan);
   var amountStr = formatRMB(amountFen);
   
@@ -186,7 +197,8 @@ function makeRMBConversionQuestion(plan, context, i, meta) {
 
 function makeRMBCalculationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var maxYuan = Math.min(20, 3 + plan.difficulty);
+  var nr = nrOf(plan);
+  var maxYuan = Math.min(20, Math.max(1, nr.max));
   var aFen = randDenom(rng, maxYuan);
   var bFen = randDenom(rng, maxYuan);
   
@@ -245,6 +257,7 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
 
 function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var kind = meta.kind;
   var table = kind === 'area' ? AREA_UNITS
     : kind === 'capacity' ? CAPACITY_UNITS
@@ -259,7 +272,7 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
     return makeRMBConversionQuestion(plan, context, i, meta);
   }
   
-  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
+  var baseValue = riC(rng, 1, Math.max(5, nr.max), nr);
   var fromUnit = Rng.pick(rng, units);
   var toUnit = Rng.pick(rng, units.filter(function(u){ return u.unit !== fromUnit.unit; }));
   
@@ -431,6 +444,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
 
 function makeWordProblemQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var kind = meta.kind;
 
   if (kind === 'rmb') {
@@ -471,8 +485,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
   // 兜底
   // P25-08：非 rmb 度量种类的应用情境题
   if (kind === 'length') {
-    var a = Rng.randInt(rng, 5, 50);
-    var b = Rng.randInt(rng, 1, 20);
+    var a = riC(rng, 5, 50, nr);
+    var b = riC(rng, 1, 20, nr);
     var useCut = rng() < 0.5;
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
@@ -489,8 +503,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'area') {
-    var w = Rng.randInt(rng, 3, 12);
-    var h = Rng.randInt(rng, 2, 10);
+    var w = riC(rng, 3, 12, nr);
+    var h = riC(rng, 2, 10, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -503,8 +517,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'mass') {
-    var m1 = Rng.randInt(rng, 1, 10);
-    var m2 = Rng.randInt(rng, 1, 5);
+    var m1 = riC(rng, 1, 10, nr);
+    var m2 = riC(rng, 1, 5, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -517,8 +531,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'time') {
-    var t1 = Rng.randInt(rng, 1, 10);
-    var t2 = Rng.randInt(rng, 1, 5);
+    var t1 = riC(rng, 1, 10, nr);
+    var t2 = riC(rng, 1, 5, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -531,8 +545,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'capacity') {
-    var c1 = Rng.randInt(rng, 1, 5);
-    var c2 = Rng.randInt(rng, 1, 3);
+    var c1 = riC(rng, 1, 5, nr);
+    var c2 = riC(rng, 1, 3, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',

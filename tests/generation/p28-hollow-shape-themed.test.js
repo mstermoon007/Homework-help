@@ -208,3 +208,82 @@ E2E_ROWS.forEach(function (row) {
     assert.ok(TC.check(qt, q).ok, kp + ' / ' + qt + ' E2E TypeContract');
   });
 });
+
+/* ---------------- 3. P35-CLOSE-01：math-g4-down-u02-k001 配套图形（DEBT-3，用户 2026-10-12 签批方案） ---------------- */
+
+test('P35-CLOSE-01：视图推算题配 view-cards 题设视图（不泄题），拼大正方体题 cube 去棱长标注', () => {
+  const KP = 'math-g4-down-u02-k001';
+  const gen = Generators.get(SHAPE);
+  const seen = { viewCards: 0, plainCube: 0, cuboidKept: 0 };
+  ['choice', 'fill', 'geometry'].forEach(function (qt) {
+    const plan = SP.attachToPlan({
+      knowledgePointIds: [KP], questionTypeId: qt, difficulty: 3, count: 3,
+      seed: 'p35-close-01:' + KP + ':' + qt
+    });
+    const qs = gen.generate(plan, {});
+    assert.equal(qs.length, 3, KP + ' / ' + qt + ' 产出 3 题');
+    qs.forEach(function (q, idx) {
+      const tag = KP + ' / ' + qt + ' #' + idx;
+      const g = q.data && q.data.graphic;
+      assert.ok(g && g.type === 'geometry', tag + ' graphic.type=geometry（evidence 锚定）');
+      assert.equal(g.params && g.params.unit, 'cm', tag + ' params.unit=cm（evidence 锚定）');
+      if (/至少由____个小正方体组成/.test(String(q.prompt))) {
+        seen.viewCards++;
+        assert.equal(g.subtype, 'view-cards', tag + ' 视图推算题必须配 view-cards 题设视图，不得画组合体成品泄题');
+        assert.deepEqual(g.params.views, [
+          { direction: 'front', grid: [[1, 1]] },
+          { direction: 'top', grid: [[1, 1]] }
+        ], tag + ' view-cards 为前面/上面各 1×2 横排方格');
+        assert.equal(g.role, 'quantity-correspondence', tag + ' role 回显');
+        if (qt === 'geometry') {
+          assert.ok(/观察下图（从前面、上面看到的形状）/.test(String(q.prompt)),
+            tag + ' geometry 图形标签由视图方向推导: ' + q.prompt);
+        }
+      }
+      if (/最少用____个同样的小正方体/.test(String(q.prompt))) {
+        seen.plainCube++;
+        assert.equal(g.subtype, 'cube', tag + ' 拼大正方体题保持 cube 原材料示意');
+        assert.equal(g.params.labelSides, false, tag + ' cube 必须去棱长标注（消除棱长数字误导）');
+        if (qt === 'geometry') {
+          assert.ok(/观察下图（正方体）/.test(String(q.prompt)),
+            tag + ' cube 条目图形标签须为正方体（不得回退 KP 名派生名错位）: ' + q.prompt);
+        }
+      }
+      if (/最多能同时看到____个面/.test(String(q.prompt))) {
+        seen.cuboidKept++;
+        assert.equal(g.subtype, 'cuboid', tag + ' 第 1 条 cuboid 维持不动');
+      }
+    });
+  });
+  assert.equal(seen.viewCards, 3, '三题型各命中 1 次 view-cards 条目（v=i%3 轮换），实际 ' + seen.viewCards);
+  assert.equal(seen.plainCube, 3, '三题型各命中 1 次 cube 条目，实际 ' + seen.plainCube);
+  assert.equal(seen.cuboidKept, 3, '三题型各命中 1 次 cuboid 条目，实际 ' + seen.cuboidKept);
+});
+
+/* ---------------- 4. P36-01：math-g4-down-u02-k001 judge/apply 配主题原材料图（用户 2026-10-12 签批） ---------------- */
+
+test('P36-01：judge 配 cuboid 观察对象、apply 配 cube 原材料（均去标注），替代 flat 族派生图', () => {
+  const KP = 'math-g4-down-u02-k001';
+  const gen = Generators.get(SHAPE);
+  ['judge', 'apply'].forEach(function (qt) {
+    const plan = SP.attachToPlan({
+      knowledgePointIds: [KP], questionTypeId: qt, difficulty: 3, count: 3,
+      seed: 'p36-01:' + KP + ':' + qt
+    });
+    const qs = gen.generate(plan, {});
+    assert.equal(qs.length, 3, KP + ' / ' + qt + ' 产出 3 题');
+    qs.forEach(function (q, idx) {
+      const tag = KP + ' / ' + qt + ' #' + idx;
+      const g = q.data && q.data.graphic;
+      assert.ok(g && g.type === 'geometry', tag + ' graphic.type=geometry（evidence 锚定）');
+      assert.equal(g.params && g.params.unit, 'cm', tag + ' params.unit=cm（evidence 锚定）');
+      if (qt === 'judge') {
+        assert.equal(g.subtype, 'cuboid', tag + ' judge 配 cuboid 观察对象，不得再落 flat 族（圆/正方形）');
+      } else {
+        assert.equal(g.subtype, 'cube', tag + ' apply 配 cube 原材料，不得再落 flat 族（圆/正方形）');
+      }
+      assert.equal(g.params.labelSides, false, tag + ' 原材料示意图去棱长标注');
+      assert.equal(g.role, 'quantity-correspondence', tag + ' role 回显');
+    });
+  });
+});

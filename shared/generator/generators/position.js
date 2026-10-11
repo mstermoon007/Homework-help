@@ -57,9 +57,19 @@ function getPositionMeta(kp) {
   return { legacyType: lt, category: cat };
 }
 
-function generateScene(rng, difficulty) {
-  // 生成场景：网格大小随难度增加
-  var gridSize = Math.min(5, 2 + difficulty);
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
+function generateScene(rng, nr) {
+  // 生成场景：网格大小随 numberRange.max 伸缩（语义地板 2、天花板 5）
+  var gridSize = Math.min(5, Math.max(2, nr.max));
   var objCount = Rng.randInt(rng, 3, Math.min(6, gridSize));
   var objects = [];
   var positions = [];
@@ -208,7 +218,7 @@ function makeFillDirectionQuestion(plan, context, i, scene, meta) {
   };
 }
 
-function makeGraphicForPosition(scene, difficulty) {
+function makeGraphicForPosition(scene) {
   // 生成 SVG 几何场景：网格 + 物体位置
   // 这里用 geometry.grid 子类型（需要在 svg-geometry 支持或自定义）
   // 简化：用 geometry.rectangle 画网格背景，params 里带 objects 信息供前端渲染
@@ -419,8 +429,9 @@ function makeObserveQuestion(plan, context, i) {
 
 function makeCoordinateQuestion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var x = Rng.randInt(rng, 1, 9);
-  var y = Rng.randInt(rng, 1, 9);
+  var nr = nrOf(plan);
+  var x = riC(rng, 1, 9, nr);
+  var y = riC(rng, 1, 9, nr);
   var qt = plan.questionTypeId;
   if (qt === 'fill') {
     return {
@@ -489,6 +500,7 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
+      var nr = nrOf(plan);
       // P25-08：从 plan.semanticParams.name 派生空间子类型（方向/平移/旋转/观察/数对）
       var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
       var spatialType = deriveSpatialType(kpName);
@@ -512,8 +524,8 @@ function createPositionGenerator(spec) {
         } else if (spatialType === 'coordinate') {
           q = makeCoordinateQuestion(plan, context, i);
         } else {
-          var scene = generateScene(rng, plan.difficulty);
-          var graphic = makeGraphicForPosition(scene, plan.difficulty);
+          var scene = generateScene(rng, nr);
+          var graphic = makeGraphicForPosition(scene);
           var meta = { legacyType: null, category: null };
           if (qt === 'choice') {
             q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
@@ -554,8 +566,8 @@ function createPositionGenerator(spec) {
         // P25-08：translation/rotation/observe/coordinate 子类型的 maker 仅覆盖
         // choice/judge/fill；geometry/apply 请求走兜底，保证 questionType 匹配不被过滤。
         if (!q) {
-          var scene2 = generateScene(rng, plan.difficulty);
-          var graphic2 = makeGraphicForPosition(scene2, plan.difficulty);
+          var scene2 = generateScene(rng, nr);
+          var graphic2 = makeGraphicForPosition(scene2);
           var objA2 = Rng.pick(rng, scene2.objects);
           var objB2 = Rng.pick(rng, scene2.objects.filter(function(o){ return o !== objA2; })) || scene2.objects[0];
           var dir2 = getRelativeDirection(objA2, objB2, 'self');

@@ -130,12 +130,16 @@ function getShapeMeta(kp, name) {
   return { legacyType: lt, category: cat, subtype: subtype, meta: meta };
 }
 
-function generateGraphicParams(subtype, difficulty, rng) {
-  // 根据难度和子类型生成 SVGGeometry 参数
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+
+function generateGraphicParams(subtype, nr, rng) {
+  // 根据 numberRange 伸缩图形尺寸（语义地板/天花板）
   var unitPx = 25;
   var unit = 'cm';
-  var maxDim = Math.min(12, 3 + difficulty);
-  var minDim = Math.max(1, difficulty - 1);
+  var maxDim = Math.min(12, Math.max(3, nr.max));
+  var minDim = Math.max(1, nr.min);
 
   switch (subtype) {
     case 'square':
@@ -878,12 +882,18 @@ function makeCalcMeasurementQuestion(plan, context, i, kpName) {
 // wrongs：3 对 [假命题, 误区纠正]（judge 假项，data.misconception 教学闭环）
 // nums：3 组 [设问(带____), 答案字符串, 数值]（choice/fill/geometry 数值变式，数值互异）
 // scenes：3 对 [情境任务, 参考答案]（apply 两步题；无 apply 行的 KP 省略）
-function shapeTheme(facts, wrongs, nums, scenes) {
+// P36-01：可选第 5 参 opts.judgeGraphic / opts.applyGraphic——judge/apply 行的 KP 级主题原材料图
+// （descriptor 对象，深拷贝直通）。缺省时 judge/apply 沿用 qMeta 派生图（既有行为零变化）。
+// 用途：观察物体族 KP 的 qMeta 派生图落 flat 族（圆/正方形）与题面语义弱相关，
+// 改配本 KP 观察对象（cuboid）/原材料（cube）示意图（2026-10-12 用户签批「配主题原材料图」）。
+function shapeTheme(facts, wrongs, nums, scenes, opts) {
   return {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; })
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; }),
+    judgeGraphic: (opts && opts.judgeGraphic) || null,
+    applyGraphic: (opts && opts.applyGraphic) || null
   };
 }
 
@@ -968,10 +978,25 @@ var SHAPE_THEME = {
     [['从哪个方向看，看到的形状都一样', '观察方向不同，看到的形状可能不同，要逐方向确认。'],
      ['从上面看到的列数一定和从前面看到的一样', '上面看到的是前后排列，前面看到的是左右排列，两者不一定相同。'],
      ['从前面看是 3 个正方形，这个立体就只有 3 个小正方体', '前面看不到被挡住的正方体，实际个数可能更多。']],
-    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3, 'cuboid'], ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2, 'cube'], ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8, 'cube']],
+    // P35-CLOSE-01（DEBT-3，用户 2026-10-12 签批方案）：第 2 条视图推算题配 view-cards 题设视图卡
+    // （前面 1×2 横排 + 上面 1×2 横排方格），替代错配的单 cube 图——画题设视图而非组合体成品，不泄题；
+    // 第 3 条保持 cube 原材料示意但去棱长标注（labelSides:false，消除棱长数字误导）。
+    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3, 'cuboid'],
+     ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1]] }, { direction: 'top', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8,
+      { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+        params: { edge: 3, labelSides: false, unit: 'cm', unitPx: 25 } }]],
     [['把 4 个小正方体摆成一排，先画出从上面看到的形状，再画出从前面看到的形状？', '从上面看是 4 个正方形排一行；从前面看是 1 个正方形（或 4 个排一行，取决于摆的方向）'],
      ['用 4 个小正方体搭成 2×2 方阵，先从左面看，再说出看到的形状？', '从左面看是 2 个正方形并排'],
-     ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']]),
+     ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']],
+    // P36-01（用户 2026-10-12 签批「配主题原材料图」）：judge 配 cuboid 观察对象示意、apply 配 cube
+    // 原材料示意（均去棱长标注），替代 qMeta 派生的 flat 族图（圆/正方形，与本 KP 语义弱相关）。
+    { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                      params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+      applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                      params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g4-down-u02-k002': shapeTheme( // 由平面到立体
     ['根据从不同方向看到的平面图形，可以推断立体图形的形状', '只给从一个方向看到的图形，摆法可能不止一种', '给出从前面、上面、左面三个方向看到的图形，一般能确定立体的样子'],
     [['只看从一个方向看到的图形，就能确定立体的样子', '一个方向只能看到一部分，必须结合多个方向的视图才能确定。'],
@@ -1590,10 +1615,30 @@ function numDistractors(n) {
 // P34-03：主题条目自声明图形（nums 第 4 元 shape，可选）——choice/fill/geometry 消费条目时，
 // 图形与「观察下图（…）」标签从条目自身派生，不再沿用 KP 名正则兜底/flat 取样的图形
 //（修复观察物体族「观察下图（圆）」问长方体的图形-题面错位；条目未声明 shape 时行为不变）。
+// P35-CLOSE-01：视图卡片 descriptor 的图形标签——由 params.views 方向推导
+// （「观察下图（从前面、上面看到的形状）」）；无 views 时返回 null 沿用 KP 名。
+var VIEW_DIR_CN = { front: '前面', top: '上面', left: '左面' };
+function graphicLabelOf(d) {
+  var views = d && d.params && d.params.views;
+  if (!Array.isArray(views) || !views.length) return null;
+  var names = views.map(function (v) { return v && VIEW_DIR_CN[v.direction]; }).filter(Boolean);
+  return names.length ? '从' + names.join('、') + '看到的形状' : null;
+}
+
 function themedItemMeta(item, qMeta, plan, rng) {
-  if (!item || !item.shape || !SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
+  if (!item || !item.shape) return null;
+  // P35-CLOSE-01：nums 第 4 元可直接给完整 descriptor 对象（定制图形，如视图卡片 view-cards、
+  // 去标注 cube）——深拷贝直通（避免多题共享引用被下游改写），不再经 generateGraphicParams 随机派生；
+  // 图形标签由 descriptor 自身语义推导（graphicLabelOf），缺标签时沿用 KP 名。
+  if (typeof item.shape === 'object') {
+    var d = JSON.parse(JSON.stringify(item.shape));
+    return { legacyType: qMeta.legacyType, subtype: d.subtype, category: qMeta.category,
+      meta: { name: graphicLabelOf(d) || (SHAPE_FEATURES[d.subtype] && SHAPE_FEATURES[d.subtype].name) || qMeta.meta.name },
+      graphic: d };
+  }
+  if (!SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
   var m = { legacyType: item.shape, subtype: item.shape, category: qMeta.category, meta: SHAPE_FEATURES[item.shape] };
-  m.graphic = generateGraphicParams(item.shape, plan.difficulty, rng);
+  m.graphic = generateGraphicParams(item.shape, nrOf(plan), rng);
   return m;
 }
 
@@ -1647,6 +1692,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       explanation: '正确选项是「' + cItem.a + '」。' + themedExpl(cItem.q, cItem.a) };
     answerMode = 'choice';
   } else if (qt === 'judge') {
+    // P36-01：judge 配主题原材料图（如观察物体族配 cuboid 观察对象）；缺省沿用 qMeta 派生图
+    if (!noGraphic && theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
     var isTrue = rng() < 0.5;
     var shown, explanation;
     if (isTrue) {
@@ -1688,6 +1735,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
     }
   } else { // apply，steps=2
+    // P36-01：apply 配主题原材料图（如摆小正方体情境配 cube 原材料）；缺省沿用 qMeta 派生图
+    if (!noGraphic && theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
     var sList = theme.scenes.length
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
@@ -1753,7 +1802,7 @@ function createShapeGenerator(spec) {
           var picked = FLAT_FAMILY[Math.floor(rng() * FLAT_FAMILY.length)];
           qMeta = { legacyType: picked, subtype: picked, category: shapeMeta.category, meta: SHAPE_FEATURES[picked] };
         }
-        var graphic = generateGraphicParams(qMeta.subtype, plan.difficulty, rng);
+        var graphic = generateGraphicParams(qMeta.subtype, nrOf(plan), rng);
 
         var q;
         var qt = plan.questionTypeId;

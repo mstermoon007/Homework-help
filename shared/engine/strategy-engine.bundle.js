@@ -7107,12 +7107,16 @@ function getShapeMeta(kp, name) {
   return { legacyType: lt, category: cat, subtype: subtype, meta: meta };
 }
 
-function generateGraphicParams(subtype, difficulty, rng) {
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+
+function generateGraphicParams(subtype, nr, rng) {
   
   var unitPx = 25;
   var unit = 'cm';
-  var maxDim = Math.min(12, 3 + difficulty);
-  var minDim = Math.max(1, difficulty - 1);
+  var maxDim = Math.min(12, Math.max(3, nr.max));
+  var minDim = Math.max(1, nr.min);
 
   switch (subtype) {
     case 'square':
@@ -7839,12 +7843,18 @@ function makeCalcMeasurementQuestion(plan, context, i, kpName) {
 
 
 
-function shapeTheme(facts, wrongs, nums, scenes) {
+
+
+
+
+function shapeTheme(facts, wrongs, nums, scenes, opts) {
   return {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; })
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; }),
+    judgeGraphic: (opts && opts.judgeGraphic) || null,
+    applyGraphic: (opts && opts.applyGraphic) || null
   };
 }
 
@@ -7929,10 +7939,25 @@ var SHAPE_THEME = {
     [['从哪个方向看，看到的形状都一样', '观察方向不同，看到的形状可能不同，要逐方向确认。'],
      ['从上面看到的列数一定和从前面看到的一样', '上面看到的是前后排列，前面看到的是左右排列，两者不一定相同。'],
      ['从前面看是 3 个正方形，这个立体就只有 3 个小正方体', '前面看不到被挡住的正方体，实际个数可能更多。']],
-    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3, 'cuboid'], ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2, 'cube'], ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8, 'cube']],
+    
+    
+    
+    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3, 'cuboid'],
+     ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1]] }, { direction: 'top', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8,
+      { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+        params: { edge: 3, labelSides: false, unit: 'cm', unitPx: 25 } }]],
     [['把 4 个小正方体摆成一排，先画出从上面看到的形状，再画出从前面看到的形状？', '从上面看是 4 个正方形排一行；从前面看是 1 个正方形（或 4 个排一行，取决于摆的方向）'],
      ['用 4 个小正方体搭成 2×2 方阵，先从左面看，再说出看到的形状？', '从左面看是 2 个正方形并排'],
-     ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']]),
+     ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']],
+    
+    
+    { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                      params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+      applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                      params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g4-down-u02-k002': shapeTheme( 
     ['根据从不同方向看到的平面图形，可以推断立体图形的形状', '只给从一个方向看到的图形，摆法可能不止一种', '给出从前面、上面、左面三个方向看到的图形，一般能确定立体的样子'],
     [['只看从一个方向看到的图形，就能确定立体的样子', '一个方向只能看到一部分，必须结合多个方向的视图才能确定。'],
@@ -8551,10 +8576,30 @@ function numDistractors(n) {
 
 
 
+
+
+var VIEW_DIR_CN = { front: '前面', top: '上面', left: '左面' };
+function graphicLabelOf(d) {
+  var views = d && d.params && d.params.views;
+  if (!Array.isArray(views) || !views.length) return null;
+  var names = views.map(function (v) { return v && VIEW_DIR_CN[v.direction]; }).filter(Boolean);
+  return names.length ? '从' + names.join('、') + '看到的形状' : null;
+}
+
 function themedItemMeta(item, qMeta, plan, rng) {
-  if (!item || !item.shape || !SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
+  if (!item || !item.shape) return null;
+  
+  
+  
+  if (typeof item.shape === 'object') {
+    var d = JSON.parse(JSON.stringify(item.shape));
+    return { legacyType: qMeta.legacyType, subtype: d.subtype, category: qMeta.category,
+      meta: { name: graphicLabelOf(d) || (SHAPE_FEATURES[d.subtype] && SHAPE_FEATURES[d.subtype].name) || qMeta.meta.name },
+      graphic: d };
+  }
+  if (!SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
   var m = { legacyType: item.shape, subtype: item.shape, category: qMeta.category, meta: SHAPE_FEATURES[item.shape] };
-  m.graphic = generateGraphicParams(item.shape, plan.difficulty, rng);
+  m.graphic = generateGraphicParams(item.shape, nrOf(plan), rng);
   return m;
 }
 
@@ -8608,6 +8653,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       explanation: '正确选项是「' + cItem.a + '」。' + themedExpl(cItem.q, cItem.a) };
     answerMode = 'choice';
   } else if (qt === 'judge') {
+    
+    if (!noGraphic && theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
     var isTrue = rng() < 0.5;
     var shown, explanation;
     if (isTrue) {
@@ -8649,6 +8696,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
     }
   } else { 
+    
+    if (!noGraphic && theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
     var sList = theme.scenes.length
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
@@ -8714,7 +8763,7 @@ function createShapeGenerator(spec) {
           var picked = FLAT_FAMILY[Math.floor(rng() * FLAT_FAMILY.length)];
           qMeta = { legacyType: picked, subtype: picked, category: shapeMeta.category, meta: SHAPE_FEATURES[picked] };
         }
-        var graphic = generateGraphicParams(qMeta.subtype, plan.difficulty, rng);
+        var graphic = generateGraphicParams(qMeta.subtype, nrOf(plan), rng);
 
         var q;
         var qt = plan.questionTypeId;
@@ -8830,9 +8879,19 @@ function getPositionMeta(kp) {
   return { legacyType: lt, category: cat };
 }
 
-function generateScene(rng, difficulty) {
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
+function generateScene(rng, nr) {
   
-  var gridSize = Math.min(5, 2 + difficulty);
+  var gridSize = Math.min(5, Math.max(2, nr.max));
   var objCount = Rng.randInt(rng, 3, Math.min(6, gridSize));
   var objects = [];
   var positions = [];
@@ -8981,7 +9040,7 @@ function makeFillDirectionQuestion(plan, context, i, scene, meta) {
   };
 }
 
-function makeGraphicForPosition(scene, difficulty) {
+function makeGraphicForPosition(scene) {
   
   
   
@@ -9192,8 +9251,9 @@ function makeObserveQuestion(plan, context, i) {
 
 function makeCoordinateQuestion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var x = Rng.randInt(rng, 1, 9);
-  var y = Rng.randInt(rng, 1, 9);
+  var nr = nrOf(plan);
+  var x = riC(rng, 1, 9, nr);
+  var y = riC(rng, 1, 9, nr);
   var qt = plan.questionTypeId;
   if (qt === 'fill') {
     return {
@@ -9262,6 +9322,7 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
+      var nr = nrOf(plan);
       
       var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
       var spatialType = deriveSpatialType(kpName);
@@ -9285,8 +9346,8 @@ function createPositionGenerator(spec) {
         } else if (spatialType === 'coordinate') {
           q = makeCoordinateQuestion(plan, context, i);
         } else {
-          var scene = generateScene(rng, plan.difficulty);
-          var graphic = makeGraphicForPosition(scene, plan.difficulty);
+          var scene = generateScene(rng, nr);
+          var graphic = makeGraphicForPosition(scene);
           var meta = { legacyType: null, category: null };
           if (qt === 'choice') {
             q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
@@ -9327,8 +9388,8 @@ function createPositionGenerator(spec) {
         
         
         if (!q) {
-          var scene2 = generateScene(rng, plan.difficulty);
-          var graphic2 = makeGraphicForPosition(scene2, plan.difficulty);
+          var scene2 = generateScene(rng, nr);
+          var graphic2 = makeGraphicForPosition(scene2);
           var objA2 = Rng.pick(rng, scene2.objects);
           var objB2 = Rng.pick(rng, scene2.objects.filter(function(o){ return o !== objA2; })) || scene2.objects[0];
           var dir2 = getRelativeDirection(objA2, objB2, 'self');
@@ -9401,6 +9462,16 @@ function seedFor(plan, context, i) {
   
   if (plan && plan.seed != null) return plan.seed + ':money:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':money:' + i;
+}
+
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
 }
 
 
@@ -9514,7 +9585,8 @@ function parseRMB(str) {
 
 function makeRMBConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var maxYuan = Math.min(10, 2 + plan.difficulty);
+  var nr = nrOf(plan);
+  var maxYuan = Math.min(10, Math.max(1, nr.max));
   var amountFen = randDenom(rng, maxYuan);
   var amountStr = formatRMB(amountFen);
   
@@ -9559,7 +9631,8 @@ function makeRMBConversionQuestion(plan, context, i, meta) {
 
 function makeRMBCalculationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var maxYuan = Math.min(20, 3 + plan.difficulty);
+  var nr = nrOf(plan);
+  var maxYuan = Math.min(20, Math.max(1, nr.max));
   var aFen = randDenom(rng, maxYuan);
   var bFen = randDenom(rng, maxYuan);
   
@@ -9618,6 +9691,7 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
 
 function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var kind = meta.kind;
   var table = kind === 'area' ? AREA_UNITS
     : kind === 'capacity' ? CAPACITY_UNITS
@@ -9632,7 +9706,7 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
     return makeRMBConversionQuestion(plan, context, i, meta);
   }
   
-  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
+  var baseValue = riC(rng, 1, Math.max(5, nr.max), nr);
   var fromUnit = Rng.pick(rng, units);
   var toUnit = Rng.pick(rng, units.filter(function(u){ return u.unit !== fromUnit.unit; }));
   
@@ -9804,6 +9878,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
 
 function makeWordProblemQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var kind = meta.kind;
 
   if (kind === 'rmb') {
@@ -9844,8 +9919,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
   
   
   if (kind === 'length') {
-    var a = Rng.randInt(rng, 5, 50);
-    var b = Rng.randInt(rng, 1, 20);
+    var a = riC(rng, 5, 50, nr);
+    var b = riC(rng, 1, 20, nr);
     var useCut = rng() < 0.5;
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
@@ -9862,8 +9937,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'area') {
-    var w = Rng.randInt(rng, 3, 12);
-    var h = Rng.randInt(rng, 2, 10);
+    var w = riC(rng, 3, 12, nr);
+    var h = riC(rng, 2, 10, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -9876,8 +9951,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'mass') {
-    var m1 = Rng.randInt(rng, 1, 10);
-    var m2 = Rng.randInt(rng, 1, 5);
+    var m1 = riC(rng, 1, 10, nr);
+    var m2 = riC(rng, 1, 5, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -9890,8 +9965,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'time') {
-    var t1 = Rng.randInt(rng, 1, 10);
-    var t2 = Rng.randInt(rng, 1, 5);
+    var t1 = riC(rng, 1, 10, nr);
+    var t2 = riC(rng, 1, 5, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -9904,8 +9979,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     };
   }
   if (kind === 'capacity') {
-    var c1 = Rng.randInt(rng, 1, 5);
-    var c2 = Rng.randInt(rng, 1, 3);
+    var c1 = riC(rng, 1, 5, nr);
+    var c2 = riC(rng, 1, 3, nr);
     return {
       knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
@@ -10196,11 +10271,21 @@ function randInt(rng, min, max) {
   return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-function pickTemplate(rng, difficulty, allowedOps) {
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return randInt(rng, min, max);
+}
+
+function pickTemplate(rng, nr, allowedOps) {
   
   var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less', 'equal-groups', 'share-equally'];
   var complexTemplates = ['multiple', 'divide-multiple', 'grouping', 'distance', 'work'];
-  var pool = difficulty >= 4 ? TEMPLATE_KEYS : simpleTemplates;
+  var pool = nr.max >= 50 ? TEMPLATE_KEYS : simpleTemplates;
   
   if (allowedOps) {
     pool = pool.filter(function (k) {
@@ -10211,59 +10296,59 @@ function pickTemplate(rng, difficulty, allowedOps) {
   return Rng.pick(rng, pool);
 }
 
-function generateNumbers(rng, template, difficulty) {
-  var maxVal = Math.min(100, 10 + difficulty * 15);
+function generateNumbers(rng, template, nr) {
+  var maxVal = Math.min(100, Math.max(1, nr.max));
   var minVal = 1;
   
   switch (template) {
     case 'total-from-parts':
-      var a = randInt(rng, minVal, maxVal);
-      var b = randInt(rng, minVal, maxVal);
+      var a = riC(rng, minVal, maxVal, nr);
+      var b = riC(rng, minVal, maxVal, nr);
       return { a: a, b: b };
     case 'compare-more':
-      var a = randInt(rng, minVal + 2, maxVal);
-      var diff = randInt(rng, minVal, maxVal - a);
+      var a = riC(rng, minVal + 2, maxVal, nr);
+      var diff = riC(rng, minVal, maxVal - a, nr);
       return { a: a, diff: diff };
     case 'part-from-total':
-      var total = randInt(rng, minVal + 2, maxVal);
-      var part1 = randInt(rng, minVal, total - 1);
+      var total = riC(rng, minVal + 2, maxVal, nr);
+      var part1 = riC(rng, minVal, total - 1, nr);
       return { total: total, part1: part1 };
     case 'compare-less':
-      var a = randInt(rng, minVal + 2, maxVal);
-      var diff = randInt(rng, minVal, a - 1);
+      var a = riC(rng, minVal + 2, maxVal, nr);
+      var diff = riC(rng, minVal, a - 1, nr);
       return { a: a, diff: diff };
     case 'multiple':
-      var a = randInt(rng, minVal, Math.floor(maxVal / 3));
-      var n = randInt(rng, 2, 5);
+      var a = riC(rng, minVal, Math.floor(maxVal / 3), nr);
+      var n = riC(rng, 2, 5, nr);
       return { a: a, n: n };
     case 'equal-groups':
-      var gp = randInt(rng, 2, 9);
-      var gs = randInt(rng, 2, 6);
+      var gp = riC(rng, 2, 9, nr);
+      var gs = riC(rng, 2, 6, nr);
       return { per: gp, groups: gs };
     case 'share-equally':
-      var sg = randInt(rng, 2, 6);
-      var sp = randInt(rng, 2, 9);
+      var sg = riC(rng, 2, 6, nr);
+      var sp = riC(rng, 2, 9, nr);
       return { total: sg * sp, groups: sg };
     case 'divide-multiple':
-      var n = randInt(rng, 2, 5);
-      var b = randInt(rng, minVal, maxVal);
+      var n = riC(rng, 2, 5, nr);
+      var b = riC(rng, minVal, maxVal, nr);
       var a = b * n;
       return { a: a, n: n };
     case 'grouping':
-      var per = randInt(rng, 2, 10);
-      var groups = randInt(rng, 2, 10);
+      var per = riC(rng, 2, 10, nr);
+      var groups = riC(rng, 2, 10, nr);
       var total = per * groups;
       return { total: total, per: per };
     case 'distance':
-      var speed = randInt(rng, 10, 100);
-      var time = randInt(rng, 1, 5);
+      var speed = riC(rng, 10, 100, nr);
+      var time = riC(rng, 1, 5, nr);
       return { speed: speed, time: time };
     case 'work':
-      var rate = randInt(rng, 5, 50);
-      var time = randInt(rng, 1, 10);
+      var rate = riC(rng, 5, 50, nr);
+      var time = riC(rng, 1, 10, nr);
       return { rate: rate, time: time };
   }
-  return { a: randInt(rng, 1, 20), b: randInt(rng, 1, 20) };
+  return { a: riC(rng, 1, 20, nr), b: riC(rng, 1, 20, nr) };
 }
 
 function computeAnswer(template, nums) {
@@ -10374,9 +10459,10 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
 
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
+  var nr = nrOf(plan);
+  var template = pickTemplate(rng, nr, kpAllowedOps(plan));
   if (!template) return null; 
-  var nums = generateNumbers(rng, template, plan.difficulty);
+  var nums = generateNumbers(rng, template, nr);
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
   
@@ -10724,6 +10810,16 @@ function seedFor(plan, context, i) {
 }
 
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function factorial(n) {
   var f = 1;
   for (var k = 2; k <= n; k++) f *= k;
@@ -10760,6 +10856,7 @@ function stairWays(n) {
 
 function makeCountingQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   
   
   
@@ -10787,8 +10884,8 @@ function makeCountingQuestion(plan, context, i, kp) {
   var v = i; 
   var prompt, answer, steps;
   if (type === 'principle') {
-    var m = Rng.randInt(rng, 3, 8);
-    var n = Rng.randInt(rng, 2, 6);
+    var m = riC(rng, 3, 8, nr);
+    var n = riC(rng, 2, 6, nr);
     prompt = '从A城到B城有' + m + '条路线，从B城到C城有' + n + '条路线，从A城到C城共有多少种走法？';
     answer = m * n;
     steps = 2;
@@ -10815,27 +10912,27 @@ function makeCountingQuestion(plan, context, i, kp) {
     prompt = '一个盒子里有' + colorNames.slice(0, wc.c).join('、') + '等' + wc.c + '种颜色的球各若干个，至少要摸出多少个球，才能保证有' + wc.k + '个球颜色相同？';
     answer = wc.c * (wc.k - 1) + 1; steps = 2;
   } else if (type === 'combination') {
-    var shirts = Rng.randInt(rng, 2, 5);
-    var pants = Rng.randInt(rng, 2, 5);
+    var shirts = riC(rng, 2, 5, nr);
+    var pants = riC(rng, 2, 5, nr);
     prompt = '小明有' + shirts + '件上衣和' + pants + '条裤子，一共有多少种不同的搭配方法？';
     answer = shirts * pants;
     steps = 2;
   } else if (type === 'set') {
-    var inBoth = Rng.randInt(rng, 3, 8);
-    var onlyA = Rng.randInt(rng, 5, 15);
-    var onlyB = Rng.randInt(rng, 5, 15);
+    var inBoth = riC(rng, 3, 8, nr);
+    var onlyA = riC(rng, 5, 15, nr);
+    var onlyB = riC(rng, 5, 15, nr);
     prompt = '全班40人，有' + onlyA + '人喜欢数学，' + onlyB + '人喜欢语文，有' + inBoth + '人两门都喜欢。两门都不喜欢的有多少人？';
     answer = 40 - (onlyA + onlyB - inBoth);
     steps = 2;
   } else if (type === 'permutation') {
     
-    var pn = Rng.randInt(rng, 4, 6);
+    var pn = riC(rng, 4, 6, nr);
     prompt = pn + '本不同的书排成一排放在书架上，一共有多少种不同的排法？';
     answer = factorial(pn);
     steps = 2;
   } else if (type === 'choose') {
     
-    var cn = Rng.randInt(rng, 5, 7);
+    var cn = riC(rng, 5, 7, nr);
     prompt = '从' + cn + '名同学中选出 2 名代表参加会议，一共有多少种不同的选法？';
     answer = nCr(cn, 2);
     steps = 2;
@@ -10902,8 +10999,8 @@ function makeCountingQuestion(plan, context, i, kp) {
     answer = derangement(dn);
     steps = 2;
   } else {
-    var a = Rng.randInt(rng, 2, 6);
-    var b = Rng.randInt(rng, 2, 6);
+    var a = riC(rng, 2, 6, nr);
+    var b = riC(rng, 2, 6, nr);
     var cQt = plan.questionTypeId;
     
     if (cQt === 'calc') {
@@ -11010,6 +11107,16 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':reason:' + i;
 }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 
 
 
@@ -11036,9 +11143,10 @@ function table789Options(rng, correct, distractors) {
 
 function makeTable789Question(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var qt = plan.questionTypeId;
-  var a = Rng.randInt(rng, 7, 9);
-  var b = Rng.randInt(rng, 2, 9);
+  var a = riC(rng, 7, 9, nr);
+  var b = riC(rng, 2, 9, nr);
   var p = a * b;
   var form = i % 5;
 
@@ -11125,6 +11233,7 @@ function makeTable789Question(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   
   
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
@@ -11140,8 +11249,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   if (plan.questionTypeId === 'calc') {
     var cPrompt, cAnswer;
     if (name.indexOf('除') !== -1 || name.indexOf('乘') !== -1 || name.indexOf('口诀') !== -1) {
-      var a = Rng.randInt(rng, 7, 9);
-      var b = Rng.randInt(rng, 2, 9);
+      var a = riC(rng, 7, 9, nr);
+      var b = riC(rng, 2, 9, nr);
       if (i % 2 === 0) {
         
         cPrompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
@@ -11151,9 +11260,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
         cAnswer = b;
       }
     } else {
-      var x = Rng.randInt(rng, 2, 9);
-      var y = Rng.randInt(rng, 2, 9);
-      var z = Rng.randInt(rng, 1, 9);
+      var x = riC(rng, 2, 9, nr);
+      var y = riC(rng, 2, 9, nr);
+      var z = riC(rng, 1, 9, nr);
       cPrompt = '找规律列式：' + x + ' × ' + y + ' + ' + z + ' = ____';
       cAnswer = x * y + z;
     }
@@ -11183,8 +11292,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('植树') !== -1) type = 'tree-planting';
   else if (name.indexOf('找次品') !== -1 || name.indexOf('天平') !== -1) type = 'find-defect';
   else if (name.indexOf('握手') !== -1) type = 'handshake';
-  else if (name.indexOf('数独') !== -1) type = 'sudoku';
-  else if (name.indexOf('必胜') !== -1) type = 'winning';
+  
   else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
   else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
@@ -11207,20 +11315,20 @@ function makeReasoningQuestion(plan, context, i, kp) {
       + d.k + ' 个同色，' + d.c.length + ' × ' + (d.k - 1) + ' + 1 = ' + d.ans;
   } else if (type === 'extreme') {
     if (v % 3 === 0) {
-      var twoSum = Rng.randInt(rng, 10, 50);
+      var twoSum = riC(rng, 10, 50, nr);
       var half = Math.floor(twoSum / 2);
       prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
       answer = half * (twoSum - half); steps = 2;
       nativeWhy = '和一定时，两数越接近乘积越大，取 ' + half + ' 和 ' + (twoSum - half)
         + '：' + half + ' × ' + (twoSum - half) + ' = ' + answer;
     } else if (v % 3 === 1) {
-      var twoSum2 = Rng.randInt(rng, 10, 50);
+      var twoSum2 = riC(rng, 10, 50, nr);
       var half2 = Math.floor(twoSum2 / 2);
       prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
       answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
       nativeWhy = '和一定，两数最接近时相差最小（差 0 或 1），所以是 ' + half2 + ' 和 ' + (twoSum2 - half2);
     } else {
-      var threeSum = Rng.randInt(rng, 12, 60);
+      var threeSum = riC(rng, 12, 60, nr);
       var base = Math.floor(threeSum / 3);
       var rem = threeSum - 3 * base;
       var parts = [base, base, base]; parts[2] += rem;
@@ -11231,8 +11339,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
     }
   } else if (type === 'chicken-rabbit') {
     if (v % 3 === 0) {
-      var heads = Rng.randInt(rng, 8, 20);
-      var rabb0 = Rng.randInt(rng, 3, Math.max(3, heads - 2));
+      var heads = riC(rng, 8, 20, nr);
+      var rabb0 = riC(rng, 3, Math.max(3, heads - 2), nr);
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
       var r0 = (feet - heads * 2) / 2;
@@ -11245,8 +11353,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (heads - r0 - 1) + '只，兔' + (r0 + 1) + '只',
         '鸡' + (heads - r0 + 1) + '只，兔' + (r0 - 1) + '只'];
     } else if (v % 3 === 1) {
-      var D = Rng.randInt(rng, 1, 5);
-      var R = Rng.randInt(rng, 3, 8);
+      var D = riC(rng, 1, 5, nr);
+      var R = riC(rng, 3, 8, nr);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
@@ -11257,8 +11365,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (R + D - 1) + '只，兔' + (R + 1) + '只',
         '鸡' + (R + D + 1) + '只，兔' + (R - 1) + '只'];
     } else {
-      var D2 = Rng.randInt(rng, 1, 4);
-      var C = Rng.randInt(rng, 3, 8);
+      var D2 = riC(rng, 1, 4, nr);
+      var C = riC(rng, 3, 8, nr);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
@@ -11270,8 +11378,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (C + 1) + '只，兔' + (C + D2 - 1) + '只'];
     }
   } else if (type === 'tree-planting') {
-    var L = Rng.randInt(rng, 100, 500);
-    var G = Rng.randInt(rng, 5, 20);
+    var L = riC(rng, 100, 500, nr);
+    var G = riC(rng, 5, 20, nr);
     var TP = [
       { desc: '两端都栽', ans: Math.floor(L / G) + 1 },
       { desc: '两端都不栽', ans: Math.floor(L / G) - 1 },
@@ -11300,38 +11408,14 @@ function makeReasoningQuestion(plan, context, i, kp) {
       { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
     ];
     var hs = HSK[v % HSK.length];
-    var n = Rng.randInt(rng, 4, 12);
+    var n = riC(rng, 4, 12, nr);
     prompt = n + hs.w + '，一共需要多少次？';
     answer = hs.ans(n); steps = 2;
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
-  } else if (type === 'sudoku') {
-    var SUD = [
-      { w: '请根据已知数字推理出空格中的数字。' },
-      { w: '在 4×4 数独中，根据已知数字填出空格。' },
-      { w: '在 6×6 数独中，根据已知数字填出空格。' }
-    ];
-    var su = SUD[v % SUD.length];
-    prompt = name + '：' + su.w;
-    answer = '（推理过程略）'; steps = 4;
-    nativeWhy = '数独规则：每行、每列、每个宫格内的数字都不重复，从已知数最多的行、列或宫格入手，逐个排除确定空格';
-  } else if (type === 'winning') {
-    var WIN = [
-      { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
-      { w: '一堆石子，每次可取 1~4 个，取到最后一个者胜', a: '先手必胜（凑 5 策略）' },
-      { w: '三堆石子，每次从一堆取任意个，取到最后一个者胜', a: '先手必胜（尼姆和策略）' }
-    ];
-    var win = WIN[v % WIN.length];
-    prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
-    answer = win.a; steps = 3;
-    nativeWhy = v % 3 === 0
-      ? '先手先取完一堆使两堆相同，此后后手从一堆取几个、先手就从另一堆取几个，先手取到最后一个'
-      : v % 3 === 1
-        ? '每回合两人取子数可凑成 5（对方取 k 个就取 5−k 个），先手按凑 5 策略取到最后一个'
-        : '三堆石子的尼姆和不为 0，先手可取子使尼姆和变为 0，之后每步维持尼姆和为 0，先手必胜';
   } else if (type === 'optimization') {
     if (v % 3 === 0) {
-      var pans = Rng.randInt(rng, 2, 5);
+      var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
       answer = pans * 2; steps = 3;
       nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
@@ -11366,7 +11450,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       logicOptions = ['甲', '乙', '丙'];
       nativeWhy = '假设甲真则乙假、推出丙真，丙真则甲假，矛盾；假设丙真则甲、乙都假，由甲假推出乙真，矛盾；只有乙真时其余假设均不矛盾，所以说真话的是乙';
     } else if (LGV === 1) {
-      var ageTop = Rng.randInt(rng, 9, 12);
+      var ageTop = riC(rng, 9, 12, nr);
       prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
       answer = '小明'; steps = 2;
       logicOptions = ['小明', '小红', '小刚'];
@@ -11775,22 +11859,26 @@ function makeClassifyShape(plan, context, i, name, theme) {
     }
   } else if (qt === 'apply') {
     data.steps = 2;
+    
+    
+    
+    var numberedList = theme.items.map(function (it, idx) { return (idx + 1) + '）' + it; }).join('；');
     if (v === 0) {
       
       
-      prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。先写出分类结果，再说一说按这个标准分类说明了什么。';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。请按「' + theme.criterion + '」分类整理这些材料，再说一说整理结果说明了什么。';
       answer = statPartitionText(theme) + '。' + theme.conclusion;
       explanation = '逐个按「' + theme.criterion + '」归类后，得到：'
         + statPartitionText(theme) + '。' + theme.conclusion;
     } else if (v === 1) {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。先完成分类，再数出每一类各有多少项。';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。按「' + theme.criterion + '」分类后，向大家汇报每一类各有多少项。';
       answer = countsText;
       explanation = '分类完成后逐类点数，' + answer + '。';
     } else {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。哪一类包含的事物最多？比最少的一类多几项？';
+      prompt = name + '：下面是待整理的材料：' + numberedList
+        + '。按「' + theme.criterion + '」分类后比较一下：哪一类包含的事物最多？比最少的一类多几项？';
       var gMin = groupsArr.slice().sort(function (a, b) { return a.members.length - b.members.length; })[0];
       answer = '「' + gMax.label + '」最多（' + gMax.members.length + ' 项），比「' + gMin.label
         + '」多 ' + (gMax.members.length - gMin.members.length) + ' 项';
@@ -13142,8 +13230,19 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':picture:' + i;
 }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function makePictureEquationQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   
   
   
@@ -13165,14 +13264,14 @@ function makePictureEquationQuestion(plan, context, i, kp) {
 
   var prompt, answer, steps, graphic, why = null;
   if (type === 'segment') {
-    var total = Rng.randInt(rng, 20, 100);
-    var part = Rng.randInt(rng, 5, total - 5);
+    var total = riC(rng, 20, 100, nr);
+    var part = riC(rng, 5, total - 5, nr);
     prompt = '根据线段图：总长' + total + '，其中一部分是' + part + '，求另一部分是多少？';
     answer = total - part; steps = 1;
     graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: total, part: part, unit: '' } };
   } else if (type === 'brace') {
-    var a = Rng.randInt(rng, 5, 30);
-    var b = Rng.randInt(rng, 5, 30);
+    var a = riC(rng, 5, 30, nr);
+    var b = riC(rng, 5, 30, nr);
     var braceQt = plan.questionTypeId;
     
     
@@ -13192,9 +13291,9 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     if (braceQt === 'fill') why += '，所以空格填 ' + answer;
     if (braceQt === 'choice') why += '，正确选项是「' + answer + '」';
   } else if (type === 'balance') {
-    var left = Rng.randInt(rng, 5, 20);
+    var left = riC(rng, 5, 20, nr);
     var right = left;
-    var unknown = Rng.randInt(rng, 2, 8);
+    var unknown = riC(rng, 2, 8, nr);
     prompt = '天平平衡：左边有' + left + '，右边有' + unknown + ' + ?。求?的值。';
     answer = left - unknown; steps = 2;
     graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support', params: { left: left, rightUnknown: unknown, unit: '' } };
@@ -13205,25 +13304,25 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     prompt = name + '：请完成三阶幻方，使每行、每列、每条对角线上三个数的和都相等。';
     answer = '（幻方解略）'; steps = 4;
   } else if (type === 'tree') {
-    var roadLen = Rng.randInt(rng, 100, 500);
-    var gap = Rng.randInt(rng, 5, 15);
+    var roadLen = riC(rng, 100, 500, nr);
+    var gap = riC(rng, 5, 15, nr);
     prompt = name + '：线段图表示一条长' + roadLen + '米的公路，每隔' + gap + '米种一棵树（两端都栽），一共种多少棵？';
     answer = Math.floor(roadLen / gap) + 1; steps = 2;
     graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
   } else if (type === 'scale') {
-    var scale = Rng.randInt(rng, 1000, 50000);
-    var mapDist = Rng.randInt(rng, 2, 10);
+    var scale = riC(rng, 1000, 50000, nr);
+    var mapDist = riC(rng, 2, 10, nr);
     prompt = name + '：比例尺1:' + scale + '，地图上量得距离' + mapDist + 'cm，求实际距离（单位：km）。';
     answer = (mapDist * scale / 100000).toFixed(2); steps = 2;
     graphic = { type: 'diagram', subtype: 'scale', role: 'calculation-support', params: { scale: scale, mapDist: mapDist } };
   } else if (type === 'decimal-context') {
-    var w = Rng.randInt(rng, 1, 9);
-    var d = Rng.randInt(rng, 1, 9);
+    var w = riC(rng, 1, 9, nr);
+    var d = riC(rng, 1, 9, nr);
     prompt = name + '：根据情境图列式计算：' + w + '.' + d + ' + ' + (w + 1) + '.' + (d + 1) + ' = ?';
     answer = (parseFloat(w + '.' + d) + parseFloat((w + 1) + '.' + (d + 1))).toFixed(2); steps = 1;
   } else {
-    var x = Rng.randInt(rng, 3, 20);
-    var y = Rng.randInt(rng, 3, 20);
+    var x = riC(rng, 3, 20, nr);
+    var y = riC(rng, 3, 20, nr);
     prompt = name + '：根据图示信息列式并计算。';
     answer = x + y; steps = 1;
     graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: x, right: y, unit: '' } };
@@ -13502,10 +13601,18 @@ function makeCodeByKind(plan, context, i, qt) {
   var q = buildBase(plan, context, i, { mode: qt, codeType: cat });
   q.prompt = item.q;
   
+  
+  
+  
   var codeWhy;
   if (qt === 'choice') codeWhy = '按数字编码规则判断，正确选项是「' + item.a + '」。';
   else if (qt === 'fill') codeWhy = '由题中的编码规则可知，空格填 ' + item.a + '。';
-  else codeWhy = '根据数字编码规则：' + item.a + '。';
+  else {
+    var aParts = String(item.a).split('；');
+    codeWhy = aParts.length >= 2
+      ? '按题面任务逐项作答：① ' + aParts.join('；② ') + '。'
+      : '依据题中的编码规则作答：' + item.a + '。';
+  }
   q.answer = { value: item.a, acceptable: [], explanation: codeWhy };
   if (qt === 'choice') {
     var options = Rng.shuffle(rng, item.o.slice());
@@ -13617,6 +13724,25 @@ function pkp(plan) {
   return null;
 }
 
+
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 100 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+function pickStep(rng, lo, hi, range, step) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  var steps = Math.floor((max - min) / step);
+  if (steps < 0) steps = 0;
+  return min + Rng.randInt(rng, 0, steps) * step;
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -13686,7 +13812,8 @@ var qt = function (plan) { return plan.questionTypeId; };
 
 function makePercentOf(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.pick(rng, [100, 200, 300, 400, 500, 800]);
+  var nr = nrOf(plan);
+  var base = pickStep(rng, 100, 800, nr, 100);
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var ans = Math.round(base * p / 100 * 100) / 100;
   var prompt;
@@ -13707,12 +13834,13 @@ function makePercentOf(plan, context, i) {
 
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var variant = i % 3;
   var t = qt(plan);
   var isCalc = t === 'calc';
   var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
-    var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
+    var d = (riC(rng, 1, 9, nr) * 10 + riC(rng, 1, 9, nr)) / 100;
     var dpct = Math.round(d * 100);
     var stem0;
     if (isCalc) stem0 = '把小数 ' + d.toFixed(2) + ' 化成百分数，列式：' + d.toFixed(2) + ' =（ ）%（只填数字）。';
@@ -13743,7 +13871,8 @@ function makeConversion(plan, context, i) {
 
 function makeDiscount(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var price = Rng.pick(rng, [100, 200, 300, 400, 500, 600, 800]);
+  var nr = nrOf(plan);
+  var price = pickStep(rng, 100, 800, nr, 100);
   var d = Rng.pick(rng, DISCOUNTS);
   var cur = Math.round(price * d.rate) / 100;
   var askSaved = (i % 2 === 1);
@@ -13770,9 +13899,10 @@ function makeDiscount(plan, context, i) {
 
 function makeInterest(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var principal = Rng.pick(rng, [1000, 2000, 3000, 5000, 8000]);
+  var nr = nrOf(plan);
+  var principal = pickStep(rng, 1000, 8000, nr, 1000);
   var rate = Rng.pick(rng, [2, 3, 4, 5]);
-  var years = Rng.randInt(rng, 1, 3);
+  var years = riC(rng, 1, 3, nr);
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
   var t = qt(plan);
@@ -13798,11 +13928,12 @@ function makeInterest(plan, context, i) {
 
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
   var t = qt(plan);
   if (i % 2 === 1) {
     
-    var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
+    var total = pickStep(rng, 50, 500, nr, 50);
     var ratePct = Rng.pick(rng, [80, 90, 95, 75, 60]);
     var need = Math.round(total * ratePct / 100);
     if (t === 'calc') return finish(q, '列式计算：学校规定体育达标率不低于 ' + ratePct + '%，全年级共 ' + total + ' 人。列式求至少达标人数：' + total + ' × ' + ratePct + '% = ？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
@@ -13811,7 +13942,7 @@ function makeRateLine(plan, context, i) {
     return finish(q, '学校规定体育达标率不低于 ' + ratePct + '%。全年级共 ' + total + ' 人，至少要有多少人达标？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
   }
   
-  var total2 = Rng.pick(rng, [40, 50, 100, 200, 250]);
+  var total2 = pickStep(rng, 40, 250, nr, 10);
   var pct = Rng.pick(rng, CLEAN_PERCENTS.concat([95, 85]));
   var reached = Math.round(total2 * pct / 100);
   var rateAns = Math.round(reached / total2 * 100);
@@ -13825,7 +13956,8 @@ function makeRateLine(plan, context, i) {
 
 function makePercentChange(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.pick(rng, [100, 200, 250, 400, 500]);
+  var nr = nrOf(plan);
+  var base = pickStep(rng, 100, 500, nr, 50);
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var increase = (i % 2 === 0);
   var ans = increase ? base + base * p / 100 : base - base * p / 100;
@@ -13849,7 +13981,8 @@ function makePercentChange(plan, context, i) {
 
 function makeTax(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var income = Rng.pick(rng, [3000, 5000, 8000, 10000, 20000, 50000]);
+  var nr = nrOf(plan);
+  var income = pickStep(rng, 3000, 50000, nr, 1000);
   var rate = Rng.pick(rng, [3, 5, 6, 10]);
   var tax = Math.round(income * rate) / 100;
   var goods = Rng.pick(rng, ['商店某月的营业额', '一家餐馆某月的营业额', '某公司某月的营业额']);
@@ -13882,7 +14015,7 @@ function makeChengshu(plan, context, i) {
     else stemC = '农业收成常用「成数」表示：' + c.label + '改写成百分数是多少？（只填数字）';
     return finish(q, stemC, c.rate, '成数表示十分之几，也就是百分之几十：' + c.label + ' = ' + c.num + '/10 = ' + c.rate + '%');
   }
-  var base = Rng.pick(rng, [200, 300, 400, 500, 600, 800]);
+  var base = pickStep(rng, 200, 800, nrOf(plan), 100);
   var gain = Math.round(base * c.rate) / 100;
   var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
   var bb = buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' });
@@ -13896,10 +14029,11 @@ function makeChengshu(plan, context, i) {
 
 function makeLife(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var scenario;
   if (i % 2 === 0) {
     
-    var total = Rng.pick(rng, [300, 500, 800, 1000, 2000]);
+    var total = pickStep(rng, 300, 2000, nr, 100);
     var pct = Rng.pick(rng, [80, 85, 90, 95, 96]);
     var part = Math.round(total * pct) / 100;
     var things = Rng.pick(rng, [
@@ -13914,7 +14048,7 @@ function makeLife(plan, context, i) {
     };
   } else {
     
-    var price = Rng.pick(rng, [150, 200, 300, 400, 500, 600]);
+    var price = pickStep(rng, 150, 600, nr, 50);
     var rate2 = Rng.pick(rng, [80, 85, 88, 90, 95]);
     var cur = Math.round(price * rate2) / 100;
     var goods2 = Rng.pick(rng, ['一套科普书', '一个书包', '一双运动鞋', '一件外套']);
@@ -14098,8 +14232,9 @@ function timesData(base, times) {
 
 function makeTimesCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 2, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 2, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '列式计算：' + base + ' 的 ' + times + ' 倍是多少？', String(ans), [String(ans)],
@@ -14108,8 +14243,9 @@ function makeTimesCalc(plan, context, i) {
 
 function makeTimesFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 2, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 2, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
   return finish(q, '求一个数的几倍是多少，用乘法计算：' + base + ' × ' + times + ' = ____', String(ans), [String(ans)],
@@ -14118,8 +14254,9 @@ function makeTimesFill(plan, context, i) {
 
 function makeTimesApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 3, 9);
-  var times = Rng.randInt(rng, 2, 4);
+  var nr = nrOf(plan);
+  var base = riC(rng, 3, 9, nr);
+  var times = riC(rng, 2, 4, nr);
   var ans = base * times;
   var item = Rng.pick(rng, ['根小棒', '朵红花', '颗星星', '只纸鹤']);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
@@ -14129,8 +14266,9 @@ function makeTimesApply(plan, context, i) {
 
 function makeTimesChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 3, 9);
-  var times = Rng.randInt(rng, 2, 5);
+  var nr = nrOf(plan);
+  var base = riC(rng, 3, 9, nr);
+  var times = riC(rng, 2, 5, nr);
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   q.prompt = '下面哪个算式表示「' + base + ' 的 ' + times + ' 倍」？（  ）';
   var correctExpr = base + ' × ' + times;
@@ -14161,7 +14299,8 @@ function fractionData(withOperation, parts, taken) {
 
 function makeFractionCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 4, 9);
+  var nr = nrOf(plan);
+  var den = riC(rng, 4, 9, nr);
   var ans = '1/' + den;
   var q = buildBase(plan, context, i, fractionData(true, den, 1));
   return finish(q, '列式计算：把单位“1”平均分成 ' + den + ' 份，每份是单位“1”的几分之几？', ans, [ans],
@@ -14170,8 +14309,9 @@ function makeFractionCalc(plan, context, i) {
 
 function makeFractionFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 4, 9);
-  var num = Rng.randInt(rng, 2, den - 1);
+  var nr = nrOf(plan);
+  var den = riC(rng, 4, 9, nr);
+  var num = riC(rng, 2, Math.max(2, den - 1), nr);
   var ans = num + '/' + den;
   var q = buildBase(plan, context, i, fractionData(false, den, num));
   return finish(q, '把单位“1”平均分成 ' + den + ' 份，表示这样 ' + num + ' 份的数是 ____。', ans, [ans],
@@ -14189,8 +14329,9 @@ function makeFractionApply(plan, context, i) {
 
 function makeFractionChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var den = Rng.randInt(rng, 5, 9);
-  var num = Rng.randInt(rng, 2, den - 1);
+  var nr = nrOf(plan);
+  var den = riC(rng, 5, 9, nr);
+  var num = riC(rng, 2, Math.max(2, den - 1), nr);
   var q = buildBase(plan, context, i, fractionData(false, den, num));
   q.prompt = '下面哪个分数的分数单位是 1/' + den + '？（  ）';
   var fracAns = num + '/' + den;
@@ -14297,8 +14438,9 @@ function makeAreaChoice(plan, context, i) {
 
 function makeAreaGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 6, 9);
-  var b = Rng.randInt(rng, 3, a - 2);
+  var nr = nrOf(plan);
+  var a = riC(rng, 6, 9, nr);
+  var b = riC(rng, 3, Math.max(3, a - 2), nr);
   var winner = Rng.pick(rng, [['甲', a], ['乙', b]]);
   var q = buildBase(plan, context, i, { subType: 'area-compare', quantityKind: 'area', gridA: a, gridB: b });
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
@@ -14332,6 +14474,17 @@ function makeAreaJudge(plan, context, i) {
 
 
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+
+
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return ri(rng, min, max);
+}
 
 
 
@@ -14421,8 +14574,8 @@ function validateCompositionItem(item, t, o, n) {
   if (/参考/.test(item.stem + item.apply + item.fill)) throw new Error('composition: 题干仍含答案显示');
 }
 
-function buildCompositionItem(rng) {
-  var t = ri(rng, 1, 9), o = ri(rng, 1, 9);
+function buildCompositionItem(rng, name, nr) {
+  var t = riC(rng, 1, 9, nr), o = riC(rng, 1, 9, nr);
   var n = t * 10 + o;
   var reverse = rng() < 0.5;
 
@@ -14472,12 +14625,12 @@ function buildCompositionItem(rng) {
   return item;
 }
 
-function buildNumberConceptItem(rng, name) {
+function buildNumberConceptItem(rng, name, nr) {
   
   
   if (name.indexOf('数数') !== -1) {
     if (rng() < 0.5) {
-      var ct = ri(rng, 2, 10);
+      var ct = riC(rng, 2, 10, nr);
       var tensTotal = ct * 10;
       
       
@@ -14494,7 +14647,7 @@ function buildNumberConceptItem(rng, name) {
         apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数，' + ct + ' 个十是多少根？',
         operation: 'add' };
     }
-    var co = ri(rng, 2, 9);
+    var co = riC(rng, 2, 9, nr);
     var onesExpr;
     if (co <= 5) {
       onesExpr = [];
@@ -14511,7 +14664,7 @@ function buildNumberConceptItem(rng, name) {
   
   if (name.indexOf('11—20') !== -1 || name.indexOf('11-20') !== -1 ||
       name.indexOf('11～20') !== -1 || name.indexOf('11~20') !== -1) {
-    var o2 = ri(rng, 1, 9);
+    var o2 = riC(rng, 1, 9, nr);
     var n2 = 10 + o2;
     if (rng() < 0.5) {
       return { stem: n2 + ' 里面有几个十和几个一？（10 + ' + o2 + ' = ？）',
@@ -14528,19 +14681,19 @@ function buildNumberConceptItem(rng, name) {
   
   
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
-    var n5 = ri(rng, 2, 5);
+    var n5 = riC(rng, 2, 5, nr);
     return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
       apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
-    var x0 = ri(rng, 12, 88);
+    var x0 = riC(rng, 12, 88, nr);
     return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（' + x0 + ' + 1 = ？）',
       answer: String(x0 + 1), options: [String(x0 + 1), String(x0 + 10), String(x0 - 1)],
       apply: '在百数表（每行10个数）里圈出 ' + x0 + '，它右边一格的数是多少？（' + x0 + ' + 1 = ？）' };
   }
   if (name.indexOf('近似') !== -1 || name.indexOf('改写') !== -1) {
-    var n0 = ri(rng, 2, 8) * 10000;
+    var n0 = riC(rng, 2, 8, nr) * 10000;
     return { stem: '把 ' + n0 + ' 改写成用「万」作单位的数：' + n0 + ' = ' + (n0 / 10000) + ' × 10000，等于多少万？',
       answer: String(n0 / 10000) + '万', options: [n0 / 10000 + '万', n0 / 1000 + '万', n0 + '万'],
       fill: '' + n0 + ' = ____ 万',
@@ -14560,20 +14713,20 @@ function buildNumberConceptItem(rng, name) {
   }
   if (name.indexOf('数位') !== -1) {
     
-    var tens = ri(rng, 1, 9), ones = ri(rng, 1, 9);
+    var tens = riC(rng, 1, 9, nr), ones = riC(rng, 1, 9, nr);
     var num0 = tens * 10 + ones;
     return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
       apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
-    var cur = ri(rng, 11, 88);
+    var cur = riC(rng, 11, 88, nr);
     return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
       answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
       apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '（' + cur + ' − 1 = ' + (cur - 1) + '），后一个数是多少？' };
   }
   if (name.indexOf('比较') !== -1) {
-    var a0 = ri(rng, 12, 98), b0 = a0 + ri(rng, 1, 9) * (rng() < 0.5 ? 1 : -1);
+    var a0 = riC(rng, 12, 98, nr), b0 = a0 + riC(rng, 1, 9, nr) * (rng() < 0.5 ? 1 : -1);
     if (b0 <= 10) b0 = a0 + 5;
     return { stem: '比较大小：' + Math.min(a0, b0) + ' ○ ' + Math.max(a0, b0) + '（参考：' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '）',
       answer: '<', options: ['>', '<', '='],
@@ -14582,7 +14735,7 @@ function buildNumberConceptItem(rng, name) {
   if (name.indexOf('组成') !== -1) {
     
     
-    return buildCompositionItem(rng);
+    return buildCompositionItem(rng, name, nr);
   }
   if (name.indexOf('算盘') !== -1) {
     
@@ -14605,7 +14758,7 @@ function buildNumberConceptItem(rng, name) {
   }
   
   
-  var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
+  var t1 = riC(rng, 1, 9, nr), o1 = riC(rng, 1, 9, nr);
   
   
   return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ？），写作多少？',
@@ -14615,10 +14768,10 @@ function buildNumberConceptItem(rng, name) {
 
 
 
-function buildMakeTenItem(rng) {
-  var a = ri(rng, 8, 9);
+function buildMakeTenItem(rng, name, nr) {
+  var a = riC(rng, 8, 9, nr);
   var need = 10 - a;
-  var b = ri(rng, need + 1, 9);
+  var b = riC(rng, need + 1, 9, nr);
   var rest = b - need;
   var sum = a + b;
   
@@ -14630,8 +14783,8 @@ function buildMakeTenItem(rng) {
 }
 
 
-function buildBracketOrderItem(rng) {
-  var x = ri(rng, 2, 9), y = ri(rng, 2, 9), z = ri(rng, 2, 5);
+function buildBracketOrderItem(rng, name, nr) {
+  var x = riC(rng, 2, 9, nr), y = riC(rng, 2, 9, nr), z = riC(rng, 2, 5, nr);
   var inner = x + y;
   var ans = inner * z;
   return { stem: '先算小括号里面的：(' + x + ' + ' + y + ') × ' + z + ' = ' + inner + ' × ' + z + ' = ？（先算 ' + x + ' + ' + y + ' = ' + inner + '）',
@@ -14642,10 +14795,10 @@ function buildBracketOrderItem(rng) {
 }
 
 
-function buildStepwiseItem(rng) {
-  var a = ri(rng, 12, 49), b = ri(rng, 11, 39);
+function buildStepwiseItem(rng, name, nr) {
+  var a = riC(rng, 12, 49, nr), b = riC(rng, 11, 39, nr);
   var s1 = a + b;
-  var c = ri(rng, 2, s1 - 1);
+  var c = riC(rng, 2, Math.max(2, s1 - 1), nr);
   var ans = s1 - c;
   return { stem: '按脱式计算规范一步一步算：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + ' = ？（第一步 ' + a + ' + ' + b + ' = ' + s1 + '）',
     answer: String(ans), options: [String(ans), String(s1), String(a + b + c)],
@@ -14654,9 +14807,9 @@ function buildStepwiseItem(rng) {
     operation: 'mixed' };
 }
 
-function buildNegativeItem(rng, name) {
+function buildNegativeItem(rng, name, nr) {
   if (name.indexOf('数轴') !== -1) {
-    var k0 = ri(rng, 2, 6);
+    var k0 = riC(rng, 2, 6, nr);
     
     
     return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（0 − ' + k0 + ' = ？）',
@@ -14664,7 +14817,7 @@ function buildNegativeItem(rng, name) {
       apply: '温度计以 0℃ 为分界，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
   }
   if (name.indexOf('比较') !== -1) {
-    var a1 = ri(rng, 2, 8), b1 = a1 + ri(rng, 1, 5);
+    var a1 = riC(rng, 2, 8, nr), b1 = a1 + riC(rng, 1, 5, nr);
     return { stem: '比较大小：−' + b1 + ' ○ −' + a1 + '（参考：' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，负号后越大数越小）',
       answer: '<', options: ['>', '<', '='],
       apply: '哈尔滨 −' + b1 + '℃，北京 −' + a1 + '℃，' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，哪里更冷，即 −' + b1 + ' ○ −' + a1 + '？' };
@@ -14679,21 +14832,21 @@ function buildNegativeItem(rng, name) {
     apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
 }
 
-function buildMultDivRelationItem(rng, name) {
+function buildMultDivRelationItem(rng, name, nr) {
   if (name.indexOf('平均分') !== -1) {
-    var total0 = ri(rng, 2, 9) * ri(rng, 2, 9), groups0 = ri(rng, 2, 6);
+    var total0 = riC(rng, 2, 9, nr) * riC(rng, 2, 9, nr), groups0 = riC(rng, 2, 6, nr);
     while (total0 % groups0 !== 0) total0 += 1;
     return { stem: '把 ' + total0 + ' 平均分成 ' + groups0 + ' 份，每份多少？（' + total0 + ' ÷ ' + groups0 + ' = ？）',
       answer: String(total0 / groups0), options: [String(total0 / groups0), String(groups0), String(total0)],
       apply: '把 ' + total0 + ' 块糖平均分给 ' + groups0 + ' 个小朋友，' + total0 + ' ÷ ' + groups0 + ' = ？，每人几块？' };
   }
-  var a2 = ri(rng, 2, 9), b2 = ri(rng, 2, 9), p2 = a2 * b2;
+  var a2 = riC(rng, 2, 9, nr), b2 = riC(rng, 2, 9, nr), p2 = a2 * b2;
   return { stem: '因为 ' + a2 + ' × ' + b2 + ' = ' + p2 + '，所以 ' + p2 + ' ÷ ' + a2 + ' = 多少？',
     answer: String(b2), options: [String(b2), String(a2), String(p2)],
     apply: '每盒有 ' + a2 + ' 支笔，' + b2 + ' 盒共 ' + p2 + ' 支（' + a2 + ' × ' + b2 + ' = ' + p2 + '）。反过来 ' + p2 + ' ÷ ' + a2 + ' = ？，是多少盒？' };
 }
 
-function buildAlgebraLetterItem(rng, name) {
+function buildAlgebraLetterItem(rng, name, nr) {
   if (name.indexOf('数量关系') !== -1) {
     return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（参考：80 × 2 = 160）',
       answer: 's = v × t', options: ['s = v × t', 's = v + t', 's = v − t'],
@@ -14701,14 +14854,14 @@ function buildAlgebraLetterItem(rng, name) {
       apply: '汽车每小时行 v 千米，行了 t 小时（如 80 × 2 = 160），路程 s 用字母怎样表示？' };
   }
   if (name.indexOf('值') !== -1) {
-    var a3 = ri(rng, 2, 6), k3 = ri(rng, 2, 5);
+    var a3 = riC(rng, 2, 6, nr), k3 = riC(rng, 2, 5, nr);
     return { stem: '当 a = ' + a3 + ' 时，' + k3 + 'a + 1 = ' + k3 + ' × ' + a3 + ' + 1 = 多少？',
       answer: String(k3 * a3 + 1), options: [String(k3 * a3 + 1), String(k3 * a3), String(a3 + 1)],
       fill: '当 a = ' + a3 + ' 时，' + k3 + ' × a + 1 = ____',
       apply: '文具店有 a 盒彩笔，每盒 ' + k3 + ' 支还多 1 支样品。当 a = ' + a3 + ' 时，' + k3 + ' × ' + a3 + ' + 1 = ？，共多少支？' };
   }
   
-  var d0 = ri(rng, 4, 20);
+  var d0 = riC(rng, 4, 20, nr);
   return { stem: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁。当 a = 10 时，10 + ' + d0 + ' = 多少，爸爸岁数用字母怎样表示？',
     answer: 'a + ' + d0 + '（岁）', options: ['a + ' + d0, 'a − ' + d0, 'a × ' + d0],
     fill: '爸爸比小明大 ' + d0 + ' 岁，用含字母的式子表示爸爸的岁数：____',
@@ -14716,11 +14869,11 @@ function buildAlgebraLetterItem(rng, name) {
 }
 
 
-function buildNumberTheoryItem(rng, name) {
+function buildNumberTheoryItem(rng, name, nr) {
   
   
   if (name.indexOf('因数和倍数') !== -1) {
-    var fa = ri(rng, 2, 8), fb = fa + ri(rng, 1, 9 - fa), fp = fa * fb;
+    var fa = riC(rng, 2, 8, nr), fb = fa + riC(rng, 1, Math.max(1, 9 - fa), nr), fp = fa * fb;
     var facStmt = fa + ' 和 ' + fb;
     
     
@@ -14743,7 +14896,7 @@ function buildNumberTheoryItem(rng, name) {
   
   
   if (name.indexOf('因数与倍数') !== -1) {
-    var fn2 = ri(rng, 3, 9);
+    var fn2 = riC(rng, 3, 9, nr);
     
     return { operation: 'mult',
       stem: '用一个数依次乘 1、2、3……可以找它的倍数：'
@@ -14764,8 +14917,8 @@ function buildNumberTheoryItem(rng, name) {
       { oddA: true, oddB: false, res: '奇数', rule: '奇数 + 偶数 = 奇数' }
     ];
     var pt = patterns[ri(rng, 0, patterns.length - 1)];
-    var pa = pt.oddA ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
-    var pb = pt.oddB ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
+    var pa = pt.oddA ? riC(rng, 1, 9, nr) * 2 - 1 : riC(rng, 1, 9, nr) * 2;
+    var pb = pt.oddB ? riC(rng, 1, 9, nr) * 2 - 1 : riC(rng, 1, 9, nr) * 2;
     
     
     return { stem: '不计算，判断：' + pa + ' + ' + pb + ' = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）',
@@ -14794,7 +14947,7 @@ function buildNumberTheoryItem(rng, name) {
   }
   
   if (name.indexOf('奇数') !== -1 || name.indexOf('偶数') !== -1) {
-    var en = ri(rng, 2, 24) * 2;
+    var en = riC(rng, 2, 24, nr) * 2;
     var askEven = rng() < 0.5;
     if (askEven) {
       return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
@@ -14806,7 +14959,7 @@ function buildNumberTheoryItem(rng, name) {
         
         apply: '门牌号按单双号排列，' + en + ' 号是奇数还是偶数？' };
     }
-    var on = ri(rng, 2, 24) * 2 - 1;
+    var on = riC(rng, 2, 24, nr) * 2 - 1;
     return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
       answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
       fill: '' + on + ' ÷ 2 余 1，____ 不是 2 的倍数',
@@ -14816,15 +14969,15 @@ function buildNumberTheoryItem(rng, name) {
   }
   
   var feats = [
-    { f: 2, text: '个位上是 0、2、4、6、8', build: function () { var x = ri(rng, 6, 49) * 2; return x; },
+    { f: 2, text: '个位上是 0、2、4、6、8', build: function () { var x = riC(rng, 6, 49, nr) * 2; return x; },
       bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 2 === 0 ? b + 1 : b; } },
-    { f: 5, text: '个位上是 0 或 5', build: function () { return ri(rng, 2, 19) * 5; },
+    { f: 5, text: '个位上是 0 或 5', build: function () { return riC(rng, 2, 19, nr) * 5; },
       bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 5 === 0 ? b + 1 : b; } },
     { f: 3, text: '各位上数字之和是 3 的倍数', build: function () {
-        for (var t = 0; t < 30; t++) { var x = ri(rng, 12, 99); var s = Math.floor(x / 10) + x % 10; if (s % 3 === 0) return x; }
+        for (var t = 0; t < 30; t++) { var x = riC(rng, 12, 99, nr); var s = Math.floor(x / 10) + x % 10; if (s % 3 === 0) return x; }
         return 12;
       }, bad: function (x) {
-        for (var t = 0; t < 30; t++) { var b = ri(rng, 12, 99); var s = Math.floor(b / 10) + b % 10; if (s % 3 !== 0 && b !== x) return b; }
+        for (var t = 0; t < 30; t++) { var b = riC(rng, 12, 99, nr); var s = Math.floor(b / 10) + b % 10; if (s % 3 !== 0 && b !== x) return b; }
         return x + 1;
       } }
   ];
@@ -14862,7 +15015,7 @@ function headContext(stem) {
 function makeByItem(plan, context, i, builder, subType) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var params = plan.semanticParams || {};
-  var item = builder(rng, params.name || '');
+  var item = builder(rng, params.name || '', nrOf(plan));
   var qt = plan.questionTypeId;
   var q = buildBase(plan, context, i, { subType: subType, operation: item.operation });
   var answer = item.answer;
@@ -15019,6 +15172,17 @@ function pkp(plan) {
   return null;
 }
 
+
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 100 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -15091,8 +15255,9 @@ function finishChoice(q, rng, correct, wrongs, explanation) {
 
 function makeAddRelCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var take = Rng.randInt(rng, 2, 9);
-  var left = Rng.randInt(rng, 2, 9);
+  var nr = nrOf(plan);
+  var take = riC(rng, 2, 9, nr);
+  var left = riC(rng, 2, 9, nr);
   var subtract = (i % 2 === 0);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
@@ -15117,8 +15282,9 @@ function makeAddRelCalc(plan, context, i) {
 
 function makeAddRelFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 3, 9);
-  var b = Rng.randInt(rng, 3, 9);
+  var nr = nrOf(plan);
+  var a = riC(rng, 3, 9, nr);
+  var b = riC(rng, 3, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     
@@ -15140,8 +15306,9 @@ function makeAddRelFill(plan, context, i) {
 
 function makeAddRelApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 5, 12);
-  var diff = Rng.randInt(rng, 2, 8);
+  var nr = nrOf(plan);
+  var base = riC(rng, 5, 12, nr);
+  var diff = riC(rng, 2, 8, nr);
   var more = (i % 2 === 0);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
@@ -15161,8 +15328,9 @@ function makeAddRelApply(plan, context, i) {
 
 function makeAddRelChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 4, 9);
-  var b = Rng.randInt(rng, 4, 9);
+  var nr = nrOf(plan);
+  var a = riC(rng, 4, 9, nr);
+  var b = riC(rng, 4, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     
@@ -15189,8 +15357,9 @@ function makeAddRelChoice(plan, context, i) {
 
 function makeAddRelGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 4, 9);
-  var longer = Rng.randInt(rng, 2, 6);
+  var nr = nrOf(plan);
+  var a = riC(rng, 4, 9, nr);
+  var longer = riC(rng, 2, 6, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     
@@ -15214,10 +15383,10 @@ function makeAddRelGeometry(plan, context, i) {
 
 var PATTERN_SHAPES = ['△', '○', '□', '☆'];
 
-function patternPick(rng) {
+function patternPick(rng, nr) {
   var n = Rng.randInt(rng, 2, 4);
   var shapes = Rng.shuffle(rng, PATTERN_SHAPES).slice(0, n);
-  var period = Rng.randInt(rng, 7, 30);
+  var period = riC(rng, 7, 30, nr);
   var rem = period % n;
   var shape = rem === 0 ? shapes[n - 1] : shapes[rem - 1];
   var quotient = Math.floor(period / n);
@@ -15226,7 +15395,7 @@ function patternPick(rng) {
 
 function makePeriodCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -15241,7 +15410,7 @@ function makePeriodCalc(plan, context, i) {
 
 function makePeriodFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -15256,10 +15425,11 @@ function makePeriodFill(plan, context, i) {
 
 function makePeriodApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var items = [['红旗', '黄旗', '蓝旗'], ['红花', '黄花', '蓝花'], ['红灯笼', '黄灯笼', '蓝灯笼']];
   var set = Rng.pick(rng, items);
   var n = set.length;
-  var k = Rng.randInt(rng, 10, 40);
+  var k = riC(rng, 10, 40, nr);
   var rem = k % n;
   var which = rem === 0 ? set[n - 1] : set[rem - 1];
   var q = buildBase(plan, context, i, {
@@ -15274,7 +15444,7 @@ function makePeriodApply(plan, context, i) {
 
 function makePeriodChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -15290,7 +15460,7 @@ function makePeriodChoice(plan, context, i) {
 
 function makePeriodGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem,
@@ -15407,10 +15577,11 @@ function makeScaleGeometry(plan, context, i) {
 
 function makePropCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   
   var unit = Rng.pick(rng, [2, 3, 4, 5, 6, 8]);
-  var a = Rng.randInt(rng, 2, 6);
-  var b = Rng.randInt(rng, 2, 9);
+  var a = riC(rng, 2, 6, nr);
+  var b = riC(rng, 2, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     unitPrice: unit, quantityA: a, quantityB: b
@@ -15424,10 +15595,11 @@ function makePropCalc(plan, context, i) {
 
 function makePropFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   
   var speed = Rng.pick(rng, [40, 50, 60, 70, 80]);
-  var t1 = Rng.randInt(rng, 2, 4);
-  var t2 = Rng.randInt(rng, 5, 9);
+  var t1 = riC(rng, 2, 4, nr);
+  var t2 = riC(rng, 5, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     speed: speed, hoursA: t1, hoursB: t2
@@ -15462,9 +15634,10 @@ function makePropApply(plan, context, i) {
 
 function makePropChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var unit = Rng.pick(rng, [3, 4, 5, 6]);
-  var a = Rng.randInt(rng, 2, 5);
-  var b = Rng.randInt(rng, 6, 9);
+  var a = riC(rng, 2, 5, nr);
+  var b = riC(rng, 6, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     unitPrice: unit, quantityA: a, quantityB: b
@@ -15508,16 +15681,16 @@ var MAP_SCALES = [
   { label: '1:50000', factor: 50000 }
 ];
 
-function mapPick(rng) {
+function mapPick(rng, nr) {
   var s = Rng.pick(rng, MAP_SCALES);
-  var mapCm = Rng.randInt(rng, 2, 9);
+  var mapCm = riC(rng, 2, 9, nr);
   var realCm = mapCm * s.factor;
   return { label: s.label, factor: s.factor, mapCm: mapCm, realCm: realCm, realM: realCm / 100 };
 }
 
 function makeMapCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -15535,7 +15708,7 @@ function makeMapCalc(plan, context, i) {
 
 function makeMapFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -15551,7 +15724,7 @@ function makeMapFill(plan, context, i) {
 
 function makeMapApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -15564,7 +15737,7 @@ function makeMapApply(plan, context, i) {
 
 function makeMapChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -15583,21 +15756,21 @@ function ratioName(plan) {
 }
 
 
-function equalRatiosPick(rng) {
+function equalRatiosPick(rng, nr) {
   var pairs = [[1, 2], [1, 3], [2, 3], [3, 4], [2, 5]];
   var base = Rng.pick(rng, pairs);
-  var r = Rng.randInt(rng, 2, 4);
+  var r = riC(rng, 2, 4, nr);
   var s;
-  do { s = Rng.randInt(rng, 2, 4); } while (s === r);
+  do { s = riC(rng, 2, 4, nr); } while (s === r);
   return { a: base[0] * r, b: base[1] * r, c: base[0] * s, d: base[1] * s };
 }
 
 
-function solveRatioPick(rng) {
+function solveRatioPick(rng, nr) {
   for (var t = 0; t < 40; t++) {
-    var x = Rng.randInt(rng, 2, 6);
-    var d = Rng.randInt(rng, 2, 9);
-    var c = Rng.randInt(rng, 2, 6);
+    var x = riC(rng, 2, 6, nr);
+    var d = riC(rng, 2, 9, nr);
+    var c = riC(rng, 2, 6, nr);
     if ((x * d) % c === 0) {
       var b = x * d / c;
       if (b >= 2 && b <= 9) return { x: x, b: b, c: c, d: d };
@@ -15611,7 +15784,7 @@ function makeRatioCalc(plan, context, i) {
   var name = ratioName(plan);
   if (name.indexOf('基本性质') !== -1) {
     if (i % 2 === 0) {
-      var s = solveRatioPick(rng);
+      var s = solveRatioPick(rng, nrOf(plan));
       var q0 = buildBase(plan, context, i, {
         subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x
       });
@@ -15620,7 +15793,7 @@ function makeRatioCalc(plan, context, i) {
         s.x, [String(s.x)],
         '内项积 = 外项积：x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
     }
-    var e = equalRatiosPick(rng);
+    var e = equalRatiosPick(rng, nrOf(plan));
     var q1 = buildBase(plan, context, i, {
       subTopic: 'ratio-basics', aspect: 'property'
     });
@@ -15630,7 +15803,7 @@ function makeRatioCalc(plan, context, i) {
       '外项积 = 内项积：' + e.a + ' × ' + e.d + ' = ' + e.b + ' × ' + e.c + ' = ' + (e.a * e.d));
   }
   
-  var p = equalRatiosPick(rng);
+  var p = equalRatiosPick(rng, nrOf(plan));
   var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
     + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
@@ -15642,9 +15815,9 @@ function makeRatioCalc(plan, context, i) {
 function makeRatioFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = ratioName(plan);
-  var s = solveRatioPick(rng);
+  var s = solveRatioPick(rng, nrOf(plan));
   if (name.indexOf('基本性质') !== -1 && i % 2 === 1) {
-    var e = equalRatiosPick(rng);
+    var e = equalRatiosPick(rng, nrOf(plan));
     var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'property' });
     return finish(q0, '在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d + ' 中（' + e.a + ' × ' + e.d
       + ' = ' + (e.a * e.d) + '），两个内项的积是（  ）。', e.b * e.c, [String(e.b * e.c)],
@@ -15680,7 +15853,7 @@ function makeRatioChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = ratioName(plan);
   if (name.indexOf('基本性质') !== -1) {
-    var s = solveRatioPick(rng);
+    var s = solveRatioPick(rng, nrOf(plan));
     var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
     q0.prompt = '根据比例的基本性质解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d
       + '（x × ' + s.d + ' = ' + s.b + ' × ' + s.c + '），x = ？（  ）';
@@ -15688,7 +15861,7 @@ function makeRatioChoice(plan, context, i) {
       + s.d + ' = ' + s.x + '，正确选项是「' + s.x + '」。';
     return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)], ratioSolveWhy);
   }
-  var p = equalRatiosPick(rng);
+  var p = equalRatiosPick(rng, nrOf(plan));
   var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   q1.prompt = '下面哪组中的两个比可以组成比例？（提示：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d)
     + '，' + p.b + ' × ' + p.c + ' = ' + (p.b * p.c) + '）（  ）';
@@ -15834,12 +16007,22 @@ function deriveSubtype(name) {
 function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
 
-function addsubStructure(rng, mixed) {
-  var a = r2(ri(rng, 11, 99) / 10);
-  var b = r2(ri(rng, 11, Math.max(12, Math.floor(a * 10) - 1)) / 10);
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
+function addsubStructure(rng, nr, mixed) {
+  var a = r2(riC(rng, 11, 99, nr) / 10);
+  var b = r2(riC(rng, 11, Math.max(12, Math.floor(a * 10) - 1), nr) / 10);
   var add = rng() < 0.5;
   if (mixed) {
-    var c = r2(ri(rng, 11, 50) / 10);
+    var c = r2(riC(rng, 11, 50, nr) / 10);
     var ops = rng() < 0.5 ? ['+', '−'] : ['−', '+'];
     var v = ops[0] === '+' ? a + b : a - b;
     v = ops[1] === '+' ? v + c : v - c;
@@ -15850,26 +16033,26 @@ function addsubStructure(rng, mixed) {
     : { expr: fmt(a) + ' − ' + fmt(b), answer: fmt(r2(a - b)) };
 }
 
-function multStructure(rng) {
+function multStructure(rng, nr) {
   if (rng() < 0.5) {
-    var a = r2(ri(rng, 12, 88) / 10);
-    var n = ri(rng, 2, 9);
+    var a = r2(riC(rng, 12, 88, nr) / 10);
+    var n = riC(rng, 2, 9, nr);
     return { expr: fmt(a) + ' × ' + n, answer: fmt(r2(a * n)) };
   }
-  var x = r1(ri(rng, 11, 35) / 10);
-  var y = r1(ri(rng, 12, Math.max(13, Math.floor(x * 10) - 2)) / 10);
+  var x = r1(riC(rng, 11, 35, nr) / 10);
+  var y = r1(riC(rng, 12, Math.max(13, Math.floor(x * 10) - 2), nr) / 10);
   return { expr: fmt(x) + ' × ' + fmt(y), answer: fmt(r2(x * y)) };
 }
 
-function divStructure(rng) {
+function divStructure(rng, nr) {
   if (rng() < 0.5) {
-    var b = ri(rng, 2, 9);
-    var q = r2(ri(rng, 12, 84) / 10);
+    var b = riC(rng, 2, 9, nr);
+    var q = r2(riC(rng, 12, 84, nr) / 10);
     var a = r2(b * q);
     return { expr: fmt(a) + ' ÷ ' + b, answer: fmt(q), explain: fmt(b) + ' × ' + fmt(q) + ' = ' + fmt(a) };
   }
-  var d = r1(ri(rng, 12, 25) / 10);
-  var q2 = ri(rng, 2, 8);
+  var d = r1(riC(rng, 12, 25, nr) / 10);
+  var q2 = riC(rng, 2, 8, nr);
   var a2 = r2(d * q2);
   return { expr: fmt(a2) + ' ÷ ' + fmt(d), answer: String(q2), explain: fmt(d) + ' × ' + q2 + ' = ' + fmt(a2) };
 }
@@ -15934,11 +16117,11 @@ var ARITH_REASON = {
   '+': '一个加数 = 和 − 另一个加数',
   '×': '一个因数 = 积 ÷ 另一个因数'
 };
-function arithmeticTyped(sub, qt, rng) {
+function arithmeticTyped(sub, qt, rng, nr) {
   var st;
-  if (sub === 'div') st = divStructure(rng);
-  else if (sub === 'addsub-mix') st = addsubStructure(rng, true);
-  else st = (sub === 'addsub') ? addsubStructure(rng, false) : multStructure(rng);
+  if (sub === 'div') st = divStructure(rng, nr);
+  else if (sub === 'addsub-mix') st = addsubStructure(rng, nr, true);
+  else st = (sub === 'addsub') ? addsubStructure(rng, nr, false) : multStructure(rng, nr);
   var expr = st.expr, answer = st.answer;
   var nums = expr.match(/[\d.]+/g);
   var mOp = (/÷/.test(expr)) ? '÷' : (/×/.test(expr)) ? '×' : (/−/.test(expr)) ? '−' : '+';
@@ -16024,12 +16207,12 @@ function arithmeticTyped(sub, qt, rng) {
 }
 
 
-function estimateTyped(qt, rng) {
-  var tx = ri(rng, 22, 88);
-  while (tx % 10 === 0) tx = ri(rng, 22, 88); 
+function estimateTyped(qt, rng, nr) {
+  var tx = riC(rng, 22, 88, nr);
+  while (tx % 10 === 0) tx = riC(rng, 22, 88, nr); 
   var x = r1(tx / 10);                        
   var nearest = Math.round(x);
-  var n = ri(rng, 2, 9);
+  var n = riC(rng, 2, 9, nr);
   var est = nearest * n;
   var exact = r2(x * n);
   var estWhy = '把 ' + fmt(x) + ' 看成最接近的整数 ' + nearest + '，' + nearest + ' × ' + n + ' = ' + est;
@@ -16051,9 +16234,9 @@ function estimateTyped(qt, rng) {
 }
 
 
-function conceptTyped(sub, qt, rng) {
+function conceptTyped(sub, qt, rng, nr) {
   if (sub === 'readwrite') {
-    var n = ri(rng, 2, 9), dec = r1(n / 10);
+    var n = riC(rng, 2, 9, nr), dec = r1(n / 10);
     if (qt === 'calc') return { prompt: '列式（十分之几就是零点几）：' + n + '/10 = ？', answer: fmt(dec), options: null,
       explain: '十分之几就是零点几：' + n + '/10 = ' + fmt(dec) + '。' };
     if (qt === 'fill') return { prompt: fmt(dec) + ' 写成分数是 ____/10（填分子）', answer: String(n), options: null,
@@ -16068,7 +16251,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'nature') {
-    var base = r1(ri(rng, 12, 85) / 10);
+    var base = r1(riC(rng, 12, 85, nr) / 10);
     var full = base.toFixed(1) + '0';   
     var natureWhy = '小数的末尾添上 0 或去掉 0，小数的大小不变，' + full + ' = ' + fmt(base);
     if (qt === 'calc') return { prompt: '根据小数的性质化简，列式：' + full + ' − 0 = ？', answer: fmt(base), options: null,
@@ -16085,14 +16268,14 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'approx') {
-    var x = r2(ri(rng, 105, 999) / 100);
+    var x = r2(riC(rng, 105, 999, nr) / 100);
     var one = r1(Math.round(x * 10) / 10);
     if (qt === 'calc') {
       
-      var u = r2(ri(rng, 105, 499) / 100), v2 = r2(ri(rng, 105, 499) / 100);
+      var u = r2(riC(rng, 105, 499, nr) / 100), v2 = r2(riC(rng, 105, 499, nr) / 100);
       var raw = r2(u + v2), rounded = r1(Math.round(raw * 10) / 10), guardAp = 0;
       while (fmt(raw) === fmt(rounded) && guardAp++ < 20) {
-        v2 = r2(ri(rng, 105, 499) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
+        v2 = r2(riC(rng, 105, 499, nr) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
       }
       return { prompt: '列式计算（得数用四舍五入法保留一位小数）：' + fmt(u) + ' + ' + fmt(v2) + ' = ？', answer: fmt(rounded), options: null,
         explain: '先算 ' + fmt(u) + ' + ' + fmt(v2) + ' = ' + fmt(raw) + '，再用四舍五入法保留一位小数，约是 ' + fmt(rounded) + '。' };
@@ -16110,7 +16293,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'point-move') {
-    var p = r2(ri(rng, 11, 99) / 100);
+    var p = r2(riC(rng, 11, 99, nr) / 100);
     var right = rng() < 0.5;
     if (right) {
       var after = r2(p * 10);
@@ -16127,7 +16310,7 @@ function conceptTyped(sub, qt, rng) {
       return { prompt: '1 米 = 10 分米，' + fmt(p) + ' 米是多少分米？', answer: fmt(after), options: null,
         explain: '1 米 = 10 分米，' + fmt(p) + ' 米 = ' + fmt(p) + ' × 10 = ' + fmt(after) + ' 分米。' };
     }
-    var xi = ri(rng, 11, 99);
+    var xi = riC(rng, 11, 99, nr);
     var afterL = r1(xi / 10);
     if (qt === 'calc') return { prompt: '列式计算（小数点向左移动一位）：' + xi + ' ÷ 10 = ？', answer: fmt(afterL), options: null,
       explain: '小数点向左移动一位，原数缩小到原来的 1/10：' + xi + ' ÷ 10 = ' + fmt(afterL) + '。' };
@@ -16144,7 +16327,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'unit') {
-    var m = ri(rng, 2, 9), dm = m * 10;
+    var m = riC(rng, 2, 9, nr), dm = m * 10;
     var unitWhy = '1 米 = 10 分米，' + m + ' 米 = ' + m + ' × 10 = ' + dm + ' 分米';
     if (qt === 'calc') return { prompt: '列式换算：' + m + ' × 10 = ？（分米）', answer: String(dm), options: null,
       explain: unitWhy + '，所以得数是 ' + dm + '。' };
@@ -16160,8 +16343,8 @@ function conceptTyped(sub, qt, rng) {
   }
 
   
-  var a = r1(ri(rng, 11, 88) / 10), b = r1(ri(rng, 11, 88) / 10);
-  while (b === a) b = r1(ri(rng, 11, 88) / 10);
+  var a = r1(riC(rng, 11, 88, nr) / 10), b = r1(riC(rng, 11, 88, nr) / 10);
+  while (b === a) b = r1(riC(rng, 11, 88, nr) / 10);
   var sign = a > b ? '>' : '<';
   var hi = fmt(Math.max(a, b)), lo = fmt(Math.min(a, b)), diff = fmt(r1(Math.abs(a - b)));
   if (qt === 'calc') return { prompt: '列式比一比：' + hi + ' − ' + lo + ' = ？（差大于 0，说明前者大）', answer: diff, options: null,
@@ -16194,11 +16377,12 @@ function buildQuestion(plan, context, i) {
   var name = (plan.semanticParams && plan.semanticParams.name) || '小数';
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
+  var nr = nrOf(plan);
 
   var arithmeticSubs = { 'addsub': 1, 'addsub-mix': 1, 'mult': 1, 'div': 1, 'word': 1 };
-  var typed = sub === 'mult-estimate' ? estimateTyped(qt, rng)
-    : arithmeticSubs[sub] ? arithmeticTyped(sub === 'word' ? 'mult' : sub, qt, rng)
-    : conceptTyped(sub, qt, rng);
+  var typed = sub === 'mult-estimate' ? estimateTyped(qt, rng, nr)
+    : arithmeticSubs[sub] ? arithmeticTyped(sub === 'word' ? 'mult' : sub, qt, rng, nr)
+    : conceptTyped(sub, qt, rng, nr);
 
   var prompt = typed.prompt;
   var answer = typed.answer;
@@ -16286,6 +16470,16 @@ function fs(f) { return f.n + '/' + f.d; }
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
 function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
 
 var NAME_RULES = [
   { sub: 'word', re: /解决问题/ },
@@ -16310,24 +16504,24 @@ function deriveSubtype(name) {
 
 
 
-function diffDenomAdd(rng) {
+function diffDenomAdd(rng, nr) {
   var d1 = pick(rng, [2, 3, 4, 6]), d2 = pick(rng, [3, 5, 4, 6].filter(function (x) { return x !== d1; }));
-  var n1 = ri(rng, 1, d1 - 1), n2 = ri(rng, 1, d2 - 1);
+  var n1 = riC(rng, 1, d1 - 1, nr), n2 = riC(rng, 1, d2 - 1, nr);
   var lcm = d1 * d2 / gcd(d1, d2);
   var num = n1 * (lcm / d1) + n2 * (lcm / d2);
   return { d1: d1, d2: d2, n1: n1, n2: n2, lcm: lcm,
     expr: n1 + '/' + d1 + ' + ' + n2 + '/' + d2, ans: simp(num, lcm) };
 }
 
-function fracDiv(rng) {
-  var n1 = ri(rng, 1, 5), d1 = ri(rng, 2, 8);
-  var n2 = ri(rng, 1, 5), d2 = ri(rng, 2, 8);
+function fracDiv(rng, nr) {
+  var n1 = riC(rng, 1, 5, nr), d1 = riC(rng, 2, 8, nr);
+  var n2 = riC(rng, 1, 5, nr), d2 = riC(rng, 2, 8, nr);
   return { n1: n1, d1: d1, n2: n2, d2: d2,
     expr: n1 + '/' + d1 + ' ÷ ' + n2 + '/' + d2, ans: simp(n1 * d2, d1 * n2) };
 }
 
-function fracDivInt(rng) {
-  var d = ri(rng, 2, 8), n = ri(rng, 1, d - 1), k = ri(rng, 2, 6);
+function fracDivInt(rng, nr) {
+  var d = riC(rng, 2, 8, nr), n = riC(rng, 1, d - 1, nr), k = riC(rng, 2, 6, nr);
   return { n: n, d: d, k: k,
     expr: n + '/' + d + ' ÷ ' + k, ans: simp(n, d * k) };
 }
@@ -16399,9 +16593,9 @@ function applyItem(story, expr, ansF, why) {
 }
 
 
-function arithmeticTyped(sub, qt, rng) {
+function arithmeticTyped(sub, qt, rng, nr) {
   if (sub === 'word') {
-    var wd = ri(rng, 3, 9), wa = ri(rng, 1, wd - 2), wb = ri(rng, 1, wd - wa - 1);
+    var wd = riC(rng, 3, 9, nr), wa = riC(rng, 1, wd - 2, nr), wb = riC(rng, 1, wd - wa - 1, nr);
     var wexpr = wa + '/' + wd + ' + ' + wb + '/' + wd, wans = simp(wa + wb, wd);
     if (qt === 'calc') return calcItem(wexpr, wans, null,
       '同分母分数相加，分母不变、分子相加：');
@@ -16424,9 +16618,9 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'addsub') {
-    var d = ri(rng, 3, 9), add = rng() < 0.5;
+    var d = riC(rng, 3, 9, nr), add = rng() < 0.5;
     if (add) {
-      var a = ri(rng, 1, d - 2), b = ri(rng, 1, d - a);
+      var a = riC(rng, 1, d - 2, nr), b = riC(rng, 1, d - a, nr);
       var ae = a + '/' + d + ' + ' + b + '/' + d, aa = simp(a + b, d);
       if (qt === 'calc') return calcItem(ae, aa, null,
         '同分母分数相加，分母不变、分子相加：');
@@ -16438,12 +16632,12 @@ function arithmeticTyped(sub, qt, rng) {
       return applyItem('一根彩带，第一次用去这根彩带的 ' + a + '/' + d + '，第二次又用去 ' + b + '/' + d +
         '，列式求两次一共用去这根彩带的几分之几', ae, aa);
     }
-    var hi = ri(rng, 2, d - 1), lo = ri(rng, 1, hi - 1);
+    var hi = riC(rng, 2, d - 1, nr), lo = riC(rng, 1, hi - 1, nr);
     
     
     
     while (hi - lo === lo) {
-      d = ri(rng, 3, 9); hi = ri(rng, 2, d - 1); lo = ri(rng, 1, hi - 1);
+      d = riC(rng, 3, 9, nr); hi = riC(rng, 2, d - 1, nr); lo = riC(rng, 1, hi - 1, nr);
     }
     var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
     if (qt === 'calc') return calcItem(se, sa, null,
@@ -16458,7 +16652,7 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'addsub-diff') {
-    var s2 = diffDenomAdd(rng);
+    var s2 = diffDenomAdd(rng, nr);
     var de = s2.expr, da = s2.ans;
     if (qt === 'calc') return calcItem(de, da, '列式计算（先通分）',
       '异分母分数相加，先通分化成同分母分数，再按同分母加法计算：');
@@ -16475,8 +16669,8 @@ function arithmeticTyped(sub, qt, rng) {
   }
 
   if (sub === 'mix') {
-    var md = ri(rng, 4, 9);
-    var m1 = ri(rng, 1, md - 3), m2 = ri(rng, 1, md - m1 - 2), m3 = ri(rng, 1, md - m1 - m2 - 1);
+    var md = riC(rng, 4, 9, nr);
+    var m1 = riC(rng, 1, md - 3, nr), m2 = riC(rng, 1, md - m1 - 2, nr), m3 = riC(rng, 1, md - m1 - m2 - 1, nr);
     var me = m1 + '/' + md + ' + ' + m2 + '/' + md + ' + ' + m3 + '/' + md, ma = simp(m1 + m2 + m3, md);
     if (qt === 'calc') return calcItem(me, ma, null,
       '同分母分数连加，分母不变、分子连加：');
@@ -16491,10 +16685,10 @@ function arithmeticTyped(sub, qt, rng) {
 
   
   if (rng() < 0.5) {
-    var dv = fracDiv(rng);
+    var dv = fracDiv(rng, nr);
     
     
-    while (dv.n2 === dv.d2) dv = fracDiv(rng);
+    while (dv.n2 === dv.d2) dv = fracDiv(rng, nr);
     var de2 = dv.expr, da2 = dv.ans;
     if (qt === 'calc') return calcItem(de2, da2, null,
       '除以一个不为零的分数，等于乘这个分数的倒数：');
@@ -16506,7 +16700,7 @@ function arithmeticTyped(sub, qt, rng) {
     return applyItem('把 ' + dv.n1 + '/' + dv.d1 + ' 米长的彩带剪成每段 ' + dv.n2 + '/' + dv.d2 +
       ' 米的小段，列式求能剪多少段', de2, da2);
   }
-  var di = fracDivInt(rng), ie = di.expr, ia = di.ans;
+  var di = fracDivInt(rng, nr), ie = di.expr, ia = di.ans;
   if (qt === 'calc') return calcItem(ie, ia, null,
     '分数除以一个不为零的整数，等于分数乘这个整数的倒数：');
   if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + di.n + '/' + di.d + ' ÷ ____ = ' + fs(ia),
@@ -16517,9 +16711,9 @@ function arithmeticTyped(sub, qt, rng) {
 }
 
 
-function conceptTyped(sub, qt, rng) {
+function conceptTyped(sub, qt, rng, nr) {
   if (sub === 'meaning') {
-    var d0 = ri(rng, 4, 9), n0 = ri(rng, 2, d0 - 2);
+    var d0 = riC(rng, 4, 9, nr), n0 = riC(rng, 2, d0 - 2, nr);
     if (qt === 'calc') {
       return { prompt: '分数单位累加，列式：1/' + d0 + ' + 1/' + d0 + ' + 1/' + d0 + ' = ？',
         answer: '3/' + d0, options: null,
@@ -16542,28 +16736,28 @@ function conceptTyped(sub, qt, rng) {
 
   if (sub === 'nature') {
     if (qt === 'calc') {
-      var g2 = ri(rng, 2, 5), ca = ri(rng, 1, 4), cb = ca + ri(rng, 1, 3);
+      var g2 = riC(rng, 2, 5, nr), ca = riC(rng, 1, 4, nr), cb = ca + riC(rng, 1, 3, nr);
       var cn = g2 * ca, cd = g2 * cb, cr = simp(cn, cd);
       return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + cr.n + '）：' +
         cn + '/' + cd + ' = ？', answer: fs(cr), options: null,
         explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fs(cr) + '。' };
     }
     if (qt === 'fill') {
-      var bd = ri(rng, 3, 8), bk = ri(rng, 2, 5);
+      var bd = riC(rng, 3, 8, nr), bk = riC(rng, 2, 5, nr);
       return { prompt: '分数的基本性质，在 ____ 里填数：1/' + bd + ' = ____/' + (bd * bk),
         answer: String(bk), options: null,
         explain: '分数的基本性质：分子分母同时乘 ' + bk + '，1/' + bd + ' = ' + bk + '/' + (bd * bk)
           + '，所以填 ' + bk + '。' };
     }
     if (qt === 'choice') {
-      var g3 = ri(rng, 2, 4), rn3 = ri(rng, 1, 4), rd3 = rn3 + ri(rng, 1, 3);
+      var g3 = riC(rng, 2, 4, nr), rn3 = riC(rng, 1, 4, nr), rd3 = rn3 + riC(rng, 1, 3, nr);
       var en = g3 * rn3, ed = g3 * rd3, rr = simp(en, ed);
       var optsN = Rng.shuffle(rng, [fs(rr), (en + 1) + '/' + ed, en + '/' + (ed + 1), (rr.n + 1) + '/' + rr.d]);
       return { prompt: '下面哪个分数与 ' + en + '/' + ed + ' 大小相等？（  ）', answer: fs(rr), options: optsN,
         explain: en + '/' + ed + ' 的分子分母同除以公因数 ' + g3 + '，约成 ' + fs(rr)
           + '，正确选项是「' + fs(rr) + '」。' };
     }
-    var ag = ri(rng, 2, 5), ab = ag + ri(rng, 1, 3), an = ag * ri(rng, 1, ab - 1);
+    var ag = riC(rng, 2, 5, nr), ab = ag + riC(rng, 1, 3, nr), an = ag * riC(rng, 1, ab - 1, nr);
     var ar = simp(an, ab * ag);
     return { prompt: '合唱队有 ' + (ab * ag) + ' 人，其中男生 ' + an + ' 人，列式求男生占全队人数的几分之几（约成最简分数）：' +
       an + '/' + (ab * ag) + ' = ？', answer: fs(ar), options: null,
@@ -16571,7 +16765,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'compare') {
-    var cd2 = ri(rng, 4, 9), clo = ri(rng, 1, cd2 - 2), chi = ri(rng, clo + 1, cd2 - 1);
+    var cd2 = riC(rng, 4, 9, nr), clo = riC(rng, 1, cd2 - 2, nr), chi = riC(rng, clo + 1, cd2 - 1, nr);
     var lf = clo + '/' + cd2, hf = chi + '/' + cd2;
     if (qt === 'calc') {
       return { prompt: '列式比一比：' + hf + ' − ' + lf + ' = ？（差大于 0，说明同分母时分子大的分数大）',
@@ -16595,7 +16789,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'relation') {
-    var rn1 = ri(rng, 2, 6), rd1 = rn1 + ri(rng, 1, 4);
+    var rn1 = riC(rng, 2, 6, nr), rd1 = rn1 + riC(rng, 1, 4, nr);
     var relationExpr = rn1 + ' ÷ ' + rd1, relationAns = rn1 + '/' + rd1;
     if (qt === 'calc') return { prompt: '用分数表示除法的商，列式：' + relationExpr + ' = ？',
       answer: relationAns, options: null,
@@ -16620,8 +16814,8 @@ function conceptTyped(sub, qt, rng) {
     if (qt === 'calc') {
       var improper = rng() < 0.5;
       var pq, qq;
-      if (improper) { qq = ri(rng, 2, 5); pq = qq + ri(rng, 1, 4); }
-      else { pq = ri(rng, 1, 4); qq = pq + ri(rng, 2, 5); }
+      if (improper) { qq = riC(rng, 2, 5, nr); pq = qq + riC(rng, 1, 4, nr); }
+      else { pq = riC(rng, 1, 4, nr); qq = pq + riC(rng, 2, 5, nr); }
       return { prompt: '比较分子与分母（列式：' + pq + ' − ' + qq + ' = ？）：分数 ' + pq + '/' + qq +
         ' 的分子减去分母，得数是多少？', answer: String(pq - qq), options: null,
         explain: improper
@@ -16631,8 +16825,8 @@ function conceptTyped(sub, qt, rng) {
     if (qt === 'fill') {
       var imp2 = rng() < 0.5;
       var p2, q2;
-      if (imp2) { q2 = ri(rng, 2, 6); p2 = q2 + ri(rng, 1, 3); }
-      else { p2 = ri(rng, 1, 5); q2 = p2 + ri(rng, 1, 4); }
+      if (imp2) { q2 = riC(rng, 2, 6, nr); p2 = q2 + riC(rng, 1, 3, nr); }
+      else { p2 = riC(rng, 1, 5, nr); q2 = p2 + riC(rng, 1, 4, nr); }
       return { prompt: '分数 ' + p2 + '/' + q2 + ' 的分子' + (imp2 ? '大于分母' : '小于分母') + '，它是 ____ 分数',
         answer: imp2 ? '假分数' : '真分数', options: null,
         explain: '分子大于分母（或等于分母）的分数叫假分数，分子小于分母的叫真分数；'
@@ -16640,14 +16834,14 @@ function conceptTyped(sub, qt, rng) {
           + (imp2 ? '假' : '真') + '分数。' };
     }
     if (qt === 'choice') {
-      var bd3 = ri(rng, 4, 7), impN = bd3 + ri(rng, 1, 3);
+      var bd3 = riC(rng, 4, 7, nr), impN = bd3 + riC(rng, 1, 3, nr);
       var impFrac = impN + '/' + bd3;
       var optsP = Rng.shuffle(rng, ['1/' + bd3, '2/' + bd3, '3/' + bd3, impFrac]);
       return { prompt: '下面四个分数中，哪个是假分数？（  ）', answer: impFrac, options: optsP,
         explain: '假分数的分子大于或等于分母，' + impFrac + ' 的分子 ' + impN + ' 大于分母 '
           + bd3 + '，正确选项是「' + impFrac + '」。' };
     }
-    var pg = ri(rng, 2, 6), qg = pg + ri(rng, 1, 3);
+    var pg = riC(rng, 2, 6, nr), qg = pg + riC(rng, 1, 3, nr);
     return { prompt: '把 ' + pg + ' 个同样大的面包平均分给 ' + qg + ' 个小组，每个小组分得多少个面包？（用分数表示）',
       answer: pg + '/' + qg, options: null,
       explain: '把 ' + pg + ' 个面包平均分给 ' + qg + ' 个小组，用除法：' + pg + ' ÷ ' + qg
@@ -16655,7 +16849,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   
-  var ra = ri(rng, 2, 7), rb = ra + ri(rng, 1, 3);
+  var ra = riC(rng, 2, 7, nr), rb = ra + riC(rng, 1, 3, nr);
   var orig = ra + '/' + rb, recip = rb + '/' + ra;
   if (qt === 'calc') {
     return { prompt: '写出 ' + orig + ' 的倒数，再列式检验乘积：' + orig + ' × ' + recip + ' = ？',
@@ -16683,9 +16877,10 @@ function buildQuestion(plan, context, i) {
   var name = (plan.semanticParams && plan.semanticParams.name) || '分数';
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
+  var nr = nrOf(plan);
 
   var ARITH_SUBS = { word: 1, addsub: 1, 'addsub-diff': 1, mix: 1, div: 1 };
-  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng) : conceptTyped(sub, qt, rng);
+  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr);
 
   var prompt = typed.prompt;
   var answer = typed.answer;

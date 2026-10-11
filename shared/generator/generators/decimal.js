@@ -65,12 +65,22 @@ function deriveSubtype(name) {
 function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
 
-function addsubStructure(rng, mixed) {
-  var a = r2(ri(rng, 11, 99) / 10);
-  var b = r2(ri(rng, 11, Math.max(12, Math.floor(a * 10) - 1)) / 10);
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
+function addsubStructure(rng, nr, mixed) {
+  var a = r2(riC(rng, 11, 99, nr) / 10);
+  var b = r2(riC(rng, 11, Math.max(12, Math.floor(a * 10) - 1), nr) / 10);
   var add = rng() < 0.5;
   if (mixed) {
-    var c = r2(ri(rng, 11, 50) / 10);
+    var c = r2(riC(rng, 11, 50, nr) / 10);
     var ops = rng() < 0.5 ? ['+', '−'] : ['−', '+'];
     var v = ops[0] === '+' ? a + b : a - b;
     v = ops[1] === '+' ? v + c : v - c;
@@ -81,26 +91,26 @@ function addsubStructure(rng, mixed) {
     : { expr: fmt(a) + ' − ' + fmt(b), answer: fmt(r2(a - b)) };
 }
 
-function multStructure(rng) {
+function multStructure(rng, nr) {
   if (rng() < 0.5) {
-    var a = r2(ri(rng, 12, 88) / 10);
-    var n = ri(rng, 2, 9);
+    var a = r2(riC(rng, 12, 88, nr) / 10);
+    var n = riC(rng, 2, 9, nr);
     return { expr: fmt(a) + ' × ' + n, answer: fmt(r2(a * n)) };
   }
-  var x = r1(ri(rng, 11, 35) / 10);
-  var y = r1(ri(rng, 12, Math.max(13, Math.floor(x * 10) - 2)) / 10);
+  var x = r1(riC(rng, 11, 35, nr) / 10);
+  var y = r1(riC(rng, 12, Math.max(13, Math.floor(x * 10) - 2), nr) / 10);
   return { expr: fmt(x) + ' × ' + fmt(y), answer: fmt(r2(x * y)) };
 }
 
-function divStructure(rng) {
+function divStructure(rng, nr) {
   if (rng() < 0.5) {
-    var b = ri(rng, 2, 9);
-    var q = r2(ri(rng, 12, 84) / 10);
+    var b = riC(rng, 2, 9, nr);
+    var q = r2(riC(rng, 12, 84, nr) / 10);
     var a = r2(b * q);
     return { expr: fmt(a) + ' ÷ ' + b, answer: fmt(q), explain: fmt(b) + ' × ' + fmt(q) + ' = ' + fmt(a) };
   }
-  var d = r1(ri(rng, 12, 25) / 10);
-  var q2 = ri(rng, 2, 8);
+  var d = r1(riC(rng, 12, 25, nr) / 10);
+  var q2 = riC(rng, 2, 8, nr);
   var a2 = r2(d * q2);
   return { expr: fmt(a2) + ' ÷ ' + fmt(d), answer: String(q2), explain: fmt(d) + ' × ' + q2 + ' = ' + fmt(a2) };
 }
@@ -175,11 +185,11 @@ var ARITH_REASON = {
   '+': '一个加数 = 和 − 另一个加数',
   '×': '一个因数 = 积 ÷ 另一个因数'
 };
-function arithmeticTyped(sub, qt, rng) {
+function arithmeticTyped(sub, qt, rng, nr) {
   var st;
-  if (sub === 'div') st = divStructure(rng);
-  else if (sub === 'addsub-mix') st = addsubStructure(rng, true);
-  else st = (sub === 'addsub') ? addsubStructure(rng, false) : multStructure(rng);
+  if (sub === 'div') st = divStructure(rng, nr);
+  else if (sub === 'addsub-mix') st = addsubStructure(rng, nr, true);
+  else st = (sub === 'addsub') ? addsubStructure(rng, nr, false) : multStructure(rng, nr);
   var expr = st.expr, answer = st.answer;
   var nums = expr.match(/[\d.]+/g);
   var mOp = (/÷/.test(expr)) ? '÷' : (/×/.test(expr)) ? '×' : (/−/.test(expr)) ? '−' : '+';
@@ -265,12 +275,12 @@ function arithmeticTyped(sub, qt, rng) {
 }
 
 // 乘法估算（mult-estimate）的四题型真分工：把一位小数估成最接近的整数再乘
-function estimateTyped(qt, rng) {
-  var tx = ri(rng, 22, 88);
-  while (tx % 10 === 0) tx = ri(rng, 22, 88); // 十分位非零，保证 exact ≠ est（选项不撞）
+function estimateTyped(qt, rng, nr) {
+  var tx = riC(rng, 22, 88, nr);
+  while (tx % 10 === 0) tx = riC(rng, 22, 88, nr); // 十分位非零，保证 exact ≠ est（选项不撞）
   var x = r1(tx / 10);                        // 2.2–8.8 的一位小数，nearest≥2
   var nearest = Math.round(x);
-  var n = ri(rng, 2, 9);
+  var n = riC(rng, 2, 9, nr);
   var est = nearest * n;
   var exact = r2(x * n);
   var estWhy = '把 ' + fmt(x) + ' 看成最接近的整数 ' + nearest + '，' + nearest + ' × ' + n + ' = ' + est;
@@ -292,9 +302,9 @@ function estimateTyped(qt, rng) {
 }
 
 // 概念子类型的四题型真分工
-function conceptTyped(sub, qt, rng) {
+function conceptTyped(sub, qt, rng, nr) {
   if (sub === 'readwrite') {
-    var n = ri(rng, 2, 9), dec = r1(n / 10);
+    var n = riC(rng, 2, 9, nr), dec = r1(n / 10);
     if (qt === 'calc') return { prompt: '列式（十分之几就是零点几）：' + n + '/10 = ？', answer: fmt(dec), options: null,
       explain: '十分之几就是零点几：' + n + '/10 = ' + fmt(dec) + '。' };
     if (qt === 'fill') return { prompt: fmt(dec) + ' 写成分数是 ____/10（填分子）', answer: String(n), options: null,
@@ -309,7 +319,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'nature') {
-    var base = r1(ri(rng, 12, 85) / 10);
+    var base = r1(riC(rng, 12, 85, nr) / 10);
     var full = base.toFixed(1) + '0';   // 2.0 → '2.00'，不能用 '2'+'0'（会变成 20）
     var natureWhy = '小数的末尾添上 0 或去掉 0，小数的大小不变，' + full + ' = ' + fmt(base);
     if (qt === 'calc') return { prompt: '根据小数的性质化简，列式：' + full + ' − 0 = ？', answer: fmt(base), options: null,
@@ -326,14 +336,14 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'approx') {
-    var x = r2(ri(rng, 105, 999) / 100);
+    var x = r2(riC(rng, 105, 999, nr) / 100);
     var one = r1(Math.round(x * 10) / 10);
     if (qt === 'calc') {
       // 算式在场：先求两个两位小数之和，再用四舍五入法保留一位小数（得数是近似数）
-      var u = r2(ri(rng, 105, 499) / 100), v2 = r2(ri(rng, 105, 499) / 100);
+      var u = r2(riC(rng, 105, 499, nr) / 100), v2 = r2(riC(rng, 105, 499, nr) / 100);
       var raw = r2(u + v2), rounded = r1(Math.round(raw * 10) / 10), guardAp = 0;
       while (fmt(raw) === fmt(rounded) && guardAp++ < 20) {
-        v2 = r2(ri(rng, 105, 499) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
+        v2 = r2(riC(rng, 105, 499, nr) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
       }
       return { prompt: '列式计算（得数用四舍五入法保留一位小数）：' + fmt(u) + ' + ' + fmt(v2) + ' = ？', answer: fmt(rounded), options: null,
         explain: '先算 ' + fmt(u) + ' + ' + fmt(v2) + ' = ' + fmt(raw) + '，再用四舍五入法保留一位小数，约是 ' + fmt(rounded) + '。' };
@@ -351,7 +361,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'point-move') {
-    var p = r2(ri(rng, 11, 99) / 100);
+    var p = r2(riC(rng, 11, 99, nr) / 100);
     var right = rng() < 0.5;
     if (right) {
       var after = r2(p * 10);
@@ -368,7 +378,7 @@ function conceptTyped(sub, qt, rng) {
       return { prompt: '1 米 = 10 分米，' + fmt(p) + ' 米是多少分米？', answer: fmt(after), options: null,
         explain: '1 米 = 10 分米，' + fmt(p) + ' 米 = ' + fmt(p) + ' × 10 = ' + fmt(after) + ' 分米。' };
     }
-    var xi = ri(rng, 11, 99);
+    var xi = riC(rng, 11, 99, nr);
     var afterL = r1(xi / 10);
     if (qt === 'calc') return { prompt: '列式计算（小数点向左移动一位）：' + xi + ' ÷ 10 = ？', answer: fmt(afterL), options: null,
       explain: '小数点向左移动一位，原数缩小到原来的 1/10：' + xi + ' ÷ 10 = ' + fmt(afterL) + '。' };
@@ -385,7 +395,7 @@ function conceptTyped(sub, qt, rng) {
   }
 
   if (sub === 'unit') {
-    var m = ri(rng, 2, 9), dm = m * 10;
+    var m = riC(rng, 2, 9, nr), dm = m * 10;
     var unitWhy = '1 米 = 10 分米，' + m + ' 米 = ' + m + ' × 10 = ' + dm + ' 分米';
     if (qt === 'calc') return { prompt: '列式换算：' + m + ' × 10 = ？（分米）', answer: String(dm), options: null,
       explain: unitWhy + '，所以得数是 ' + dm + '。' };
@@ -401,8 +411,8 @@ function conceptTyped(sub, qt, rng) {
   }
 
   // compare：比较大小（calc 求差比较 / fill 填符号 / choice 比较式辨析 / apply 跳远情境）
-  var a = r1(ri(rng, 11, 88) / 10), b = r1(ri(rng, 11, 88) / 10);
-  while (b === a) b = r1(ri(rng, 11, 88) / 10);
+  var a = r1(riC(rng, 11, 88, nr) / 10), b = r1(riC(rng, 11, 88, nr) / 10);
+  while (b === a) b = r1(riC(rng, 11, 88, nr) / 10);
   var sign = a > b ? '>' : '<';
   var hi = fmt(Math.max(a, b)), lo = fmt(Math.min(a, b)), diff = fmt(r1(Math.abs(a - b)));
   if (qt === 'calc') return { prompt: '列式比一比：' + hi + ' − ' + lo + ' = ？（差大于 0，说明前者大）', answer: diff, options: null,
@@ -437,11 +447,12 @@ function buildQuestion(plan, context, i) {
   var name = (plan.semanticParams && plan.semanticParams.name) || '小数';
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
+  var nr = nrOf(plan);
 
   var arithmeticSubs = { 'addsub': 1, 'addsub-mix': 1, 'mult': 1, 'div': 1, 'word': 1 };
-  var typed = sub === 'mult-estimate' ? estimateTyped(qt, rng)
-    : arithmeticSubs[sub] ? arithmeticTyped(sub === 'word' ? 'mult' : sub, qt, rng)
-    : conceptTyped(sub, qt, rng);
+  var typed = sub === 'mult-estimate' ? estimateTyped(qt, rng, nr)
+    : arithmeticSubs[sub] ? arithmeticTyped(sub === 'word' ? 'mult' : sub, qt, rng, nr)
+    : conceptTyped(sub, qt, rng, nr);
 
   var prompt = typed.prompt;
   var answer = typed.answer;

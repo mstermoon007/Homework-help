@@ -25,6 +25,16 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':reason:' + i;
 }
 
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 // FINAL-141：「7～9的乘、除法」KP（推理族绑定中唯一的算术 KP：7~9 乘法口诀 + 用口诀求商）
 // 专属 maker。历史实现只有 calc 题型带专用分支且仅 2 个模板；fill/choice/apply 全部落入
 // 通用 logic 模板，产出「谁说真话/年龄/盒子标签」无关逻辑题（fill 还因无空位全挂契约），
@@ -51,9 +61,10 @@ function table789Options(rng, correct, distractors) {
 
 function makeTable789Question(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var qt = plan.questionTypeId;
-  var a = Rng.randInt(rng, 7, 9);
-  var b = Rng.randInt(rng, 2, 9);
+  var a = riC(rng, 7, 9, nr);
+  var b = riC(rng, 2, 9, nr);
   var p = a * b;
   var form = i % 5;
 
@@ -140,6 +151,7 @@ function makeTable789Question(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   // P25-09：名称以 selector 注入的 semanticParams.name 为准（kp={} 占位曾使分派恒落 logic）；
   // 直连调用兜底读传入 kp，再兜底「逻辑推理」。
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
@@ -155,8 +167,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   if (plan.questionTypeId === 'calc') {
     var cPrompt, cAnswer;
     if (name.indexOf('除') !== -1 || name.indexOf('乘') !== -1 || name.indexOf('口诀') !== -1) {
-      var a = Rng.randInt(rng, 7, 9);
-      var b = Rng.randInt(rng, 2, 9);
+      var a = riC(rng, 7, 9, nr);
+      var b = riC(rng, 2, 9, nr);
       if (i % 2 === 0) {
         // P26：意图矩阵 driftRisk 警告「题面退化为纯算式」——补口诀运用情境词（calc form-bound，算式保留）
         cPrompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
@@ -166,9 +178,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
         cAnswer = b;
       }
     } else {
-      var x = Rng.randInt(rng, 2, 9);
-      var y = Rng.randInt(rng, 2, 9);
-      var z = Rng.randInt(rng, 1, 9);
+      var x = riC(rng, 2, 9, nr);
+      var y = riC(rng, 2, 9, nr);
+      var z = riC(rng, 1, 9, nr);
       cPrompt = '找规律列式：' + x + ' × ' + y + ' + ' + z + ' = ____';
       cAnswer = x * y + z;
     }
@@ -198,8 +210,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('植树') !== -1) type = 'tree-planting';
   else if (name.indexOf('找次品') !== -1 || name.indexOf('天平') !== -1) type = 'find-defect';
   else if (name.indexOf('握手') !== -1) type = 'handshake';
-  else if (name.indexOf('数独') !== -1) type = 'sudoku';
-  else if (name.indexOf('必胜') !== -1) type = 'winning';
+  // P36-03：原 sudoku/winning 分支已物理删除——canonical 375 KP 名零命中（可达性裁决，见 docs/P36/change-log.md）
   else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
   else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
@@ -222,20 +233,20 @@ function makeReasoningQuestion(plan, context, i, kp) {
       + d.k + ' 个同色，' + d.c.length + ' × ' + (d.k - 1) + ' + 1 = ' + d.ans;
   } else if (type === 'extreme') {
     if (v % 3 === 0) {
-      var twoSum = Rng.randInt(rng, 10, 50);
+      var twoSum = riC(rng, 10, 50, nr);
       var half = Math.floor(twoSum / 2);
       prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
       answer = half * (twoSum - half); steps = 2;
       nativeWhy = '和一定时，两数越接近乘积越大，取 ' + half + ' 和 ' + (twoSum - half)
         + '：' + half + ' × ' + (twoSum - half) + ' = ' + answer;
     } else if (v % 3 === 1) {
-      var twoSum2 = Rng.randInt(rng, 10, 50);
+      var twoSum2 = riC(rng, 10, 50, nr);
       var half2 = Math.floor(twoSum2 / 2);
       prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
       answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
       nativeWhy = '和一定，两数最接近时相差最小（差 0 或 1），所以是 ' + half2 + ' 和 ' + (twoSum2 - half2);
     } else {
-      var threeSum = Rng.randInt(rng, 12, 60);
+      var threeSum = riC(rng, 12, 60, nr);
       var base = Math.floor(threeSum / 3);
       var rem = threeSum - 3 * base;
       var parts = [base, base, base]; parts[2] += rem;
@@ -246,8 +257,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
     }
   } else if (type === 'chicken-rabbit') {
     if (v % 3 === 0) {
-      var heads = Rng.randInt(rng, 8, 20);
-      var rabb0 = Rng.randInt(rng, 3, Math.max(3, heads - 2));
+      var heads = riC(rng, 8, 20, nr);
+      var rabb0 = riC(rng, 3, Math.max(3, heads - 2), nr);
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
       var r0 = (feet - heads * 2) / 2;
@@ -260,8 +271,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (heads - r0 - 1) + '只，兔' + (r0 + 1) + '只',
         '鸡' + (heads - r0 + 1) + '只，兔' + (r0 - 1) + '只'];
     } else if (v % 3 === 1) {
-      var D = Rng.randInt(rng, 1, 5);
-      var R = Rng.randInt(rng, 3, 8);
+      var D = riC(rng, 1, 5, nr);
+      var R = riC(rng, 3, 8, nr);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
@@ -272,8 +283,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (R + D - 1) + '只，兔' + (R + 1) + '只',
         '鸡' + (R + D + 1) + '只，兔' + (R - 1) + '只'];
     } else {
-      var D2 = Rng.randInt(rng, 1, 4);
-      var C = Rng.randInt(rng, 3, 8);
+      var D2 = riC(rng, 1, 4, nr);
+      var C = riC(rng, 3, 8, nr);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
@@ -285,8 +296,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
         '鸡' + (C + 1) + '只，兔' + (C + D2 - 1) + '只'];
     }
   } else if (type === 'tree-planting') {
-    var L = Rng.randInt(rng, 100, 500);
-    var G = Rng.randInt(rng, 5, 20);
+    var L = riC(rng, 100, 500, nr);
+    var G = riC(rng, 5, 20, nr);
     var TP = [
       { desc: '两端都栽', ans: Math.floor(L / G) + 1 },
       { desc: '两端都不栽', ans: Math.floor(L / G) - 1 },
@@ -315,38 +326,14 @@ function makeReasoningQuestion(plan, context, i, kp) {
       { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
     ];
     var hs = HSK[v % HSK.length];
-    var n = Rng.randInt(rng, 4, 12);
+    var n = riC(rng, 4, 12, nr);
     prompt = n + hs.w + '，一共需要多少次？';
     answer = hs.ans(n); steps = 2;
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
-  } else if (type === 'sudoku') {
-    var SUD = [
-      { w: '请根据已知数字推理出空格中的数字。' },
-      { w: '在 4×4 数独中，根据已知数字填出空格。' },
-      { w: '在 6×6 数独中，根据已知数字填出空格。' }
-    ];
-    var su = SUD[v % SUD.length];
-    prompt = name + '：' + su.w;
-    answer = '（推理过程略）'; steps = 4;
-    nativeWhy = '数独规则：每行、每列、每个宫格内的数字都不重复，从已知数最多的行、列或宫格入手，逐个排除确定空格';
-  } else if (type === 'winning') {
-    var WIN = [
-      { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
-      { w: '一堆石子，每次可取 1~4 个，取到最后一个者胜', a: '先手必胜（凑 5 策略）' },
-      { w: '三堆石子，每次从一堆取任意个，取到最后一个者胜', a: '先手必胜（尼姆和策略）' }
-    ];
-    var win = WIN[v % WIN.length];
-    prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
-    answer = win.a; steps = 3;
-    nativeWhy = v % 3 === 0
-      ? '先手先取完一堆使两堆相同，此后后手从一堆取几个、先手就从另一堆取几个，先手取到最后一个'
-      : v % 3 === 1
-        ? '每回合两人取子数可凑成 5（对方取 k 个就取 5−k 个），先手按凑 5 策略取到最后一个'
-        : '三堆石子的尼姆和不为 0，先手可取子使尼姆和变为 0，之后每步维持尼姆和为 0，先手必胜';
   } else if (type === 'optimization') {
     if (v % 3 === 0) {
-      var pans = Rng.randInt(rng, 2, 5);
+      var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
       answer = pans * 2; steps = 3;
       nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
@@ -381,7 +368,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       logicOptions = ['甲', '乙', '丙'];
       nativeWhy = '假设甲真则乙假、推出丙真，丙真则甲假，矛盾；假设丙真则甲、乙都假，由甲假推出乙真，矛盾；只有乙真时其余假设均不矛盾，所以说真话的是乙';
     } else if (LGV === 1) {
-      var ageTop = Rng.randInt(rng, 9, 12);
+      var ageTop = riC(rng, 9, 12, nr);
       prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
       answer = '小明'; steps = 2;
       logicOptions = ['小明', '小红', '小刚'];

@@ -45,6 +45,17 @@ function pkp(plan) {
   return null;
 }
 
+/* P35-DEBT-1：难度执行端消费——数值范围与 numberRange 取交集 */
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 100 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -119,8 +130,9 @@ function finishChoice(q, rng, correct, wrongs, explanation) {
 
 function makeAddRelCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var take = Rng.randInt(rng, 2, 9);
-  var left = Rng.randInt(rng, 2, 9);
+  var nr = nrOf(plan);
+  var take = riC(rng, 2, 9, nr);
+  var left = riC(rng, 2, 9, nr);
   var subtract = (i % 2 === 0);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
@@ -145,8 +157,9 @@ function makeAddRelCalc(plan, context, i) {
 
 function makeAddRelFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 3, 9);
-  var b = Rng.randInt(rng, 3, 9);
+  var nr = nrOf(plan);
+  var a = riC(rng, 3, 9, nr);
+  var b = riC(rng, 3, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     // P31-FIX-09：题面「看线段图填空」此前零 graphic（P31-FIX-05 risk① 登记同族
@@ -168,8 +181,9 @@ function makeAddRelFill(plan, context, i) {
 
 function makeAddRelApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.randInt(rng, 5, 12);
-  var diff = Rng.randInt(rng, 2, 8);
+  var nr = nrOf(plan);
+  var base = riC(rng, 5, 12, nr);
+  var diff = riC(rng, 2, 8, nr);
   var more = (i % 2 === 0);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
@@ -189,8 +203,9 @@ function makeAddRelApply(plan, context, i) {
 
 function makeAddRelChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 4, 9);
-  var b = Rng.randInt(rng, 4, 9);
+  var nr = nrOf(plan);
+  var a = riC(rng, 4, 9, nr);
+  var b = riC(rng, 4, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     // P31-FIX-09：题面「线段图把总数分成两部分」此前零 graphic（P31-FIX-05 risk①
@@ -217,8 +232,9 @@ function makeAddRelChoice(plan, context, i) {
 
 function makeAddRelGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var a = Rng.randInt(rng, 4, 9);
-  var longer = Rng.randInt(rng, 2, 6);
+  var nr = nrOf(plan);
+  var a = riC(rng, 4, 9, nr);
+  var longer = riC(rng, 2, 6, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
     // P31-FIX-05：题面「看线段图…（在图上标出长出来的那一段）」此前零 graphic
@@ -245,10 +261,10 @@ function makeAddRelGeometry(plan, context, i) {
 
 var PATTERN_SHAPES = ['△', '○', '□', '☆'];
 
-function patternPick(rng) {
+function patternPick(rng, nr) {
   var n = Rng.randInt(rng, 2, 4);
   var shapes = Rng.shuffle(rng, PATTERN_SHAPES).slice(0, n);
-  var period = Rng.randInt(rng, 7, 30);
+  var period = riC(rng, 7, 30, nr);
   var rem = period % n;
   var shape = rem === 0 ? shapes[n - 1] : shapes[rem - 1];
   var quotient = Math.floor(period / n);
@@ -257,7 +273,7 @@ function patternPick(rng) {
 
 function makePeriodCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -272,7 +288,7 @@ function makePeriodCalc(plan, context, i) {
 
 function makePeriodFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -287,10 +303,11 @@ function makePeriodFill(plan, context, i) {
 
 function makePeriodApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var items = [['红旗', '黄旗', '蓝旗'], ['红花', '黄花', '蓝花'], ['红灯笼', '黄灯笼', '蓝灯笼']];
   var set = Rng.pick(rng, items);
   var n = set.length;
-  var k = Rng.randInt(rng, 10, 40);
+  var k = riC(rng, 10, 40, nr);
   var rem = k % n;
   var which = rem === 0 ? set[n - 1] : set[rem - 1];
   var q = buildBase(plan, context, i, {
@@ -305,7 +322,7 @@ function makePeriodApply(plan, context, i) {
 
 function makePeriodChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
@@ -321,7 +338,7 @@ function makePeriodChoice(plan, context, i) {
 
 function makePeriodGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var p = patternPick(rng);
+  var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem,
@@ -442,10 +459,11 @@ function makeScaleGeometry(plan, context, i) {
 
 function makePropCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   // 正比例归一：a 件共 c 元（单价整数），求 b 件
   var unit = Rng.pick(rng, [2, 3, 4, 5, 6, 8]);
-  var a = Rng.randInt(rng, 2, 6);
-  var b = Rng.randInt(rng, 2, 9);
+  var a = riC(rng, 2, 6, nr);
+  var b = riC(rng, 2, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     unitPrice: unit, quantityA: a, quantityB: b
@@ -459,10 +477,11 @@ function makePropCalc(plan, context, i) {
 
 function makePropFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   // 正比例：速度恒定
   var speed = Rng.pick(rng, [40, 50, 60, 70, 80]);
-  var t1 = Rng.randInt(rng, 2, 4);
-  var t2 = Rng.randInt(rng, 5, 9);
+  var t1 = riC(rng, 2, 4, nr);
+  var t2 = riC(rng, 5, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     speed: speed, hoursA: t1, hoursB: t2
@@ -497,9 +516,10 @@ function makePropApply(plan, context, i) {
 
 function makePropChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var unit = Rng.pick(rng, [3, 4, 5, 6]);
-  var a = Rng.randInt(rng, 2, 5);
-  var b = Rng.randInt(rng, 6, 9);
+  var a = riC(rng, 2, 5, nr);
+  var b = riC(rng, 6, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
     unitPrice: unit, quantityA: a, quantityB: b
@@ -545,16 +565,16 @@ var MAP_SCALES = [
   { label: '1:50000', factor: 50000 }
 ];
 
-function mapPick(rng) {
+function mapPick(rng, nr) {
   var s = Rng.pick(rng, MAP_SCALES);
-  var mapCm = Rng.randInt(rng, 2, 9);
+  var mapCm = riC(rng, 2, 9, nr);
   var realCm = mapCm * s.factor;
   return { label: s.label, factor: s.factor, mapCm: mapCm, realCm: realCm, realM: realCm / 100 };
 }
 
 function makeMapCalc(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -572,7 +592,7 @@ function makeMapCalc(plan, context, i) {
 
 function makeMapFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -588,7 +608,7 @@ function makeMapFill(plan, context, i) {
 
 function makeMapApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -601,7 +621,7 @@ function makeMapApply(plan, context, i) {
 
 function makeMapChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var m = mapPick(rng);
+  var m = mapPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
   });
@@ -622,21 +642,21 @@ function ratioName(plan) {
 }
 
 /** 可组成比例的两个比 a∶b = c∶d（a×d = b×c，数值控制在一位数） */
-function equalRatiosPick(rng) {
+function equalRatiosPick(rng, nr) {
   var pairs = [[1, 2], [1, 3], [2, 3], [3, 4], [2, 5]];
   var base = Rng.pick(rng, pairs);
-  var r = Rng.randInt(rng, 2, 4);
+  var r = riC(rng, 2, 4, nr);
   var s;
-  do { s = Rng.randInt(rng, 2, 4); } while (s === r);
+  do { s = riC(rng, 2, 4, nr); } while (s === r);
   return { a: base[0] * r, b: base[1] * r, c: base[0] * s, d: base[1] * s };
 }
 
 /** 解比例 x∶b = c∶d，保证 b×c 能被 d 整除，x 为一位数 */
-function solveRatioPick(rng) {
+function solveRatioPick(rng, nr) {
   for (var t = 0; t < 40; t++) {
-    var x = Rng.randInt(rng, 2, 6);
-    var d = Rng.randInt(rng, 2, 9);
-    var c = Rng.randInt(rng, 2, 6);
+    var x = riC(rng, 2, 6, nr);
+    var d = riC(rng, 2, 9, nr);
+    var c = riC(rng, 2, 6, nr);
     if ((x * d) % c === 0) {
       var b = x * d / c;
       if (b >= 2 && b <= 9) return { x: x, b: b, c: c, d: d };
@@ -650,7 +670,7 @@ function makeRatioCalc(plan, context, i) {
   var name = ratioName(plan);
   if (name.indexOf('基本性质') !== -1) {
     if (i % 2 === 0) {
-      var s = solveRatioPick(rng);
+      var s = solveRatioPick(rng, nrOf(plan));
       var q0 = buildBase(plan, context, i, {
         subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x
       });
@@ -659,7 +679,7 @@ function makeRatioCalc(plan, context, i) {
         s.x, [String(s.x)],
         '内项积 = 外项积：x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
     }
-    var e = equalRatiosPick(rng);
+    var e = equalRatiosPick(rng, nrOf(plan));
     var q1 = buildBase(plan, context, i, {
       subTopic: 'ratio-basics', aspect: 'property'
     });
@@ -669,7 +689,7 @@ function makeRatioCalc(plan, context, i) {
       '外项积 = 内项积：' + e.a + ' × ' + e.d + ' = ' + e.b + ' × ' + e.c + ' = ' + (e.a * e.d));
   }
   // 比例的意义：比值相等的两个比可以组成比例
-  var p = equalRatiosPick(rng);
+  var p = equalRatiosPick(rng, nrOf(plan));
   var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
     + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
@@ -681,9 +701,9 @@ function makeRatioCalc(plan, context, i) {
 function makeRatioFill(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = ratioName(plan);
-  var s = solveRatioPick(rng);
+  var s = solveRatioPick(rng, nrOf(plan));
   if (name.indexOf('基本性质') !== -1 && i % 2 === 1) {
-    var e = equalRatiosPick(rng);
+    var e = equalRatiosPick(rng, nrOf(plan));
     var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'property' });
     return finish(q0, '在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d + ' 中（' + e.a + ' × ' + e.d
       + ' = ' + (e.a * e.d) + '），两个内项的积是（  ）。', e.b * e.c, [String(e.b * e.c)],
@@ -719,7 +739,7 @@ function makeRatioChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = ratioName(plan);
   if (name.indexOf('基本性质') !== -1) {
-    var s = solveRatioPick(rng);
+    var s = solveRatioPick(rng, nrOf(plan));
     var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
     q0.prompt = '根据比例的基本性质解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d
       + '（x × ' + s.d + ' = ' + s.b + ' × ' + s.c + '），x = ？（  ）';
@@ -727,7 +747,7 @@ function makeRatioChoice(plan, context, i) {
       + s.d + ' = ' + s.x + '，正确选项是「' + s.x + '」。';
     return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)], ratioSolveWhy);
   }
-  var p = equalRatiosPick(rng);
+  var p = equalRatiosPick(rng, nrOf(plan));
   var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   q1.prompt = '下面哪组中的两个比可以组成比例？（提示：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d)
     + '，' + p.b + ' × ' + p.c + ' = ' + (p.b * p.c) + '）（  ）';

@@ -158,11 +158,21 @@ function randInt(rng, min, max) {
   return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-function pickTemplate(rng, difficulty, allowedOps) {
-  // 低难度用简单模板，高难度用复杂模板
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return randInt(rng, min, max);
+}
+
+function pickTemplate(rng, nr, allowedOps) {
+  // 低难度用简单模板，高难度用复杂模板（以 numberRange.max 作为难度档位信号）
   var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less', 'equal-groups', 'share-equally'];
   var complexTemplates = ['multiple', 'divide-multiple', 'grouping', 'distance', 'work'];
-  var pool = difficulty >= 4 ? TEMPLATE_KEYS : simpleTemplates;
+  var pool = nr.max >= 50 ? TEMPLATE_KEYS : simpleTemplates;
   // FINAL-31c：KP 运算约束过滤（真源 semanticParams.operations；无约束不过滤）
   if (allowedOps) {
     pool = pool.filter(function (k) {
@@ -173,59 +183,59 @@ function pickTemplate(rng, difficulty, allowedOps) {
   return Rng.pick(rng, pool);
 }
 
-function generateNumbers(rng, template, difficulty) {
-  var maxVal = Math.min(100, 10 + difficulty * 15);
+function generateNumbers(rng, template, nr) {
+  var maxVal = Math.min(100, Math.max(1, nr.max));
   var minVal = 1;
   
   switch (template) {
     case 'total-from-parts':
-      var a = randInt(rng, minVal, maxVal);
-      var b = randInt(rng, minVal, maxVal);
+      var a = riC(rng, minVal, maxVal, nr);
+      var b = riC(rng, minVal, maxVal, nr);
       return { a: a, b: b };
     case 'compare-more':
-      var a = randInt(rng, minVal + 2, maxVal);
-      var diff = randInt(rng, minVal, maxVal - a);
+      var a = riC(rng, minVal + 2, maxVal, nr);
+      var diff = riC(rng, minVal, maxVal - a, nr);
       return { a: a, diff: diff };
     case 'part-from-total':
-      var total = randInt(rng, minVal + 2, maxVal);
-      var part1 = randInt(rng, minVal, total - 1);
+      var total = riC(rng, minVal + 2, maxVal, nr);
+      var part1 = riC(rng, minVal, total - 1, nr);
       return { total: total, part1: part1 };
     case 'compare-less':
-      var a = randInt(rng, minVal + 2, maxVal);
-      var diff = randInt(rng, minVal, a - 1);
+      var a = riC(rng, minVal + 2, maxVal, nr);
+      var diff = riC(rng, minVal, a - 1, nr);
       return { a: a, diff: diff };
     case 'multiple':
-      var a = randInt(rng, minVal, Math.floor(maxVal / 3));
-      var n = randInt(rng, 2, 5);
+      var a = riC(rng, minVal, Math.floor(maxVal / 3), nr);
+      var n = riC(rng, 2, 5, nr);
       return { a: a, n: n };
     case 'equal-groups':
-      var gp = randInt(rng, 2, 9);
-      var gs = randInt(rng, 2, 6);
+      var gp = riC(rng, 2, 9, nr);
+      var gs = riC(rng, 2, 6, nr);
       return { per: gp, groups: gs };
     case 'share-equally':
-      var sg = randInt(rng, 2, 6);
-      var sp = randInt(rng, 2, 9);
+      var sg = riC(rng, 2, 6, nr);
+      var sp = riC(rng, 2, 9, nr);
       return { total: sg * sp, groups: sg };
     case 'divide-multiple':
-      var n = randInt(rng, 2, 5);
-      var b = randInt(rng, minVal, maxVal);
+      var n = riC(rng, 2, 5, nr);
+      var b = riC(rng, minVal, maxVal, nr);
       var a = b * n;
       return { a: a, n: n };
     case 'grouping':
-      var per = randInt(rng, 2, 10);
-      var groups = randInt(rng, 2, 10);
+      var per = riC(rng, 2, 10, nr);
+      var groups = riC(rng, 2, 10, nr);
       var total = per * groups;
       return { total: total, per: per };
     case 'distance':
-      var speed = randInt(rng, 10, 100);
-      var time = randInt(rng, 1, 5);
+      var speed = riC(rng, 10, 100, nr);
+      var time = riC(rng, 1, 5, nr);
       return { speed: speed, time: time };
     case 'work':
-      var rate = randInt(rng, 5, 50);
-      var time = randInt(rng, 1, 10);
+      var rate = riC(rng, 5, 50, nr);
+      var time = riC(rng, 1, 10, nr);
       return { rate: rate, time: time };
   }
-  return { a: randInt(rng, 1, 20), b: randInt(rng, 1, 20) };
+  return { a: riC(rng, 1, 20, nr), b: riC(rng, 1, 20, nr) };
 }
 
 function computeAnswer(template, nums) {
@@ -336,9 +346,10 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
 
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
+  var nr = nrOf(plan);
+  var template = pickTemplate(rng, nr, kpAllowedOps(plan));
   if (!template) return null; // FINAL-31c：fail-closed，不产出运算错位题
-  var nums = generateNumbers(rng, template, plan.difficulty);
+  var nums = generateNumbers(rng, template, nr);
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
   // choice/judge 专用精简题面（与 apply 故事骨架互异）

@@ -26,6 +26,16 @@ function seedFor(plan, context, i) {
 }
 
 // —— 组合数学辅助 ——
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 20 };
+}
+function riC(rng, lo, hi, nr) {
+  var min = Math.max(lo, nr.min);
+  var max = Math.min(hi, nr.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+
 function factorial(n) {
   var f = 1;
   for (var k = 2; k <= n; k++) f *= k;
@@ -62,6 +72,7 @@ function stairWays(n) {
 
 function makeCountingQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   // FINAL-32：KP 名源改读 plan.semanticParams.name（SemanticParameters.attachToPlan 注入），
   // 让 variant 分派（加法原理/枚举/最不利/抽屉/容斥/递推/错排/捆绑/插空/隔板/排列/搭配/组合/集合）
   // 按 KP 真名生效——原 kp={} 恒 undefined 致 variant 恒 'generic'，13 类计数变体全失效。
@@ -89,8 +100,8 @@ function makeCountingQuestion(plan, context, i, kp) {
   var v = i; // 变体序号：同 KP 同题型下轮换不同设问/参数，提升语义容量（R6）
   var prompt, answer, steps;
   if (type === 'principle') {
-    var m = Rng.randInt(rng, 3, 8);
-    var n = Rng.randInt(rng, 2, 6);
+    var m = riC(rng, 3, 8, nr);
+    var n = riC(rng, 2, 6, nr);
     prompt = '从A城到B城有' + m + '条路线，从B城到C城有' + n + '条路线，从A城到C城共有多少种走法？';
     answer = m * n;
     steps = 2;
@@ -117,27 +128,27 @@ function makeCountingQuestion(plan, context, i, kp) {
     prompt = '一个盒子里有' + colorNames.slice(0, wc.c).join('、') + '等' + wc.c + '种颜色的球各若干个，至少要摸出多少个球，才能保证有' + wc.k + '个球颜色相同？';
     answer = wc.c * (wc.k - 1) + 1; steps = 2;
   } else if (type === 'combination') {
-    var shirts = Rng.randInt(rng, 2, 5);
-    var pants = Rng.randInt(rng, 2, 5);
+    var shirts = riC(rng, 2, 5, nr);
+    var pants = riC(rng, 2, 5, nr);
     prompt = '小明有' + shirts + '件上衣和' + pants + '条裤子，一共有多少种不同的搭配方法？';
     answer = shirts * pants;
     steps = 2;
   } else if (type === 'set') {
-    var inBoth = Rng.randInt(rng, 3, 8);
-    var onlyA = Rng.randInt(rng, 5, 15);
-    var onlyB = Rng.randInt(rng, 5, 15);
+    var inBoth = riC(rng, 3, 8, nr);
+    var onlyA = riC(rng, 5, 15, nr);
+    var onlyB = riC(rng, 5, 15, nr);
     prompt = '全班40人，有' + onlyA + '人喜欢数学，' + onlyB + '人喜欢语文，有' + inBoth + '人两门都喜欢。两门都不喜欢的有多少人？';
     answer = 40 - (onlyA + onlyB - inBoth);
     steps = 2;
   } else if (type === 'permutation') {
     // 排列：n 个不同元素全排列
-    var pn = Rng.randInt(rng, 4, 6);
+    var pn = riC(rng, 4, 6, nr);
     prompt = pn + '本不同的书排成一排放在书架上，一共有多少种不同的排法？';
     answer = factorial(pn);
     steps = 2;
   } else if (type === 'choose') {
     // 组合：从 n 人中选 2 人
-    var cn = Rng.randInt(rng, 5, 7);
+    var cn = riC(rng, 5, 7, nr);
     prompt = '从' + cn + '名同学中选出 2 名代表参加会议，一共有多少种不同的选法？';
     answer = nCr(cn, 2);
     steps = 2;
@@ -204,8 +215,8 @@ function makeCountingQuestion(plan, context, i, kp) {
     answer = derangement(dn);
     steps = 2;
   } else {
-    var a = Rng.randInt(rng, 2, 6);
-    var b = Rng.randInt(rng, 2, 6);
+    var a = riC(rng, 2, 6, nr);
+    var b = riC(rng, 2, 6, nr);
     var cQt = plan.questionTypeId;
     // P30-GEN-06（P30-16）：搭配问题按题型分化骨架，fill/choice 不再与 apply 共享同一 coreStem。
     if (cQt === 'calc') {

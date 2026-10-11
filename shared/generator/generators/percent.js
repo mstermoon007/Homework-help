@@ -34,6 +34,25 @@ function pkp(plan) {
   return null;
 }
 
+/* P35-DEBT-1：难度执行端消费——base 金额按步长从 numberRange 内取值，让数值随难度分化 */
+function nrOf(plan) {
+  return (plan && plan.constraints && plan.constraints.numberRange) || { min: 1, max: 100 };
+}
+function riC(rng, lo, hi, range) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  return Rng.randInt(rng, min, max);
+}
+function pickStep(rng, lo, hi, range, step) {
+  var min = Math.max(lo, range.min);
+  var max = Math.min(hi, range.max);
+  if (min > max) { min = lo; max = hi; }
+  var steps = Math.floor((max - min) / step);
+  if (steps < 0) steps = 0;
+  return min + Rng.randInt(rng, 0, steps) * step;
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -103,7 +122,8 @@ var qt = function (plan) { return plan.questionTypeId; };
 /* ---------- k001 百分数的意义：求一个数的百分之几 ---------- */
 function makePercentOf(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.pick(rng, [100, 200, 300, 400, 500, 800]);
+  var nr = nrOf(plan);
+  var base = pickStep(rng, 100, 800, nr, 100);
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var ans = Math.round(base * p / 100 * 100) / 100;
   var prompt;
@@ -124,12 +144,13 @@ function makePercentOf(plan, context, i) {
 /* ---------- k002 百分数与分数、小数的互化 ---------- */
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var variant = i % 3;
   var t = qt(plan);
   var isCalc = t === 'calc';
   var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
-    var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
+    var d = (riC(rng, 1, 9, nr) * 10 + riC(rng, 1, 9, nr)) / 100;
     var dpct = Math.round(d * 100);
     var stem0;
     if (isCalc) stem0 = '把小数 ' + d.toFixed(2) + ' 化成百分数，列式：' + d.toFixed(2) + ' =（ ）%（只填数字）。';
@@ -160,7 +181,8 @@ function makeConversion(plan, context, i) {
 /* ---------- k003 百分数的应用——折扣 ---------- */
 function makeDiscount(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var price = Rng.pick(rng, [100, 200, 300, 400, 500, 600, 800]);
+  var nr = nrOf(plan);
+  var price = pickStep(rng, 100, 800, nr, 100);
   var d = Rng.pick(rng, DISCOUNTS);
   var cur = Math.round(price * d.rate) / 100;
   var askSaved = (i % 2 === 1);
@@ -187,9 +209,10 @@ function makeDiscount(plan, context, i) {
 /* ---------- k004 百分数的应用——利率 ---------- */
 function makeInterest(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var principal = Rng.pick(rng, [1000, 2000, 3000, 5000, 8000]);
+  var nr = nrOf(plan);
+  var principal = pickStep(rng, 1000, 8000, nr, 1000);
   var rate = Rng.pick(rng, [2, 3, 4, 5]);
-  var years = Rng.randInt(rng, 1, 3);
+  var years = riC(rng, 1, 3, nr);
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
   var t = qt(plan);
@@ -215,11 +238,12 @@ function makeInterest(plan, context, i) {
 /* ---------- k005 确定达标线：达标率 / 至少达标人数 ---------- */
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
   var t = qt(plan);
   if (i % 2 === 1) {
     // 已知达标率与总人数，求至少达标人数
-    var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
+    var total = pickStep(rng, 50, 500, nr, 50);
     var ratePct = Rng.pick(rng, [80, 90, 95, 75, 60]);
     var need = Math.round(total * ratePct / 100);
     if (t === 'calc') return finish(q, '列式计算：学校规定体育达标率不低于 ' + ratePct + '%，全年级共 ' + total + ' 人。列式求至少达标人数：' + total + ' × ' + ratePct + '% = ？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
@@ -228,7 +252,7 @@ function makeRateLine(plan, context, i) {
     return finish(q, '学校规定体育达标率不低于 ' + ratePct + '%。全年级共 ' + total + ' 人，至少要有多少人达标？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
   }
   // 已知总人数与达标人数，求达标率
-  var total2 = Rng.pick(rng, [40, 50, 100, 200, 250]);
+  var total2 = pickStep(rng, 40, 250, nr, 10);
   var pct = Rng.pick(rng, CLEAN_PERCENTS.concat([95, 85]));
   var reached = Math.round(total2 * pct / 100);
   var rateAns = Math.round(reached / total2 * 100);
@@ -242,7 +266,8 @@ function makeRateLine(plan, context, i) {
 /* ---------- k006 解决问题：求比一个数多/少百分之几 ---------- */
 function makePercentChange(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var base = Rng.pick(rng, [100, 200, 250, 400, 500]);
+  var nr = nrOf(plan);
+  var base = pickStep(rng, 100, 500, nr, 50);
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var increase = (i % 2 === 0);
   var ans = increase ? base + base * p / 100 : base - base * p / 100;
@@ -266,7 +291,8 @@ function makePercentChange(plan, context, i) {
 /* ---------- P25-09 k003 百分数的应用——税率 ---------- */
 function makeTax(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var income = Rng.pick(rng, [3000, 5000, 8000, 10000, 20000, 50000]);
+  var nr = nrOf(plan);
+  var income = pickStep(rng, 3000, 50000, nr, 1000);
   var rate = Rng.pick(rng, [3, 5, 6, 10]);
   var tax = Math.round(income * rate) / 100;
   var goods = Rng.pick(rng, ['商店某月的营业额', '一家餐馆某月的营业额', '某公司某月的营业额']);
@@ -299,7 +325,7 @@ function makeChengshu(plan, context, i) {
     else stemC = '农业收成常用「成数」表示：' + c.label + '改写成百分数是多少？（只填数字）';
     return finish(q, stemC, c.rate, '成数表示十分之几，也就是百分之几十：' + c.label + ' = ' + c.num + '/10 = ' + c.rate + '%');
   }
-  var base = Rng.pick(rng, [200, 300, 400, 500, 600, 800]);
+  var base = pickStep(rng, 200, 800, nrOf(plan), 100);
   var gain = Math.round(base * c.rate) / 100;
   var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
   var bb = buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' });
@@ -313,10 +339,11 @@ function makeChengshu(plan, context, i) {
 /* ---------- P25-09 k005 生活与百分数：促销/普及率等综合生活情境 ---------- */
 function makeLife(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
   var scenario;
   if (i % 2 === 0) {
     // 普及率/合格率：总量 × 百分率
-    var total = Rng.pick(rng, [300, 500, 800, 1000, 2000]);
+    var total = pickStep(rng, 300, 2000, nr, 100);
     var pct = Rng.pick(rng, [80, 85, 90, 95, 96]);
     var part = Math.round(total * pct) / 100;
     var things = Rng.pick(rng, [
@@ -331,7 +358,7 @@ function makeLife(plan, context, i) {
     };
   } else {
     // 会员促销：原价 × 会员折扣率
-    var price = Rng.pick(rng, [150, 200, 300, 400, 500, 600]);
+    var price = pickStep(rng, 150, 600, nr, 50);
     var rate2 = Rng.pick(rng, [80, 85, 88, 90, 95]);
     var cur = Math.round(price * rate2) / 100;
     var goods2 = Rng.pick(rng, ['一套科普书', '一个书包', '一双运动鞋', '一件外套']);
