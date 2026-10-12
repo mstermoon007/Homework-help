@@ -6,6 +6,16 @@
 
 ---
 
+## P38-08 · needs-review 根因澄清：派生器规则覆盖不足，非 Excel 数据问题（2026-10-12）
+
+- **modified**：无（纯登记/澄清，零代码改动）。
+- **deleted**：无。
+- **reason**：用户澄清「源 Excel 是早已确定的内容，若有不匹配提示即可」——纠正 P38-03/P38-07 中「待人工评审回流」的误导性表述。经核实 `dev/p25/derive-qt-intent.js` 源码：needs-review 状态完全由派生器推导逻辑决定（L200 whyThisType 推导失败→needs-review、L221/223 differentiation 失败→needs-review、L247 legitimacy 失败→needs-review、L282 任一问 needs-review→整行 needs-review），**与 root Excel 无关**。Excel 字段（KP 名/概念/单元/年级）早已确定且不动，needs-review 是派生器的推导规则覆盖不到某些 KP×QT 组合导致的，属规则缺口非数据缺口。正确处置路径：① 派生器推导失败时输出缺什么证据（已有 flags.push 标记）；② AI 改进派生器推导规则覆盖面（扩正则/匹配逻辑）；③ 重跑 `derive-qt-intent.js` → needs-review 行升级 ai-verified → intent 文本挂载。P38-07 已将 assessment（已成功推导）与 intent 文本（推导失败）分离——assessment 挂载使配图生效，intent 文本缺口可通过改派生器规则填补。P38-03 risk① 与 P38-07 reason 中「待人工评审回流」表述订正为「待派生器规则改进后重跑派生」。
+- **tests**：纯登记澄清，零代码；门禁状态继承 P38-07 收口态（check-all 30/0/1）。
+- **risk**：零（纯文档澄清，无门禁影响）。后续若改进派生器推导规则填补 141 行 intent 文本缺口，需走 P38-GEN 序列立项（改派生器 → 重跑 → 升级 status → 重建 bundle → 门禁）。
+
+---
+
 ## P38-07 · 141 条 needs-review 意图行全部配图：闸门放开 + Generator 既有逻辑覆盖（2026-10-12）
 
 - **modified**：
