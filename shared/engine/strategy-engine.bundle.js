@@ -5643,8 +5643,15 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
       var graphic = null;
       var intentTextLoaded = false;
       
-      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status]) {
-        if (intentRow.intent) {
+      
+      
+      
+      
+      var hasAuthority = intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status];
+      var needsReviewGraphic = intentRow && intentRow.status === 'needs-review'
+        && intentRow.assessment && intentRow.assessment.graphicRole != null;
+      if (hasAuthority || needsReviewGraphic) {
+        if (hasAuthority && intentRow.intent) {
           intentTextLoaded = true;
           intent = {
             trainsWhat: intentRow.intent.trainsWhat || null,
@@ -5654,6 +5661,7 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
             legitimacy: intentRow.intent.legitimacy || null
           };
         }
+        
         
         
         if (intentRow.assessment && typeof intentRow.assessment === 'object') {

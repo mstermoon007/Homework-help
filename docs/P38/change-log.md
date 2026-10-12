@@ -6,6 +6,21 @@
 
 ---
 
+## P38-07 · 141 条 needs-review 意图行全部配图：闸门放开 + Generator 既有逻辑覆盖（2026-10-12）
+
+- **modified**：
+  - `shared/generator/core/semantic-parameters.js` L300-335：P30-06 权威闸门条件扩展——needs-review 且 assessment.graphicRole!=null 的行，assessment 机器约束（graphicRole）挂载，使 validator auxiliary 强制配图闸门生效 + Generator intentWantsGraphic 返回 true；intent 教学文本（trainsWhat 等）仍不挂载，待人工评审回流。用户显式指令覆盖 P30-06。
+  - `shared/engine/strategy-engine.bundle.js`：重建。
+  - `shared/engine/presentation-engine.bundle.js`：重建。
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`：重冻（+29 新配图图形）。
+  - `shared/knowledge/mappings/generator-matrix/P30-GENERATOR-MATRIX.json`：重冻（6e）。
+- **deleted**：无。
+- **reason**：用户指令「不动原始 Excel。以上 KP 中涉及的问题需要全部配图。且是多样性图」。141 条 needs-review 行（99 KP，全 auxiliary role）此前因 P30-06 权威闸门 assessment 不挂载 → intent.graphicRole=null → validator 禁图 → Generator 不配图。本任务放开闸门：needs-review 行的 assessment.graphicRole 挂载（auxiliary），validator auxiliary 强制配图生效，Generator intentWantsGraphic=true。实测 141/141 全部自动配图（Generator 既有逻辑覆盖，同 KP 的 confirmed/ai-verified 行已有配图逻辑，needs-review 题型复用同一生成器自动生效），无需额外改 Generator。多样性：28 种 type/subtype 组合（triangle/rectangle/square/circle/parallelogram/trapezoid/cube/cuboid/cylinder/cone/position-grid/angle/line-segment/translationDemo/rotationDemo/view-cards + diagram groups/segment/ratio/brace/balance）。intent 教学文本不动（待人工评审）。
+- **tests**：`npm test` 759/759；6g 泄露门禁 PASS（L2 渲染 645 全 SUCCESS/0 未登记，自判回放 TRUE 1485/FALSE 0）；矩阵重冻 1570/1570 FAIL 0；GENERATOR-MATRIX 23 FAIL 0；6a 1570/1570 PASS；`node dev/check-all.js` 30 PASS / 0 FAIL / 1 SKIP。
+- **risk**：① P30-06 权威闸门被用户指令覆盖，needs-review 行 assessment 挂载但 intent 文本不挂载——人工评审回流后需对齐 intent 文本与 assessment 口径；② 141 行配图依赖 Generator 既有逻辑（同 KP 其他题型已有图），若未来 Generator 重构移除配图逻辑需同步核实 needs-review 行影响；③ 未 git commit。
+
+---
+
 ## P38-06 · role 体系双轨统一：auxiliary 收紧为必须配图 + 两轨语义注释归一（2026-10-12）
 
 - **modified**：

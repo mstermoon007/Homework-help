@@ -298,8 +298,15 @@
       var graphic = null;
       var intentTextLoaded = false;
       // P30-06：needs-review 行不得作为生成权威——意图文本与机器约束均不挂载
-      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status]) {
-        if (intentRow.intent) {
+      // P38-07 用户显式指令覆盖：「以上 KP 中涉及的问题需要全部配图」——
+      // needs-review 行的 assessment 机器约束（graphicRole）挂载，使 validator
+      // auxiliary 强制配图闸门生效 + Generator intentWantsGraphic 返回 true；
+      // intent 教学文本（trainsWhat 等）仍不挂载，待人工评审回流。
+      var hasAuthority = intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status];
+      var needsReviewGraphic = intentRow && intentRow.status === 'needs-review'
+        && intentRow.assessment && intentRow.assessment.graphicRole != null;
+      if (hasAuthority || needsReviewGraphic) {
+        if (hasAuthority && intentRow.intent) {
           intentTextLoaded = true;
           intent = {
             trainsWhat: intentRow.intent.trainsWhat || null,
@@ -310,6 +317,7 @@
           };
         }
         // P30-05/P30-10/P38-DATA-01：机器可执行约束并入 intent 块（权威行才对 Generator 可见）；
+        // P38-07：needs-review 行 graphicRole 机器约束也挂载（用户指令覆盖）；
         // 投影行（运行时镜像）仅含 assessment，机器约束挂载不依赖教学文本
         if (intentRow.assessment && typeof intentRow.assessment === 'object') {
           intent = intent || {};
@@ -321,7 +329,7 @@
           intent.expressionModes = (intentRow.assessment.expressionModes || []).slice();
           intent.graphicRole = intentRow.assessment.graphicRole == null ? null : intentRow.assessment.graphicRole;
         }
-        // P30-10：expression/graphic 顶层投影（仅权威行）
+        // P30-10：expression/graphic 顶层投影（仅权威行 + P38-07 needs-review graphic 行）
         expression = { modes: (intent && intent.expressionModes) || [] };
         graphic = (intent && intent.graphicRole != null) ? { role: intent.graphicRole } : null;
       }
