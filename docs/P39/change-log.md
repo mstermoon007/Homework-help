@@ -7,6 +7,16 @@
 
 ---
 
+## P39-11 · v5.2.0 正式发布：白名单出包 + 服务器原子切换 + 线上验证（2026-10-12）
+
+- **modified**：`release/RELEASE-MANIFEST-5.2.0.md` 新增（gitignored，含白名单 pathspec/组成对账/部署命令级留痕/验证证据，可复现）；根目录 `f50aaf9fa36f1f4482b665214f418996.txt` 从线上恢复并**入库**（commit `9de6d3c`，文件名与内容逐字节等于线上文件，已随包部署）。
+- **deleted**：服务器 `/tmp/homework-help-5.2.0.tar.gz`、本地 `/tmp/pkg52` 临时解包（发布后清理）。
+- **reason**：用户显式指令「执行发布流程」（v5.2.0 标记完成后）。流程依据 FINAL-130 §5 命令级留痕 + FINAL-121 白名单口径重建（RELEASE-MANIFEST-5.0.0.md 已随 release/ 清理删除，pathspec 按 FINAL-121 条目文字 + 当前树实测重建）：①**履行 P33-16 留痕义务**——key 文件本地丢失且未 tracked，先从线上逐字节恢复入库并入包（否则原子切换后 IndexNow 失效）；②白名单出包 609 条目/564 文件/3.5M，禁止项 0（tests/dev/docs/tools/scripts/migration/kbl/release/.trae/.github/node_modules/README/*.md/DS_Store/package.json/.gitignore/.env），必含项全齐，解包 3 文件与 HEAD hash 3/3 MATCH；③服务器备份 `/root/Homework-help.bak-20261012.tar.gz`（3,639,218 字节）→ scp（SHA256 两侧一致 475baaae…）→ 暂存解压（564 文件/VERSION=5.2.0/key 内容正确）→ **原子切换**（mv old-swap → mv new → chown www-data:www-data → rm old-swap）→ 线上验证。
+- **tests**：线上实测——路径电池 **21/21 HTTP 200（NON200=0）**；`/VERSION`=5.2.0；`sw.js` CACHE='hw-help-5.2.0'（逐字符与 HEAD 一致）；sitemap `<loc>`=**382**（冻结口径不变）；线上↔HEAD hash 一致性 **8/8 MATCH**（index/select/sw/practice/双 bundle/knowledge-index/sitemap）；IndexNow key 文件 200 且内容=key。包组成对账：HTML 384 不变、JS 144（−9 为 P30~P39 死代码清理）、CSS 8、合计 564（v5.0.0 为 571）。
+- **risk**：①commit `9de6d3c`（key 文件）需 push 同步远端（包来源必须与远端一致，随本条一并 push）；②SW 缓存键变更，已部署客户端首次访问触发缓存重建（预期，activate 清旧版本）；③百度收录仍待人工账号办理（P33-17 口径不变）；④备份包保留于服务器 `/root/`（可回滚）。
+
+---
+
 ## P39-10 · 小版本标记 v5.1.0 → v5.2.0（2026-10-12）
 
 - **modified**：
