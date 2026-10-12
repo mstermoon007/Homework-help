@@ -75,12 +75,33 @@ emit('index/index.json', JSON.stringify(index));
 // teaching overlay 原样镜像（derived 产物已带 schema/counts 溯源，不剥离字段）
 emit('teaching/misconception-profiles.json', JSON.stringify(misconceptions));
 
+// P38-DATA-01：qt-intent 运行时投影（T2 全文 3.9MB 不上运行时；仅投影机器约束字段
+// status + assessment，供 KBL Runtime 公开 API intentFor 分发、Generator 图形/意图闸门消费）。
+// SSOT 仍为 kbl/teaching/qt-intent.json（同源读入、确定性序列化，同源重跑 hash 一致）。
+var qtIntent = readJson(path.join(SRC, 'teaching/qt-intent.json'));
+var qtIntentRuntime = {
+  schemaVersion: qtIntent.schemaVersion,
+  purpose: qtIntent.purpose,
+  builtFrom: qtIntent.builtFrom,
+  projection: 'status+assessment（P38-DATA-01：教学文本不进运行时，仅机器约束投影）',
+  counts: { rows: qtIntent.rows.length },
+  rows: qtIntent.rows.map(function (r) {
+    return {
+      knowledgeId: r.knowledgeId,
+      questionType: r.questionType,
+      status: r.status,
+      assessment: r.assessment == null ? null : JSON.parse(JSON.stringify(r.assessment))
+    };
+  })
+};
+emit('teaching/qt-intent-runtime.json', JSON.stringify(qtIntentRuntime));
+
 // ---- 4. Manifest + rootHash（数据文件序: path:hash） ----
 // P28-05/P30-03 确定性：manifest 禁止 wall-clock 字段（buildAt/日期 packageVersion），
 // 否则每次重建都脏 tracked 文件。packageVersion 继承 kbl/manifest 源清单（稳定），时间溯源在源清单。
 var srcManifestForBuild = readJson(path.join(SRC, 'manifest/manifest.json'));
 var kpCount = Object.keys(grades).reduce(function (n, g) { return n + grades[g].knowledgePoints.length; }, 0);
-var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json'];
+var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json'];
 var rootInput = DATA_RELS.map(function (rel) { return rel + ':' + files[rel] + '\n'; }).join('');
 var rootHash = sha(rootInput);
 var manifest = {

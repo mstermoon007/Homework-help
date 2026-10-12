@@ -1,6 +1,6 @@
 {
  "task": "P28-08 1570 Generation Matrix 最终冻结",
- "date": "2026-10-11",
+ "date": "2026-10-12",
  "seedPolicy": {
   "version": "p28-v1",
   "difficulty": 3,
@@ -7594,8 +7594,8 @@
    "tc": 1,
    "realGen": 1,
    "promptLen": 50,
-   "sample": "用同样大的小方格去量两个图形：甲用了 8 个，乙用了 6 个。哪个图形的",
-   "ans": "甲",
+   "sample": "用同样大的小方格去量两个图形：甲用了 7 个，乙用了 9 个。哪个图形的",
+   "ans": "乙",
    "ok": true,
    "err": null
   },

@@ -416,6 +416,24 @@
     return finish(inner, o);
   }
 
+  /**
+   * P38 断链修复：五角星——「角的概念」应用素材（贴纸/剪图情境）。
+   * @param {Object} o { size(单位，外接半径), unitPx, fill }
+   */
+  function star(o) {
+    var R = px(o.size || 2, o);
+    var r = R * 0.382;
+    var cx = R + 10, cy = R + 10;
+    var pts = [];
+    for (var i = 0; i < 10; i++) {
+      var ang = -Math.PI / 2 + i * Math.PI / 5;
+      var rad = (i % 2 === 0) ? R : r;
+      pts.push([cx + rad * Math.cos(ang), cy + rad * Math.sin(ang)]);
+    }
+    var inner = U.svgPolygon(pts, { fill: o.fill || '#dbe7ff', stroke: '#3f6fd1', strokeWidth: 2 });
+    return finish(inner, o);
+  }
+
   // ============ 导出 ============
   var SVGGeometry = {
     rectangle: rectangle, square: square, triangle: triangle,
@@ -427,6 +445,7 @@
     tickMark: tickMark,
     positionGrid: positionGrid,
     viewCards: viewCards,
+    star: star,
     _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
 

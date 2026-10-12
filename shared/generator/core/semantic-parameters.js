@@ -102,6 +102,16 @@
 
   var _intentIndex = null;
   function getIntent(kpId, questionType) {
+    // P38-DATA-01：优先经 KnowledgeContext 单一入口（bundle/浏览器链路，P30-31
+    // misconception 同构；kbl-uniqueness 禁 P-production 直连 App.KNOWLEDGE）；
+    // Node 直连（单测/工具链）兜底 loadTeaching。两源同出 kbl/teaching/qt-intent.json。
+    try {
+      var KC = getGlobalKC();
+      if (KC && typeof KC.intentFor === 'function') {
+        var viaRuntime = KC.intentFor(kpId, questionType);
+        if (viaRuntime) return viaRuntime;
+      }
+    } catch (e) { /* runtime 不可达时走文件兜底 */ }
     if (_intentIndex === null) {
       var doc = loadTeaching('qt-intent');
       var index = {};
@@ -286,17 +296,23 @@
       var intent = null;
       var expression = null;
       var graphic = null;
+      var intentTextLoaded = false;
       // P30-06：needs-review 行不得作为生成权威——意图文本与机器约束均不挂载
-      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status] && intentRow.intent) {
-        intent = {
-          trainsWhat: intentRow.intent.trainsWhat || null,
-          whyThisType: intentRow.intent.whyThisType || null,
-          differentiation: intentRow.intent.differentiation || null,
-          driftRisk: intentRow.intent.driftRisk || null,
-          legitimacy: intentRow.intent.legitimacy || null
-        };
-        // P30-05/P30-10：机器可执行约束并入 intent 块（权威行才对 Generator 可见）
+      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status]) {
+        if (intentRow.intent) {
+          intentTextLoaded = true;
+          intent = {
+            trainsWhat: intentRow.intent.trainsWhat || null,
+            whyThisType: intentRow.intent.whyThisType || null,
+            differentiation: intentRow.intent.differentiation || null,
+            driftRisk: intentRow.intent.driftRisk || null,
+            legitimacy: intentRow.intent.legitimacy || null
+          };
+        }
+        // P30-05/P30-10/P38-DATA-01：机器可执行约束并入 intent 块（权威行才对 Generator 可见）；
+        // 投影行（运行时镜像）仅含 assessment，机器约束挂载不依赖教学文本
         if (intentRow.assessment && typeof intentRow.assessment === 'object') {
+          intent = intent || {};
           intent.targetCodes = (intentRow.assessment.targetCodes || []).slice();
           intent.focus = intentRow.assessment.focus || null;
           intent.requiredRelations = (intentRow.assessment.requiredRelations || []).slice();
@@ -306,8 +322,8 @@
           intent.graphicRole = intentRow.assessment.graphicRole == null ? null : intentRow.assessment.graphicRole;
         }
         // P30-10：expression/graphic 顶层投影（仅权威行）
-        expression = { modes: intent.expressionModes || [] };
-        graphic = intent.graphicRole != null ? { role: intent.graphicRole } : null;
+        expression = { modes: (intent && intent.expressionModes) || [] };
+        graphic = (intent && intent.graphicRole != null) ? { role: intent.graphicRole } : null;
       }
 
       return {
@@ -331,7 +347,10 @@
           subTopic: 'mechanical-rule:kbl-name-concept',
           kind: kind ? 'mechanical-rule:kbl-name-operations' : 'none',
           // P30-06：blocked:<status> 显式标注「行存在但无生成权威」，供审计区分缺失与被拦
-          intent: intent ? ('teaching:qt-intent:' + intentRow.status)
+          // P38-DATA-01：runtime-projection 标注「仅机器约束投影（intent 文本不在运行时）」
+          intent: intent
+            ? (intentTextLoaded ? ('teaching:qt-intent:' + intentRow.status)
+                                : ('teaching:qt-intent-runtime:' + intentRow.status))
             : (intentRow ? ('blocked:qt-intent:' + intentRow.status) : 'none')
         }
       };

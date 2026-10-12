@@ -190,6 +190,54 @@ function buildDistractorExpressions(structure, correctAnswer) {
   return out.slice(0, 3);
 }
 
+// P38 断链修复闸门：意图驱动——仅当该 (KP, 题型) 行 intent.graphicRole 非空
+// （plan.semanticParams.graphic 为 P30-10 权威行投影）时挂图；意图无图的行零改动。
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+// P38 断链修复：混合运算计算辅助图（role 统一 calculation-support）。
+// calc/judge/apply 统一「首步表示法」：仅展示前两个操作数与首个运算符，结果以 '？'
+// 标记（judge 的 shown 绝不入图，经 finishJudge 转换时 graphic 原样透传）。
+// fill 2-op：按运算符派生逆推图（空位 = operands[0]，禁印空位值）；
+// fill 3-op / choice：天平图（等式结果已印题面，空位/正确算式不入图）。
+function normCalcOp(o) { return o === '*' ? '×' : (o === '/' ? '÷' : (o === '-' ? '−' : o)); }
+function buildCalcGraphic(qt, structure, answer) {
+  var ops = structure.operands, oprs = structure.operators;
+  function seg(p) {
+    return { type: 'diagram', subtype: 'segment', role: 'calculation-support',
+      params: Object.assign({ unit: '' }, p) };
+  }
+  function br(p) {
+    return { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: p };
+  }
+  function grp(p) {
+    return { type: 'diagram', subtype: 'groups', role: 'calculation-support', params: p };
+  }
+  function bal() {
+    return { type: 'diagram', subtype: 'balance', role: 'calculation-support',
+      params: { left: answer, rightLabel: '？' } };
+  }
+  function firstStep() {
+    var a = ops[0], b = ops[1], o = normCalcOp(oprs[0]);
+    if (o === '+') return br({ left: a, right: b });
+    if (o === '−') return seg({ total: a, part: b });
+    if (o === '×') return grp({ boxes: b, boxText: a, topText: '?' });
+    return grp({ boxes: b, boxText: '？', topText: a }); // ÷：总数已知，每份未知
+  }
+  if (qt === 'choice') return bal();
+  if (qt === 'fill') {
+    if (ops.length > 2) return bal();
+    var b = ops[1], o = normCalcOp(oprs[0]), ans = answer;
+    if (o === '+') return seg({ total: ans, part: b, partLabel: String(b), otherLabel: '？', totalLabel: String(ans) });
+    if (o === '−') return seg({ total: ans + b, part: ans, partLabel: String(ans), otherLabel: String(b), totalLabel: '？' });
+    if (o === '×') return grp({ boxes: b, boxText: '？', topText: String(ans) });
+    return grp({ boxes: b, boxText: String(ans), topText: '？' }); // ÷
+  }
+  return firstStep();
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -279,6 +327,9 @@ function createArithmeticGenerator(spec) {
         }
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var qt = plan.questionTypeId;
+        // P38 断链修复：意图闸门 + 计算辅助图（judge 经 finishJudge 转换时 graphic 透传）
+        var wantsG = intentWantsGraphic(plan);
+        var calcGraphic = null;
         var prompt, outAnswer = answer, options = null;
         // P34-12：题型分型讲解（运算意义 + 完整演算），统一在各分支赋值
         var fullExpr = Arith.formatExpression(structure.operands, structure.operators);
@@ -299,12 +350,14 @@ function createArithmeticGenerator(spec) {
           }
           prompt = '填空：' + fillParts.join(' ') + ' = ' + answer;
           outAnswer = ops[blankIdx];
+          if (wantsG) calcGraphic = buildCalcGraphic('fill', structure, answer);
           // 解析：先指认空格应填的数，再代入验证等式成立
           explanationText = '空格里填 ' + outAnswer + '：' + fullExpr + ' = ' + answer + '，等式成立';
         } else if (qt === 'apply') {
           // P30-GEN-06：apply = 真实情境迁移，直接生成情境题面（不依赖 finisher 包装，
           // 避免「= ?」被 contextPresent 短路而退化为裸算式）。
           prompt = buildApplyStory(structure, op);
+          if (wantsG) calcGraphic = buildCalcGraphic('apply', structure, answer);
           // 解析：情境 → 运算意义 → 列式演算
           explanationText = OP_MEANING[op] + '，列式 ' + fullExpr + ' = ' + answer;
         } else if (qt === 'choice') {
@@ -315,16 +368,18 @@ function createArithmeticGenerator(spec) {
           var distractorExprs = buildDistractorExpressions(structure, answer);
           options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
           outAnswer = correctExpr;
+          if (wantsG) calcGraphic = buildCalcGraphic('choice', structure, answer);
           // 解析：指认正确算式并验算
           explanationText = '结果等于 ' + answer + ' 的算式是 ' + correctExpr +
             '（验算：' + correctExpr + ' = ' + answer + '）';
         } else {
           prompt = fullExpr + ' = ?';
+          if (wantsG) calcGraphic = buildCalcGraphic(qt, structure, answer);
           // 解析：运算意义 + 完整演算
           explanationText = OP_MEANING[op] + '：' + fullExpr + ' = ' + answer;
         }
 
-        questions.push({
+        var pushedQ = {
           knowledgePointId: pkp(plan),
           questionType: qt,
           difficulty: plan.difficulty,
@@ -350,8 +405,10 @@ function createArithmeticGenerator(spec) {
             operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
             steps: structure.steps
           }
-        });
-        if (options) questions[questions.length - 1].data.options = options;
+        };
+        if (calcGraphic) pushedQ.data.graphic = calcGraphic;
+        if (options) pushedQ.data.options = options;
+        questions.push(pushedQ);
       }
       return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }

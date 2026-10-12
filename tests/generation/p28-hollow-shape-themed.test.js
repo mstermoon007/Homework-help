@@ -128,13 +128,17 @@ test('maker：不落 flat 模板、含 KP 名、契约通过、指纹互异、ju
 
       // 证据包络：mode/graphic/shapeName/steps 保持，不挂算术 operation
       assert.ok(q.data && q.data.mode === qt, tag + ' data.mode 回显');
-      // P34-H1（人工数据请求 H6，2026-10-08 签批）：三视图/搭建推算 3 KP 题面文字自含，
-      // 去图后 graphic 必须显式为 null、shapeName 保留（geometry 经 graphicOrInstruction）；
-      // 其余 67 KP 图形仍必须在场。
+      // P34-H1（人工数据请求 H6，2026-10-08 签批）→ P38 用户指令覆盖（2026-10-12，依据留存
+      // docs/P38/change-log.md）：三视图/搭建推算 3 KP 的 fill/choice/judge/apply 补题设
+      // 视图卡/原材料图（T2 现行口径 ai-verified auxiliary 授权，只画题面已述视图/原材料，
+      // 不画组合体成品）；geometry 维持纯文字（T2 三 KP geometry 均 role=null numeric-only，
+      // shapeName 满足 graphicOrInstruction 兜底契约）；其余 67 KP 图形仍必须在场。
       if (NO_GRAPHIC_VIEW_KPS.has(kp)) {
-        assert.equal(q.data.graphic, null, tag + ' H6 签批去图：graphic 必须为 null');
         if (qt === 'geometry') {
+          assert.equal(q.data.graphic, null, tag + ' H6 geometry 维持纯文字：graphic 必须为 null');
           assert.ok(!/观察下图/.test(String(q.prompt)), tag + ' 去图 geometry 不得再有「观察下图」引导: ' + q.prompt);
+        } else {
+          assert.ok(q.data.graphic && q.data.graphic.type, tag + ' P38 覆盖 H6：题设视图卡/原材料图必须在场');
         }
       } else {
         assert.ok(q.data.graphic && q.data.graphic.type, tag + ' graphic 在场');

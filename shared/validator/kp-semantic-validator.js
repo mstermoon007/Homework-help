@@ -622,18 +622,26 @@ function checkIntentAlignment(sq, plan) {
       SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
   }
 
-  // 3. graphicRole 对齐（P30-22/27/28）
-  //    intent.graphicRole 取值：carrier（图为核心载体，必须有图）/ auxiliary（图为辅助，可选）/ null（不需图）。
-  //    carrier → 必须含 graphic；null → 禁止含 graphic；auxiliary → 不约束有无。
+  // 3. graphicRole 对齐（P30-22/27/28 + P38-06 双轨统一）
+  //    intent.graphicRole（Intent 层，表"题目对图形的需求"）取值：
+  //      carrier（图为核心载体，必须配图）/ auxiliary（需参考图，必须配图）/ null（纯文字，禁图）。
+  //    graphic.role（Generator 层，表"图的具体语义角色"）取值：
+  //      quantity-correspondence/number-position/angle-measure/fraction-part/area-measure/
+  //      data-comparison/calculation-support/auxiliary（两轨 auxiliary 语义不同，见下注释）。
+  //    两轨不同维度，不强制相等；仅校验 graphic.role 属于合法枚举。
+  //    P38-06：auxiliary 从"不约束有无"收紧为"必须配图"——与 carrier 同等强制约束，
+  //    语义区分：carrier=图为核心载体（图本身是答案），auxiliary=需参考图（图为解题材料）。
+  //    实测 397 条 auxiliary 权威行全部配图（断链清零后无遗漏），收紧安全。
   var graphicRole = intent.graphicRole;
   var GRAPHIC_ROLES = {
     'quantity-correspondence': 1, 'number-position': 1, 'angle-measure': 1,
     'fraction-part': 1, 'area-measure': 1, 'data-comparison': 1,
     'calculation-support': 1, 'auxiliary': 1, 'carrier': 1
   };
-  if (graphicRole === 'carrier' && !hasGraphic) {
+  // carrier/auxiliary → 必须含 graphic（图为核心或参考材料，缺图则教学语义不完整）
+  if ((graphicRole === 'carrier' || graphicRole === 'auxiliary') && !hasGraphic) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
-      'intent.graphicRole=carrier 要求题目必须含图形，实际未含',
+      'intent.graphicRole=' + graphicRole + ' 要求题目必须含图形，实际未含',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
   }
   if (graphicRole === null && hasGraphic) {
@@ -642,9 +650,11 @@ function checkIntentAlignment(sq, plan) {
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
   }
   // P30-27：graphic.role 合法性校验。
-  // 注意：intent.graphicRole（carrier/auxiliary/null，表"图是否核心载体"）与
-  // graphic.role（quantity-correspondence/angle-measure/...，表"图的具体语义角色"）
+  // 注意：intent.graphicRole（carrier/auxiliary/null，表"题目对图形的需求"）与
+  // graphic.role（quantity-correspondence/angle-measure/.../auxiliary，表"图的具体语义角色"）
   // 是不同维度，不强制相等；仅校验 graphic.role 属于合法枚举。
+  // carrier 仅 Intent 层使用（Generator 侧零产出），auxiliary 在两轨语义不同：
+  //   Intent auxiliary = 需参考图（必须配图）；Generator auxiliary = 非核心语义载体（涂色/认识图形）。
   if (hasGraphic) {
     var gRole = sq.data.graphic.role;
     if (gRole != null && !GRAPHIC_ROLES[gRole]) {

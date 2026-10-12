@@ -43,7 +43,8 @@ assert('permission 全 allow(canonical: 1570 allow)', s.permissions.allow === 15
 
 const manifest = require(path.join(ROOT, 'shared/knowledge/manifest/manifest.json'));
 // P30-31：与 tools/kbl/build.js DATA_RELS 保持一致（含 teaching/misconception-profiles.json）
-const rels = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json'];
+// P38-DATA-01：+ teaching/qt-intent-runtime.json（机器约束投影）
+const rels = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json'];
 const rootInput = rels.map(r => {
   const b = fs.readFileSync(path.join(ROOT, 'shared/knowledge', r));
   return r + ':' + crypto.createHash('sha256').update(b).digest('hex') + '\n';
@@ -79,6 +80,12 @@ const mcOverlay = K.misconceptionsFor('math-g2-up-u07-k001');
 assert('misconceptionsFor(7~9乘除法) 返回 slots', mcOverlay && Array.isArray(mcOverlay.slots) && mcOverlay.slots.length > 0);
 assert('misconceptionsFor(未知 KP) = null', K.misconceptionsFor('math-g0-up-u01-k001') === null);
 assert('stats 携带 misconceptions 计数', s.misconceptions && s.misconceptions.slots > 0);
+
+// ---- 3c. qt-intent 机器约束投影分发（P38-DATA-01：T2 投影经 Runtime 公开 API 只读分发）----
+const itRow = K.intentFor('math-g3-down-u01-k002', 'fill');
+assert('intentFor(平移 fill) 返回权威行', itRow && itRow.status === 'ai-verified' && itRow.assessment && itRow.assessment.graphicRole != null);
+assert('intentFor(未知 KP) = null', K.intentFor('math-g0-up-u01-k001', 'fill') === null);
+assert('intentFor(未绑定题型) = null', K.intentFor('math-g3-down-u01-k002', 'calc') === null);
 
 // ---- 4. 权限裁决 ----
 // canonical：全部映射 allow；无映射类型（essay）→ missing；未知 KP → unknown

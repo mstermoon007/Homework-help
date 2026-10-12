@@ -5468,6 +5468,16 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
 
   var _intentIndex = null;
   function getIntent(kpId, questionType) {
+    
+    
+    
+    try {
+      var KC = getGlobalKC();
+      if (KC && typeof KC.intentFor === 'function') {
+        var viaRuntime = KC.intentFor(kpId, questionType);
+        if (viaRuntime) return viaRuntime;
+      }
+    } catch (e) {  }
     if (_intentIndex === null) {
       var doc = loadTeaching('qt-intent');
       var index = {};
@@ -5631,17 +5641,23 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
       var intent = null;
       var expression = null;
       var graphic = null;
+      var intentTextLoaded = false;
       
-      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status] && intentRow.intent) {
-        intent = {
-          trainsWhat: intentRow.intent.trainsWhat || null,
-          whyThisType: intentRow.intent.whyThisType || null,
-          differentiation: intentRow.intent.differentiation || null,
-          driftRisk: intentRow.intent.driftRisk || null,
-          legitimacy: intentRow.intent.legitimacy || null
-        };
+      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status]) {
+        if (intentRow.intent) {
+          intentTextLoaded = true;
+          intent = {
+            trainsWhat: intentRow.intent.trainsWhat || null,
+            whyThisType: intentRow.intent.whyThisType || null,
+            differentiation: intentRow.intent.differentiation || null,
+            driftRisk: intentRow.intent.driftRisk || null,
+            legitimacy: intentRow.intent.legitimacy || null
+          };
+        }
+        
         
         if (intentRow.assessment && typeof intentRow.assessment === 'object') {
+          intent = intent || {};
           intent.targetCodes = (intentRow.assessment.targetCodes || []).slice();
           intent.focus = intentRow.assessment.focus || null;
           intent.requiredRelations = (intentRow.assessment.requiredRelations || []).slice();
@@ -5651,8 +5667,8 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
           intent.graphicRole = intentRow.assessment.graphicRole == null ? null : intentRow.assessment.graphicRole;
         }
         
-        expression = { modes: intent.expressionModes || [] };
-        graphic = intent.graphicRole != null ? { role: intent.graphicRole } : null;
+        expression = { modes: (intent && intent.expressionModes) || [] };
+        graphic = (intent && intent.graphicRole != null) ? { role: intent.graphicRole } : null;
       }
 
       return {
@@ -5676,7 +5692,10 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
           subTopic: 'mechanical-rule:kbl-name-concept',
           kind: kind ? 'mechanical-rule:kbl-name-operations' : 'none',
           
-          intent: intent ? ('teaching:qt-intent:' + intentRow.status)
+          
+          intent: intent
+            ? (intentTextLoaded ? ('teaching:qt-intent:' + intentRow.status)
+                                : ('teaching:qt-intent-runtime:' + intentRow.status))
             : (intentRow ? ('blocked:qt-intent:' + intentRow.status) : 'none')
         }
       };
@@ -6590,6 +6609,54 @@ function buildDistractorExpressions(structure, correctAnswer) {
   return out.slice(0, 3);
 }
 
+
+
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+
+
+
+
+
+function normCalcOp(o) { return o === '*' ? '×' : (o === '/' ? '÷' : (o === '-' ? '−' : o)); }
+function buildCalcGraphic(qt, structure, answer) {
+  var ops = structure.operands, oprs = structure.operators;
+  function seg(p) {
+    return { type: 'diagram', subtype: 'segment', role: 'calculation-support',
+      params: Object.assign({ unit: '' }, p) };
+  }
+  function br(p) {
+    return { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: p };
+  }
+  function grp(p) {
+    return { type: 'diagram', subtype: 'groups', role: 'calculation-support', params: p };
+  }
+  function bal() {
+    return { type: 'diagram', subtype: 'balance', role: 'calculation-support',
+      params: { left: answer, rightLabel: '？' } };
+  }
+  function firstStep() {
+    var a = ops[0], b = ops[1], o = normCalcOp(oprs[0]);
+    if (o === '+') return br({ left: a, right: b });
+    if (o === '−') return seg({ total: a, part: b });
+    if (o === '×') return grp({ boxes: b, boxText: a, topText: '?' });
+    return grp({ boxes: b, boxText: '？', topText: a }); 
+  }
+  if (qt === 'choice') return bal();
+  if (qt === 'fill') {
+    if (ops.length > 2) return bal();
+    var b = ops[1], o = normCalcOp(oprs[0]), ans = answer;
+    if (o === '+') return seg({ total: ans, part: b, partLabel: String(b), otherLabel: '？', totalLabel: String(ans) });
+    if (o === '−') return seg({ total: ans + b, part: ans, partLabel: String(ans), otherLabel: String(b), totalLabel: '？' });
+    if (o === '×') return grp({ boxes: b, boxText: '？', topText: String(ans) });
+    return grp({ boxes: b, boxText: String(ans), topText: '？' }); 
+  }
+  return firstStep();
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -6679,6 +6746,9 @@ function createArithmeticGenerator(spec) {
         }
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var qt = plan.questionTypeId;
+        
+        var wantsG = intentWantsGraphic(plan);
+        var calcGraphic = null;
         var prompt, outAnswer = answer, options = null;
         
         var fullExpr = Arith.formatExpression(structure.operands, structure.operators);
@@ -6699,12 +6769,14 @@ function createArithmeticGenerator(spec) {
           }
           prompt = '填空：' + fillParts.join(' ') + ' = ' + answer;
           outAnswer = ops[blankIdx];
+          if (wantsG) calcGraphic = buildCalcGraphic('fill', structure, answer);
           
           explanationText = '空格里填 ' + outAnswer + '：' + fullExpr + ' = ' + answer + '，等式成立';
         } else if (qt === 'apply') {
           
           
           prompt = buildApplyStory(structure, op);
+          if (wantsG) calcGraphic = buildCalcGraphic('apply', structure, answer);
           
           explanationText = OP_MEANING[op] + '，列式 ' + fullExpr + ' = ' + answer;
         } else if (qt === 'choice') {
@@ -6715,16 +6787,18 @@ function createArithmeticGenerator(spec) {
           var distractorExprs = buildDistractorExpressions(structure, answer);
           options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
           outAnswer = correctExpr;
+          if (wantsG) calcGraphic = buildCalcGraphic('choice', structure, answer);
           
           explanationText = '结果等于 ' + answer + ' 的算式是 ' + correctExpr +
             '（验算：' + correctExpr + ' = ' + answer + '）';
         } else {
           prompt = fullExpr + ' = ?';
+          if (wantsG) calcGraphic = buildCalcGraphic(qt, structure, answer);
           
           explanationText = OP_MEANING[op] + '：' + fullExpr + ' = ' + answer;
         }
 
-        questions.push({
+        var pushedQ = {
           knowledgePointId: pkp(plan),
           questionType: qt,
           difficulty: plan.difficulty,
@@ -6750,8 +6824,10 @@ function createArithmeticGenerator(spec) {
             operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
             steps: structure.steps
           }
-        });
-        if (options) questions[questions.length - 1].data.options = options;
+        };
+        if (calcGraphic) pushedQ.data.graphic = calcGraphic;
+        if (options) pushedQ.data.options = options;
+        questions.push(pushedQ);
       }
       return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
@@ -7959,30 +8035,77 @@ var SHAPE_THEME = {
      ['从上面看是 4 个正方形，立体就只有一层', '从上面看只能确定底层占位，上面还可能叠着正方体。'],
      ['三个方向看到的正方形个数一定相同', '三个方向的视图分别反映长、宽、高，个数一般不同。']],
     
-    [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3], ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2], ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1]],
+    
+    
+    
+    [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1]] }, { direction: 'top', grid: [[1, 1]] }, { direction: 'left', grid: [[1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }, { direction: 'front', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }]],
     [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
      ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
-     ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']]),
+     ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']],
+  
+  { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                    params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u01-k001': shapeTheme( 
     ['从正面、左面、上面观察同一立体图形，看到的平面图形可能不同', '辨认视图时要看清每行每列各有几个正方形', '观察方向变了，看到的形状和正方形的排列也会跟着变'],
     [['从正面看到的形状就是立体本身的样子', '正面视图只是一个方向的样子，还要结合其他方向。'],
      ['从上面看到的正方形个数就是立体的总个数', '上面只能看到最上层的占位，被压在下面的数不清。'],
      ['同一立体从不同方向看，正方形个数一定相同', '方向不同，看到的个数和排列可能不同。']],
     
-    [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4], ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3], ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2]],
+    
+    
+    
+    [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1, 1]] }, { direction: 'top', grid: [[1, 1, 1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3,
+      { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+        params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } }],
+     ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1], [1]] }], unit: 'cm', unitPx: 25 } }]],
     [['用 4 个小正方体搭一个立体，先画出从正面看到的形状，再画出从上面看到的形状？', '视图取决于搭法，如排一行：正面 1 个或 4 个、上面 4 个排一行'],
      ['先观察由 5 个小正方体搭成的立体，再说出从哪个方向看到的正方形最多？', '比较正面、左面、上面的视图，个数可能不同'],
-     ['把 3 个小正方体叠成一竖列，先分别从正面和上面看，再说出各看到几个正方形', '正面看是 3 个竖排，上面看是 1 个']]),
+     ['把 3 个小正方体叠成一竖列，先分别从正面和上面看，再说出各看到几个正方形', '正面看是 3 个竖排，上面看是 1 个']],
+  
+  { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                    params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u01-k002': shapeTheme( 
     ['根据从三个方向看到的图形，可以还原出立体图形', '只根据一个方向的视图摆一摆，摆法往往不唯一', '先按从上面看到的图形确定底层，再按从正面和左面看到的确定层数'],
     [['按一个方向的视图摆出的立体是唯一的', '一个方向的视图挡不住的部分看不见，摆法不唯一。'],
      ['还原时可以不数被挡住的正方体', '被挡住的正方体要根据三个方向的视图推算。'],
      ['从上面看到的图形决定立体的高', '从上面看到的是底面占位；高由正面和左面视图决定。']],
     
-    [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4], ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3], ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2]],
+    
+    
+    [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1], [1], [1]] }], unit: 'cm', unitPx: 25 } }],
+     ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1, 1]] }], unit: 'cm', unitPx: 25 } }]],
     [['先根据「从上面看是 3 个正方形排一行」摆好底层，再根据「从正面看最高 2 层」补上第二层？', '底层 3 个排一行，某一列上再叠 1 个'],
      ['给出三个方向的视图，先摆一摆，再数一数一共用了几个小正方体', '按上→正→左顺序核对，个数由视图推算'],
-     ['只用「从正面看是 2 个正方形」摆一摆，先摆出两种不同摆法，再说明为什么不唯一？', '被挡住的个数和位置无法确定，摆法不唯一']]),
+     ['只用「从正面看是 2 个正方形」摆一摆，先摆出两种不同摆法，再说明为什么不唯一？', '被挡住的个数和位置无法确定，摆法不唯一']],
+  
+  { judgeGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
 
   
   'math-g2-up-u05-k002': shapeTheme( 
@@ -8603,6 +8726,9 @@ function themedItemMeta(item, qMeta, plan, rng) {
 
 
 
+
+
+
 var NO_GRAPHIC_VIEW_KPS = {
   'math-g4-down-u02-k002': 1,  
   'math-g5-down-u01-k001': 1,  
@@ -8638,7 +8764,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
   if (qt === 'choice') {
     var cItem = nums[v % nums.length];
     var cMeta = themedItemMeta(cItem, qMeta, plan, rng);
-    if (cMeta && !noGraphic) data.graphic = cMeta.graphic;
+    
+    if (cMeta && (!noGraphic || typeof cItem.shape === 'object')) data.graphic = cMeta.graphic;
     var options = Rng.shuffle(rng, [cItem.a].concat(numDistractors(cItem.n)));
     data.options = options;
     data.correctIndex = options.indexOf(cItem.a);
@@ -8649,7 +8776,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     answerMode = 'choice';
   } else if (qt === 'judge') {
     
-    if (!noGraphic && theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
+    
+    if (theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
     var isTrue = rng() < 0.5;
     var shown, explanation;
     if (isTrue) {
@@ -8668,7 +8796,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
   } else if (qt === 'fill') {
     var fItem = nums[v % nums.length];
     var fMeta = themedItemMeta(fItem, qMeta, plan, rng);
-    if (fMeta && !noGraphic) data.graphic = fMeta.graphic;
+    
+    if (fMeta && (!noGraphic || typeof fItem.shape === 'object')) data.graphic = fMeta.graphic;
     data.operands = [fItem.n];
     prompt = fItem.q;
     answer = { value: fItem.a, acceptable: [], explanation: themedExpl(fItem.q, fItem.a) };
@@ -8692,7 +8821,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     }
   } else { 
     
-    if (!noGraphic && theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
+    
+    if (theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
     var sList = theme.scenes.length
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
@@ -9065,6 +9195,48 @@ function makeGraphicForPosition(scene) {
 }
 
 
+
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+
+
+function translationGraphic(dx, dy) {
+  return {
+    type: 'geometry', subtype: 'translationDemo', role: 'number-position',
+    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 30 }
+  };
+}
+function rotationGraphic(angle, dir) {
+  return {
+    type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+    params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0,
+      deg: dir === '顺时针' ? -angle : angle, unitPx: 34 }
+  };
+}
+function clockHandGraphic() {
+  
+  return {
+    type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: -90, unitPx: 34 }
+  };
+}
+function observeCubeGraphic() {
+  return { type: 'geometry', subtype: 'cube', role: 'number-position',
+    params: { edge: 2, labelSides: false, unit: 'cm' } };
+}
+function coordGridGraphic(col, row) {
+  var gs = Math.max(col, row, 5);
+  return {
+    type: 'geometry', subtype: 'position-grid', role: 'number-position',
+    params: { gridSize: gs, unitPx: gs > 6 ? 28 : 35,
+      objects: [{ name: 'A', x: col - 1, y: row - 1 }], showGrid: true }
+  };
+}
+
+
 var NAME_TO_SPATIAL = [
   { re: /数对|坐标/, type: 'coordinate' },
   { re: /距离/, type: 'distance' },
@@ -9096,6 +9268,7 @@ function makeTranslationQuestion(plan, context, i) {
   var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
   var hDir = dx > 0 ? '右' : '左';
   var vDir = dy > 0 ? '下' : '上';
+  var transGraphic = intentWantsGraphic(plan) ? translationGraphic(dx, dy) : null;
   
   
   var prompt;
@@ -9115,7 +9288,7 @@ function makeTranslationQuestion(plan, context, i) {
       answer: { value: String(answer), acceptable: [],
         explanation: '平移分两次移动，总格数是两次格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
           + '＝' + answer + ' 格。' }, answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '平移' }
+      data: { mode: 'fill', steps: 1, shapeName: '平移', graphic: transGraphic }
     };
   }
   if (qt === 'choice') {
@@ -9137,12 +9310,12 @@ function makeTranslationQuestion(plan, context, i) {
       answer: { value: String(ci2), acceptable: [],
         explanation: '总格数是两次平移格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
           + '＝' + answer + ' 格，正确选项是「' + answer + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移', graphic: transGraphic }
     };
   }
   
   var transIsTrue = shown === answer;
-  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown) };
+  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown), graphic: transGraphic };
   var transExplanation = transIsTrue
     ? '图形平移了 ' + answer + ' 格，题中答案正确。'
     : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
@@ -9164,6 +9337,7 @@ function makeRotationQuestion(plan, context, i) {
   var angle = Rng.pick(rng, [90, 180, 270]);
   var dir = rng() < 0.5 ? '顺时针' : '逆时针';
   var qt = plan.questionTypeId;
+  var wantsG = intentWantsGraphic(plan);
   var prompt = '一个图形绕中心点' + dir + '旋转 ' + angle + ' 度后，方向是否改变？';
   var isTrue = angle === 180 ? true : true;
   if (qt === 'judge') {
@@ -9173,7 +9347,7 @@ function makeRotationQuestion(plan, context, i) {
       seed: seedFor(plan, context, i),
       prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
       answer: { value: true, acceptable: [], explanation: '旋转只改变图形的位置和方向，不改变图形的形状和大小，说法正确。' }, answerMode: 'judge',
-      data: { mode: 'judge', steps: 1, shapeName: '旋转' }
+      data: { mode: 'judge', steps: 1, shapeName: '旋转', graphic: wantsG ? rotationGraphic(angle, dir) : null }
     };
   }
   if (qt === 'fill') {
@@ -9185,7 +9359,7 @@ function makeRotationQuestion(plan, context, i) {
       answer: { value: '90', acceptable: [],
         explanation: '钟面上指针从 12 走到 3 转过一个直角，直角是 90 度，与顺时针还是逆时针无关。' },
       answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '旋转' }
+      data: { mode: 'fill', steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic() : null }
     };
   }
   
@@ -9198,7 +9372,7 @@ function makeRotationQuestion(plan, context, i) {
     answer: { value: '0', acceptable: [],
       explanation: '旋转只改变图形的位置和方向，不改变形状和大小，所以正确说法是「形状不变」。' },
     answerMode: 'choice',
-    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转' }
+    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转', graphic: wantsG ? rotationGraphic(angle, dir) : null }
   };
 }
 
@@ -9207,6 +9381,7 @@ function makeObserveQuestion(plan, context, i) {
   var views = ['正面', '上面', '侧面'];
   var correct = Rng.pick(rng, views);
   var qt = plan.questionTypeId;
+  var obsGraphic = intentWantsGraphic(plan) ? observeCubeGraphic() : null;
   if (qt === 'choice') {
     var opts = Rng.shuffle(rng, views.slice());
     var ci = opts.indexOf(correct);
@@ -9218,7 +9393,7 @@ function makeObserveQuestion(plan, context, i) {
       answer: { value: String(ci), acceptable: [],
         explanation: '正方体每个面都是正方形；题中描述的是从' + correct + '看到的，正确选项是「'
           + correct + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察', graphic: obsGraphic }
     };
   }
   if (qt === 'fill') {
@@ -9230,7 +9405,7 @@ function makeObserveQuestion(plan, context, i) {
       answer: { value: correct, acceptable: [],
         explanation: '正方体的每个面都是正方形，从' + correct + '观察看到的就是正方形。' },
       answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '观察' }
+      data: { mode: 'fill', steps: 1, shapeName: '观察', graphic: obsGraphic }
     };
   }
   
@@ -9240,7 +9415,7 @@ function makeObserveQuestion(plan, context, i) {
     seed: seedFor(plan, context, i),
     prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
     answer: { value: false, acceptable: [], explanation: '从正面、上面、侧面等不同方向观察同一物体，看到的形状可能不同，说法错误。' }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '观察', misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
+    data: { mode: 'judge', steps: 1, shapeName: '观察', graphic: obsGraphic, misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
   };
 }
 
@@ -9250,6 +9425,7 @@ function makeCoordinateQuestion(plan, context, i) {
   var x = riC(rng, 1, 9, nr);
   var y = riC(rng, 1, 9, nr);
   var qt = plan.questionTypeId;
+  var wantsG = intentWantsGraphic(plan);
   if (qt === 'fill') {
     return {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
@@ -9261,7 +9437,7 @@ function makeCoordinateQuestion(plan, context, i) {
       answer: { value: String(x), acceptable: [],
         explanation: '数对中第一个数表示列，（' + x + '，' + y + '）的第一个数是 ' + x
           + '，所以点 A 在第 ' + x + ' 列。' }, answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '数对' }
+      data: { mode: 'fill', steps: 1, shapeName: '数对', graphic: wantsG ? coordGridGraphic(x, y) : null }
     };
   }
   if (qt === 'choice') {
@@ -9282,7 +9458,7 @@ function makeCoordinateQuestion(plan, context, i) {
       answer: { value: String(ci), acceptable: [],
         explanation: '数对第一个数表示列、第二个数表示行，第 ' + x + ' 列第 ' + y
           + ' 行用 ' + correct + ' 表示，正确选项是「' + correct + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对', graphic: wantsG ? coordGridGraphic(x, y) : null }
     };
   }
   
@@ -9292,7 +9468,7 @@ function makeCoordinateQuestion(plan, context, i) {
     seed: seedFor(plan, context, i),
     prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
     answer: { value: false, acceptable: [], explanation: '数对中第一个数表示列、第二个数表示行，（3，5）表示第 3 列第 5 行，说法错误。' }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '数对', misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
+    data: { mode: 'judge', steps: 1, shapeName: '数对', graphic: wantsG ? coordGridGraphic(3, 5) : null, misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
   };
 }
 
@@ -10386,6 +10562,55 @@ function formatExpr(expr) {
   return expr.operands[0] + ' ' + expr.ops[0] + ' ' + expr.operands[1];
 }
 
+
+
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+
+
+
+
+function buildRelationGraphic(template, nums, ans, qt, expr) {
+  function seg(p) {
+    return { type: 'diagram', subtype: 'segment', role: 'quantity-correspondence',
+      params: Object.assign({ unit: '' }, p) };
+  }
+  function br(p) {
+    return { type: 'diagram', subtype: 'brace', role: 'quantity-correspondence', params: p };
+  }
+  function grp(p) {
+    return { type: 'diagram', subtype: 'groups', role: 'quantity-correspondence', params: p };
+  }
+  if (qt === 'fill') {
+    
+    var op = expr.ops[0], b = expr.operands[1];
+    if (op === '+') return seg({ total: ans, part: b, partLabel: String(b), otherLabel: '？', totalLabel: String(ans) });
+    if (op === '−') return seg({ total: ans + b, part: ans, partLabel: String(ans), otherLabel: String(b), totalLabel: '？' });
+    if (op === '×') return grp({ boxes: b, boxText: '？', topText: String(ans) });
+    return grp({ boxes: b, boxText: String(ans), topText: '？' }); 
+  }
+  
+  switch (template) {
+    case 'total-from-parts': return br({ left: nums.a, right: nums.b });
+    case 'part-from-total': return seg({ total: nums.total, part: nums.part1 });
+    case 'compare-more': return seg({ total: nums.a + nums.diff, part: nums.a,
+      partLabel: String(nums.a), otherLabel: String(nums.diff), totalLabel: '？' });
+    case 'compare-less': return seg({ total: nums.a, part: nums.a - nums.diff,
+      partLabel: '？', otherLabel: String(nums.diff), totalLabel: String(nums.a) });
+    case 'multiple': return grp({ boxes: nums.n, boxText: nums.a, topText: '?' });
+    case 'equal-groups': return grp({ boxes: nums.groups, boxText: nums.per, topText: '?' });
+    case 'share-equally': return grp({ boxes: nums.groups, boxText: '？', topText: nums.total });
+    case 'divide-multiple': return grp({ boxes: nums.n, boxText: '？', topText: nums.a });
+    case 'grouping': return grp({ dots: nums.total, topText: '？组' });
+    case 'distance': return grp({ boxes: nums.time, boxText: nums.speed, topText: '?' });
+    case 'work': return grp({ boxes: nums.time, boxText: nums.rate, topText: '?' });
+  }
+  return null;
+}
+
 function formatTemplate(template, nums) {
   var tpl = PROBLEM_TEMPLATES[template];
   var str = tpl.zh;
@@ -10512,11 +10737,12 @@ function makeApplicationQuestion(plan, context, i, meta) {
         numbers: nums,
         options: options,
         correctIndex: correctIndex,
-        relation: PROBLEM_TEMPLATES[template].relation
+        relation: PROBLEM_TEMPLATES[template].relation,
+        graphic: intentWantsGraphic(plan) ? buildRelationGraphic(template, nums, ans, 'choice') : null
       }
     };
   }
-  
+
   if (qt === 'judge') {
     var isTrue = rng() < 0.5;
     
@@ -10532,7 +10758,9 @@ function makeApplicationQuestion(plan, context, i, meta) {
       template: template,
       numbers: nums,
       shownAnswer: shown,
-      relation: PROBLEM_TEMPLATES[template].relation
+      relation: PROBLEM_TEMPLATES[template].relation,
+      
+      graphic: intentWantsGraphic(plan) ? buildRelationGraphic(template, nums, ans, 'judge') : null
     };
     if (!isTrue) {
       judgeData.misconception = '数量关系理解错误：按题意正确答案应为 ' + ans + '，题中给成了 ' + shown + '。';
@@ -10586,6 +10814,18 @@ function makeApplicationQuestion(plan, context, i, meta) {
     };
   }
 
+  
+  var appData = {
+    mode: qt,
+    steps: Object.keys(nums).length > 2 ? 2 : 1,
+    template: template,
+    numbers: nums,
+    relation: PROBLEM_TEMPLATES[template].relation,
+    operation: PROBLEM_TEMPLATES[template].ops[0]
+  };
+  if ((qt === 'fill' || qt === 'apply') && intentWantsGraphic(plan)) {
+    appData.graphic = buildRelationGraphic(template, nums, answer, qt, appExpr);
+  }
   return {
     knowledgePointId: pkp(plan),
     questionType: qt,
@@ -10596,14 +10836,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
     prompt: stemPrompt,
     answer: answerField,
     answerMode: 'input',
-    data: {
-      mode: qt,
-      steps: Object.keys(nums).length > 2 ? 2 : 1,
-      template: template,
-      numbers: nums,
-      relation: PROBLEM_TEMPLATES[template].relation,
-      operation: PROBLEM_TEMPLATES[template].ops[0]
-    }
+    data: appData
   };
 }
 
@@ -14348,6 +14581,11 @@ function makeAngleFill(plan, context, i) {
       constructs: ['vertex', 'rays', 'angle']
     }
   });
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '一个角有 1 个顶点和 ____ 条边。', '2', ['2', '两'],
     '角由一个顶点和两条边（射线）组成');
 }
@@ -14356,6 +14594,18 @@ function makeAngleApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var shape = Rng.pick(rng, [['三角形', 3], ['红领巾', 3], ['五角星贴纸', 5], ['正方形', 4]]);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-count' });
+  
+  var g;
+  if (shape[0] === '五角星贴纸') {
+    g = { type: 'geometry', subtype: 'star', role: 'auxiliary', params: { size: 2, unitPx: 26 } };
+  } else if (shape[0] === '正方形') {
+    g = { type: 'geometry', subtype: 'square', role: 'auxiliary', params: { size: 2, unitPx: 26, labelSides: false, rightAngle: false } };
+  } else if (shape[0] === '红领巾') {
+    g = { type: 'geometry', subtype: 'triangle', role: 'auxiliary', params: { p1: [0, 0], p2: [4, 0], p3: [0.8, 0.9], unitPx: 26 } };
+  } else {
+    g = { type: 'geometry', subtype: 'triangle', role: 'auxiliary', params: { p1: [0, 0], p2: [3, 0], p3: [1.5, 2], unitPx: 26 } };
+  }
+  q.data.graphic = g;
   return finish(q, '观察一块' + shape[0] + '形状的纸板：上面有几个角？', String(shape[1]), [String(shape[1])],
     shape[0] + '有 ' + shape[1] + ' 个角');
 }
@@ -14364,6 +14614,11 @@ function makeAngleChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-definition' });
   q.prompt = '下面哪个说法正确地描述了“角”？（  ）';
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   var angleDef = '从一点引出两条射线所组成的图形';
   return finishChoice(q, rng, angleDef,
     ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形'],
@@ -14372,6 +14627,11 @@ function makeAngleChoice(plan, context, i) {
 
 function makeAngleGeometry(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-size-vs-edge' });
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '观察一个角：把它的两条边画得更长，这个角的大小 ____。（填“变大”“变小”或“不变”）',
     '不变', ['不变'], '角的大小与两边张开的程度有关，与边的长短无关');
 }
@@ -14397,10 +14657,26 @@ function makeAngleJudge(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
   q.answerMode = 'judge'; 
   if (s.misconception) q.data.misconception = s.misconception;
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 
+
+
+function gridOf(n) {
+  var cols = Math.min(5, n), rows = Math.ceil(n / cols), grid = [];
+  for (var r = 0; r < rows; r++) {
+    var row = [];
+    for (var c = 0; c < cols; c++) row.push(r * cols + c < n ? 1 : 0);
+    grid.push(row);
+  }
+  return grid;
+}
 
 function makeAreaFill(plan, context, i) {
   var q = buildBase(plan, context, i, {
@@ -14411,6 +14687,11 @@ function makeAreaFill(plan, context, i) {
       constructs: ['surface', 'size']
     }
   });
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'],
     '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
 }
@@ -14419,6 +14700,12 @@ function makeAreaApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var n = Rng.pick(rng, [6, 8, 10, 12, 15]);
   var q = buildBase(plan, context, i, { subType: 'area-measure', quantityKind: 'area', unitSquares: n });
+  
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'view-cards', role: 'auxiliary',
+    params: { views: [{ direction: '', grid: gridOf(n) }], unitPx: 20 }
+  };
   return finish(q, '用 1 平方分米的小正方形去铺一张卡片，正好铺满了 ' + n + ' 个。这张卡片的面积是多少平方分米？',
     String(n), [String(n)], '面积就是包含的面积单位的个数：' + n + ' 个 1 平方分米 = ' + n + ' 平方分米');
 }
@@ -14427,6 +14714,11 @@ function makeAreaChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area' });
   q.prompt = '下面哪个是面积单位？（  ）';
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒'],
     '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
 }
@@ -14434,10 +14726,21 @@ function makeAreaChoice(plan, context, i) {
 function makeAreaGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var nr = nrOf(plan);
-  var a = riC(rng, 6, 9, nr);
-  var b = riC(rng, 3, Math.max(3, a - 2), nr);
-  var winner = Rng.pick(rng, [['甲', a], ['乙', b]]);
+  
+  
+  var a = riC(rng, 4, 9, nr);
+  var b = riC(rng, 4, 9, nr);
+  while (b === a) b = riC(rng, 4, 9, nr);
+  var winner = a > b ? ['甲', a] : ['乙', b];
   var q = buildBase(plan, context, i, { subType: 'area-compare', quantityKind: 'area', gridA: a, gridB: b });
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'view-cards', role: 'auxiliary',
+    params: {
+      views: [{ direction: '甲', grid: gridOf(a) }, { direction: '乙', grid: gridOf(b) }],
+      unitPx: 16
+    }
+  };
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
     winner[0], [winner[0], '图形' + winner[0]], '小方格同样大时，占的格子越多面积越大：' + winner[0] + ' 用了 ' + winner[1] + ' 个');
 }
@@ -14463,6 +14766,11 @@ function makeAreaJudge(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
   q.answerMode = 'judge'; 
   if (s.misconception) q.data.misconception = s.misconception;
+  
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
@@ -15184,8 +15492,25 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
 }
 
+
+
+
+
+
+
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
 function buildBase(plan, context, i, extra) {
   var constraints = plan.constraints || {};
+  var extraData = extra || {};
+  
+  if (extraData.graphic && !intentWantsGraphic(plan)) {
+    extraData = Object.assign({}, extraData);
+    delete extraData.graphic;
+  }
   return {
     knowledgePointId: pkp(plan),
     questionType: plan.questionTypeId,
@@ -15205,7 +15530,7 @@ function buildBase(plan, context, i, extra) {
     answer: null,
     answerMode: 'input',
     hint: null,
-    data: Object.assign({ mode: 'semantic-relations' }, extra || {})
+    data: Object.assign({ mode: 'semantic-relations' }, extraData)
   };
 }
 
@@ -15305,11 +15630,28 @@ function makeAddRelApply(plan, context, i) {
   var base = riC(rng, 5, 12, nr);
   var diff = riC(rng, 2, 8, nr);
   var more = (i % 2 === 0);
+  
+  
+  
+  var graphic = more ? {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: base + diff, part: base, unit: '',
+      partLabel: String(base), otherLabel: String(diff), totalLabel: '?'
+    }
+  } : {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: base + diff, part: base, unit: '',
+      partLabel: '?', otherLabel: String(diff), totalLabel: String(base + diff)
+    }
+  };
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
     operation: more ? 'add' : 'sub',
     barModel: true,
-    comparison: more ? 'more' : 'less'
+    comparison: more ? 'more' : 'less',
+    graphic: graphic
   });
   if (more) {
     return finish(q, '先画一画，再列式：小红有 ' + base + ' 朵小红花，小丽比小红多 ' + diff
@@ -15408,7 +15750,14 @@ function makePeriodFill(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   
   
@@ -15427,9 +15776,17 @@ function makePeriodApply(plan, context, i) {
   var k = riC(rng, 10, 40, nr);
   var rem = k % n;
   var which = rem === 0 ? set[n - 1] : set[rem - 1];
+  
+  
+  
+  var setHead = set.map(function (w) { return w.charAt(0); }).join('');
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: n, periodPosition: k, remainder: rem
+    periodLength: n, periodPosition: k, remainder: rem,
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: setHead, times: 2 }
+    }
   });
   return finish(q, '学校大门前按「' + set.join('、') + '」的顺序循环挂彩旗，第 ' + k
     + ' 面彩旗是什么颜色？', which, [which],
@@ -15442,7 +15799,13 @@ function makePeriodChoice(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   q.prompt = '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
     + ' 个图形是哪个？（  ）';
@@ -15510,7 +15873,14 @@ function makeScaleFill(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   return finish(q, '把一个边长 ' + s.orig + ' 厘米的正方形按 ' + ratio + ' 的比'
     + (s.enlarge ? '放大' : '缩小') + '，变换后正方形的边长是（  ）厘米。', s.next, [String(s.next)],
@@ -15524,7 +15894,13 @@ function makeScaleApply(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform',
     scaleRatio: s.enlarge ? (s.k + ':1') : ('1:' + s.k),
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   if (s.enlarge) {
     return finish(q, '一张小卡片长 ' + s.orig + ' 厘米，照相馆按 ' + s.k + ':1 的比把图案放大印成海报，'
@@ -15542,7 +15918,13 @@ function makeScaleChoice(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
     + '，原长 ' + s.orig + ' 厘米，变换后的长是多少厘米？（  ）';
@@ -15560,7 +15942,14 @@ function makeScaleGeometry(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next, gridFigure: true
+    fromLength: s.orig, toLength: s.next, gridFigure: true,
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: '格', unitPx: 26 }
+    }
   });
   return finish(q, '方格图上一个长方形的长占 ' + s.orig + ' 格，把图形按 ' + ratio
     + ' 的比' + (s.enlarge ? '放大' : '缩小') + '后，长应占多少格？', s.next, [String(s.next)],
@@ -15597,7 +15986,17 @@ function makePropFill(plan, context, i) {
   var t2 = riC(rng, 5, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    speed: speed, hoursA: t1, hoursB: t2
+    speed: speed, hoursA: t1, hoursB: t2,
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: t1 + '小时', text: (speed * t1) + '千米', parts: speed * t1 },
+        { label: t2 + '小时', text: '?', parts: speed * t2 }
+      ] }
+    }
   });
   return finish(q, '一辆汽车 ' + t1 + ' 小时行驶了 ' + (speed * t1)
     + ' 千米。照这样的速度，' + t2 + ' 小时能行驶（  ）千米。', speed * t2, [String(speed * t2)],
@@ -15619,7 +16018,17 @@ function makePropApply(plan, context, i) {
   var rows2 = total / c.per2;
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'inverse',
-    total: total, perRowA: c.per1, rowsA: c.rows1, perRowB: c.per2
+    total: total, perRowA: c.per1, rowsA: c.rows1, perRowB: c.per2,
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: '每行' + c.per1 + '人', text: c.rows1 + '行', parts: c.rows1 },
+        { label: '每行' + c.per2 + '人', text: '?', parts: rows2 }
+      ] }
+    }
   });
   return finish(q, '同学们排队做操，每行站 ' + c.per1 + ' 人，正好站 ' + c.rows1
     + ' 行。如果每行站 ' + c.per2 + ' 人，可以站多少行？', rows2, [String(rows2)],
@@ -15635,7 +16044,17 @@ function makePropChoice(plan, context, i) {
   var b = riC(rng, 6, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    unitPrice: unit, quantityA: a, quantityB: b
+    unitPrice: unit, quantityA: a, quantityB: b,
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: a + '千克', text: (a * unit) + '元', parts: a * unit },
+        { label: b + '千克', text: '?', parts: b * unit }
+      ] }
+    }
   });
   q.prompt = '买 ' + a + ' 千克苹果付了 ' + (a * unit) + ' 元，买 ' + b
     + ' 千克同样的苹果要付多少元？（  ）';
@@ -15659,7 +16078,17 @@ function makePropGeometry(plan, context, i) {
   var h2 = c.h1 * c.s2 / c.s1;
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    poleHeight: c.h1, poleShadow: c.s1, treeShadow: c.s2
+    poleHeight: c.h1, poleShadow: c.s1, treeShadow: c.s2,
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: '竹竿', text: '高' + c.h1 + '米', parts: c.h1 },
+        { label: '树', text: '?', parts: h2 }
+      ] }
+    }
   });
   return finish(q, '看示意图：同一时刻，一根 ' + c.h1 + ' 米长的竹竿影长是 ' + c.s1
     + ' 米，旁边一棵树的影长是 ' + c.s2 + ' 米。这棵树高多少米？', h2, [String(h2)],

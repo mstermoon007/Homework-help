@@ -118,7 +118,7 @@ test('消费方 fail-closed：percent 语义参数缺失/子类型无 maker → 
   assert.equal(ok[0].data.subType, 'percent-of');
 });
 
-test('P30-05 权威行挂载 intent 机器约束（confirmed 行）', () => {
+test('P30-05 权威行挂载 intent 机器约束（confirmed 行，运行时投影路径）', () => {
   const p = SP.resolve('math-g1-up-u03-k001', 'geometry'); // confirmed
   assert.ok(p.intent, 'confirmed 行必须挂载 intent');
   assert.deepEqual(p.intent.targetCodes, ['math-g1-up-u03-k001'], 'targetCodes 溯源本 KP');
@@ -128,13 +128,32 @@ test('P30-05 权威行挂载 intent 机器约束（confirmed 行）', () => {
   assert.deepEqual(p.intent.allowedRepresentations, ['graphic']);
   assert.deepEqual(p.intent.expressionModes, ['graphic-construction']);
   assert.equal(p.intent.graphicRole, 'carrier');
-  assert.ok(typeof p.intent.trainsWhat === 'string', 'confirmed 行 intent 五问可读');
+  // P38-DATA-01：运行时投影行仅含机器约束（status+assessment），教学五问文本不进运行时
+  assert.equal(p.intent.trainsWhat, undefined, '投影行无五问文本（trainsWhat 不出运行时）');
   assert.deepEqual(p.expression, { modes: ['graphic-construction'] }, 'expression 投影');
   assert.deepEqual(p.graphic, { role: 'carrier' }, 'graphic 投影');
-  assert.equal(p.sources.intent, 'teaching:qt-intent:confirmed');
+  assert.equal(p.sources.intent, 'teaching:qt-intent-runtime:confirmed');
 });
 
-test('P30-05 ai-verified 行同样挂载 intent 机器约束', () => {
+test('P30-05 Node 直连兜底路径挂载五问全文（confirmed 行）', () => {
+  // P38-DATA-01：屏蔽 runtime intentFor（模拟无 KBL Runtime 的 Node 工具链环境），
+  // getIntent 走 loadTeaching 直连 kbl/teaching/qt-intent.json → 全量行含五问文本。
+  const saved = global.App && global.App.KNOWLEDGE;
+  global.App.KNOWLEDGE = Object.assign({}, saved, { intentFor: undefined });
+  try {
+    const p = SP.resolve('math-g1-up-u03-k001', 'geometry');
+    assert.ok(p.intent, 'confirmed 行必须挂载 intent');
+    assert.equal(p.intent.focus, 'geometry');
+    assert.deepEqual(p.intent.allowedRepresentations, ['graphic']);
+    assert.equal(p.intent.graphicRole, 'carrier');
+    assert.ok(typeof p.intent.trainsWhat === 'string', 'Node 直连全量行五问可读');
+    assert.equal(p.sources.intent, 'teaching:qt-intent:confirmed');
+  } finally {
+    global.App.KNOWLEDGE = saved;
+  }
+});
+
+test('P30-05 ai-verified 行同样挂载 intent 机器约束（运行时投影路径）', () => {
   const p = SP.resolve('math-g1-up-u01-k002', 'calc'); // ai-verified
   assert.ok(p.intent, 'ai-verified 行必须挂载 intent');
   assert.equal(p.intent.focus, 'calculation');
@@ -142,7 +161,7 @@ test('P30-05 ai-verified 行同样挂载 intent 机器约束', () => {
   assert.ok(p.intent.requiredConstructs.indexOf('addition') !== -1, '操作构念来自 KBL semantic.operations');
   assert.deepEqual(p.expression, { modes: ['expression'] }, 'expression 投影');
   assert.equal(p.graphic, null, 'graphicRole 为 null 时 graphic 投影为 null');
-  assert.equal(p.sources.intent, 'teaching:qt-intent:ai-verified');
+  assert.equal(p.sources.intent, 'teaching:qt-intent-runtime:ai-verified');
 });
 
 test('P30-06 needs-review 行零生成权威：intent/expression/graphic 均为 null', () => {

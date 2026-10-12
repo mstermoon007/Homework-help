@@ -9,6 +9,8 @@
 //   balance  { left, leftLabel, rightUnknown, rightLabel, unit?, weightLabel? } 天平平衡
 //   scale    { scale, mapDist, ratioLabel? }                              比例尺
 //   pattern  { pattern, times? }                                          周期排列（P31-FIX-05）
+//   groups   { boxes, boxText, topText } | { dots, topText }              份数组图（P38 断链修复）
+//   ratio    { rows:[{label, text, parts}] }                              成比例条形图（P38 断链修复）
 //
 // 无效参数返回 ''（不抛异常）。
 
@@ -169,7 +171,98 @@
     return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' 180', width: o.width, padding: 10 });
   }
 
-  var SVGDiagram = { brace: brace, segment: segment, balance: balance, scale: scale, pattern: pattern };
+  /**
+   * P38 断链修复：份数组图——表达「每份数 × 份数 = 总量」语义。
+   *  盒子模式 { boxes, boxText, topText }：boxes=盒子数（1..8），boxText=盒内标注
+   *    （纯数字 1..10 画圆点，否则画文字），topText=顶部总括标注。
+   *  散点模式 { dots, topText }：dots=散点总数（份数未知、仅示总量）。
+   *  topText 为 '?' 时渲染红色问号（与 brace/segment/pattern 问号同色语义）。
+   */
+  function groups(o) {
+    var topText = o.topText != null ? String(o.topText) : '?';
+    var W = 380, yBox = 56, boxH = 52;
+    var inner = '', H = 150;
+
+    if (o.dots != null) {
+      var dots = Math.floor(Number(o.dots) || 0);
+      if (dots <= 0) return '';
+      var perRow = Math.min(10, dots);
+      var rows = Math.ceil(dots / perRow);
+      var pitch = (W - 48) / perRow;
+      for (var i = 0; i < dots; i++) {
+        var rr = Math.floor(i / perRow), cc = i % perRow;
+        inner += U.svgCircle(24 + pitch * (cc + 0.5), yBox + 16 + rr * 22, 6, { fill: INK });
+      }
+      H = yBox + 16 + (rows - 1) * 22 + 30;
+    } else {
+      var n = Math.floor(Number(o.boxes) || 0);
+      if (n < 1) return '';
+      n = Math.min(n, 8);
+      var gap = 14;
+      var boxW = Math.min(70, (W - 48 - gap * (n - 1)) / n);
+      var totalW = boxW * n + gap * (n - 1);
+      var x0 = (W - totalW) / 2;
+      var label = String(o.boxText != null ? o.boxText : '');
+      var isDot = /^\d+$/.test(label) && Number(label) >= 1 && Number(label) <= 10;
+      for (var b = 0; b < n; b++) {
+        var bx = x0 + b * (boxW + gap);
+        inner += U.svgRect(bx, yBox, boxW, boxH, { fill: '#ffffff', stroke: BLUE, strokeWidth: 2, rx: 6 });
+        if (isDot) {
+          var cnt = Number(label);
+          var pc = Math.min(cnt, 5), pr = Math.ceil(cnt / 5);
+          var dp = Math.min(boxW / 6, 14);
+          for (var d = 0; d < cnt; d++) {
+            var dc = d % pc, dr = Math.floor(d / pc);
+            inner += U.svgCircle(bx + boxW / 2 - (pc - 1) * dp / 2 + dc * dp,
+              yBox + boxH / 2 - (pr - 1) * dp / 2 + dr * dp, 4, { fill: BLUE });
+          }
+        } else {
+          inner += U.svgText(bx + boxW / 2, yBox + boxH / 2 + 6, label,
+            { fontSize: 18, fill: ORANGE, 'text-anchor': 'middle', fontWeight: 700 });
+        }
+      }
+    }
+
+    var isQ = topText === '?';
+    var x1 = 60, x2 = W - 60, yc = yBox - 22;
+    inner += U.svgPath('M ' + x1 + ' ' + (yc + 10) + ' L ' + x1 + ' ' + yc +
+      ' L ' + x2 + ' ' + yc + ' L ' + x2 + ' ' + (yc + 10), { stroke: INK, strokeWidth: 1.6, fill: 'none' });
+    inner += U.svgText((x1 + x2) / 2, yc - 8, isQ ? '？' : topText,
+      { fontSize: 20, fill: isQ ? RED : INK, 'text-anchor': 'middle', fontWeight: isQ ? 700 : 400 });
+    return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' ' + H, width: o.width, padding: 10 });
+  }
+
+  /**
+   * P38 断链修复：成比例条形图——表达「两种量成比例（正/反比例）」语义。
+   *  { rows:[{label, text, parts}] }：label=行名，text=行值（'?' 渲染红色问号），
+   *  parts=条长权重（≥0，条宽 ∝ parts/max）。
+   */
+  function ratio(o) {
+    var rows = (Array.isArray(o.rows) ? o.rows : []).filter(function (r) {
+      return r && Number(r.parts) > 0;
+    });
+    if (rows.length < 2) return '';
+    var max = Math.max.apply(null, rows.map(function (r) { return Number(r.parts) || 0; }));
+    if (!(max > 0)) return '';
+    var W = 380, labelW = 64, valueW = 70;
+    var barMax = W - labelW - valueW - 24;
+    var rowH = 46, y0 = 30;
+    var inner = '';
+    rows.forEach(function (r, i) {
+      var y = y0 + i * rowH;
+      var bw = Math.max(14, (Number(r.parts) / max) * barMax);
+      var isQ = String(r.text) === '?';
+      inner += U.svgText(0, y + 20, String(r.label || ''), { fontSize: 14, fill: INK, 'text-anchor': 'start' });
+      inner += U.svgRect(labelW, y, bw, 26, { fill: i % 2 ? '#fdf0e2' : '#eaf0fb', stroke: i % 2 ? ORANGE : BLUE, strokeWidth: 1.6, rx: 4 });
+      inner += U.svgText(labelW + bw + 10, y + 20, isQ ? '？' : String(r.text),
+        { fontSize: 17, fill: isQ ? RED : INK, 'text-anchor': 'start', fontWeight: isQ ? 700 : 400 });
+    });
+    var H = y0 + rows.length * rowH;
+    return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' ' + H, width: o.width, padding: 10 });
+  }
+
+  var SVGDiagram = { brace: brace, segment: segment, balance: balance, scale: scale, pattern: pattern,
+    groups: groups, ratio: ratio };
 
   global.SVGDiagram = SVGDiagram;
   global.SVGGenerators = global.SVGGenerators || {};

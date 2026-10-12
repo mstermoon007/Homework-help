@@ -54,6 +54,9 @@
     'mappings/generation-contract/math.json',
     'index/index.json',
     'teaching/misconception-profiles.json',
+    // P38-DATA-01：qt-intent 机器约束投影（status+assessment，教学文本不进运行时），
+    // 完整性纳入 manifest.integrity 校验；消费口 = Query.intentFor
+    'teaching/qt-intent-runtime.json',
     'manifest/manifest.json'
   ];
 
@@ -95,6 +98,8 @@
         mappingDoc: data['mappings/generation-contract/math.json'],
         index: data['index/index.json'],
         misconceptions: data['teaching/misconception-profiles.json'],
+        // P38-DATA-01：qt-intent 机器约束投影（status+assessment），消费口 = Query.intentFor
+        qtIntents: data['teaching/qt-intent-runtime.json'],
         manifest: manifest,
         rootHash: manifest.integrity.rootHash
       };

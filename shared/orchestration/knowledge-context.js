@@ -295,6 +295,17 @@
     return K.misconceptionsFor(knowledgeId) || null;
   }
 
+  /**
+   * P38-DATA-01：qt-intent 运行时投影只读查询（Generator 侧经本通道消费，禁直连
+   * App.KNOWLEDGE / 直读 kbl/teaching——kbl-uniqueness app-knowledge-direct 口径）。
+   * 返回该 KP×QT 的投影行（status+assessment 机器约束）；未装载 / 无行 → null。
+   */
+  function intentFor(knowledgeId, questionType) {
+    var K = getRuntime();
+    if (!K || typeof K.intentFor !== 'function') return null;
+    return K.intentFor(knowledgeId, questionType) || null;
+  }
+
   function stats() {
     var K = getRuntime();
     if (!K || typeof K.stats !== 'function') return null;
@@ -331,6 +342,7 @@
     selectable: selectable,
     unit: unit,
     misconceptionsFor: misconceptionsFor,
+    intentFor: intentFor,
     stats: stats
   };
 

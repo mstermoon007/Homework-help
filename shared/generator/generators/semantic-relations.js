@@ -62,8 +62,25 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
 }
 
+// P38 修正：图形挂载意图闸门（镜像 position.js intentWantsGraphic 既有模式）——
+// 仅当 T2 意图（经 P38-DATA-01 运行时投影挂到 plan.semanticParams.graphic.role）
+// 授权配图时才允许 maker 挂图。graphicRole=null 的权威意图行（实证：正/反比例
+// fill/choice/apply）明确不配图；无条件挂图会被 Validator 的
+// KP_SEMANTIC_INTENT_ALIGNMENT 拒收（6g GEN-FAIL 复现），符合冻结链
+// 「SVG 只表达 Generator 已确定的语义、图形由意图授权」约束。
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
 function buildBase(plan, context, i, extra) {
   var constraints = plan.constraints || {};
+  var extraData = extra || {};
+  // P38 意图闸门：意图未授权配图时剥离 maker 附加的 graphic（单点收口，覆盖全部 maker）
+  if (extraData.graphic && !intentWantsGraphic(plan)) {
+    extraData = Object.assign({}, extraData);
+    delete extraData.graphic;
+  }
   return {
     knowledgePointId: pkp(plan),
     questionType: plan.questionTypeId,
@@ -83,7 +100,7 @@ function buildBase(plan, context, i, extra) {
     answer: null,
     answerMode: 'input',
     hint: null,
-    data: Object.assign({ mode: 'semantic-relations' }, extra || {})
+    data: Object.assign({ mode: 'semantic-relations' }, extraData)
   };
 }
 
@@ -185,11 +202,28 @@ function makeAddRelApply(plan, context, i) {
   var base = riC(rng, 5, 12, nr);
   var diff = riC(rng, 2, 8, nr);
   var more = (i % 2 === 0);
+  // P38 断链修复：apply 行（more/less 双形态）此前零 graphic。接通既有 diagram.segment
+  // 渲染器（makeAddRelFill/Geometry 同款）：more 求较大数→总括标 ?；less 求较小数→
+  // 第一段标 ?。参数全部来自本题已确定语义（base/diff 与所求），所求值不入图形文字。
+  var graphic = more ? {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: base + diff, part: base, unit: '',
+      partLabel: String(base), otherLabel: String(diff), totalLabel: '?'
+    }
+  } : {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: base + diff, part: base, unit: '',
+      partLabel: '?', otherLabel: String(diff), totalLabel: String(base + diff)
+    }
+  };
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
     operation: more ? 'add' : 'sub',
     barModel: true,
-    comparison: more ? 'more' : 'less'
+    comparison: more ? 'more' : 'less',
+    graphic: graphic
   });
   if (more) {
     return finish(q, '先画一画，再列式：小红有 ' + base + ' 朵小红花，小丽比小红多 ' + diff
@@ -291,7 +325,14 @@ function makePeriodFill(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    // P38 断链修复：fill 行此前零 graphic。接通 diagram.pattern 渲染器
+    // （makePeriodGeometry 同款）：周期组重复 + 省略号 + 未知位置 ?；
+    // 组内字符为序列材料（6g GRAPHIC-MATERIAL 既有裁决口径），非答案复述。
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   // P32-AS-11：第二参曾误传 [p.shapes]（整组形状=错误答案集合，嵌套数组缺陷），
   // 第 k 个图形唯一解为 p.shape，无等价答案，acceptable 必须为空。
@@ -310,9 +351,17 @@ function makePeriodApply(plan, context, i) {
   var k = riC(rng, 10, 40, nr);
   var rem = k % n;
   var which = rem === 0 ? set[n - 1] : set[rem - 1];
+  // P38 断链修复：apply 行此前零 graphic。接通 diagram.pattern 渲染器
+  // （makePeriodGeometry 同款）：组字符取旗/花/灯笼词语首字（红黄蓝），
+  // 答案为二字词语（如「红旗」），与图形单字文本不构成 token 命中。
+  var setHead = set.map(function (w) { return w.charAt(0); }).join('');
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: n, periodPosition: k, remainder: rem
+    periodLength: n, periodPosition: k, remainder: rem,
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: setHead, times: 2 }
+    }
   });
   return finish(q, '学校大门前按「' + set.join('、') + '」的顺序循环挂彩旗，第 ' + k
     + ' 面彩旗是什么颜色？', which, [which],
@@ -325,7 +374,13 @@ function makePeriodChoice(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    // P38 断链修复：choice 行此前零 graphic。接通 diagram.pattern 渲染器
+    // （makePeriodGeometry 同款）；组内字符为序列材料，非答案复述。
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   q.prompt = '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
     + ' 个图形是哪个？（  ）';
@@ -395,7 +450,14 @@ function makeScaleFill(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    // P38 断链修复：fill 行此前零 graphic。接通既有 geometry.square 渲染器
+    // （money.js 先例）：只画原边长 s.orig 的正方形（题面已知量），
+    // 不画变换后图形（避免泄露所求边长）。
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   return finish(q, '把一个边长 ' + s.orig + ' 厘米的正方形按 ' + ratio + ' 的比'
     + (s.enlarge ? '放大' : '缩小') + '，变换后正方形的边长是（  ）厘米。', s.next, [String(s.next)],
@@ -409,7 +471,13 @@ function makeScaleApply(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform',
     scaleRatio: s.enlarge ? (s.k + ':1') : ('1:' + s.k),
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    // P38 断链修复：apply 行此前零 graphic。接通 geometry.square 渲染器：
+    // 只画原长 s.orig 的正方形（题面已知量），不画变换后图形。
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   if (s.enlarge) {
     return finish(q, '一张小卡片长 ' + s.orig + ' 厘米，照相馆按 ' + s.k + ':1 的比把图案放大印成海报，'
@@ -427,7 +495,13 @@ function makeScaleChoice(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    // P38 断链修复：choice 行此前零 graphic。接通 geometry.square 渲染器：
+    // 只画原长 s.orig 的正方形（题面已知量），不画变换后图形。
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+    }
   });
   q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
     + '，原长 ' + s.orig + ' 厘米，变换后的长是多少厘米？（  ）';
@@ -445,7 +519,14 @@ function makeScaleGeometry(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next, gridFigure: true
+    fromLength: s.orig, toLength: s.next, gridFigure: true,
+    // P38 断链修复：geometry 行（方格图）此前零 graphic。接通 geometry.square
+    // 渲染器：只画原长 s.orig 格的正方形（题面已知量），单位用「格」如实承载
+    // 方格语义，不画变换后图形。
+    graphic: {
+      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+      params: { size: s.orig, unit: '格', unitPx: 26 }
+    }
   });
   return finish(q, '方格图上一个长方形的长占 ' + s.orig + ' 格，把图形按 ' + ratio
     + ' 的比' + (s.enlarge ? '放大' : '缩小') + '后，长应占多少格？', s.next, [String(s.next)],
@@ -484,7 +565,17 @@ function makePropFill(plan, context, i) {
   var t2 = riC(rng, 5, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    speed: speed, hoursA: t1, hoursB: t2
+    speed: speed, hoursA: t1, hoursB: t2,
+    // P38 断链修复：fill 行此前零 graphic。接通 diagram.ratio 渲染器（本战役新增）：
+    // 两行条形为路程（速度一定→路程与时间成正比例），第一行路程已知、第二行所求
+    // 以红「？」标注；答案 speed*t2 只决定条宽比例，不入图形文字。
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: t1 + '小时', text: (speed * t1) + '千米', parts: speed * t1 },
+        { label: t2 + '小时', text: '?', parts: speed * t2 }
+      ] }
+    }
   });
   return finish(q, '一辆汽车 ' + t1 + ' 小时行驶了 ' + (speed * t1)
     + ' 千米。照这样的速度，' + t2 + ' 小时能行驶（  ）千米。', speed * t2, [String(speed * t2)],
@@ -506,7 +597,17 @@ function makePropApply(plan, context, i) {
   var rows2 = total / c.per2;
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'inverse',
-    total: total, perRowA: c.per1, rowsA: c.rows1, perRowB: c.per2
+    total: total, perRowA: c.per1, rowsA: c.rows1, perRowB: c.per2,
+    // P38 断链修复：apply 行此前零 graphic。接通 diagram.ratio 渲染器：两种排队
+    // 方案各一行（每行人数为标签、行数为条长），总人数一定→行数与每行人数成
+    // 反比例；第二行行数所求以红「？」标注，答案 rows2 只决定条宽，不入文字。
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: '每行' + c.per1 + '人', text: c.rows1 + '行', parts: c.rows1 },
+        { label: '每行' + c.per2 + '人', text: '?', parts: rows2 }
+      ] }
+    }
   });
   return finish(q, '同学们排队做操，每行站 ' + c.per1 + ' 人，正好站 ' + c.rows1
     + ' 行。如果每行站 ' + c.per2 + ' 人，可以站多少行？', rows2, [String(rows2)],
@@ -522,7 +623,17 @@ function makePropChoice(plan, context, i) {
   var b = riC(rng, 6, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    unitPrice: unit, quantityA: a, quantityB: b
+    unitPrice: unit, quantityA: a, quantityB: b,
+    // P38 断链修复：choice 行此前零 graphic。接通 diagram.ratio 渲染器：两行条形
+    // 为总价（单价一定→总价与数量成正比例），第一行总价已知、第二行所求以
+    // 红「？」标注；答案 b*unit 只决定条宽，不入图形文字。
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: a + '千克', text: (a * unit) + '元', parts: a * unit },
+        { label: b + '千克', text: '?', parts: b * unit }
+      ] }
+    }
   });
   q.prompt = '买 ' + a + ' 千克苹果付了 ' + (a * unit) + ' 元，买 ' + b
     + ' 千克同样的苹果要付多少元？（  ）';
@@ -546,7 +657,17 @@ function makePropGeometry(plan, context, i) {
   var h2 = c.h1 * c.s2 / c.s1;
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    poleHeight: c.h1, poleShadow: c.s1, treeShadow: c.s2
+    poleHeight: c.h1, poleShadow: c.s1, treeShadow: c.s2,
+    // P38 断链修复：geometry 行（看示意图求树高）此前零 graphic。接通 diagram.ratio
+    // 渲染器：两行条形为物高（同一时刻物高与影长成正比例），竹竿行高已知、
+    // 树行所求以红「？」标注；答案 h2 只决定条宽，不入图形文字。
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: '竹竿', text: '高' + c.h1 + '米', parts: c.h1 },
+        { label: '树', text: '?', parts: h2 }
+      ] }
+    }
   });
   return finish(q, '看示意图：同一时刻，一根 ' + c.h1 + ' 米长的竹竿影长是 ' + c.s1
     + ' 米，旁边一棵树的影长是 ' + c.s2 + ' 米。这棵树高多少米？', h2, [String(h2)],

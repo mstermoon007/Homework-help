@@ -278,6 +278,55 @@ function formatExpr(expr) {
   return expr.operands[0] + ' ' + expr.ops[0] + ' ' + expr.operands[1];
 }
 
+// P38 断链修复闸门：意图驱动——仅当该 (KP, 题型) 行 intent.graphicRole 非空
+// （plan.semanticParams.graphic 为 P30-10 权威行投影）时挂图；意图无图的行零改动。
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+// P38 断链修复：应用题关系图——按模板×题型派生「题设材料」图形（role 统一
+// quantity-correspondence）。铁律：图形只画已知量与未知标记（'？'），绝不把答案、
+// judge 的 shown 值、fill 空位值（operands[0]）印成图形文字；线段/份数比例长度
+// 为教科书式示意，不承载文字语义。
+function buildRelationGraphic(template, nums, ans, qt, expr) {
+  function seg(p) {
+    return { type: 'diagram', subtype: 'segment', role: 'quantity-correspondence',
+      params: Object.assign({ unit: '' }, p) };
+  }
+  function br(p) {
+    return { type: 'diagram', subtype: 'brace', role: 'quantity-correspondence', params: p };
+  }
+  function grp(p) {
+    return { type: 'diagram', subtype: 'groups', role: 'quantity-correspondence', params: p };
+  }
+  if (qt === 'fill') {
+    // fill：空位 = expr.operands[0]（禁印），题面已印 expr.operands[1] 与等式结果 ans
+    var op = expr.ops[0], b = expr.operands[1];
+    if (op === '+') return seg({ total: ans, part: b, partLabel: String(b), otherLabel: '？', totalLabel: String(ans) });
+    if (op === '−') return seg({ total: ans + b, part: ans, partLabel: String(ans), otherLabel: String(b), totalLabel: '？' });
+    if (op === '×') return grp({ boxes: b, boxText: '？', topText: String(ans) });
+    return grp({ boxes: b, boxText: String(ans), topText: '？' }); // ÷：份数=除数，每份=结果，总量=空位
+  }
+  // choice/judge/apply：答案不在题面，图形展示已知量 + '？'
+  switch (template) {
+    case 'total-from-parts': return br({ left: nums.a, right: nums.b });
+    case 'part-from-total': return seg({ total: nums.total, part: nums.part1 });
+    case 'compare-more': return seg({ total: nums.a + nums.diff, part: nums.a,
+      partLabel: String(nums.a), otherLabel: String(nums.diff), totalLabel: '？' });
+    case 'compare-less': return seg({ total: nums.a, part: nums.a - nums.diff,
+      partLabel: '？', otherLabel: String(nums.diff), totalLabel: String(nums.a) });
+    case 'multiple': return grp({ boxes: nums.n, boxText: nums.a, topText: '?' });
+    case 'equal-groups': return grp({ boxes: nums.groups, boxText: nums.per, topText: '?' });
+    case 'share-equally': return grp({ boxes: nums.groups, boxText: '？', topText: nums.total });
+    case 'divide-multiple': return grp({ boxes: nums.n, boxText: '？', topText: nums.a });
+    case 'grouping': return grp({ dots: nums.total, topText: '？组' });
+    case 'distance': return grp({ boxes: nums.time, boxText: nums.speed, topText: '?' });
+    case 'work': return grp({ boxes: nums.time, boxText: nums.rate, topText: '?' });
+  }
+  return null;
+}
+
 function formatTemplate(template, nums) {
   var tpl = PROBLEM_TEMPLATES[template];
   var str = tpl.zh;
@@ -404,11 +453,12 @@ function makeApplicationQuestion(plan, context, i, meta) {
         numbers: nums,
         options: options,
         correctIndex: correctIndex,
-        relation: PROBLEM_TEMPLATES[template].relation
+        relation: PROBLEM_TEMPLATES[template].relation,
+        graphic: intentWantsGraphic(plan) ? buildRelationGraphic(template, nums, ans, 'choice') : null
       }
     };
   }
-  
+
   if (qt === 'judge') {
     var isTrue = rng() < 0.5;
     // V5.1.0：假命题扰动必须非 0，保证命题真值唯一（delta=0 会把假命题说成正确结果）
@@ -424,7 +474,9 @@ function makeApplicationQuestion(plan, context, i, meta) {
       template: template,
       numbers: nums,
       shownAnswer: shown,
-      relation: PROBLEM_TEMPLATES[template].relation
+      relation: PROBLEM_TEMPLATES[template].relation,
+      // judge 图形同 choice：主张材料只含已知量 + '？'，绝不含 answer/shown
+      graphic: intentWantsGraphic(plan) ? buildRelationGraphic(template, nums, ans, 'judge') : null
     };
     if (!isTrue) {
       judgeData.misconception = '数量关系理解错误：按题意正确答案应为 ' + ans + '，题中给成了 ' + shown + '。';
@@ -478,6 +530,18 @@ function makeApplicationQuestion(plan, context, i, meta) {
     };
   }
 
+  // P38 断链修复：fill/apply 补关系图（calc 意图无图，不挂键）
+  var appData = {
+    mode: qt,
+    steps: Object.keys(nums).length > 2 ? 2 : 1,
+    template: template,
+    numbers: nums,
+    relation: PROBLEM_TEMPLATES[template].relation,
+    operation: PROBLEM_TEMPLATES[template].ops[0]
+  };
+  if ((qt === 'fill' || qt === 'apply') && intentWantsGraphic(plan)) {
+    appData.graphic = buildRelationGraphic(template, nums, answer, qt, appExpr);
+  }
   return {
     knowledgePointId: pkp(plan),
     questionType: qt,
@@ -488,14 +552,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
     prompt: stemPrompt,
     answer: answerField,
     answerMode: 'input',
-    data: {
-      mode: qt,
-      steps: Object.keys(nums).length > 2 ? 2 : 1,
-      template: template,
-      numbers: nums,
-      relation: PROBLEM_TEMPLATES[template].relation,
-      operation: PROBLEM_TEMPLATES[template].ops[0]
-    }
+    data: appData
   };
 }
 

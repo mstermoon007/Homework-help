@@ -1003,30 +1003,77 @@ var SHAPE_THEME = {
      ['从上面看是 4 个正方形，立体就只有一层', '从上面看只能确定底层占位，上面还可能叠着正方体。'],
      ['三个方向看到的正方形个数一定相同', '三个方向的视图分别反映长、宽、高，个数一般不同。']],
     // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
-    [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3], ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2], ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1]],
+    // P38 断链修复（用户 2026-10-12 指令，覆盖 H6 对 fill/choice 的「不出图」裁决；依据留存 change-log）：
+    // nums 条目补 view-cards 题设视图卡（P35-CLOSE-01 同款机制）——只画题面已述视图方格阵列，
+    // 不画组合体成品，不泄所求；geometry 行维持纯文字（不在本次断链清单，shapeName 满足兜底契约）。
+    [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1]] }, { direction: 'top', grid: [[1, 1]] }, { direction: 'left', grid: [[1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }, { direction: 'front', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }]],
     [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
      ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
-     ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']]),
+     ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']],
+  // P38 断链修复：judge/apply 配原材料图（P36-01 同款，去棱长标注，不泄判断/过程所求）
+  { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                    params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u01-k001': shapeTheme( // 从不同角度观察立体图形
     ['从正面、左面、上面观察同一立体图形，看到的平面图形可能不同', '辨认视图时要看清每行每列各有几个正方形', '观察方向变了，看到的形状和正方形的排列也会跟着变'],
     [['从正面看到的形状就是立体本身的样子', '正面视图只是一个方向的样子，还要结合其他方向。'],
      ['从上面看到的正方形个数就是立体的总个数', '上面只能看到最上层的占位，被压在下面的数不清。'],
      ['同一立体从不同方向看，正方形个数一定相同', '方向不同，看到的个数和排列可能不同。']],
     // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
-    [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4], ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3], ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2]],
+    // P38 断链修复（用户 2026-10-12 指令，覆盖 H6 对 fill/choice 的「不出图」裁决；依据留存 change-log）：
+    // 有题设视图数据的条目补 view-cards（P35-CLOSE-01 同款）；概念计数条目（第 2 条「三个方向」）
+    // 配 cube 观察对象原材料图（去棱长标注），不泄所求。
+    [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1, 1, 1]] }, { direction: 'top', grid: [[1, 1, 1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3,
+      { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+        params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } }],
+     ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1], [1]] }], unit: 'cm', unitPx: 25 } }]],
     [['用 4 个小正方体搭一个立体，先画出从正面看到的形状，再画出从上面看到的形状？', '视图取决于搭法，如排一行：正面 1 个或 4 个、上面 4 个排一行'],
      ['先观察由 5 个小正方体搭成的立体，再说出从哪个方向看到的正方形最多？', '比较正面、左面、上面的视图，个数可能不同'],
-     ['把 3 个小正方体叠成一竖列，先分别从正面和上面看，再说出各看到几个正方形', '正面看是 3 个竖排，上面看是 1 个']]),
+     ['把 3 个小正方体叠成一竖列，先分别从正面和上面看，再说出各看到几个正方形', '正面看是 3 个竖排，上面看是 1 个']],
+  // P38 断链修复：judge/apply 配原材料图（P36-01 同款，去棱长标注，不泄判断/过程所求）
+  { judgeGraphic: { type: 'geometry', subtype: 'cuboid', role: 'quantity-correspondence',
+                    params: { length: 4, width: 2, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u01-k002': shapeTheme( // 根据平面视图搭建立体图形
     ['根据从三个方向看到的图形，可以还原出立体图形', '只根据一个方向的视图摆一摆，摆法往往不唯一', '先按从上面看到的图形确定底层，再按从正面和左面看到的确定层数'],
     [['按一个方向的视图摆出的立体是唯一的', '一个方向的视图挡不住的部分看不见，摆法不唯一。'],
      ['还原时可以不数被挡住的正方体', '被挡住的正方体要根据三个方向的视图推算。'],
      ['从上面看到的图形决定立体的高', '从上面看到的是底面占位；高由正面和左面视图决定。']],
     // P34-03 注：本 KP 证据规则锚定 subtype=cuboid（T2 冻结口径），nums 不声明 shape，沿用 KP 名派生图形
-    [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4], ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3], ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2]],
+    // P38 断链修复（用户 2026-10-12 指令，覆盖 H6 对 fill/choice 的「不出图」裁决；依据留存 change-log）：
+    // nums 条目补 view-cards 题设视图卡（P35-CLOSE-01 同款机制），只画题面已述视图。
+    [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }], unit: 'cm', unitPx: 25 } }],
+     ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'front', grid: [[1], [1], [1]] }], unit: 'cm', unitPx: 25 } }],
+     ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2,
+      { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+        params: { views: [{ direction: 'top', grid: [[1, 1, 1]] }], unit: 'cm', unitPx: 25 } }]],
     [['先根据「从上面看是 3 个正方形排一行」摆好底层，再根据「从正面看最高 2 层」补上第二层？', '底层 3 个排一行，某一列上再叠 1 个'],
      ['给出三个方向的视图，先摆一摆，再数一数一共用了几个小正方体', '按上→正→左顺序核对，个数由视图推算'],
-     ['只用「从正面看是 2 个正方形」摆一摆，先摆出两种不同摆法，再说明为什么不唯一？', '被挡住的个数和位置无法确定，摆法不唯一']]),
+     ['只用「从正面看是 2 个正方形」摆一摆，先摆出两种不同摆法，再说明为什么不唯一？', '被挡住的个数和位置无法确定，摆法不唯一']],
+  // P38 断链修复：judge/apply 配原材料图（P36-01 同款，去棱长标注，不泄判断/过程所求）
+  { judgeGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } },
+    applyGraphic: { type: 'geometry', subtype: 'cube', role: 'quantity-correspondence',
+                    params: { edge: 2, labelSides: false, unit: 'cm', unitPx: 25 } } }),
 
   // ---- 形态族 3：长度测量（length-measure）----
   'math-g2-up-u05-k002': shapeTheme( // 测量物体长度的方法
@@ -1645,8 +1692,11 @@ function themedItemMeta(item, qMeta, plan, rng) {
 // P34-H1（人工数据请求 H6，用户 2026-10-08 签批）：三视图/搭建推算 3 KP 的题面由文字
 // 自含视图数据（各方向看到的正方形个数/排列），cuboid 配图既非题设小正方体组合体、
 // 也不承载解题信息（画组合体更会让学生数方块直接得到「至少几个」答案，摧毁空间推理考点）。
-// 这 3 KP × 5 题型共 15 行 evidence-rules 已删 data.graphic.* 锚定；maker 对应不出图，
-// shapeName 保留（geometry 的 graphicOrInstruction 由 shapeName 满足），geometry 走纯文字引导。
+// P38 断链修复（用户 2026-10-12 指令覆盖 H6 的 fill/choice/judge/apply「不出图」部分，
+// 依据留存 docs/P38/change-log.md）：这 3 KP 的 nums 条目已补 view-cards 题设视图卡
+// （只画题面已述视图，不画组合体成品）、judge/apply 配原材料图（P36-01 同款）；
+// noGraphic 现仅阻止「KP 名派生/flat 取样」的兜底图，条目自声明 descriptor 与主题
+// judgeGraphic/applyGraphic 不受其拦截；geometry 行维持纯文字（shapeName 满足兜底契约）。
 var NO_GRAPHIC_VIEW_KPS = {
   'math-g4-down-u02-k002': 1,  // 由平面到立体
   'math-g5-down-u01-k001': 1,  // 从不同角度观察立体图形
@@ -1682,7 +1732,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
   if (qt === 'choice') {
     var cItem = nums[v % nums.length];
     var cMeta = themedItemMeta(cItem, qMeta, plan, rng);
-    if (cMeta && !noGraphic) data.graphic = cMeta.graphic;
+    // P38：noGraphic 只拦 KP 派生兜底图；条目自声明 descriptor（H6 KP 的 view-cards 等）放行
+    if (cMeta && (!noGraphic || typeof cItem.shape === 'object')) data.graphic = cMeta.graphic;
     var options = Rng.shuffle(rng, [cItem.a].concat(numDistractors(cItem.n)));
     data.options = options;
     data.correctIndex = options.indexOf(cItem.a);
@@ -1693,7 +1744,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     answerMode = 'choice';
   } else if (qt === 'judge') {
     // P36-01：judge 配主题原材料图（如观察物体族配 cuboid 观察对象）；缺省沿用 qMeta 派生图
-    if (!noGraphic && theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
+    // P38：H6 KP 主题已补 judgeGraphic（原材料去标注），不再被 noGraphic 拦截
+    if (theme.judgeGraphic) data.graphic = JSON.parse(JSON.stringify(theme.judgeGraphic));
     var isTrue = rng() < 0.5;
     var shown, explanation;
     if (isTrue) {
@@ -1712,7 +1764,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
   } else if (qt === 'fill') {
     var fItem = nums[v % nums.length];
     var fMeta = themedItemMeta(fItem, qMeta, plan, rng);
-    if (fMeta && !noGraphic) data.graphic = fMeta.graphic;
+    // P38：noGraphic 只拦 KP 派生兜底图；条目自声明 descriptor（H6 KP 的 view-cards 等）放行
+    if (fMeta && (!noGraphic || typeof fItem.shape === 'object')) data.graphic = fMeta.graphic;
     data.operands = [fItem.n];
     prompt = fItem.q;
     answer = { value: fItem.a, acceptable: [], explanation: themedExpl(fItem.q, fItem.a) };
@@ -1736,7 +1789,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     }
   } else { // apply，steps=2
     // P36-01：apply 配主题原材料图（如摆小正方体情境配 cube 原材料）；缺省沿用 qMeta 派生图
-    if (!noGraphic && theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
+    // P38：H6 KP 主题已补 applyGraphic（原材料去标注），不再被 noGraphic 拦截
+    if (theme.applyGraphic) data.graphic = JSON.parse(JSON.stringify(theme.applyGraphic));
     var sList = theme.scenes.length
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });

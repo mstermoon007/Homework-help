@@ -95,6 +95,18 @@
     return c.misconceptions.kps[kpId] || null;
   }
 
+  // P38-DATA-01：qt-intent 机器约束投影只读查询（status+assessment），
+  // 供 Generator 语义参数层经 contract 公开 API 消费（意图闸门/图形 role）。
+  function intentFor(kpId, questionType) {
+    var c = load();
+    var rows = c.qtIntents && Array.isArray(c.qtIntents.rows) ? c.qtIntents.rows : null;
+    if (!rows || !kpId || !questionType) return null;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].knowledgeId === kpId && rows[i].questionType === questionType) return rows[i];
+    }
+    return null;
+  }
+
   function stats() {
     var c = load();
     var byGrade = {}; var byBook = {};
@@ -126,6 +138,7 @@
     searchByName: searchByName,
     unit: unit,
     misconceptionsFor: misconceptionsFor,
+    intentFor: intentFor,
     stats: stats
   };
 

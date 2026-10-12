@@ -247,6 +247,48 @@ function makeGraphicForPosition(scene) {
   };
 }
 
+// P38 断链修复闸门：意图驱动——仅当该 (KP, 题型) 行 intent.graphicRole 非空
+// （plan.semanticParams.graphic 为 P30-10 权威行投影）时挂图；意图无图的行零改动。
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
+// P38 断链修复：平移/旋转/观察/数对四族描述符构造（role 统一 number-position）。
+// 图形只画题设材料（位移/旋转演示、正方体实物、数对标点），不含所求数值，不反推题目。
+function translationGraphic(dx, dy) {
+  return {
+    type: 'geometry', subtype: 'translationDemo', role: 'number-position',
+    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 30 }
+  };
+}
+function rotationGraphic(angle, dir) {
+  return {
+    type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+    params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0,
+      deg: dir === '顺时针' ? -angle : angle, unitPx: 34 }
+  };
+}
+function clockHandGraphic() {
+  // 钟面指针 12 → 3（顺时针 90°，deg 取负与 SVG y 向下一致）
+  return {
+    type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: -90, unitPx: 34 }
+  };
+}
+function observeCubeGraphic() {
+  return { type: 'geometry', subtype: 'cube', role: 'number-position',
+    params: { edge: 2, labelSides: false, unit: 'cm' } };
+}
+function coordGridGraphic(col, row) {
+  var gs = Math.max(col, row, 5);
+  return {
+    type: 'geometry', subtype: 'position-grid', role: 'number-position',
+    params: { gridSize: gs, unitPx: gs > 6 ? 28 : 35,
+      objects: [{ name: 'A', x: col - 1, y: row - 1 }], showGrid: true }
+  };
+}
+
 // P25-08：由 KP 名称派生空间关系子类型
 var NAME_TO_SPATIAL = [
   { re: /数对|坐标/, type: 'coordinate' },
@@ -279,6 +321,7 @@ function makeTranslationQuestion(plan, context, i) {
   var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
   var hDir = dx > 0 ? '右' : '左';
   var vDir = dy > 0 ? '下' : '上';
+  var transGraphic = intentWantsGraphic(plan) ? translationGraphic(dx, dy) : null;
   // P30-GEN-06（P30-16）：fill/choice/judge 不得共享「一个图形先…再…一共平移了多少格」骨架，
   // 按题型换引导词与问法打散共享 3-gram。
   var prompt;
@@ -298,7 +341,7 @@ function makeTranslationQuestion(plan, context, i) {
       answer: { value: String(answer), acceptable: [],
         explanation: '平移分两次移动，总格数是两次格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
           + '＝' + answer + ' 格。' }, answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '平移' }
+      data: { mode: 'fill', steps: 1, shapeName: '平移', graphic: transGraphic }
     };
   }
   if (qt === 'choice') {
@@ -320,12 +363,12 @@ function makeTranslationQuestion(plan, context, i) {
       answer: { value: String(ci2), acceptable: [],
         explanation: '总格数是两次平移格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
           + '＝' + answer + ' 格，正确选项是「' + answer + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移', graphic: transGraphic }
     };
   }
   // judge
   var transIsTrue = shown === answer;
-  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown) };
+  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown), graphic: transGraphic };
   var transExplanation = transIsTrue
     ? '图形平移了 ' + answer + ' 格，题中答案正确。'
     : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
@@ -347,6 +390,7 @@ function makeRotationQuestion(plan, context, i) {
   var angle = Rng.pick(rng, [90, 180, 270]);
   var dir = rng() < 0.5 ? '顺时针' : '逆时针';
   var qt = plan.questionTypeId;
+  var wantsG = intentWantsGraphic(plan);
   var prompt = '一个图形绕中心点' + dir + '旋转 ' + angle + ' 度后，方向是否改变？';
   var isTrue = angle === 180 ? true : true;
   if (qt === 'judge') {
@@ -356,7 +400,7 @@ function makeRotationQuestion(plan, context, i) {
       seed: seedFor(plan, context, i),
       prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
       answer: { value: true, acceptable: [], explanation: '旋转只改变图形的位置和方向，不改变图形的形状和大小，说法正确。' }, answerMode: 'judge',
-      data: { mode: 'judge', steps: 1, shapeName: '旋转' }
+      data: { mode: 'judge', steps: 1, shapeName: '旋转', graphic: wantsG ? rotationGraphic(angle, dir) : null }
     };
   }
   if (qt === 'fill') {
@@ -368,7 +412,7 @@ function makeRotationQuestion(plan, context, i) {
       answer: { value: '90', acceptable: [],
         explanation: '钟面上指针从 12 走到 3 转过一个直角，直角是 90 度，与顺时针还是逆时针无关。' },
       answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '旋转' }
+      data: { mode: 'fill', steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic() : null }
     };
   }
   // choice
@@ -381,7 +425,7 @@ function makeRotationQuestion(plan, context, i) {
     answer: { value: '0', acceptable: [],
       explanation: '旋转只改变图形的位置和方向，不改变形状和大小，所以正确说法是「形状不变」。' },
     answerMode: 'choice',
-    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转' }
+    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转', graphic: wantsG ? rotationGraphic(angle, dir) : null }
   };
 }
 
@@ -390,6 +434,7 @@ function makeObserveQuestion(plan, context, i) {
   var views = ['正面', '上面', '侧面'];
   var correct = Rng.pick(rng, views);
   var qt = plan.questionTypeId;
+  var obsGraphic = intentWantsGraphic(plan) ? observeCubeGraphic() : null;
   if (qt === 'choice') {
     var opts = Rng.shuffle(rng, views.slice());
     var ci = opts.indexOf(correct);
@@ -401,7 +446,7 @@ function makeObserveQuestion(plan, context, i) {
       answer: { value: String(ci), acceptable: [],
         explanation: '正方体每个面都是正方形；题中描述的是从' + correct + '看到的，正确选项是「'
           + correct + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察', graphic: obsGraphic }
     };
   }
   if (qt === 'fill') {
@@ -413,7 +458,7 @@ function makeObserveQuestion(plan, context, i) {
       answer: { value: correct, acceptable: [],
         explanation: '正方体的每个面都是正方形，从' + correct + '观察看到的就是正方形。' },
       answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '观察' }
+      data: { mode: 'fill', steps: 1, shapeName: '观察', graphic: obsGraphic }
     };
   }
   // judge
@@ -423,7 +468,7 @@ function makeObserveQuestion(plan, context, i) {
     seed: seedFor(plan, context, i),
     prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
     answer: { value: false, acceptable: [], explanation: '从正面、上面、侧面等不同方向观察同一物体，看到的形状可能不同，说法错误。' }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '观察', misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
+    data: { mode: 'judge', steps: 1, shapeName: '观察', graphic: obsGraphic, misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
   };
 }
 
@@ -433,6 +478,7 @@ function makeCoordinateQuestion(plan, context, i) {
   var x = riC(rng, 1, 9, nr);
   var y = riC(rng, 1, 9, nr);
   var qt = plan.questionTypeId;
+  var wantsG = intentWantsGraphic(plan);
   if (qt === 'fill') {
     return {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
@@ -444,7 +490,7 @@ function makeCoordinateQuestion(plan, context, i) {
       answer: { value: String(x), acceptable: [],
         explanation: '数对中第一个数表示列，（' + x + '，' + y + '）的第一个数是 ' + x
           + '，所以点 A 在第 ' + x + ' 列。' }, answerMode: 'input',
-      data: { mode: 'fill', steps: 1, shapeName: '数对' }
+      data: { mode: 'fill', steps: 1, shapeName: '数对', graphic: wantsG ? coordGridGraphic(x, y) : null }
     };
   }
   if (qt === 'choice') {
@@ -465,7 +511,7 @@ function makeCoordinateQuestion(plan, context, i) {
       answer: { value: String(ci), acceptable: [],
         explanation: '数对第一个数表示列、第二个数表示行，第 ' + x + ' 列第 ' + y
           + ' 行用 ' + correct + ' 表示，正确选项是「' + correct + '」。' }, answerMode: 'choice',
-      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对' }
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对', graphic: wantsG ? coordGridGraphic(x, y) : null }
     };
   }
   // judge
@@ -475,7 +521,7 @@ function makeCoordinateQuestion(plan, context, i) {
     seed: seedFor(plan, context, i),
     prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
     answer: { value: false, acceptable: [], explanation: '数对中第一个数表示列、第二个数表示行，（3，5）表示第 3 列第 5 行，说法错误。' }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '数对', misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
+    data: { mode: 'judge', steps: 1, shapeName: '数对', graphic: wantsG ? coordGridGraphic(3, 5) : null, misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
   };
 }
 

@@ -19,8 +19,11 @@
   'use strict';
 
   // P30-22：graphic.role 枚举——图形必须回答「为什么需要这个图」。
-  // 取值与 kbl/teaching qt-intent.assessment.graphicRole 对齐；
-  // Generator 依据 Intent 设定，缺省按 graphic.type 映射（见 GRAPHIC_TYPE_ROLES）。
+  // P38-06 双轨统一：graphic.role（Generator 层，表"图的具体语义角色"）与
+  // intent.graphicRole（Intent 层，表"题目对图形的需求" carrier/auxiliary/null）是不同维度。
+  // carrier 仅 Intent 层使用（Generator 侧零产出，不在本枚举）；
+  // auxiliary 在两轨语义不同：Generator auxiliary = 非核心语义载体（涂色/认识图形），
+  // Intent auxiliary = 需参考图（P38-06 收紧为必须配图）。
   var GRAPHIC_ROLES = {
     'quantity-correspondence': true,  // 数量对应（如数图形个数、人民币计数）
     'number-position': true,          // 数与位置（钟表、数轴、方位）

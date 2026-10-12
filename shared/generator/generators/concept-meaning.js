@@ -258,6 +258,11 @@ function makeAngleFill(plan, context, i) {
       constructs: ['vertex', 'rays', 'angle']
     }
   });
+  // P38 断链修复：角的结构配图（顶点 + 两条边），不标角度（结构认知非度量）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '一个角有 1 个顶点和 ____ 条边。', '2', ['2', '两'],
     '角由一个顶点和两条边（射线）组成');
 }
@@ -266,6 +271,18 @@ function makeAngleApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var shape = Rng.pick(rng, [['三角形', 3], ['红领巾', 3], ['五角星贴纸', 5], ['正方形', 4]]);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-count' });
+  // P38 断链修复：按题设形状配原材料图（不标角数/边长，数角为考点）
+  var g;
+  if (shape[0] === '五角星贴纸') {
+    g = { type: 'geometry', subtype: 'star', role: 'auxiliary', params: { size: 2, unitPx: 26 } };
+  } else if (shape[0] === '正方形') {
+    g = { type: 'geometry', subtype: 'square', role: 'auxiliary', params: { size: 2, unitPx: 26, labelSides: false, rightAngle: false } };
+  } else if (shape[0] === '红领巾') {
+    g = { type: 'geometry', subtype: 'triangle', role: 'auxiliary', params: { p1: [0, 0], p2: [4, 0], p3: [0.8, 0.9], unitPx: 26 } };
+  } else {
+    g = { type: 'geometry', subtype: 'triangle', role: 'auxiliary', params: { p1: [0, 0], p2: [3, 0], p3: [1.5, 2], unitPx: 26 } };
+  }
+  q.data.graphic = g;
   return finish(q, '观察一块' + shape[0] + '形状的纸板：上面有几个角？', String(shape[1]), [String(shape[1])],
     shape[0] + '有 ' + shape[1] + ' 个角');
 }
@@ -274,6 +291,11 @@ function makeAngleChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-definition' });
   q.prompt = '下面哪个说法正确地描述了“角”？（  ）';
+  // P38 断链修复：角的定义配图（顶点 + 两条射线）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   var angleDef = '从一点引出两条射线所组成的图形';
   return finishChoice(q, rng, angleDef,
     ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形'],
@@ -282,6 +304,11 @@ function makeAngleChoice(plan, context, i) {
 
 function makeAngleGeometry(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-size-vs-edge' });
+  // P38 断链修复：观察对象配图（一个角，不标角度——角的大小与边长无关为考点）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '观察一个角：把它的两条边画得更长，这个角的大小 ____。（填“变大”“变小”或“不变”）',
     '不变', ['不变'], '角的大小与两边张开的程度有关，与边的长短无关');
 }
@@ -307,12 +334,28 @@ function makeAngleJudge(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
   q.answerMode = 'judge'; // P32-AS-12：陈述判断为原生判断题，answerMode 不得沿用 input 默认值
   if (s.misconception) q.data.misconception = s.misconception;
+  // P38 断链修复：判断主张的观察材料配图（一个角）；judge 答案为 boolean，图形仅作主张材料
+  q.data.graphic = {
+    type: 'geometry', subtype: 'angle', role: 'auxiliary',
+    params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
+  };
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 /* ================================================================
  * g3 面积的认识 — KBL：物体表面或封闭图形的大小
  * ================================================================ */
+
+/** P38 断链修复：面积格子阵列（每行最多 5 格，逐行填充，末行可不满） */
+function gridOf(n) {
+  var cols = Math.min(5, n), rows = Math.ceil(n / cols), grid = [];
+  for (var r = 0; r < rows; r++) {
+    var row = [];
+    for (var c = 0; c < cols; c++) row.push(r * cols + c < n ? 1 : 0);
+    grid.push(row);
+  }
+  return grid;
+}
 
 function makeAreaFill(plan, context, i) {
   var q = buildBase(plan, context, i, {
@@ -323,6 +366,11 @@ function makeAreaFill(plan, context, i) {
       constructs: ['surface', 'size']
     }
   });
+  // P38 断链修复：封闭图形表面示意（不标边长——概念认知非度量）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'],
     '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
 }
@@ -331,6 +379,12 @@ function makeAreaApply(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var n = Rng.pick(rng, [6, 8, 10, 12, 15]);
   var q = buildBase(plan, context, i, { subType: 'area-measure', quantityKind: 'area', unitSquares: n });
+  // P38 断链修复：铺满过程可视化（题面已知量 n 的格子阵列，无文字标注；
+  // 铺满计数与面积同源为面积定义本身，AS-16C #2 既有裁决口径）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'view-cards', role: 'auxiliary',
+    params: { views: [{ direction: '', grid: gridOf(n) }], unitPx: 20 }
+  };
   return finish(q, '用 1 平方分米的小正方形去铺一张卡片，正好铺满了 ' + n + ' 个。这张卡片的面积是多少平方分米？',
     String(n), [String(n)], '面积就是包含的面积单位的个数：' + n + ' 个 1 平方分米 = ' + n + ' 平方分米');
 }
@@ -339,6 +393,11 @@ function makeAreaChoice(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area' });
   q.prompt = '下面哪个是面积单位？（  ）';
+  // P38 断链修复：面的大小示意（不标边长——概念认知非度量）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒'],
     '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
 }
@@ -346,10 +405,21 @@ function makeAreaChoice(plan, context, i) {
 function makeAreaGeometry(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var nr = nrOf(plan);
-  var a = riC(rng, 6, 9, nr);
-  var b = riC(rng, 3, Math.max(3, a - 2), nr);
-  var winner = Rng.pick(rng, [['甲', a], ['乙', b]]);
+  // P38-05 修复：原 winner=Rng.pick 随机选但 b≤a-2 恒小于 a → 选乙时答案数学错误（60%）；
+  // 改为 a/b 同范围随机、避免相等，winner 取面积大者（格数多者），答案恒正确。
+  var a = riC(rng, 4, 9, nr);
+  var b = riC(rng, 4, 9, nr);
+  while (b === a) b = riC(rng, 4, 9, nr);
+  var winner = a > b ? ['甲', a] : ['乙', b];
   var q = buildBase(plan, context, i, { subType: 'area-compare', quantityKind: 'area', gridA: a, gridB: b });
+  // P38 断链修复：甲/乙格子阵列同尺寸并排（数格比大小为考点，标签为题面材料非答案内容）
+  q.data.graphic = {
+    type: 'geometry', subtype: 'view-cards', role: 'auxiliary',
+    params: {
+      views: [{ direction: '甲', grid: gridOf(a) }, { direction: '乙', grid: gridOf(b) }],
+      unitPx: 16
+    }
+  };
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
     winner[0], [winner[0], '图形' + winner[0]], '小方格同样大时，占的格子越多面积越大：' + winner[0] + ' 用了 ' + winner[1] + ' 个');
 }
@@ -375,6 +445,11 @@ function makeAreaJudge(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
   q.answerMode = 'judge'; // P32-AS-12：陈述判断为原生判断题，answerMode 不得沿用 input 默认值
   if (s.misconception) q.data.misconception = s.misconception;
+  // P38 断链修复：封闭图形观察材料配图（不标边长）；judge 答案为 boolean，图形仅作主张材料
+  q.data.graphic = {
+    type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
+    params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
+  };
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 

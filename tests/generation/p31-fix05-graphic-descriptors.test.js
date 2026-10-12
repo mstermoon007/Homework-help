@@ -181,31 +181,39 @@ test('P31-09 登记 seed 同形重放：题面逐字一致（仅新增 data.grap
   assert.ok(q.data && q.data.graphic, '登记题现已带描述符');
 });
 
-/* ---------------- 3b. FIX-09 证据分流：销账/挂账行维持不带 graphic（附证据，防误修） ---------------- */
+/* ---------------- 3b. FIX-09 证据分流（P38 断链修复后按 T2 现行口径重写） ---------------- */
 
-test('证据销账行（g2 calc/fill/choice/apply）不携带 graphic——非断链，口径见头注释', () => {
-  // g2 calc：intent 整体缺失（缺失不猜）+ 题面只问余数、周期组引号内自足；
-  // g2 fill/choice：intent auxiliary 允许但不要求 graphic，引号字符已给出周期组，
-  //                无看图指示，numeric 表征合法；
-  // g2 apply：文字情境（彩旗），无图指示。
-  [['math-g2-down-u02-k005', 'calc'], ['math-g2-down-u02-k005', 'fill'],
-   ['math-g2-down-u02-k005', 'choice'], ['math-g2-down-u02-k005', 'apply']].forEach(function (row) {
+test('证据销账行重分类（P38）：g2 calc 不带 graphic；fill/choice/apply 带 graphic', () => {
+  // P38 断链修复（用户 2026-10-12 指令）：P31-FIX-09 时代的「fill/choice 销账不带图」
+  // 裁决基于旧 T2 口径；现行 T2（P34/P35/P36 评审周期更新）g2-down-u02-k005
+  // fill/choice/apply 均 ai-verified + auxiliary + repr 含 graphic → 断链修复配图
+  // （periodic-pattern 序列材料图，6g L2 GRAPHIC-MATERIAL 白名单已登记）；
+  // calc 行 confirmed + role=null + repr=['numeric'] → 意图禁图维持不带。
+  [['math-g2-down-u02-k005', 'calc', false], ['math-g2-down-u02-k005', 'fill', true],
+   ['math-g2-down-u02-k005', 'choice', true], ['math-g2-down-u02-k005', 'apply', true]].forEach(function (row) {
     const out = gen(row[0], row[1], 3);
     out.qs.forEach(function (q, i) {
-      assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' 不带 graphic');
+      if (row[2]) {
+        assert.ok(q.data && q.data.graphic && q.data.graphic.type, row[0] + '/' + row[1] + ' #' + i + ' P38 配图在场');
+      } else {
+        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' calc intent 禁图，不带 graphic');
+      }
     });
   });
 });
 
-test('挂人工裁决行（g1 calc/apply）不携带 graphic——calc intent 禁图，apply 要求学生自画', () => {
-  // g1 calc：intent allowedRepresentations=['numeric']/graphicRole=null，
-  //          driftRisk 明文图形语义降级为文字/算式；题面「看图列式」与该 T2 口径的
-  //          张力挂人工裁决（AI 加图=validator 双 ERROR，改题面=禁改面），只登记不修复；
-  // g1 apply：题面「先画一画，再列式」要求学生自己画，不属于题目应配图示。
-  [['math-g1-down-u06-k002', 'calc'], ['math-g1-down-u06-k002', 'apply']].forEach(function (row) {
+test('挂人工裁决行重分类（P38）：g1 calc 不带 graphic；apply 带 graphic', () => {
+  // P38 断链修复：现行 T2 g1-down-u06-k002 apply = confirmed + auxiliary +
+  // repr=['numeric','graphic'] → 意图授权配图（segment 线段图，P38 断链修复落地）；
+  // calc 行 = confirmed + role=null + repr=['numeric'] → 禁图维持不带。
+  [['math-g1-down-u06-k002', 'calc', false], ['math-g1-down-u06-k002', 'apply', true]].forEach(function (row) {
     const out = gen(row[0], row[1], 3);
     out.qs.forEach(function (q, i) {
-      assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' 不带 graphic');
+      if (row[2]) {
+        assert.ok(q.data && q.data.graphic && q.data.graphic.type, row[0] + '/' + row[1] + ' #' + i + ' P38 配图在场');
+      } else {
+        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' calc intent 禁图，不带 graphic');
+      }
     });
   });
 });

@@ -42,10 +42,11 @@
 
   // 唯一公开入口的方法白名单（Runtime 除白名单外不得向页面/引擎暴露其他方法）
   // P30-31：+ misconceptionsFor（T2 MisconceptionProfile overlay 只读分发，供 KnowledgeContext→Strategy 消费）
+  // P38-DATA-01：+ intentFor（qt-intent 机器约束投影只读分发，供 Generator 语义参数层消费）
   var PUBLIC_API = Object.freeze([
     'get', 'byGrade', 'byBook', 'byUnit', 'selectable',
     'canGenerate', 'searchByName', 'unit', 'relationsFor', 'stats',
-    'misconceptionsFor'
+    'misconceptionsFor', 'intentFor'
   ].sort());
 
   function isKnowledgeId(id) { return typeof id === 'string' && ID_REGEX.test(id); }
@@ -127,6 +128,9 @@
     'mappings/generation-contract/math.json',
     'index/index.json',
     'teaching/misconception-profiles.json',
+    // P38-DATA-01：qt-intent 机器约束投影（status+assessment，教学文本不进运行时），
+    // 完整性纳入 manifest.integrity 校验；消费口 = Query.intentFor
+    'teaching/qt-intent-runtime.json',
     'manifest/manifest.json'
   ];
 
@@ -168,6 +172,7 @@
         mappingDoc: data['mappings/generation-contract/math.json'],
         index: data['index/index.json'],
         misconceptions: data['teaching/misconception-profiles.json'],
+        qtIntents: data['teaching/qt-intent-runtime.json'],
         manifest: manifest,
         rootHash: manifest.integrity.rootHash
       };
@@ -512,6 +517,18 @@
     return c.misconceptions.kps[kpId] || null;
   }
 
+  // P38-DATA-01：qt-intent 机器约束投影只读查询（status+assessment），
+  // 供 Generator 语义参数层经 contract 公开 API 消费（意图闸门/图形 role）。
+  function intentFor(kpId, questionType) {
+    var c = load();
+    var rows = c.qtIntents && Array.isArray(c.qtIntents.rows) ? c.qtIntents.rows : null;
+    if (!rows || !kpId || !questionType) return null;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].knowledgeId === kpId && rows[i].questionType === questionType) return rows[i];
+    }
+    return null;
+  }
+
   function stats() {
     var c = load();
     var byGrade = {}; var byBook = {};
@@ -543,6 +560,7 @@
     searchByName: searchByName,
     unit: unit,
     misconceptionsFor: misconceptionsFor,
+    intentFor: intentFor,
     stats: stats
   };
 
@@ -600,6 +618,7 @@
     unit: Query.unit,
     relationsFor: function (id) { return Relation.relationsFor(id); },
     misconceptionsFor: Query.misconceptionsFor,
+    intentFor: Query.intentFor,
     stats: Query.stats
   };
 
