@@ -62,6 +62,11 @@ function snapshot() {
       if (st.isDirectory()) {
         function walk(d, base) {
           for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+            // P39-03：排除点文件（.DS_Store 等 macOS Finder/Spotlight 元数据）。
+            // 此类文件与「源码/测试/冻结文件」无关，但其写入（如 Finder 索引）会造成
+            // 前后 hash 快照假差异，导致 FINAL-91 瞬态误报。监视路径内点文件盘点
+            // （P39-03 取证）证实全部为 .DS_Store，无合法点文件被漏快照。
+            if (e.name.startsWith('.')) continue;
             const rel = base ? base + '/' + e.name : e.name;
             const fp = path.join(d, e.name);
             if (e.isDirectory()) walk(fp, rel);

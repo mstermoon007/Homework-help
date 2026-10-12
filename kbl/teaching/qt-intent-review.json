@@ -1607,6 +1607,208 @@
           }
         }
       }
+    },
+    {
+      "batch": "p38-gen01-2026-10-12",
+      "origin": "用户裁决（2026-10-12 P38-GEN-01 + P34-H1/P38-03 裁决持久化）：3 个三视图/搭建推算 KP（math-g4-down-u02-k002 由平面到立体 / math-g5-down-u01-k001 从不同角度观察立体图形 / math-g5-down-u01-k002 根据平面视图搭建立体图形）的 geometry 行维持纯文字——graphicRole=null + allowedRepresentations=['numeric']。依据 P34-H1 人工数据请求（view-graphic-anchor-removal-15.csv）：geometry 契约 graphicOrInstruction 由 data.shapeName + 题面指令语义满足；画组合体会直接泄答案（数方块即得）。P38-03 用户指令覆盖 P34-H1 为「geometry 维持纯文字，fill/choice/judge/apply 补题设视图卡」。此前 P34 commit 0dae10a 直接改 qt-intent.json 未走 review ledger（破坏派生器确定性）；P38-GEN-01 扩容题型认知区间后重跑派生器，需把 P34-H1/P38-03 裁决持久化到 review ledger，使重跑派生器自动应用。",
+      "verdicts": {
+        "math-g4-down-u02-k002|geometry": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P34-H1 裁决（VIEW-INFERENCE）：geometry 契约 graphicOrInstruction 由 shapeName + 指令语义满足；组合体配图泄题。P38-03 覆盖维持 geometry 纯文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric"],
+            "graphicRole": null
+          }
+        },
+        "math-g5-down-u01-k001|geometry": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P34-H1 裁决（VIEW-INFERENCE）：同 g4-down-u02-k002 口径。P38-03 覆盖维持 geometry 纯文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric"],
+            "graphicRole": null
+          }
+        },
+        "math-g5-down-u01-k002|geometry": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P34-H1 裁决（VIEW-INFERENCE）：graphicOrInstruction 由 shapeName + 指令语义满足；组合体配图泄题。P38-03 覆盖维持 geometry 纯文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric"],
+            "graphicRole": null
+          }
+        },
+        "math-g4-up-u06-k001|judge": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "P38-GEN-01 裁决：bar-single 形态 judge 行经 makeBarSingleShape 无条件产 chart graphic（统计图本身是图），与 fill/choice/apply 同口径。KP reps=[numeric] 是 root Excel 标注遗漏（统计图 KP 表征应含 graphic），扩容题型认知区间后 judge 行升级 ai-verified + gr=null + reps=[numeric]，validator L647 拒收含 chart 题目。镜像 fill/choice/apply 的人工裁决（P30-15 supplements）：gr=auxiliary + reps 含 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k002|judge": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "P38-GEN-01 裁决：bar-double 形态 judge 行经 makeBarDoubleShape 无条件产 chart graphic。同 g4-up-u06-k001|judge 口径。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k003|judge": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "P38-GEN-01 裁决：bar-double 形态 judge 行经 makeBarDoubleShape 无条件产 chart graphic。同 g4-up-u06-k001|judge 口径。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u05-k001|judge": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：classify-geo 形态 judge 行经 makeClassifyGeoShape L388 geo(25,null) 无条件产 segment graphic（calculation-support role）。KP reps=[numeric] 是 root Excel 标注遗漏，扩容后 judge 行升级 ai-verified + gr=null + reps=[numeric]，validator L647 拒收。镜像 fill/choice/apply 的人工裁决（P30-15 supplements）：gr=auxiliary + reps 含 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k002|calc": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：money-measurement（mass kind）calc 行经 makeMeasurementConversionQuestion + L643 makeGraphicForMoney 无条件产度量 graphic。KP reps=[numeric] 是 root Excel 标注遗漏（度量 KP 表征应含 graphic），扩容后升级 ai-verified + gr=null + reps=[numeric]，validator L619/L647 拒收。gr=auxiliary + reps 含 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：同 calc 行口径，makeMeasurementConversionQuestion + L643 无条件产 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：makeWordProblemQuestion + L643 无条件产 graphic。同 calc/fill 口径。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u08-k004|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：lunch-chart 形态 fill 行经 makeLunchChartShape L676 无条件产 chart graphic。KP reps=[numeric] 是 root Excel 标注遗漏，扩容后升级 ai-verified + gr=null + reps=[numeric]，validator 拒收。镜像 apply 行人工裁决（P30-15）：gr=auxiliary + reps 含 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u08-k004|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：同 fill 行口径，makeLunchChartShape L676 无条件产 chart graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：position（direction 子类型）fill 行经 makeFillDirectionQuestion + L584 无条件产 direction graphic。KP reps=[numeric] 是 root Excel 标注遗漏（方向 KP 表征应含 graphic），扩容后升级 ai-verified + gr=null + reps=[numeric]，validator 拒收。gr=auxiliary + reps 含 graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "P38-GEN-01 裁决：同 fill 行口径，L590-606 无条件产 direction graphic。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        }
+      }
+    },
+    {
+      "batch": "p38-gen02-2026-10-12",
+      "origin": "用户裁决（2026-10-12 P38-GEN-02，方案 1 逐行裁决）：P38-GEN-01 扩容题型认知区间后仅剩 2 行 needs-review，均为 representation-conflict——KP 语义含 numeric+graphic 多表征，而 calc 题型 supports.graphic=false。实测生成器产出本就是纯算式无图（g6-down-u04-k007：比例放大列式 3×2=?；g6-down-u04-k008：归一问题列式 6÷2×4=?），题干保留比例/归一 KP 语义非普通算术退化；assessment 机器投影 reps=[numeric]/gr=null 与实际产出一致。镜像 sample-1 math-g1-down-u06-k002|calc 与 p31-fix11 math-g2-down-u02-k005|calc 两条同旗标人工裁决先例：接受 numeric-only 降级在 calc 上成立，legitimacy 空问维持 null（人工接受，AI 不代写教学论述），不加 correctedAssessment（机器投影本就正确），textFrozen 冻结确认时点四问文本。",
+      "verdicts": {
+        "math-g6-down-u04-k007|calc": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "用户裁决（2026-10-12 P38-GEN-02）：接受机器提案 allowedRepresentations=['numeric'] / graphicRole=null；calc 实测产比例放大纯算式列式题（3×2=?），无图形指示，无需 correctedAssessment；legitimacy 维持 null（人工接受其空问，口径同 g1-down-u06-k002|calc / g2-down-u02-k005|calc）。",
+          "textFrozen": {
+            "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「图形的放大与缩小」（按一定的比将图形放大或缩小，放大或缩小后的图形与原图形形状相同、大小不同）；题型限定：不承载概念表述与图形操作",
+            "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+            "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+            "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）；表征冲突：本知识点含图形表征而该题型不支持图形，图形语义将降级为文字/算式"
+          }
+        },
+        "math-g6-down-u04-k008|calc": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "用户裁决（2026-10-12 P38-GEN-02）：接受机器提案 allowedRepresentations=['numeric'] / graphicRole=null；calc 实测产正反比例归一问题纯算式列式题（6÷2×4=?），无图形指示，无需 correctedAssessment；legitimacy 维持 null（人工接受其空问，口径同 g1-down-u06-k002|calc / g2-down-u02-k005|calc）。",
+          "textFrozen": {
+            "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「解决问题」（运用正比例和反比例的知识解决实际问题，如归一问题、行程问题等）；题型限定：不承载概念表述与图形操作",
+            "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「分析」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+            "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+            "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）；表征冲突：本知识点含图形表征而该题型不支持图形，图形语义将降级为文字/算式"
+          }
+        }
+      }
+    },
+    {
+      "batch": "p38-gen03-2026-10-12",
+      "origin": "用户裁决（2026-10-12 P38-GEN-03，显式覆盖 P38-GEN-02/sample-1/p31-fix11 三次旧裁决）：用户指出 4 个 KP 的 calc 均属「图形辅助理解算法、几个图形、比例的关系，需要有图」，numeric-only 口径不成立。4 行分别为 g1-down-u06-k002|calc（画图理解加减关系→segment 数量对应图）、g2-down-u02-k005|calc（周期图形排列→pattern 周期组图）、g6-down-u04-k007|calc（图形放大缩小→square 原图）、g6-down-u04-k008|calc（正反比例归一→ratio 两行条形图）；同族 fill/apply/choice/geometry 已全部配图且渲染器（diagram.segment/diagram.pattern/geometry.square/diagram.ratio）均已存在，calc maker 补挂同款辅助图即接通（SVG 零改动）。correctedAssessment 覆盖机器投影 reps=[numeric,graphic]/gr=auxiliary；auxiliary 经 P38-06 收紧为必须配图，validator L642 闸门生效。legitimacy 维持 null（representation-conflict 旗标保留，人工接受空问的历史口径不变；配图授权由 correctedAssessment 承载，AI 不代写教学论述）。",
+      "verdicts": {
+        "math-g1-down-u06-k002|calc": {
+          "verdict": "通过",
+          "fromStatus": "confirmed",
+          "note": "用户裁决（2026-10-12 P38-GEN-03）：覆盖 sample-1 与 P31-FIX-11 的 numeric-only 旧裁决。calc 须配辅助图（segment 数量对应图，与 fill/apply/choice 同族同款）：加法总括标 ?、减法所求段标 ?，答案不入图形文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-down-u02-k005|calc": {
+          "verdict": "通过",
+          "fromStatus": "confirmed",
+          "note": "用户裁决（2026-10-12 P38-GEN-03）：覆盖 p31-fix11 numeric-only 旧裁决。calc 须配辅助图（diagram.pattern 周期组图，与 fill/choice/apply/geometry 同款）：周期组字符为序列材料，所求余数不入图形文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g6-down-u04-k007|calc": {
+          "verdict": "通过",
+          "fromStatus": "confirmed",
+          "note": "用户裁决（2026-10-12 P38-GEN-03）：覆盖 P38-GEN-02 numeric-only 裁决。calc 须配辅助图（geometry.square 原图，与 fill/apply/choice/geometry 同款）：只画原边长已知量，不画变换后图形（避免泄所求边长）。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g6-down-u04-k008|calc": {
+          "verdict": "通过",
+          "fromStatus": "confirmed",
+          "note": "用户裁决（2026-10-12 P38-GEN-03）：覆盖 P38-GEN-02 numeric-only 裁决。calc 须配辅助图（diagram.ratio 两行条形图，与 fill/choice/apply/geometry 同款）：第一行总价已知、第二行所求标 ?，答案只决定条宽不入文字。",
+          "correctedAssessment": {
+            "allowedRepresentations": ["numeric", "graphic"],
+            "graphicRole": "auxiliary"
+          }
+        }
+      }
     }
   ]
 }

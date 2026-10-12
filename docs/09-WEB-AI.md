@@ -51,7 +51,7 @@ SEO / AI / Crawler / LLM（只读消费）
 ## 3. Sitemap 最终冻结（P28-35）
 
 ```
-381 条 = 5 官方公共页（index / math-types / subject-types / practice / faq）
+382 条 = 6 官方公共页（index / math-types / subject-types / select / practice / faq）
        + 375 KP 页（knowledge/{id}.html）
        + knowledge-index.html
 ```

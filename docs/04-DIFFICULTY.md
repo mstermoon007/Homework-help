@@ -25,7 +25,7 @@ SSOT：`shared/catalog/difficulty.js`（唯一难度公式）+ `difficulty-stati
 
 | 检查 | 唯一定义位置 |
 |---|---|
-| `diffLevel(` | `shared/catalog/core/core.js` |
+| `diffLevel(` | `shared/core/core.js` |
 | `resolveStaticDifficulty(` | `shared/strategy/static-difficulty.js` |
 | `resolveTargetDifficulty(` | `shared/strategy/target-difficulty.js` |
 

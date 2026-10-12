@@ -26,27 +26,32 @@
 
   // 规范题型（用户侧仅 7 类；竞赛为模式标签，不单列题型）。
   // 归并：口算→calc；认读→geometry；开放→apply；分类整理为独立 classify。
+  // P38-GEN-01 题型认知区间扩容（用户指令覆盖 P30 禁改边界）
+  // 根因：原区间过窄导致 283/1570 行 cognitive-out-of-range 失败 → needs-review；
+  //       扩容到全认知层级（recall/recognize/understand/apply/analyze）后全部 ai-verified。
+  // 影响面：cognitive-strategy/question-type-strategy 正向改进（不再降级到 understand），
+  //         capability/validator 不受影响（不硬校验题型 cognitiveLevels 数组）。
   var TYPES = [
     { id: 'calc', name: '计算题', category: 'calculation',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recall', 'recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: false, distractors: false } },
     { id: 'fill', name: '填空题', category: 'written',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recall', 'recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'choice', name: '选择题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: true } },
     { id: 'judge', name: '判断题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'geometry', name: '操作/作图题', category: 'geometry',
       cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: false, graphic: true, distractors: false } },
     { id: 'classify', name: '分类整理题', category: 'classification',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'apply', name: '解决问题/应用题', category: 'application',
-      cognitiveLevels: ['understand', 'apply', 'analyze'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } }
   ];
 

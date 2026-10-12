@@ -36,14 +36,23 @@
  *     空问；重跑 derive-qt-intent 后行升级 confirmed，运行时由零权威变为
  *     teaching:qt-intent:confirmed 强约束。题面/maker 不动。
  *
+ * P38-GEN-03 二次人工裁决（用户 2026-10-12 显式覆盖 FIX-11/GEN-02 numeric-only
+ *   口径，change-log P38-GEN-03 留指令依据）：4 个 KP 的 calc 均属「图形辅助理解
+ *   算法、几个图形、比例的关系」，需要辅助图。账本 p38-gen03 supplement 对 4 行
+ *   correctedAssessment 改判 graphicRole=auxiliary / reps 含 graphic；4 个 calc
+ *   maker 补挂同族已验证描述符（g1 segment / g2 pattern / k007 square / k008
+ *   ratio），题面/答案仍逐字不变，SVG 零改动。legitimacy 维持 null（配图授权由
+ *   correctedAssessment 承载，AI 不代写教学论述）。
+ *
  * 冻结不变量：
  *   1. 四个修复 maker（geometry 两条 + fill/choice 两条）真实产出描述符且经
  *      SvgRegistry 渲染 SUCCESS（接通证据）。
  *   2. 描述符参数与题目已确定语义一致（segment total=两部分和；pattern=周期组）。
  *   3. FIX-05/09 范围题面/答案零变化（固定 seed 同形重放逐字一致）；
  *      FIX-11 仅 g1 calc 两变式题面按人工裁决去图，变化有定向断言。
- *   4. 证据销账/裁决行不携带 graphic（FIX-09/11 分流口径，注释附证据）。
- *   5. KpSemantic intent 对齐维持 PASS（graphicRole=auxiliary 不约束有无、
+ *   4. （P38-GEN-03 改写）4 个 calc 裁决行携带辅助 graphic：g1/g2/k007/k008
+ *      calc 全部配图（旧 FIX-09/11 销账不带图口径已被用户 2026-10-12 裁决覆盖）。
+ *   5. KpSemantic intent 对齐维持 PASS（graphicRole=auxiliary 必须配图、
  *      graphic.role 在合法枚举、allowedRepresentations 含 graphic）。
  */
 
@@ -183,46 +192,74 @@ test('P31-09 登记 seed 同形重放：题面逐字一致（仅新增 data.grap
 
 /* ---------------- 3b. FIX-09 证据分流（P38 断链修复后按 T2 现行口径重写） ---------------- */
 
-test('证据销账行重分类（P38）：g2 calc 不带 graphic；fill/choice/apply 带 graphic', () => {
+test('证据销账行重分类（P38-GEN-03）：g2 calc 配 pattern 辅助图；fill/choice/apply 配图不变', () => {
   // P38 断链修复（用户 2026-10-12 指令）：P31-FIX-09 时代的「fill/choice 销账不带图」
   // 裁决基于旧 T2 口径；现行 T2（P34/P35/P36 评审周期更新）g2-down-u02-k005
   // fill/choice/apply 均 ai-verified + auxiliary + repr 含 graphic → 断链修复配图
-  // （periodic-pattern 序列材料图，6g L2 GRAPHIC-MATERIAL 白名单已登记）；
-  // calc 行 confirmed + role=null + repr=['numeric'] → 意图禁图维持不带。
-  [['math-g2-down-u02-k005', 'calc', false], ['math-g2-down-u02-k005', 'fill', true],
+  // （periodic-pattern 序列材料图，6g L2 GRAPHIC-MATERIAL 白名单已登记）。
+  // P38-GEN-03（用户 2026-10-12 二次裁决，覆盖 p31-fix11）：calc 改判 confirmed +
+  // auxiliary + repr=['numeric','graphic'] → makePeriodCalc 补挂同款 diagram.pattern。
+  [['math-g2-down-u02-k005', 'calc', true], ['math-g2-down-u02-k005', 'fill', true],
    ['math-g2-down-u02-k005', 'choice', true], ['math-g2-down-u02-k005', 'apply', true]].forEach(function (row) {
     const out = gen(row[0], row[1], 3);
     out.qs.forEach(function (q, i) {
       if (row[2]) {
         assert.ok(q.data && q.data.graphic && q.data.graphic.type, row[0] + '/' + row[1] + ' #' + i + ' P38 配图在场');
       } else {
-        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' calc intent 禁图，不带 graphic');
+        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' 无图行不带 graphic');
       }
     });
   });
 });
 
-test('挂人工裁决行重分类（P38）：g1 calc 不带 graphic；apply 带 graphic', () => {
+test('挂人工裁决行重分类（P38-GEN-03）：g1 calc 配 segment 辅助图；apply 配图不变', () => {
   // P38 断链修复：现行 T2 g1-down-u06-k002 apply = confirmed + auxiliary +
-  // repr=['numeric','graphic'] → 意图授权配图（segment 线段图，P38 断链修复落地）；
-  // calc 行 = confirmed + role=null + repr=['numeric'] → 禁图维持不带。
-  [['math-g1-down-u06-k002', 'calc', false], ['math-g1-down-u06-k002', 'apply', true]].forEach(function (row) {
-    const out = gen(row[0], row[1], 3);
+  // repr=['numeric','graphic'] → 意图授权配图（segment 线段图，P38 断链修复落地）。
+  // P38-GEN-03（用户 2026-10-12 裁决，覆盖 sample-1/P31-FIX-11 numeric-only 旧口径）：
+  // calc 改判 auxiliary → makeAddRelCalc 两变式均挂 geometry.segment（加法总括标 ?、
+  // 减法所求段标 ?），count=6 覆盖 add/sub 两分支。
+  [['math-g1-down-u06-k002', 'calc', true], ['math-g1-down-u06-k002', 'apply', true]].forEach(function (row) {
+    const out = gen(row[0], row[1], 6);
     out.qs.forEach(function (q, i) {
       if (row[2]) {
         assert.ok(q.data && q.data.graphic && q.data.graphic.type, row[0] + '/' + row[1] + ' #' + i + ' P38 配图在场');
       } else {
-        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' calc intent 禁图，不带 graphic');
+        assert.ok(!(q.data && q.data.graphic), row[0] + '/' + row[1] + ' #' + i + ' 无图行不带 graphic');
       }
+    });
+  });
+});
+
+test('P38-GEN-03：g6 两 KP calc 配辅助图（scale→rectangle 原图 / proportion→ratio 两行条形）', () => {
+  // 用户 2026-10-12 裁决（覆盖 P38-GEN-02 numeric-only）：图形放大缩小需原图辅助
+  // 理解比的关系；k007 题面为「长方形的长」，故用 geometry.rectangle（只标已知长，
+  // 宽取视觉比例不标数字，禁编造）；正反比例归一需两行条形图辅助
+  // 理解数量对应（diagram.ratio，所求行红？遮蔽）。答案均不入图形文字。
+  const expectSub = {
+    'math-g6-down-u04-k007': 'rectangle',
+    'math-g6-down-u04-k008': 'ratio'
+  };
+  Object.keys(expectSub).forEach(function (kp) {
+    const out = gen(kp, 'calc', 6);
+    assert.ok(out.qs.length > 0, kp + ' calc 须有真实产出');
+    out.qs.forEach(function (q, i) {
+      assert.ok(q.data && q.data.graphic, kp + '/calc #' + i + ' P38-GEN-03 配图在场');
+      assert.equal(q.data.graphic.subtype, expectSub[kp], kp + '/calc #' + i + ' subtype');
+      const rendered = SvgRegistry.render(q.data.graphic, { width: 320 });
+      assert.equal(rendered.status, 'SUCCESS', kp + '/calc #' + i + ' 渲染 SUCCESS');
+      const v = KpSem.validateKpSemantics(q, { plan: out.plan, kpId: kp });
+      assert.ok(v.valid, kp + '/calc #' + i + ' intent 对齐 PASS: ' + JSON.stringify(v.violations || v.errors));
     });
   });
 });
 
 /* ---------------- 4. KpSemantic intent 对齐：补图行 PASS（geometry + FIX-09 fill/choice） ---------------- */
 
-test('KpSemantic：两 KP geometry + g1 fill/choice 补图后 intent 对齐维持 PASS', () => {
+test('KpSemantic：两 KP geometry + g1 fill/choice + P38-GEN-03 四行 calc 补图后 intent 对齐 PASS', () => {
   [['math-g1-down-u06-k002', 'geometry'], ['math-g2-down-u02-k005', 'geometry'],
-   ['math-g1-down-u06-k002', 'fill'], ['math-g1-down-u06-k002', 'choice']].forEach(function (row) {
+   ['math-g1-down-u06-k002', 'fill'], ['math-g1-down-u06-k002', 'choice'],
+   ['math-g1-down-u06-k002', 'calc'], ['math-g2-down-u02-k005', 'calc'],
+   ['math-g6-down-u04-k007', 'calc'], ['math-g6-down-u04-k008', 'calc']].forEach(function (row) {
     const out = gen(row[0], row[1], 2);
     out.qs.forEach(function (q, i) {
       const v = KpSem.validateKpSemantics(q, { plan: out.plan, kpId: row[0] });

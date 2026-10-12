@@ -3170,27 +3170,32 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
 
   
   
+  
+  
+  
+  
+  
   var TYPES = [
     { id: 'calc', name: '计算题', category: 'calculation',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recall', 'recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: false, distractors: false } },
     { id: 'fill', name: '填空题', category: 'written',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recall', 'recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'choice', name: '选择题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: true } },
     { id: 'judge', name: '判断题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'geometry', name: '操作/作图题', category: 'geometry',
       cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: false, graphic: true, distractors: false } },
     { id: 'classify', name: '分类整理题', category: 'classification',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } },
     { id: 'apply', name: '解决问题/应用题', category: 'application',
-      cognitiveLevels: ['understand', 'apply', 'analyze'], difficultyRange: [1, 6],
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
       supports: { context: true, graphic: true, distractors: false } }
   ];
 
@@ -15587,15 +15592,29 @@ function makeAddRelCalc(plan, context, i) {
   var take = riC(rng, 2, 9, nr);
   var left = riC(rng, 2, 9, nr);
   var subtract = (i % 2 === 0);
+  
+  
+  
+  
+  var graphic = subtract ? {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: take + left, part: left, unit: '',
+      partLabel: '?', otherLabel: String(take), totalLabel: String(take + left)
+    }
+  } : {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: take + left, part: left, unit: '',
+      partLabel: String(left), otherLabel: String(take), totalLabel: '?'
+    }
+  };
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
     operation: subtract ? 'sub' : 'add',
-    barModel: true
+    barModel: true,
+    graphic: graphic
   });
-  
-  
-  
-  
   
   
   if (subtract) {
@@ -15743,7 +15762,15 @@ function makePeriodCalc(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   return finish(q, '图形按「' + p.shapes.join('') + '」为一组重复排列。要确定第 ' + p.period
     + ' 个图形是什么，列式 ' + p.period + ' ÷ ' + p.n + ' 的余数是几？（只填余数）',
@@ -15866,7 +15893,16 @@ function makeScaleCalc(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
+    }
   });
   return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
     + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。列式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
@@ -15905,9 +15941,11 @@ function makeScaleApply(plan, context, i) {
     fromLength: s.orig, toLength: s.next,
     
     
+    
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   if (s.enlarge) {
@@ -15929,9 +15967,11 @@ function makeScaleChoice(plan, context, i) {
     fromLength: s.orig, toLength: s.next,
     
     
+    
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
@@ -15955,8 +15995,9 @@ function makeScaleGeometry(plan, context, i) {
     
     
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: '格', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: '格', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   return finish(q, '方格图上一个长方形的长占 ' + s.orig + ' 格，把图形按 ' + ratio
@@ -15976,7 +16017,18 @@ function makePropCalc(plan, context, i) {
   var b = riC(rng, 2, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    unitPrice: unit, quantityA: a, quantityB: b
+    unitPrice: unit, quantityA: a, quantityB: b,
+    
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: a + '支', text: (a * unit) + '元', parts: a * unit },
+        { label: b + '支', text: '?', parts: b * unit }
+      ] }
+    }
   });
   return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
     + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？列式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',

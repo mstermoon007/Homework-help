@@ -2,6 +2,38 @@
 
 > 阶段报告全文见 `docs/archive/phases/`；此处为按版本聚合的变更摘要。
 
+## v5.2.0 — P34~P39 收口（2026-10-12）
+
+### P34 数据正确性战役（波次 1/2/3）
+
+- 题目语义/表述、图形分类、开放设计讲解、解析质量、变式与算术 calc、难度执行端修复；H6 三视图去图。
+
+### P35 难度执行端消费 + 遗留债务统一收口
+
+- DEBT-1~7 取证销账、图形表达实现、战役最终冻结。
+
+### P36 / P37 遗留活账处置
+
+- P36：judge/apply 配图修复、开放设计讲解深化（规则内重组）、concept 讲解任务登记。
+- P37：人工请求 H1–H5 签批处置、F-TYPE-2 rawType 别名收口、practice.html 渲染路径登记项处置。
+
+### P38 107 图形断链清零 + 语义治理
+
+- 33 KP 接入裁决全部销账（维持剔除，基线不变）；107 条图形生成真断链清零（T2 意图运行时投影 `qt-intent-runtime.json` + 六生成器配图 + SVG 渲染器扩族）。
+- makeAreaGeometry winner 缺陷修复；role 双轨统一（auxiliary 收紧为必须配图）；141 条 needs-review 意图行经派生器规则改进清账（P38-GEN-01~04，284→2→0）。
+
+### P39 死代码清理 + 文档与文件清洗收口
+
+- rawType 死链全链清零（canonical rootHash 更新）；schema 图形子类型白名单与生产真值对齐（补 9 项 + 删 13 对死条目）；`GRAPHIC_TYPES` 删 `number-line`/`grid` 2 个类型级死条目；FINAL-91 门禁 `.DS_Store` 瞬态误报根治。
+- 图形类型白名单收敛 = `geometry/chart/diagram/currency` + `custom`（svg-legacy 透传架构保留项）。
+- 文档口径全量对齐（00-BASELINE 门禁链 31 项重写、测试 762/762、sitemap 382、核心路径实证订正）+ 开发文档/文件清洗（P32 审计报告归档、docs-2026-09 快照、根 archive/ 6 目录、release/、dev/reports/、kbl/releases/ 快照、全库 .DS_Store 清扫；删除后四面断链核查零断链）；两役准备稿 `docs/P40-PREP.md` 落盘。
+
+### 门禁与测试（当前口径）
+
+- npm test **762/762** PASS（15 套件 / 71 测试文件）。
+- check-all **31 项**：本地 30 PASS / 0 FAIL / 1 SKIP（第 15 项无 Chrome SKIP）；CI 31 PASS / 0 FAIL / 0 SKIP。
+- 基线 375/98/373/1570 全程不变。
+
 ## v5.1.0 — P30/P31/P32 收口（2026-10-08）
 
 ### 答案系统收口（P32）
@@ -35,7 +67,7 @@
 
 ### 门禁与测试
 
-- check-all 30 项：本地 29 PASS / 0 FAIL / 1 SKIP（无 Chrome 时第 15 项 SKIP；CI 设 CHROME_BIN 为 31 PASS / 0 FAIL / 0 SKIP）。
+- check-all 31 项：本地 30 PASS / 0 FAIL / 1 SKIP（无 Chrome 时第 15 项 SKIP）；CI 设 CHROME_BIN 为 31 PASS / 0 FAIL / 0 SKIP（v5.1.0 收口时点口径，P32 加入 6g 后定稿）。
 - npm test 742/742 PASS / 0 FAIL（14 测试套件）。
 - 375/98/373/1570 口径全程不变。
 

@@ -93,15 +93,18 @@
   }
 
   // ============ 平面图形 ============
-  /** 长方形：{width, height, labelSides, rightAngle, dashed, unit, unitPx} */
+  /** 长方形：{width, height, labelSides, rightAngle, dashed, unit, unitPx}
+   *  labelSides：false=全不标；{width:bool,height:bool}=分别控制底/右边标注（缺省 true）；其余=全标。
+   *  用于题面仅给出一条边长的场景（如放大缩小题只给长），避免编造第二条边的数字。 */
   function rectangle(o) {
     var w = px(o.width, o), h = px(o.height, o);
     var unit = o.unit || '';
     var inner = U.svgRect(0, 0, w, h, mergeDash(o));
-    if (o.labelSides !== false) {
-      inner += sideLabel(0, h, w, h, o.width + unit, o);
-      inner += sideLabel(w, 0, w, h, o.height + unit, o, -14);
-    }
+    var ls = o.labelSides;
+    var labelW = ls === false ? false : (typeof ls === 'object' && ls ? ls.width !== false : true);
+    var labelH = ls === false ? false : (typeof ls === 'object' && ls ? ls.height !== false : true);
+    if (labelW) inner += sideLabel(0, h, w, h, o.width + unit, o);
+    if (labelH) inner += sideLabel(w, 0, w, h, o.height + unit, o, -14);
     if (o.rightAngle !== false) {
       inner += rightAngleMark(0, 0, 1, 0, 0, 1);
       inner += rightAngleMark(w, 0, -1, 0, 0, 1);

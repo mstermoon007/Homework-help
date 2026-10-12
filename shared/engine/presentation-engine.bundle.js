@@ -3170,24 +3170,31 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
   var RESPONSE_LAYOUTS = ['inline-after-equals', 'block'];
 
   // ====== 图形类型 ======
+  // P39-04（用户指令）：删类型级死条目 number-line/grid——无渲染派发入口（GRAPHIC_RENDERERS
+  // 无此二类型）、全库零产出、P39-03 已删其 subtype 行，仅存类型登记。
   var GRAPHIC_TYPES = [
     'geometry',   // 几何图形
     'chart',      // 统计图表
     'diagram',    // 示意图
     'currency',   // 人民币/货币
-    'number-line', // 数轴
-    'grid',       // 网格/方格
     'custom'      // 自定义
   ];
 
   // ====== 图形子类型 ======
+  // P39-02：白名单与生产真值对齐——P34~P38 断链修复期间新增的 9 个 (type,subtype)
+  // 组合此前未登记，导致 SemanticQuestion 校验对每道带图题误发「未知 subtype」WARNING。
+  // 依据：三方对账（生成器产出 grep × SVG 模块注册表 × 本白名单），全部 9 项均有
+  // 真实渲染器（svg-geometry/svg-diagram）且为 1570 冻结矩阵在产子类型。
+  // P39-03（用户指令）：删 13 对无渲染器且零产出的死条目（geometry: polygon/line/point；
+  // diagram: flow/tree/venn/mindmap；number-line 与 grid 整行——两类型在渲染派发表中
+  // 无入口）。v4.0.0（135ca55）历史存量，白名单收紧为「登记=可渲染+在产」，
+  // 未来若产出这些子类型将正确触发 WARNING 而非静默放行。
   var GRAPHIC_SUBTYPES = {
-    geometry: ['triangle', 'rectangle', 'circle', 'polygon', 'angle', 'line', 'point', 'position-grid'],
+    geometry: ['triangle', 'rectangle', 'circle', 'angle', 'position-grid',
+      'square', 'cube', 'cuboid', 'star', 'view-cards', 'segment'],
     chart: ['bar', 'line', 'pie', 'scatter'],
-    diagram: ['flow', 'tree', 'venn', 'mindmap', 'brace', 'segment', 'balance', 'scale'],
+    diagram: ['brace', 'segment', 'balance', 'scale', 'pattern', 'groups', 'ratio'],
     currency: ['rmb'],
-    'number-line': ['integer', 'fraction', 'decimal'],
-    grid: ['dot', 'square', 'isometric'],
     custom: []
   };
 

@@ -10,8 +10,8 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 版本号 | **5.1.0** | `VERSION` / `package.json` / `shared/catalog/version.js` |
-| SW 缓存名 | `hw-help-5.1.0` | `sw.js` |
+| 版本号 | **5.2.0** | `VERSION` / `package.json` / `shared/catalog/version.js` |
+| SW 缓存名 | `hw-help-5.2.0` | `sw.js` |
 | 形态 | 纯前端静态站，零运行时依赖 | — |
 | 浏览器 + Node 双环境兼容 | ✓ | — |
 
@@ -90,9 +90,9 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 测试文件 | **63** | `tests/**/*.test.js` |
-| 测试用例 | **651** | `npm test` |
-| PASS | **651** | 同上 |
+| 测试文件 | **71** | `tests/**/*.test.js` |
+| 测试用例 | **762** | `npm test` |
+| PASS | **762** | 同上 |
 | FAIL | **0** | 同上 |
 | 测试套件数 | 15 | 同上 |
 
@@ -100,19 +100,14 @@
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generator/` | 生成器契约、教育语义、金题集、覆盖率、变式/迷思剖面 |
-| `tests/generator-registry/` | Generator 注册表（23 条声明一致性） |
-| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重 |
-| `tests/difficulty/` | 难度权威链、静态权重、编排器归一 |
-| `tests/validator/` | 答案验证器（含安全） |
-| `tests/presentation/` | 渲染、SVG 契约、SVG 安全 |
-| `tests/learner/` | 学习状态、数据链、存储 |
-| `tests/strategy/` | 策略可解释性 |
-| `tests/adaptive/` | 自适应策略 |
-| `tests/shape/` | POL × KBL 题型形态 |
-| `tests/request/` | 请求契约 |
-| `tests/bridge/` | 生成并发桥接 |
-| `tests/unit/` | 基础工具、语义族、教学语义剖面 |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（28 文件） |
+| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（22 文件） |
+| `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
+| `tests/adaptive/` | 自适应策略（4 文件） |
+| `tests/source/` | 随机源 / 权重分配 / 随机分布（4 文件） |
+| `tests/validator/` | 答案验证器（含安全）（3 文件） |
+| `tests/core/` | core 基础（1 文件） |
+| `tests/semantic/` | 语义治理（1 文件） |
 
 ---
 
@@ -158,7 +153,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 7–8s（651 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 7–8s（762 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1570 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -188,20 +183,42 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 
 ## 门禁链
 
+唯一入口 `npm run check-all`（`dev/check-all.js`；`bash scripts/run-all-checks.sh` 委托同源，与 CI 等价）。
+**合计 31 项：本地 30 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome 时 SKIP）；CI 设 `CHROME_BIN` 为 31 PASS / 0 FAIL / 0 SKIP。**
+
 | # | 命令 | 作用 |
 |---|---|---|
-| 1 | `npm run check:sw-version` | SW 版本一致性 |
-| 2 | `npm run check-lint` | 静态质量 lint |
-| 3 | `npm run verify:syntax` | 全项目 JS 语法（286 文件） |
-| 4 | `npm test` | 全链测试（651/651） |
-| 5 | `npm run verify` | M0 聚合门禁（8 步） |
-| 6 | `npm run verify:allow-gen` | 1570 ALLOW 真实生成 |
-| 7 | `node dev/p28/check-kbl-ai-boundary.js` | KBL 回写白名单 + 页面漂移 |
-| 8 | `node dev/p28/check-seo-ai-history-isolation.js` | 六目录 noindex/nofollow |
-| 9 | `node dev/p28/check-sitemap-freeze.js` | 382 URL 逐条保证 |
-| 10 | `node dev/p28/check-ai-agent-crawl.js` | 375/375 AI Agent 抓取 |
-
-一键全量：`bash scripts/run-all-checks.sh`（与 CI 等价）。
+| 1 | `scripts/sync-sw-version.js` | SW 版本一致性 |
+| 2 | `dev/verify-m0.js` + `dev/p28/check-kbl-ai-boundary.js` | M0 聚合门禁（8 步）+ KBL AI 边界 |
+| 3 | `dev/lint-check.js` | 静态质量 lint |
+| 4 | `dev/check-syntax.js` | 全项目 JS 语法（299 文件） |
+| 5 | `npm test` | 全链测试（762/762） |
+| 6a | `dev/check-allow-generation.js` | 1570 ALLOW 真实生成 |
+| 6b | `dev/p28/check-generation-matrix-freeze.js` | 生成矩阵冻结 |
+| 6c | `dev/p28/check-generator-matrix.js` | Generator Registry |
+| 6d | `dev/p28/check-generator-noninterference.js` | 四轴不夺权 |
+| 6e | `dev/p30/check-kp-qt-maker-matrix.js` | KP×QT Maker 分工矩阵 |
+| 6f | `dev/p30/check-generation-failure-classify.js` | 失败分类深观测 |
+| 6g | `dev/p32/check-answer-leak.js` | 答案防泄露门禁（AS-18） |
+| 7 | `dev/check-educational-generation.js` | 教育语义生成 |
+| 8 | `dev/p25/validate-golden-dataset.js` | 金题集校验 |
+| 9a | `dev/p28/check-difficulty-authority-gate.js` | 难度权威链唯一 |
+| 9b | `dev/p28/check-difficulty-provenance-gate.js` | 难度溯源 |
+| 10 | `tests/presentation/renderer.test.js` | 渲染 + Legacy 隔离 |
+| 11 | SVG 契约 + Sanitizer（svg-contract / svg-contract-full / svg-sanitizer） | SVG 返回状态 + 安全 |
+| 12 | `dev/p28/check-security.js` | eval/Function + AnswerValidator + HTML + KBL 写保护 |
+| 13 | `dev/p28/check-sitemap-freeze.js` | 382 URL 逐条保证 |
+| 14a | `dev/p28/check-ai-agent-crawl.js` | 375/375 AI Agent 抓取 |
+| 14b | `dev/check-crawl-health.js` | 爬虫健康 |
+| 15 | `dev/p28/check-browser-e2e.js` | 真实浏览器 9 步路径（无 Chrome → SKIP，发布强制） |
+| 16 | `dev/p28/check-bundle-determinism.js --mode bundle` | bundle source==hash 一致 |
+| 17 | `dev/p28/check-bundle-determinism.js --mode determinism` | 构建确定性（重跑 hash 不变） |
+| 18 | `dev/p25/build-coverage-report.js --strict` | 覆盖率报告 |
+| 19 | `dev/check-llm-understanding.js` | AI 可读体检 |
+| 20 | `dev/p28/check-doc-consistency.js` | 历史数字扫描 |
+| 21 | `dev/p28/check-dead-code.js` | 死代码矩阵 |
+| 22 | `dev/p28/check-legacy-matrix.js` | Legacy 治理矩阵 |
+| FINAL-91 | check-all 内建运行前后 hash 快照 | 只读门禁：CI 不得修改源码/测试/冻结文件（快照排除 `.DS_Store` 点文件） |
 
 ### M0 聚合门禁明细（`npm run verify`）
 

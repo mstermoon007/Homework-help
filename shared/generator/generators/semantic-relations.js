@@ -151,17 +151,31 @@ function makeAddRelCalc(plan, context, i) {
   var take = riC(rng, 2, 9, nr);
   var left = riC(rng, 2, 9, nr);
   var subtract = (i % 2 === 0);
+  // P38-GEN-03（用户 2026-10-12 显式裁决，覆盖 P31-FIX-11 numeric-only 旧口径）：
+  // 本 KP×calc 改判 graphicRole=auxiliary / reps 含 graphic——加减关系需以线段图
+  // 辅助理解算理。接通 diagram.segment 渲染器（与 makeAddRelFill/Apply 同款）：
+  // 加法两部分已知→总括标 ?；减法总数与吃掉部分已知→所求剩余段标 ?；答案不入图文字。
+  var graphic = subtract ? {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: take + left, part: left, unit: '',
+      partLabel: '?', otherLabel: String(take), totalLabel: String(take + left)
+    }
+  } : {
+    type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+    params: {
+      total: take + left, part: left, unit: '',
+      partLabel: String(left), otherLabel: String(take), totalLabel: '?'
+    }
+  };
   var q = buildBase(plan, context, i, {
     subTopic: 'pictorial-additive-relation',
     operation: subtract ? 'sub' : 'add',
-    barModel: true
+    barModel: true,
+    graphic: graphic
   });
-  // P31-FIX-11（用户 2026-10-06 显式裁决，覆盖 P31 题面文案禁改面，依据留存 change-log）：
-  // 本 KP×calc 意图已经 sample-1 人工评审「通过」——calc 题型原生不支持图形
-  // （type.supports.graphic=false），driftRisk 明示「图形语义将降级为文字/算式」。
-  // 原题面「看图列式…（在图中圈出/画出）」引用不存在的图，违反已确认意图；
-  // 改为纯文字情境「列式计算」，保留具象情境（防 driftRisk 所警告的退化为纯算式）、
-  // 数字/答案/解析逐字不变。
+  // P31-FIX-11：题面已从「看图列式…（在图中圈出/画出）」改为纯文字情境「列式计算」，
+  // 保留具象情境与数字/答案/解析逐字不变；P38-GEN-03 后线段图作辅助材料随题给出。
   if (subtract) {
     return finish(q, '列式计算：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
       + ' 个。还剩多少个？', left, [],
@@ -310,7 +324,15 @@ function makePeriodCalc(plan, context, i) {
   var p = patternPick(rng, nrOf(plan));
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
-    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    // P38-GEN-03（用户 2026-10-12 裁决，覆盖 p31-fix11 numeric-only 旧口径）：
+    // calc 改判 auxiliary——周期组排列需 pattern 图辅助理解余数定位。接通
+    // diagram.pattern 渲染器（与 makePeriodFill/Choice/Geometry 同款）；
+    // 组内字符为序列材料（6g GRAPHIC-MATERIAL 口径），本题答案是余数数字，不泄题。
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   return finish(q, '图形按「' + p.shapes.join('') + '」为一组重复排列。要确定第 ' + p.period
     + ' 个图形是什么，列式 ' + p.period + ' ÷ ' + p.n + ' 的余数是几？（只填余数）',
@@ -435,7 +457,16 @@ function makeScaleCalc(plan, context, i) {
   var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
-    fromLength: s.orig, toLength: s.next
+    fromLength: s.orig, toLength: s.next,
+    // P38-GEN-03（用户 2026-10-12 裁决，覆盖 P38-GEN-02 numeric-only 口径）：
+    // calc 改判 auxiliary——放大缩小需原图辅助理解比的关系。题面为「长方形的长」，
+    // 接通 geometry.rectangle 渲染器（非 square）：只画原长 s.orig（题面已知量），
+    // 宽取视觉比例值且不标注数字（题面未给宽，禁止编造），不画变换后图形（避免泄露所求边长）。
+    graphic: {
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
+    }
   });
   return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
     + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。列式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
@@ -472,11 +503,13 @@ function makeScaleApply(plan, context, i) {
     subTopic: 'scale-transform',
     scaleRatio: s.enlarge ? (s.k + ':1') : ('1:' + s.k),
     fromLength: s.orig, toLength: s.next,
-    // P38 断链修复：apply 行此前零 graphic。接通 geometry.square 渲染器：
-    // 只画原长 s.orig 的正方形（题面已知量），不画变换后图形。
+    // P38 断链修复 + P38-GEN-04 长方形语义对齐：apply 题面「小卡片长/某段长」
+    // 用「长」非「边长」，对象为长方形图案，接通 geometry.rectangle：
+    // 只画原长 s.orig（题面已知量），宽取视觉比例不标数字，不画变换后图形。
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   if (s.enlarge) {
@@ -496,11 +529,13 @@ function makeScaleChoice(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
     fromLength: s.orig, toLength: s.next,
-    // P38 断链修复：choice 行此前零 graphic。接通 geometry.square 渲染器：
-    // 只画原长 s.orig 的正方形（题面已知量），不画变换后图形。
+    // P38 断链修复 + P38-GEN-04 长方形语义对齐：choice 题面「一个图形…原长」
+    // 用「长」非「边长」，接通 geometry.rectangle：
+    // 只画原长 s.orig（题面已知量），宽取视觉比例不标数字，不画变换后图形。
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: 'cm', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: 'cm', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
@@ -520,12 +555,13 @@ function makeScaleGeometry(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'scale-transform', scaleRatio: ratio,
     fromLength: s.orig, toLength: s.next, gridFigure: true,
-    // P38 断链修复：geometry 行（方格图）此前零 graphic。接通 geometry.square
-    // 渲染器：只画原长 s.orig 格的正方形（题面已知量），单位用「格」如实承载
-    // 方格语义，不画变换后图形。
+    // P38 断链修复：geometry 行（方格图）此前零 graphic。题面为「长方形的长占 X 格」，
+    // 接通 geometry.rectangle 渲染器（非 square）：只画原长 s.orig 格的长方形（题面已知量），
+    // 宽取视觉比例值且不标注数字（题面未给宽），单位用「格」如实承载方格语义，不画变换后图形。
     graphic: {
-      type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
-      params: { size: s.orig, unit: '格', unitPx: 26 }
+      type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+      params: { width: s.orig, height: Math.round(s.orig * 0.6), unit: '格', unitPx: 26,
+        labelSides: { width: true, height: false } }
     }
   });
   return finish(q, '方格图上一个长方形的长占 ' + s.orig + ' 格，把图形按 ' + ratio
@@ -547,7 +583,18 @@ function makePropCalc(plan, context, i) {
   var b = riC(rng, 2, 9, nr);
   var q = buildBase(plan, context, i, {
     subTopic: 'proportion-application', proportion: 'direct',
-    unitPrice: unit, quantityA: a, quantityB: b
+    unitPrice: unit, quantityA: a, quantityB: b,
+    // P38-GEN-03（用户 2026-10-12 裁决，覆盖 P38-GEN-02 numeric-only 口径）：
+    // calc 改判 auxiliary——正比例归一需两行条形图辅助理解数量对应关系。接通
+    // diagram.ratio 渲染器（与 makePropChoice/Fill 同款）：第一行总价已知、
+    // 第二行所求以红「？」标注；答案 b*unit 只决定条宽比例，不入图形文字。
+    graphic: {
+      type: 'diagram', subtype: 'ratio', role: 'auxiliary',
+      params: { rows: [
+        { label: a + '支', text: (a * unit) + '元', parts: a * unit },
+        { label: b + '支', text: '?', parts: b * unit }
+      ] }
+    }
   });
   return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
     + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？列式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',

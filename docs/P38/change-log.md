@@ -6,6 +6,66 @@
 
 ---
 
+## P38-GEN-04 · k007 长方形渲染修正：square→rectangle，题面「长」与图形语义对齐（2026-10-12）
+
+- **modified**：
+  - `shared/svg/svg-geometry.js`：`rectangle(o)` 扩 `labelSides` 参数形态——除原 `false`（全不标）/ 真值（全标）外，支持 `{width:bool, height:bool}` 分别控制底边（长）与右边（宽）标注，缺省 true。向后兼容：`square` 仍经 `rectangle({width:size,height:size})` 走默认全标。用于题面仅给出一条边长的场景，避免编造第二条边数字。
+  - `shared/generator/generators/semantic-relations.js`：k007 放大缩小 5 个 maker 按题面用词统一裁决——题面用「长」非「边长」的 4 个 maker（calc「长方形的长」、geometry「长方形的长占」、apply「小卡片长/某段长」、choice「原长」）graphic 从 `subtype:'square'` 改为 `subtype:'rectangle'`，params `{width:s.orig, height:Math.round(s.orig*0.6), unit, unitPx:26, labelSides:{width:true,height:false}}`——只标已知长（题面已知量），宽取视觉比例值且不标注数字（题面未给宽，禁编造），不画变换后图形（避免泄露所求边长）。题面明确「边长…正方形」的 makeScaleFill 保持 square 不变。题面/答案/解析逐字未动。
+  - `tests/generation/p31-fix05-graphic-descriptors.test.js`：P38-GEN-03 专项断言中 k007 calc 的 expectSub 由 `'square'` 翻转为 `'rectangle'`（附注释说明题面「长方形」语义），测试名同步更新。
+  - `shared/engine/strategy-engine.bundle.js`：重建（semantic-relations.js 改动）。
+- **deleted**：无。
+- **reason**：承接 P38-GEN-03 risk ② 挂账——k007 题面用「长」（非「边长」）的 maker 用 `geometry.square`（等边长正方形），图文语义不一致。五步闭环取证：① 全库扫描 5 处 `subtype:'square'`：k007 的 calc/geometry/apply/choice 题面均用「长」、fill 题面用「边长…正方形」；另 2 处（concept-meaning 角观察「正方形纸板」、money 面积单位「边长 1 厘米的正方形」）题面明确正方形，保持不变；② `svg-geometry.rectangle` 渲染器已存在且在 schema `GRAPHIC_SUBTYPES.geometry` 白名单内（square 反而不在白名单）；③ rectangle 默认同时标长/宽两边，而题面只给长、未给宽，直接用会把视觉比例值当成真实宽标注（编造教学数据），故需扩 `labelSides` 选择性标注；④ `scalePick` 仅产出 `orig`（长）与 `next`（所求），无宽字段，宽只能取视觉比例（`orig*0.6` 四舍五入）且必须不标注；⑤ 裁决口径：题面用「长」→ rectangle，用「边长」→ square，数学语义自洽（正方形说边长，长方形说长宽）。
+- **tests**：定向 p31-fix05 9/9、p25-06 全绿；渲染直验：rectangle 只含长标注（如 `6cm`）、不含宽标注（如 `4cm`），`<rect>` 像素 156×104 确为不等边长方形；square 向后兼容仍标两边；端到端 k007 五题型：calc/fill/apply/choice/geometry 全部 subtype 与题面用词一致（4 rectangle + 1 square）+ SUCCESS；`npm test` **762/762**；6a 1570 PASS；6b 冻结矩阵**零 diff**（题面/答案/生成器指纹未变，graphic 不在冻结字段内）；6g AS-18 **PASS**（图形文字仅含题面已知量 s.orig，无新增未登记命中）；11 SVG 契约、12 security、16/17 bundle 确定性 PASS；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**（本地无 Chrome）。
+- **risk**：① 宽取 `orig*0.6` 为纯视觉比例，不承载教学语义，若未来题面补充宽的具体数值，需改为传入真实宽并标注；② 全库其余 3 处 square 经核实验证题面均明确「正方形/边长」，无需改动；③ 未 git commit。
+
+---
+
+## P38-GEN-03 · 4 行 representation-conflict calc 改判辅助图：图形辅助理解算理断链接通（2026-10-12）
+
+- **modified**：
+  - `kbl/teaching/qt-intent-review.json`：新增 p38-gen03-2026-10-12 supplement，4 条 verdict=通过 + correctedAssessment（allowedRepresentations=["numeric","graphic"] / graphicRole="auxiliary"）——`math-g1-down-u06-k002|calc`（覆盖 sample-1、P31-FIX-11 两次 numeric-only 旧裁决）、`math-g2-down-u02-k005|calc`（覆盖 p31-fix11）、`math-g6-down-u04-k007|calc`、`math-g6-down-u04-k008|calc`（覆盖 P38-GEN-02）。legitimacy 维持 null（representation-conflict 旗标保留；配图授权由 correctedAssessment 承载，AI 不代写教学论述）。
+  - `shared/generator/generators/semantic-relations.js`：4 个 calc maker 补挂同族已验证描述符（题面/答案/解析逐字不动）——makeAddRelCalc 双变式挂 geometry.segment/quantity-correspondence（加法总括标 ?、减法所求剩余段标 ?，参数镜像 makeAddRelFill/Apply）；makePeriodCalc 挂 diagram.pattern/auxiliary（周期组材料图，与 Fill/Choice/Geometry 同款）；makeScaleCalc 挂 geometry.square/quantity-correspondence（只画已知原长 s.orig，不画变换后图形）；makePropCalc 挂 diagram.ratio/auxiliary（两行条形：第一行总价已知、第二行红 ?，答案仅决定条宽）；同步更新 makeAddRelCalc 内 P31-FIX-11 旧口径注释。**SVG 渲染器零改动**（4 subtype 均由同族题型既有渲染）。
+  - `tests/generation/p31-fix05-graphic-descriptors.test.js`：2 条 calc=false 旧断言按用户新裁决翻转为配图断言（非删除，注释附 P38-GEN-03 证据链）；新增 g6 两 KP calc 专项断言（subtype/渲染 SUCCESS/validator PASS，count=6）；intent 对齐 PASS 矩阵扩入 4 行 calc；头部补 P38-GEN-03 裁决段与不变量 #4 改写。
+  - `tests/generation/p25-06-semantic-params.test.js`：P38-GEN-02 numeric-only 收口断言重写为 P38-GEN-03 四行 auxiliary 配图断言（runtime 投影 gr=auxiliary / reps=[numeric,graphic] / graphic 投影挂载）；合成 needs-review 闸门行为测试保留（机制回归）。
+  - 派生/构建产物：`kbl/teaching/qt-intent.json`（4 行 humanReview 改批 p38-gen03/corrected=true，gr/reps 翻转，四问文本逐字未变）、qt-intent-sample.xlsx、P25-KP-QT-INTENT.md；`shared/knowledge/teaching/qt-intent-runtime.json` 等 build.js 镜像（rootHash 4e084d36→0c566c81）；knowledge-runtime/strategy/presentation 三 bundle；evidence-rules/variation/misconception 经派生器重跑（**4 KP 行零 diff**，画像只取题面/答案，本次仅加 data.graphic）。
+- **deleted**：无（无临时脚本；P31-FIX-11/P38-GEN-02 旧账本批次 append 保留作溯源，不删不改）。
+- **reason**：用户 2026-10-12 显式裁决：「这个四个 KP，明显属于图形辅助理解算法、几个图形、比例的关系，需要有图。」五步闭环取证：① 4 个 calc maker 零 graphic，而同族 fill/apply/choice/geometry 已全部配图且 4 个 SVG 渲染器均存在（segment/pattern/square/ratio），属「接口/素材已存在但 calc 未接通」真断链；② `supports.graphic=false` 全库仅派生器 5 处消费，无运行时/validator 硬卡口，correctedAssessment 是 P30-15 既有合法回流通道；③ validator checkIntentAlignment 完全 intent 驱动（L619 reps 含 graphic 放行、L642 auxiliary 强制配图），生成器 intentWantsGraphic 单点闸门已就位；④ KP 数据（T0/T1）零改动，calc 题型注册表 supports.graphic 不改（不扩大到其他 calc 行），仅 4 行逐行人工授权。
+- **tests**：定向 36/36（p31-fix05 + p25-06）；`npm test` **762/762**；6a **1570/1570 PASS**；6g AS-18 **PASS**（L2 命中 26 全部已登记，0 未登记——所求量一律 ? 遮蔽、图形文字只含题面已知量，无需新增白名单）；6b P28 冻结矩阵**零 diff**（冻结证据只存题面前 36 字/答案/生成器，题面答案逐字未动；图形覆盖由 6g L2 与 SVG 契约门禁把关）；6e maker 矩阵 GEN-03 零增量（4 行本就是 confirmed，makerKey 不变）；11 SVG 契约、12 security PASS；evidence/variation/misconception 二次重跑零漂移；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**（本地无 Chrome）。
+- **risk**：① 4 行 calc 配图授权逐行挂人工账本，未来新增 graphic KP×calc 仍走 needs-review 卡口，不自动放行；② k007 calc 题面称「长方形」而 square 渲染器画等边长示意（与 makeScaleGeometry 既有同款搭配，图承载原长数量语义非形状），若后续要求严格长方形需扩 geometry.square 契约，另立项；③ 4 行 legitimacy 文本仍永久 null（人工接受空问口径不变）；④ 未 git commit。
+
+---
+
+## P38-GEN-02 · 最后 2 行 needs-review 逐行裁决：representation-conflict numeric-only 降级成立（2026-10-12）
+
+- **modified**：
+  - `kbl/teaching/qt-intent-review.json`：新增 p38-gen02-2026-10-12 supplement，2 条 verdict=通过 逐行裁决——`math-g6-down-u04-k007|calc`（图形的放大与缩小）、`math-g6-down-u04-k008|calc`（正反比例解决问题），fromStatus=needs-review，textFrozen 冻结确认时点四问文本（trainsWhat/whyThisType/differentiation/driftRisk），**legitimacy 排除在 textFrozen 外维持 null**（人工接受空问，AI 不代写教学论述），无 correctedAssessment（机器投影 reps=[numeric]/gr=null 本就正确）。镜像两条同旗标先例：sample-1 math-g1-down-u06-k002|calc 与 p31-fix11 math-g2-down-u02-k005|calc。
+  - `tests/generation/p25-06-semantic-params.test.js`：旧 P30-06 活矩阵 needs-review 样本（k007|calc）随裁决失效，按现行口径重写为 3 条（非删除）：① P38-GEN-02 收口断言（运行时投影 needs-review=0 + 2 行 confirmed numeric-only 形态）；② P30-06 闸门行为改由 KC.intentFor 注入合成 needs-review（gr=null）行验证 intent/expression/graphic 全 null + blocked 标注，finally 恢复并复验活矩阵；③ P38-07 例外分支（needs-review+gr=auxiliary → 图形机器约束挂载、意图文本仍 null）。
+  - 派生重跑产物：`kbl/teaching/qt-intent.json`、`kbl/teaching/qt-intent-sample.xlsx`、`docs/archive/phases/p25/P25-KP-QT-INTENT.md`（confirmed 167→169、needs-review 2→0、抽查单 76→66 行）；`shared/knowledge/teaching/qt-intent-runtime.json`（tools/kbl/build.js）；`kbl/teaching/evidence-rules.json`（derive/apply-evidence-candidates，1570 规则不变）；`kbl/teaching/variation-profiles.json`、`kbl/teaching/misconception-profiles.json` + `shared/knowledge/teaching/misconception-profiles.json`（重跑核实，shasum 前后一致——2 行题目形态未变）。
+  - 重建：`shared/knowledge/runtime/knowledge-runtime.js`、`shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`；两 manifest rootHash 重冻（4e084d36…）。
+  - `docs/archive/phases/p30/P30-KP-QT-MAKER-MATRIX.{json,md}`：--write 重冻，diff 仅 2 行 intentStatus needs-review→confirmed，byIntentStatus={confirmed:169, ai-verified:1401}（needs-review 键消失），makerKey/target 分工零漂移。
+- **deleted**：无（P38-GEN-02 临时诊断在取证后已物理删除，未入库）。
+- **reason**：用户选择「方案 1：镜像先例，review ledger 逐行裁决」。取证：2 行是 P38-GEN-01 后仅存的 needs-review，旗标均为 representation-conflict（KP semantic.representations=[numeric,graphic] 多表征，calc supports.graphic=false）；6a 实测生成器产出本就是纯算式无图（k007：长方形长 3 厘米按 2:1 放大 3×2=?；k008：钢笔归一问题 6÷2×4=?），题干保留比例/归一 KP 语义非普通算术退化；assessment 投影与实际产出一致，唯一缺口是第五问 legitimacy 文本被机械置 null。与 g1/g2 两条已 confirmed 的 representation-conflict 先例机器事实同构，故逐行人工接受 numeric-only 降级在 calc 成立，不改派生器规则（保留闸门对未来 graphic KP×calc 的逐行人工卡口）。**P38-GEN 序列收口：1570 行意图矩阵 needs-review 清零。**
+- **tests**：`npm test` 761/761（原 759，旧 1 条样本测试重写为 3 条，净 +2）；6a 1570/1570 PASS；6b P28 冻结矩阵重冻后与裁决前**零 diff**（2 行题目指纹未变，intent 文本挂载不影响生成内容）；6e 仅 status 字段变化；6g AS-18 PASS；variation/misconception 二次重跑 shasum 一致（确定性）；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**；意图状态分布 confirmed=169 / ai-verified=1401 / needs-review=0（旗标 representation-conflict=4 保留为溯源）。
+- **risk**：① 4 行 representation-conflict 全部 confirmed 后，calc×多表征 KP 的 numeric-only 降级依赖逐行人工裁决，未来新增同类 KP×calc 仍会落 needs-review 卡口（符合设计，非自动放行）；② 4 行 confirmed 的 legitimacy 文本永久为 null（人工接受空问），若未来要求 confirmed 行五问文本完整，需另立项补论述，不得 AI 私填；③ 未 git commit。
+
+---
+
+## P38-GEN-01 · 派生器规则改进：题型认知区间扩容，needs-review 284→2（2026-10-12）
+
+- **modified**：
+  - `shared/knowledge/question-type-registry.js`：7 题型 cognitiveLevels 扩容到全认知层级——calc/fill 增加 recognize/analyze（区间 recall..analyze），choice/judge/geometry/classify/apply 增加 analyze（区间 recognize..analyze）。用户在三方案中显式选择「方案 A：扩题型认知区间」，该指令覆盖 P30「禁改题型注册」边界并留存于本日志。
+  - `kbl/teaching/qt-intent-review.json`：p38-gen01-2026-10-12 supplement 共 14 条 correctedAssessment 裁决——① 3 条三视图 KP×geometry（g4-down-u02-k002/g5-down-u01-k001/k002）持久化 P34-H1/P38-03 裁决（gr=null + reps=[numeric]，画组合体泄题），修复 P34 commit 0dae10a 直接改 qt-intent.json 破坏派生器确定性的问题；② 3 条 g4-up-u06-k001/k002/k003×judge（bar-single/bar-double 无条件产 chart，gr=auxiliary + reps 含 graphic，镜像 P30-15 fill/choice/apply 裁决）；③ 8 条扩容后新暴露行（g3-down-u05-k001×judge classify-geo 产 segment；g3-up-u04-k002×calc/fill/apply mass 度量产图；g4-down-u08-k004×fill/choice lunch-chart 产 chart；g4-up-u08-k001×fill/apply direction 产方位图）统一裁决 gr=auxiliary + reps=[numeric,graphic]——根因均为 root Excel representations 标注遗漏（KP 实际产图但 canonical reps 缺 graphic），T0 不动 Excel，以 review ledger 裁决持久化。
+  - `tests/generation/p25-06-semantic-params.test.js` L167-178：P30-06 needs-review 零生成权威样本从 math-g1-up-u02-k001|calc（扩容后升级 ai-verified）改为 math-g6-down-u04-k007|calc（剩余 2 行真 representation-conflict 之一），附 P38-GEN-01 注释。
+  - 派生重跑产物：`kbl/teaching/qt-intent.json`、`kbl/teaching/qt-intent-sample.xlsx`、`docs/archive/phases/p25/P25-KP-QT-INTENT.md`（derive-qt-intent.js）；`shared/knowledge/teaching/qt-intent-runtime.json`（tools/kbl/build.js 投影，非 emit-canonical.js——本次修复链中核实的正确投影入口）；`kbl/teaching/variation-profiles.json`（derive-variation-profiles.js，1323 行）；`kbl/teaching/misconception-profiles.json` + `shared/knowledge/teaching/misconception-profiles.json`（derive-misconceptions.js，同步镜像）；`kbl/teaching/evidence-rules.json`（derive/apply-evidence-candidates.js，1570 规则保留、builtFrom 指纹更新）。
+  - 重建：`shared/knowledge/runtime/knowledge-runtime.js`、`shared/engine/strategy-engine.bundle.js`；`kbl/manifest/manifest.json` + `shared/knowledge/manifest/manifest.json`（rootHash 重冻）。
+  - `docs/archive/phases/p30/P30-KP-QT-MAKER-MATRIX.{json,md}`：--write 重冻，diff 仅 intentStatus 字段（282 行 needs-review→ai-verified + 14 行→confirmed），makerKey/generator/level/target 分工零漂移（target=1236/format=0/target-frozen=334 不变）。
+- **deleted**：临时诊断脚本 `dev/diag-p38-gen01.js`、`dev/diag-p38-gen01b.js`（用后即物理删除，未入库）。误重生成的 `kbl/teaching/kp-matrix.json`、`docs/archive/phases/p25/P25-BASELINE.md` 已 `git checkout` 还原（build-baseline 不属本派生链，A 类 KP 维持 313）。
+- **reason**：承接 P38-08 澄清——141（实测全量 284：141 auxiliary + 143 null）条 needs-review 的根因是派生器 legitimacy 第五问的题型认知区间过窄，不是 Excel 数据缺口。283 行 cognitive-out-of-range（KP cognition 层级不在题型 cognitiveLevels 区间）+ 1 行（后剩 2 行）representation-conflict。取证确认 cognitiveLevels 的全部消费方（cognitive-strategy/question-type-strategy/capability-model/capability-resolver）仅做过滤/传递无硬校验，validator 用 KP 自有字段不依赖题型区间，扩容安全且消除 strategy 不必要的 understand 降级。扩容后 needs-review 284→2（剩余 g6-down-u04-k007/k008×calc 为真 representation-conflict：graphic KP 的 calc 无图表达，维持挂账）。扩容暴露 8 行「intent=null 时校验跳过→题目带图通过；intent 挂载后 gr=null→validator L619/L647 拒收」的隐性行，经逐生成器源码核实（money.js L643/stats.js L388,L475,L566,L676/position.js L578-606 均无条件产图），以 correctedAssessment 裁决持久化。关键结果：**1570 行题目指纹零变化**（P28-GENERATION-MATRIX-FROZEN --write 后与 HEAD 字节一致，git 无 diff）——生成器行为从未改变，仅意图层从「无 intent 跳过校验」转为「有 intent 显式放行同一图形」，282 行 intent 教学文本正式挂载。
+- **tests**：`npm test` 759/759；6a 1570/1570 真实生成 PASS；6b 矩阵冻结 PASS（冻结文件零 diff）；6e maker 矩阵重冻 PASS（仅 status 字段变化）；6g AS-18 泄露门禁 PASS；7 教育语义 PASS；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**（#15 本地无 Chrome）；状态分布 confirmed 153→167、ai-verified 1133→1401、needs-review 284→2。
+- **risk**：① 题型认知区间扩容为用户显式指令覆盖 P30 禁改边界，区间事实上失去过滤区分度，语义合法性改由五问其余四问 + validator + 6g 承担，若后续发现题型×认知层级误配需另立项收紧；② 14 条 correctedAssessment 中 11 条（3 bar judge + 8 新行）认定 root Excel representations 标注遗漏，T0 未动 Excel 而以评审账本裁决持久化，人工回流补 Excel reps 字段后可重跑派生移除裁决；③ 剩余 2 行 needs-review（g6-down-u04-k007/k008×calc，representation-conflict）维持零生成挂账，待教学裁决（去图 calc 表达是否成立）；④ P38-07 未重跑 variation/misconception 派生器，本次重跑的两份产物含对 P38-07 现行题面的补观测成分（catch-up），已由全部门禁验证一致；⑤ 未 git commit。
+
+---
+
 ## P38-08 · needs-review 根因澄清：派生器规则覆盖不足，非 Excel 数据问题（2026-10-12）
 
 - **modified**：无（纯登记/澄清，零代码改动）。

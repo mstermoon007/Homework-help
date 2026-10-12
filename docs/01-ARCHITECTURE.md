@@ -30,7 +30,7 @@ KBL
 | **Generator** | 生成题目 | `shared/generator/`（generators / registry / selector / core / api） | 自造 KP 数据；绕过 Selector/Executor；降质量换成功；用 `Math.random`（须走 `core/rng.js`） |
 | **Validator** | 验证题目（答案/语义/难度/查重/覆盖/质量） | `shared/validator/` | 放宽规则；删减检查换 PASS |
 | **SemanticQuestion** | 统一题目对象（全链唯一题目数据契约） | `shared/semantic/semantic-question.js` | 第二套题目对象；字段口径漂移 |
-| **Presentation** | 页面表达（HTML 渲染/打印/输出格式） | `shared/presentation/`（html-renderer / renderer / print / svg-registry） | 下沉业务判断/私有题型；私带 `@media print` |
+| **Presentation** | 页面表达（HTML 渲染/打印/输出格式） | `shared/presentation/`（layout / html-renderer / renderer / print / svg-registry） | 下沉业务判断/私有题型；私带 `@media print` |
 | **SVG** | 图形表达 | `shared/svg/` + `plugins/svg-*.js` | 承载文字语义；绕过 SVG 注册统一入口 |
 | **Learner** | 学习状态基础设施（供数不决策） | `shared/learner/` | 伪造结果；越权影响生成质量；新增评分/AI 自适应/推荐/黑盒模型；写 KBL |
 | **Crawl** | 外部发现（robots/sitemap/canonical/SEO/AI 可读/爬虫健康） | `sitemap.xml` / `robots.txt` / `dev/build-knowledge-pages.js` | 为 SEO 注入虚假内容；伪造 author/rating/review |

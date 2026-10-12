@@ -38,10 +38,10 @@ SSOT：`shared/presentation/svg-registry.js`（统一入口，状态枚举 + 安
 测试覆盖图形族：
 
 ```
-geometry / calculation / make-ten / clock / area / fraction
+geometry / calculation / makeTen / clock / area / fraction
 / dataStats / draw / chart / diagram / currency
 ```
 
 检查项：viewBox / width / height / XML 安全 / 空参数 / 非法参数。
 
-测试文件：`tests/svg/svg-contract.test.js`、`tests/svg/svg-sanitizer.test.js`、`tests/svg/graphic-renderer.test.js`
+测试文件：`tests/presentation/svg-contract.test.js`、`tests/presentation/svg-contract-full.test.js`、`tests/presentation/svg-sanitizer.test.js`、`tests/generation/graphic-renderer.test.js`

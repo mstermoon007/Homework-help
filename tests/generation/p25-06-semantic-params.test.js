@@ -164,14 +164,88 @@ test('P30-05 ai-verified 行同样挂载 intent 机器约束（运行时投影�
   assert.equal(p.sources.intent, 'teaching:qt-intent-runtime:ai-verified');
 });
 
-test('P30-06 needs-review 行零生成权威：intent/expression/graphic 均为 null', () => {
-  const p = SP.resolve('math-g1-up-u02-k001', 'calc'); // needs-review
-  assert.equal(p.intent, null, 'needs-review 的教学意图不得进入生成参数');
-  assert.equal(p.expression, null, 'needs-review 的 expression 投影为 null');
-  assert.equal(p.graphic, null, 'needs-review 的 graphic 投影为 null');
-  assert.equal(p.sources.intent, 'blocked:qt-intent:needs-review', 'sources 须显式标注被拦状态');
-  // subTopic 等 KBL 机械派生不受影响（被拦的是教学意图，不是知识点事实）
-  assert.ok(p.subTopic === null || typeof p.subTopic === 'string');
+test('P38-GEN-03 收口：意图矩阵 needs-review=0，4 行 representation-conflict calc 全部 auxiliary 配图', () => {
+  // P38-GEN-01：扩容题型认知区间，283 行 cognitive-out-of-range 升级 ai-verified；
+  // P38-GEN-02：2 行 representation-conflict 经人工裁决 confirmed（numeric-only）；
+  // P38-GEN-03（用户 2026-10-12 二次裁决）：4 行 calc 均属图形辅助理解算理，账本
+  // correctedAssessment 改判 graphicRole=auxiliary / reps 含 graphic，calc 补辅助图。
+  const fs = require('node:fs');
+  const doc = JSON.parse(fs.readFileSync(
+    path.join(ROOT, 'shared', 'knowledge', 'teaching', 'qt-intent-runtime.json'), 'utf8'));
+  const dist = {};
+  doc.rows.forEach((r) => { dist[r.status] = (dist[r.status] || 0) + 1; });
+  assert.equal(dist['needs-review'] || 0, 0, 'P38-GEN 序列后 needs-review 行应为 0：' + JSON.stringify(dist));
+  // 4 行 confirmed + auxiliary：机器约束挂载 graphic 投影（驱动 Generator 配图闸门）
+  ['math-g1-down-u06-k002', 'math-g2-down-u02-k005',
+   'math-g6-down-u04-k007', 'math-g6-down-u04-k008'].forEach((kpId) => {
+    const r = doc.rows.find((x) => x.knowledgeId === kpId && x.questionType === 'calc');
+    assert.equal(r.status, 'confirmed', kpId + ' 应为人工 confirmed 权威行');
+    assert.equal(r.assessment.graphicRole, 'auxiliary', kpId + ' P38-GEN-03 改判 auxiliary');
+    assert.deepEqual(r.assessment.allowedRepresentations, ['numeric', 'graphic']);
+    const p = SP.resolve(kpId, 'calc');
+    assert.equal(p.sources.intent, 'teaching:qt-intent-runtime:confirmed', kpId + ' 运行时权威来源');
+    assert.equal(p.graphic && p.graphic.role, 'auxiliary', kpId + ' graphic 投影挂载');
+  });
+});
+
+test('P30-06 闸门：合成 needs-review 行零生成权威（KC 注入，活矩阵已无 needs-review 行）', () => {
+  // P38-GEN-02 后活矩阵 needs-review=0，闸门分支改由合成行经 KC.intentFor 注入验证：
+  // needs-review + graphicRole=null（2 行 calc 裁决前的真实形态）→ intent/expression/graphic 全 null。
+  const KC = global.KnowledgeContext;
+  const orig = KC.intentFor;
+  try {
+    KC.intentFor = function (kpId, qt) {
+      if (kpId === 'math-g6-down-u04-k007' && qt === 'calc') {
+        return {
+          knowledgeId: kpId, questionType: qt, status: 'needs-review',
+          assessment: {
+            targetCodes: [kpId], focus: 'calculation', requiredRelations: [],
+            requiredConstructs: [], allowedRepresentations: ['numeric'],
+            expressionModes: ['expression'], graphicRole: null
+          }
+        };
+      }
+      return orig.call(KC, kpId, qt);
+    };
+    const p = SP.resolve('math-g6-down-u04-k007', 'calc');
+    assert.equal(p.intent, null, 'needs-review 的教学意图与机器约束不得进入生成参数');
+    assert.equal(p.expression, null, 'needs-review 的 expression 投影为 null');
+    assert.equal(p.graphic, null, 'needs-review（gr=null）的 graphic 投影为 null');
+    assert.equal(p.sources.intent, 'blocked:qt-intent:needs-review', 'sources 须显式标注被拦状态');
+    // subTopic 等 KBL 机械派生不受影响（被拦的是教学意图，不是知识点事实）
+    assert.ok(p.subTopic === null || typeof p.subTopic === 'string');
+  } finally {
+    KC.intentFor = orig;
+  }
+  // 恢复后回到活矩阵 confirmed 形态（防止桩泄漏污染后续用例）
+  const restored = SP.resolve('math-g6-down-u04-k007', 'calc');
+  assert.equal(restored.sources.intent, 'teaching:qt-intent-runtime:confirmed');
+});
+
+test('P38-07 闸门例外：needs-review + graphicRole 非空 → 图形机器约束挂载、意图文本仍 null', () => {
+  const KC = global.KnowledgeContext;
+  const orig = KC.intentFor;
+  try {
+    KC.intentFor = function (kpId, qt) {
+      if (kpId === 'math-g6-down-u04-k007' && qt === 'calc') {
+        return {
+          knowledgeId: kpId, questionType: qt, status: 'needs-review',
+          assessment: {
+            targetCodes: [kpId], focus: 'calculation', requiredRelations: [],
+            requiredConstructs: [], allowedRepresentations: ['numeric', 'graphic'],
+            expressionModes: ['expression'], graphicRole: 'auxiliary'
+          }
+        };
+      }
+      return orig.call(KC, kpId, qt);
+    };
+    const p = SP.resolve('math-g6-down-u04-k007', 'calc');
+    assert.equal(p.graphic && p.graphic.role, 'auxiliary', 'P38-07：needs-review auxiliary 行图形约束挂载');
+    assert.equal(p.intent.graphicRole, 'auxiliary');
+    assert.equal(p.sources.intent, 'teaching:qt-intent-runtime:needs-review', '仅机器约束投影，无教学文本');
+  } finally {
+    KC.intentFor = orig;
+  }
 });
 
 test('消费方 fail-closed：concept-meaning 子类型无 maker → 返回 []', () => {
