@@ -50,6 +50,8 @@
 
 前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（用户 2026-09-30 显式指令：不设人工确认环节，上线零 LLM 依赖）。派生器 `tools/kbl/derive-relations.js`：R-REL-01 同单元序号顺序 277 条 + R-REL-02 同册跨单元递进 58 条 + R-REL-03 跨册/跨年级概念主干链 38 条（整数认识/加减/乘除/分数/小数/图形/测量/线角/数系/运动 11 族）。`inferred:true` 为溯源标记，`llm-finalized-dev` 表示 LLM 即开发期最终确认者；三元组全局去重、链内年级严格递增收敛无环。root Excel 本身无关系字段。
 
+> **概念族模型（P40 战役二）**：族表 `CONCEPT_FAMILIES`（11 主干族，含有序阶段表 stages + 演化 op 数组）与 `EXTRA_FAMILIES`（14 扩展族，regex 归类）声明于 `tools/kbl/derive-relations.js`（SSOT）。每 KP 经 `computeStageOrders` 得到 `{familyId, stageOrder}`（族内全序无并列），回填 `kbl/canonical/capability.json`（375/375）。R-REL-03 的 38 条边携带 `evolution{familyId, fromStageOrder, toStageOrder, op}`（op∈{extend_number\|increase_complexity\|abstract_up\|inverse}）。跨族前置为运行时聚合投影（不落盘）；族内难度递进校验检出 54 处 needs-review 倒挂（人工裁决，不自动改数）。
+
 ---
 
 ## Mappings
@@ -90,9 +92,9 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 测试文件 | **71** | `tests/**/*.test.js` |
-| 测试用例 | **762** | `npm test` |
-| PASS | **762** | 同上 |
+| 测试文件 | **89** | `tests/**/*.test.js` |
+| 测试用例 | **864** | `npm test` |
+| PASS | **864** | 同上 |
 | FAIL | **0** | 同上 |
 | 测试套件数 | 15 | 同上 |
 
@@ -100,14 +102,14 @@
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（28 文件） |
-| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（22 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（42 文件） |
+| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
 | `tests/source/` | 随机源 / 权重分配 / 随机分布（4 文件） |
-| `tests/validator/` | 答案验证器（含安全）（3 文件） |
+| `tests/validator/` | 答案验证器（含安全）（4 文件） |
 | `tests/core/` | core 基础（1 文件） |
-| `tests/semantic/` | 语义治理（1 文件） |
+| `tests/semantic/` | 语义治理（KBL 文档对齐、概念族地基 T-02~T-07）（3 文件） |
 
 ---
 
@@ -153,7 +155,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 7–8s（762 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 8–9s（864 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1570 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -191,8 +193,8 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 | 1 | `scripts/sync-sw-version.js` | SW 版本一致性 |
 | 2 | `dev/verify-m0.js` + `dev/p28/check-kbl-ai-boundary.js` | M0 聚合门禁（8 步）+ KBL AI 边界 |
 | 3 | `dev/lint-check.js` | 静态质量 lint |
-| 4 | `dev/check-syntax.js` | 全项目 JS 语法（299 文件） |
-| 5 | `npm test` | 全链测试（762/762） |
+| 4 | `dev/check-syntax.js` | 全项目 JS 语法（323 文件） |
+| 5 | `npm test` | 全链测试（864/864） |
 | 6a | `dev/check-allow-generation.js` | 1570 ALLOW 真实生成 |
 | 6b | `dev/p28/check-generation-matrix-freeze.js` | 生成矩阵冻结 |
 | 6c | `dev/p28/check-generator-matrix.js` | Generator Registry |

@@ -10,6 +10,16 @@
 
 ---
 
+## P40-FINAL | 2026-10-13（两役收口 + 00-BASELINE 对齐 + 日志收口 + 全量门禁）
+
+- **modified**: `docs/00-BASELINE.md`（**数字对齐现网**：Tests 表 测试文件 71→**89** / 用例 762→**864** / PASS 864；测试目录分布 `generation` 28→42、`orchestration` 22→23、`validator` 3→4、`semantic` 1→3；门禁链第 4 语法 299→**323** 文件、第 5 `npm test` 762→**864**；Performance `npm test` 762→864 用例；Relations 节追加「概念族模型（P40 战役二）」冻结段——族表 SSOT / `{familyId,stageOrder}` 375 回填 / R-REL-03 38 边 evolution / 跨族投影不落盘 / 54 处 needs-review）；`docs/P40/change-log.md`（**日志收口**：补录 `T-02`/`T-03`/`T-04`/`T-05`/`T-06`/`T-07`/`T-09`/`T-10`/`T-11` 九条缺失的六字段条目，使战役二 `T-01..T-14` 条目齐全，含本 FINAL 共 15 条）；`tests/semantic/p40-t02-t07-foundation.test.js`（**新建 6 断言**：T-02 族表/序、T-03 副本自检、T-04 evolution、T-05 capability 回填、T-06 跨族投影、T-07 难度递进）；`docs/P40/P40-TASK-BOOK.md`（头部执行状态补 P40-FINAL 收口）
+- **deleted**: 无
+- **reason**: 任务书 §4 定义 `P40-FINAL（两役收口 + 00-BASELINE 更新 + 日志收口 + 全量 30/0/1）`。收口三处缺口：①**日志收口**——change-log append-only 缺 9 条 `T` 任务六字段条目（违反任务书「任何修改 → … → `docs/P40/change-log.md` 追加六字段」纪律，早期执行期仅内联交叉引用，未独立登记）→ 逐条补录；②**基线对齐**——`00-BASELINE.md` 残留 P39 时点数字（762 用例 / 71 文件 / 299 语法），与现网 864/89/323 漂移 → 按门禁实测对齐；③**测试覆盖**——`T-02~T-07` 此前仅由派生器内联断言 + `T-12` 回归基线间接覆盖，无独立测试文件 → 新增地基验收测试补齐。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js` **6/6**；`npm test` **864/864**（858 + 地基测试 6）；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**（#15 无 Chrome SKIP 属正常；20. Doc 历史数字扫描 PASS）。**机判面全部收口；战役一/二人工签收仍待用户完成。**
+- **risk**: 低——纯文档对齐 + 新增只读测试；零生产代码 / KBL 数据改动（基线数字均以现网门禁实测为准，非臆造）；`00-BASELINE.md` 为 docs/ 非 archive，已过 20. Doc 门禁。**挂账（不变）**：Q-14 163 题人工评审、T-14 三主线链路图人工签收、T-07 54 处难度倒挂人工裁决、T-06 族间投影环观察、T-08 20 题抽样评审。
+
+---
+
 ## P40-DOC-ALIGN | 2026-10-13（指令④：项目前后信息对齐——任务书状态头 / README 版本）
 
 - **modified**: `docs/P40/P40-TASK-BOOK.md`（L7 执行状态头：战役二由「执行中」→「S0-S3 全 14 任务执行完毕，机判全过，关闭待用户人工签收」；补战役二完成清单 + needs-review 挂账 4 项）；`README.md`（版本信息「当前版本 5.0.1」→ **5.2.0**（与 `VERSION`/`package.json`/`shared/catalog/version.js`/`docs/00-BASELINE.md`/`docs/CHANGELOG.md` 一致）；版本变更说明补 V5.2.0（P34~P39 收口，2026-10-12）/ V5.1.0（P30/P31/P32 收口，2026-10-08）两条，置于 V5.0.1 之上；版本号语义化说明行补 5.1.0/5.2.0；生成时间 2026-09-29 → 2026-10-13）
@@ -227,6 +237,96 @@
 - **reason**: 任务书 S0 §2.3 P40-T-01「`derive-qt-intent.js` 推导规则收敛为声明式决策表（同文件内重组织，行为等价）」。目的：把散落在 `deriveRow` 内的硬编码 if 链外化为可独立审计的命名规则表（与 T-02 族表/排序五规则同纪律——规则以命名常量存在，可独立审计），为后续维护提供单一可读决策面，零语义变更。
 - **tests**: 重放逐字节一致取证：改前 `kbl/teaching/qt-intent.json`/`P25-KP-QT-INTENT.md` 快照 → 重构后重跑 `node dev/p25/derive-qt-intent.js` → `diff` 三产物**逐字节一致**（qt-intent.json / P25-KP-QT-INTENT.md / qt-intent-sample.xlsx）；计数不变 `1570/1570；confirmed=169 ai-verified=1401 needs-review=0`；旗标不变 `{"representation-conflict":4}`；三产物 `git status` 相对 HEAD 零漂移。全量门禁见战役二 T-14 收口条目。
 - **risk**: 低——纯同文件重构，零输出语义变更（逐字节一致为证）；`derive-qt-intent.js` 为 P25 dev-time 派生器，不入 `npm run kbl:derive` 链、不入运行时；qt-intent.json/运行时投影 rootHash 不变。
+
+---
+
+## P40-T-02 | 2026-10-13
+
+- **modified**: `tools/kbl/derive-relations.js`（**族表声明化 SSOT**：`CONCEPT_FAMILIES` 11 主干族〔familyId/name/stages 有序阶段表〔grade/book/unitName 片段〕/ops 演化 op 数组〕+ `EXTRA_FAMILIES` 14 扩展族 + `FAMILY_RULES` 优先级 regex 归类表〔首条命中〕+ `familyMembership`/`classifyFamily`【一 KP 可多族归属，主族=首条】+ `computeStageOrders`〔族内按 grade → book〔up<down〕→ unitOrdinal → knowledgeNo 全序，分配 1..n 无并列〕+ `validateFamilyTable`〔重复 familyId / 同名多族 / ops 与 stages 长度不符 / 非法 op 一律抛错〕）；`tools/kbl/derive-kbl.js`（require 单一 SSOT，按 `computeStageOrders` 回填 `conceptFamily`）；`tools/kbl/emit-canonical.js`（透出 conceptFamily）；`shared/knowledge/data/.../knowledge-points.json`（T3 镜像同步）
+- **deleted**: 无
+- **reason**: 任务书 S0 §2.3 P40-T-02（E1 族定义完备性 / E2 stageOrder 全序性）。族定义三规则 + stageOrder 排序五规则固化为命名常量（可独立审计），**族表 SSOT 落于 `derive-relations.js`**（R-REL-03 概念主干链的天然声明位），由 `derive-kbl.js` require 复用，避免双份族定义漂移。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-02 用例）6/6 内含：`validateFamilyTable` 通过；11 主干 + 14 扩展；`computeStageOrders` 覆盖 375 KP、族内 stageOrder 唯一；`classifyFamily` 全 KP 有归类。373 条逐条不变由 T-12 基线复证；全量 `npm test` 858/858。
+- **risk**: 低——族表为关系派生的纯增量声明（R-REL-03 链本已存在，仅补 familyId/stageOrder 元数据）；加字段不增边，Relations 计数 373 不变；派生器内联 `validateFamilyTable` 保证非法族表在 `kbl:derive` 即 FAIL（check-all 2. KBL 复证）。
+
+---
+
+## P40-T-03 | 2026-10-13
+
+- **modified**: `tools/kbl/build.js`（新增 `assertTeachingMirrorInSync()` 并挂入 build 步骤 2b：在 emit 覆盖镜像**之前**，对 `MIRRORED` 清单〔`misconception-profiles.json` / `context-library.json`〕比对 `kbl/teaching` ↔ `shared/knowledge/teaching`，JSON 规范化后不等即 `throw('[T-03 副本漂移] ...')`；不新建独立门禁文件，随 `kbl:build` 生效）
+- **deleted**: 无
+- **reason**: 任务书 S0 §2.3 P40-T-03。防 T2 教学语义副本（源 `kbl/teaching` → 运行时分发 `shared/knowledge/teaching`）被手改而绕过派生器造成「镜像漂移双轨」。仅原样镜像产物参与比对；投影类（qt-intent→qt-intent-runtime）与 dev-only 源不在清单。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-03 用例）断言两副本 JSON 逐字节一致（等价于守卫不变量；不等则该守卫在 `kbl:build` 抛错拦截）；`node dev/check-all.js` 2. KBL（含 `kbl:build`）PASS。
+- **risk**: 低——守卫为只读比对，零产出变更；`kbl:build` 正常链下镜像一致即通过；人为制造漂移将被 build 步骤 2b 拦截 FAIL（`throw` 语义），恢复一致后 PASS。
+
+---
+
+## P40-T-04 | 2026-10-13
+
+- **modified**: `tools/kbl/derive-relations.js`（**R-REL-03 概念主干链 38 边追加 `evolution{familyId, fromStageOrder, toStageOrder, op}`**：op 取族表声明 `fam.ops[i-1]`∈{`extend_number`|`increase_complexity`|`abstract_up`|`inverse`}；新增内联 `validateEvolution`〔同族 stageOrder 严格递增 + 年级不倒置 + 演化子图 Kahn 无环〕，在写盘前调用）；`kbl/relations/math/relations.json` + `kbl/canonical/relations.json`（38 边 evolution 落盘）；`shared/knowledge/relations/math/relations.json`（T3 镜像）；`tools/kbl/emit-canonical.js`（透出 evolution）
+- **deleted**: 无
+- **reason**: 任务书 S1 §2.3 P40-T-04（E3 跨族前置无环 / E4 evolution 字段完整性）。op 取族表声明（T-02 的 `ops`），使演化语义与族阶段表同源、可审计。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-04 用例）：38/38 边 evolution 合法（op∈闭集、`toStageOrder>fromStageOrder`、familyId 属主干族）、`validateEvolution` 无环通过。op 分布：`increase_complexity` 25 / `extend_number` 7 / `abstract_up` 5 / `inverse` 1。边数仍 373；重跑确定性由 17. Determinism 门禁复证。
+- **risk**: 低——仅给既有 38 条 R-REL-03 边补元数据（不增边）；内联 `validateEvolution` 在 `kbl:derive` 即拦截非法演化（check-all 2. KBL 复证）；`inferred/reviewStatus` 口径不变。
+
+---
+
+## P40-T-05 | 2026-10-13
+
+- **modified**: `kbl/canonical/capability.json`（**375/375 回填 `familyId` + `stageOrder`**）；`kbl/manifest/manifest.json`（rootHash 重算回填）；`kbl/data/math/*/knowledge-points.json` + `shared/knowledge/data/math/*/knowledge-points.json`（conceptFamily 落数据 + T3 镜像）；`tools/kbl/derive-kbl.js` / `tools/kbl/emit-canonical.js`（派生回填链）
+- **deleted**: 无
+- **reason**: 任务书 S1 §2.3 P40-T-05。capability 作为难度/族消费的单一权威，需携带族归属与阶段序，供 T-07/T-09/T-11 只读消费。**加字段不增边**：只回填 capability 字段，不动 Relations 计数。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-05 用例）：capability 375 行、familyId+stageOrder 覆盖 375/375、`manifest.rootHash` 为 64 位十六进制；`tests/generation/p40-t11-family-contract.test.js` 断言 `get(id).semantic.conceptFamily` 覆盖 375/375。四数 375/98/**373**/1570 不变（T-12 基线）；rootHash 合法新值 `3df605b9…`；T3 镜像同步由 T-03 自检复证。
+- **risk**: 低——纯字段回填 + 重算哈希，`kbl:derive → emit-canonical → build → build:knowledge` 全链重建，17. Determinism 复跑 hash 稳定为证。
+
+---
+
+## P40-T-06 | 2026-10-13
+
+- **modified**: `tools/kbl/derive-relations.js`（新增并导出 `reportCrossFamily(relations, knowledge)`：从既有 373 条 `prerequisite` 边聚合族间关系〔`source.familyId≠target.familyId`〕→ `familyEdges` 计数 + 族间图 Kahn 无环 + 年级倒挂检测；**纯校验不落盘**，违规挂 needs-review 不自动改数；在 `kbl:derive` 内联调用产报告）
+- **deleted**: 无
+- **reason**: 任务书 S1 §2.3 P40-T-06（E3）。跨族前置投影**零新增产物文件**（字段裁决 `prereqFamily[]` 不落盘，运行时聚合），为 T-10 组合校验提供口径。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-06 用例）：族内 303 / 跨族 70 条（= 373 全边）、族间边 61 条、返回无环标志、KP 级前置图无环；T-12 基线 `crossFamily` 项复证。**观察项**：族投影环（`fam_multiply⇄fam_divide` 等，primary-family 折叠产物〔共享单元如「7～9的表内乘、除法」多族归属〕）登记 needs-review，不改数。
+- **risk**: 低——纯只读聚合 + 控制台报告，零落盘；族投影环为归类口径的已知观察项（KP 级 DAG 与 evolution 图均无环，权威判据成立），挂人工。
+
+---
+
+## P40-T-07 | 2026-10-13
+
+- **modified**: `shared/validator/difficulty-integrity-validator.js`（新增并导出 `validateFamilyDifficultyMonotonic(rows)`：按 familyId 分组、stageOrder 排序，断言靠后者 `seedDifficulty ≥` 前序，违规登记 `needsReview`〔含 `difficultyDelta`，现算不落盘〕）；`dev/p40/t07-family-difficulty-scan.js` + `dev/p40/out/t07-family-difficulty.json`（**现网 375 行扫描证据**：22 族、54 处倒挂）
+- **deleted**: 无
+- **reason**: 任务书 S2 §2.3 P40-T-07。族内难度递进校验上线；**倒挂登记 needs-review 挂人工，不自动改数**（属既有 seedDifficulty 事实）。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js`（T-07 用例）：现网 `checked=375`、`violations=54`、`valid=false`，与扫描产物 `t07-family-difficulty.json` 一致；合成倒挂（stageOrder 2 diff<link>3）可被判出。逐族分布（addsub 7 / shape 8 / integer 1 / review 2 / relation 2 / statistics 4 / multiply 3 / divide 2 / direction 3 / measure 4 / problem_solving 4 / observation 1 / operation_law 1 / fraction 2 / motion 3 / decimal 3 / number_algebra 3 / negative 1）。T-14 三主线复算同口径（13 处）。
+- **risk**: 低——新增校验器为纯函数 + 扫描脚本写 `dev/p40/out/`（不触 KBL）；54 处倒挂为登记项（合入人工裁决清单），零生产代码/数据改动。**挂账**：54 处倒挂待人工裁决。
+
+---
+
+## P40-T-09 | 2026-10-13
+
+- **modified**: `shared/strategy/adaptive-strategy.js`（新增并导出 `orderByStageOrder(items, opts)`：按 `(familyId, stageOrder)` 稳定排序（familyId 升序 → stageOrder 升序 → 原序兜底），`opts.getKp(id)->{familyId,stageOrder}`；**无 getKp 时原样返回**，保持生产既有顺序）
+- **deleted**: 无
+- **reason**: 任务书 S2 §2.3 P40-T-09「策略感知（含防跳阶出题）」——learner 巩固/拓展序列按 stageOrder 排序，**只读消费**：不改数量/题型/难度/KP 选择（Z1-Z4 决策权仍归既有链）。
+- **tests**: 定向 `node --test tests/orchestration/p40-t09-sequence-order.test.js` 2/2（同族按 stageOrder 递增排序；无 getKp 时原样返回 = 生产行为不变）。Z1-Z4 不夺权由 6d. Generation（四轴不夺权）门禁复证。
+- **risk**: 低——新函数未被默认路径调用（接线由消费方按需传入 getKp），缺省即恒等；纯排序不改集合。
+
+---
+
+## P40-T-10 | 2026-10-13
+
+- **modified**: `shared/validator/composite-validator.js`（新增并导出 `validateCrossFamilyPrerequisite(kpIds, opts)`：跨族（familyId 不同）KP 对须存在 `prerequisite` 边可达〔`relationsFor` 只读消费〕，否则记 `missing` 使组合被拒；**无解析器时 skipped 保持生产行为**）
+- **deleted**: 无
+- **reason**: 任务书 S2 §2.3 P40-T-10「跨族组合校验」——composite 生成器组合多个 KP 时校验族间前置已满足。**零新数据**：复用既有 373 `prerequisite` 边 + T-06 投影口径，经运行时公开口 `relationsFor` 只读消费。
+- **tests**: 定向 `node --test tests/generation/p40-t10-composite-cross-family.test.js` 3/3（含未满足跨族前置的组合被拒）；现网组合题扫描随门禁复跑。`shared/orchestration/knowledge-context.js` 新增 `relationsFor(id,direction)` 只读通道（含 evolution 透出）。
+- **risk**: 低——校验器为可选传入（无解析器即跳过），不改既有 combine 决策；只读消费关系边，零落盘。
+
+---
+
+## P40-T-11 | 2026-10-13
+
+- **modified**: `tests/generation/p40-t11-family-contract.test.js`（新建：契约测试冻结 familyId/stageOrder/evolution 经既有公开口只读可及）；`shared/orchestration/knowledge-context.js`（`relationsFor` 只读通道透出 `{outgoing,incoming}` 含 evolution——与 T-08/T-10 共用同一接线）
+- **deleted**: 无
+- **reason**: 任务书 S2 §2.3 P40-T-11「消费⑤⑥ 数据就绪透出」：familyId/stageOrder 经 knowledge-contract **既有公开口**（`get().semantic.conceptFamily` / `relationsFor`）只读可及，为掌握度按族聚合（⑤）与错答族归因（⑦）提供数据通道；**不新增 PUBLIC_API**，UI 展示不实施（P31 冻结二级页面，挂账）。
+- **tests**: 定向 `node --test tests/generation/p40-t11-family-contract.test.js` 3/3：① `get(id).semantic.conceptFamily` 覆盖 375/375（`{id,stageOrder}`）；② `relationsFor` 透出 evolution（38/38）；③ PUBLIC_API 仍 13 项、未新增族相关方法、既有口（get/relationsFor/intentFor/contextLibrary/misconceptionsFor）保留。
+- **risk**: 低——无新增生产 API（白名单冻结不变）；仅消费 T-05 已回填的数据字段；UI 展示挂账（P31 冻结）。
 
 ---
 
