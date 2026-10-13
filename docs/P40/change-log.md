@@ -10,6 +10,16 @@
 
 ---
 
+## P40-CLEANUP-CLOSE | 2026-10-13（陈旧口径统一 + 无效旧记忆清理 + 签收收口记录）
+
+- **modified**: `dev/p28/check-doc-consistency.js`（**陈旧「当前口径」描述 4 条**：`1293` 当前 0→**373**、`26 generators` 当前 31→**23**、`239 tests` 当前 534→**864**、`218 syntax` 当前 286→**323**——token 本身为执法字符串不动，仅订正描述）；`docs/10-TEST-CI.md`（**陈旧计数 6 处**：测试目录 `generation` 28→**42**、`orchestration` 22→**23**、`validator` 3→**4**、`semantic` 1→**3**；检查域第 4 语法 299→**323** 文件、第 5 `npm test` 762/762→**864/864**）；`docs/P40/p40-final-closure.md`（**新建**：P40 最终收口记录——§1 收口结论 / §2 机判证据 / §3 基线恒定 / §4 口径统一 / §5 陈旧文件清理 / §6 待签收清单 / §7 签收栏，状态「机判收口完成，待用户签收」）；`docs/P40/P40-TASK-BOOK.md`（头部执行状态补收口记录引用）
+- **deleted**: `.trae/documents/*.md` ×6（旧实施计划稿：P25-13~18 收尾 / P26 SEO-AI / integer-arithmetic name 迁移 / FINAL-32 语义链 / 答案系统审计 / 生成质量收口工程 V4.3.0 C1-C5；结论均已沉淀入现行文档与 `docs/archive/`）；`.DS_Store` ×12（macOS 目录元数据垃圾，全库清扫）。以上均 gitignored，不入库（`.trae/documents/` 目录一并移除）
+- **reason**: 用户指令「查看断言，锁定的基线数据，按照目前最新的统一，且删除更新维护产生的死代码、无效旧记忆、签收收口」。①**口径统一**：`check-doc-consistency.js` 的 legacy 描述与 `10-TEST-CI.md` 现网口径残留 P39 时点数字（0/31/534/286、28/22/3/1、299、762），与现网 373/23/864/323、42/23/4/3、323、864 漂移 → 按 SSOT 实测（`generator-registry.all().length=23`、`relations.json`=373、`npm test`=864、`check-syntax`=323）逐条对齐；②**删除**：门禁 21 死代码矩阵 / 22 Legacy 矩阵均 PASS，P40 新增符号全部有调用方、`dev/p40/*` 与证据件无孤儿 → 「更新维护产生的死代码」实为 `.trae/documents/` 陈旧方案稿（无效旧记忆），物理删除；③**签收收口**：按用户选择生成 `p40-final-closure.md` 收口记录，正文标注「机判收口完成、待用户签收」，不代替用户签收。
+- **tests**: `node --check dev/p28/check-doc-consistency.js` PASS；`node dev/p28/check-doc-consistency.js` **PASS**（非 archive 文档零历史数字命中，描述订正后仍 PASS）；`npm test` **864/864**；`node dev/check-all.js` **30 PASS / 0 FAIL / 1 SKIP**（#15 无 Chrome SKIP 属正常）
+- **risk**: 低——口径订正为纯文档/注释描述（token 执法逻辑与门禁行为零变化）；删除对象均 gitignored（`.trae/` AI 记忆 + `.DS_Store`），不入库、不影响门禁与构建；收口记录为新建只读文档。**挂账（不变）**：§6 五项待用户签收/裁决。
+
+---
+
 ## P40-FINAL | 2026-10-13（两役收口 + 00-BASELINE 对齐 + 日志收口 + 全量门禁）
 
 - **modified**: `docs/00-BASELINE.md`（**数字对齐现网**：Tests 表 测试文件 71→**89** / 用例 762→**864** / PASS 864；测试目录分布 `generation` 28→42、`orchestration` 22→23、`validator` 3→4、`semantic` 1→3；门禁链第 4 语法 299→**323** 文件、第 5 `npm test` 762→**864**；Performance `npm test` 762→864 用例；Relations 节追加「概念族模型（P40 战役二）」冻结段——族表 SSOT / `{familyId,stageOrder}` 375 回填 / R-REL-03 38 边 evolution / 跨族投影不落盘 / 54 处 needs-review）；`docs/P40/change-log.md`（**日志收口**：补录 `T-02`/`T-03`/`T-04`/`T-05`/`T-06`/`T-07`/`T-09`/`T-10`/`T-11` 九条缺失的六字段条目，使战役二 `T-01..T-14` 条目齐全，含本 FINAL 共 15 条）；`tests/semantic/p40-t02-t07-foundation.test.js`（**新建 6 断言**：T-02 族表/序、T-03 副本自检、T-04 evolution、T-05 capability 回填、T-06 跨族投影、T-07 难度递进）；`docs/P40/P40-TASK-BOOK.md`（头部执行状态补 P40-FINAL 收口）

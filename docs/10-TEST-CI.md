@@ -15,14 +15,14 @@ npm test   # node --test tests/**/*.test.js
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（28 文件） |
-| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（22 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（42 文件） |
+| `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
 | `tests/source/` | 随机源 / 权重分配 / 随机分布（4 文件） |
-| `tests/validator/` | 答案验证器（含安全）（3 文件） |
+| `tests/validator/` | 答案验证器（含安全）（4 文件） |
 | `tests/core/` | core 基础（1 文件） |
-| `tests/semantic/` | 语义治理（1 文件） |
+| `tests/semantic/` | 语义治理（KBL 文档对齐、概念族地基）（3 文件） |
 
 ## 2. 唯一全量检查入口（CI 与本地完全一致）
 
@@ -53,8 +53,8 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 1 | Version | `scripts/sync-sw-version.js` | SW 版本一致 |
 | 2 | KBL | `dev/verify-m0.js` + `dev/p28/check-kbl-ai-boundary.js` | KBL M0 校验 + AI 边界 |
 | 3 | Lint | `dev/lint-check.js` | 静态质量 |
-| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（299 文件） |
-| 5 | Unit | `npm test` | 全链测试（762/762） |
+| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（323 文件） |
+| 5 | Unit | `npm test` | 全链测试（864/864） |
 | 6a | Generation | `dev/check-allow-generation.js` | 1570 真实生成 |
 | 6b | Generation | `dev/p28/check-generation-matrix-freeze.js` | 矩阵冻结 |
 | 6c | Generation | `dev/p28/check-generator-matrix.js` | Generator Registry |

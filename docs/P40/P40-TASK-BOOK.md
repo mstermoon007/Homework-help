@@ -4,7 +4,7 @@
 > 指令原文：「创建一个完整的P40维护方案，包含单题内容质量、子父知识点包含深化两大战役。特别是单题质量需要深度提升，达到大模型产出的水准含图文配合、图片使用、竖式、分数等。」
 > 上位规则：`.trae/rules/ai-coding-workflow.md`（P28 九步流水线）＞ `docs/01-ARCHITECTURE.md` ＞ `docs/00-BASELINE.md` ＞ P30/P31/P32 运行规则 ＞ 本任务书。冲突时停手提问。
 > 准备稿处置：`docs/P40-PREP.md` §一（KBL 派生器声明化重构）折入本战役二阶段一；§二（文件清洗）已由 P39-06~08 执行完毕，无遗留。P40-PREP.md 随本立项归档至 `docs/archive/phases/`。
-> **执行状态（更新 2026-10-13）**：**战役一（P40-Q）机判面七项全过，关闭待用户人工评审签收（Q-14 §0，清单 `dev/p40/out/q01-review.md` 163 题）**；**战役二（P40-T）S0-S3 全 14 任务执行完毕，机判全过（`npm test` 864/864、`check-all` 30 PASS / 0 FAIL / 1 SKIP），关闭待用户人工签收（三主线链路图 `dev/p40/out/t14-mainline-audit.md`）**；**P40-FINAL 两役收口已完成（`00-BASELINE.md` 数字对齐 + change-log 日志收口 + 地基验收测试补齐）**。
+> **执行状态（更新 2026-10-13）**：**战役一（P40-Q）机判面七项全过，关闭待用户人工评审签收（Q-14 §0，清单 `dev/p40/out/q01-review.md` 163 题）**；**战役二（P40-T）S0-S3 全 14 任务执行完毕，机判全过（`npm test` 864/864、`check-all` 30 PASS / 0 FAIL / 1 SKIP），关闭待用户人工签收（三主线链路图 `dev/p40/out/t14-mainline-audit.md`）**；**P40-FINAL 两役收口已完成（`00-BASELINE.md` 数字对齐 + change-log 日志收口 + 地基验收测试补齐 + 陈旧口径统一 + 无效旧记忆清理）；收口记录 `docs/P40/p40-final-closure.md`（机判收口完成，待用户签收）。**
 >
 > 已完成（战役一）：①立项与维度（P40-INIT / INIT-A 23 维 / INIT-B 战役二 14 任务 + 8 字段裁决表 §2.2）；②前置 P40-Q-15（R22 无障碍：SVG `<title>` + 对比度 + 6g L2 口径）/ P40-Q-16（死令牌清理 8 个）；③Q-SCAN（P40-Q-01/02）→ Q-SEM（Q-03/04/05/05B）→ Q-GRAPHIC（Q-06/07/08）→ Q-EXPLAIN（Q-09/10/11）→ Q-CONTEXT（Q-12/13）→ Q-ACCEPT（P40-Q-14 验收报告）；④验证工具订正 P40-Q-17（R9 口径）；⑤验收后债务修复 P40-Q-18（D10 分数乘整数约分）/ P40-Q-19（D18 小数尾式竖式）。分阶段证据见 `docs/P40/change-log.md`。
 >
