@@ -104,6 +104,16 @@ function createCompositeGenerator(spec) {
       if (kpIds.length < 2) {
         throw new Error('Composite generator 需要至少 2 个知识点');
       }
+      // P40 T-10：跨族组合前置校验（仅在编排层注入 relationsFor/familyOf 只读解析器时生效；
+      // 未注入则跳过，保持生产既有行为）。跨族 KP 对必须存在 prerequisite 可达边，否则组合被拒。
+      if (context && typeof context.relationsFor === 'function' && typeof context.familyOf === 'function') {
+        var cv = require('../../validator/composite-validator.js').validateCrossFamilyPrerequisite(kpIds, {
+          relationsFor: context.relationsFor, familyOf: context.familyOf
+        });
+        if (!cv.valid) {
+          throw new Error('Composite 跨族前置未满足，组合被拒: ' + cv.missing.map(function (m) { return m.a + '~' + m.b; }).join(','));
+        }
+      }
       var count = plan.count || 1;
       var questions = [];
       for (var i = 0; i < count; i++) {

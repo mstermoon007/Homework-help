@@ -1,0 +1,392 @@
+{
+  "schemaVersion": "p40-context.1",
+  "meta": {
+    "title": "情境语料库（P40-Q-12，R17 情境真实性 + G6 情境多样性承载）",
+    "source": "开发期 LLM 辅助起草 → 人工评审 → 冻结（qt-intent-sample.xlsx 回流先例同构；P40 任务书 Q-12 显式授权通道）",
+    "authority": "reviewStatus=confirmed 才具生成权威（INTENT_AUTHORITY_STATUSES 同口径）；needs-review 仅进审查不消费",
+    "consumers": [
+      "shared/generator/generators/application.js（generator:application-word，33 KP）——按 relation 锚选取叙事",
+      "shared/generator/generators/money.js rmb apply（generator:money-measurement，12 KP）——按 op 锚选取叙事"
+    ],
+    "slotContract": "槽位名与 application.js PROBLEM_TEMPLATES/generateNumbers 的 nums keys 逐字对齐（a/b/total/part1/diff/n/per/groups/speed/time/rate）；moneyApp 段 a/b 为 formatRMB 金额字符串",
+    "relationContract": "narratives 的 key 必须与 application.js PROBLEM_TEMPLATES[k].relation 逐字一致（Q-13 数量关系×情境类型匹配校验的锚）；本文件不含任何派生字段，评审冻结即终态（无第二事实源）",
+    "r17Notes": "数值常识由叙事结构承载并经人工评审把关：单价整数元（低档数域 1-20）、行程速度 10-100 千米/时（汽车区间，下限 10 为小区/低速边界，评审确认）、工程效率 5-50 个/时、植树每行 2-9 棵；数域硬约束仍由 capability.numberRange 唯一承载，本文件不重复设限（防第二事实源）"
+  },
+  "scenes": [
+    {
+      "id": "shop-low",
+      "type": "shopping",
+      "grades": [
+        1,
+        2
+      ],
+      "scene": "文具店购物",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "小明在文具店买了一支铅笔，花了 {a} 元，又买了一块橡皮，花了 {b} 元。一共花了多少钱？",
+          "brief": "买一支铅笔 {a} 元和一块橡皮 {b} 元，一共花多少钱？"
+        },
+        "part2 = total - part1": {
+          "apply": "小红带了 {total} 元去买文具，买笔记本用去 {part1} 元。还剩多少元？",
+          "brief": "带 {total} 元，用去 {part1} 元，还剩多少元？"
+        },
+        "B = A + diff": {
+          "apply": "一个笔袋 {a} 元，一个书包比笔袋贵 {diff} 元。一个书包多少元？",
+          "brief": "笔袋 {a} 元，书包比它贵 {diff} 元，书包多少元？"
+        },
+        "B = A - diff": {
+          "apply": "一个笔袋 {a} 元，一块橡皮比笔袋便宜 {diff} 元。一块橡皮多少元？",
+          "brief": "笔袋 {a} 元，橡皮比它便宜 {diff} 元，橡皮多少元？"
+        },
+        "total = per × groups": {
+          "apply": "文具店里的铅笔每盒 {per} 支，老师买了 {groups} 盒。一共买了多少支铅笔？",
+          "brief": "每盒铅笔 {per} 支，买 {groups} 盒，一共多少支？"
+        },
+        "per = total ÷ groups": {
+          "apply": "老师买了 {total} 支铅笔，平均装进 {groups} 个笔盒。每个笔盒装多少支？",
+          "brief": "{total} 支铅笔平均装进 {groups} 个笔盒，每盒装几支？"
+        }
+      }
+    },
+    {
+      "id": "shop-mid",
+      "type": "shopping",
+      "grades": [
+        3,
+        4
+      ],
+      "scene": "超市购物",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "妈妈去超市买了一箱牛奶花了 {a} 元，又买了一袋大米花了 {b} 元。一共花了多少元？",
+          "brief": "买牛奶花 {a} 元、大米花 {b} 元，一共花多少元？"
+        },
+        "part2 = total - part1": {
+          "apply": "王阿姨拿 {total} 元去超市，买水果用去 {part1} 元。还剩多少元？",
+          "brief": "拿 {total} 元，买水果用去 {part1} 元，还剩多少元？"
+        },
+        "B = A + diff": {
+          "apply": "一袋大米 {a} 元，一桶食用油比大米贵 {diff} 元。一桶食用油多少元？",
+          "brief": "大米 {a} 元一袋，食用油比它贵 {diff} 元，食用油多少元？"
+        },
+        "B = A - diff": {
+          "apply": "一桶食用油 {a} 元，一袋盐比食用油便宜 {diff} 元。一袋盐多少元？",
+          "brief": "食用油 {a} 元一桶，盐比它便宜 {diff} 元，盐多少元？"
+        },
+        "B = A × n": {
+          "apply": "超市里一箱牛奶 {a} 元，一箱苹果的价钱是牛奶的 {n} 倍。一箱苹果多少元？",
+          "brief": "牛奶 {a} 元一箱，苹果的价钱是牛奶的 {n} 倍，苹果多少元？"
+        },
+        "total = per × groups": {
+          "apply": "超市搞促销，每种饮料单价 {per} 元，李叔叔买了 {groups} 瓶。一共要付多少元？",
+          "brief": "饮料每瓶 {per} 元，买 {groups} 瓶，一共多少元？"
+        },
+        "groups = total ÷ per": {
+          "apply": "超市运来 {total} 个鸡蛋，每 {per} 个装一盒。这些鸡蛋能装多少盒？",
+          "brief": "{total} 个鸡蛋每 {per} 个装一盒，能装几盒？"
+        }
+      }
+    },
+    {
+      "id": "shop-high",
+      "type": "shopping",
+      "grades": [
+        5,
+        6
+      ],
+      "scene": "商场购物",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "张叔叔家装修，买灯具花了 {a} 元，买窗帘花了 {b} 元。这两样一共花了多少元？",
+          "brief": "买灯具 {a} 元、窗帘 {b} 元，一共多少元？"
+        },
+        "part2 = total - part1": {
+          "apply": "李阿姨带了 {total} 元逛商场，买衣服用去 {part1} 元。还剩多少元？",
+          "brief": "带 {total} 元，买衣服用去 {part1} 元，还剩多少元？"
+        },
+        "B = A + diff": {
+          "apply": "一台电风扇 {a} 元，一台空调比电风扇贵 {diff} 元。一台空调多少元？",
+          "brief": "电风扇 {a} 元，空调比它贵 {diff} 元，空调多少元？"
+        },
+        "B = A - diff": {
+          "apply": "一台空调 {a} 元，一台电风扇比空调便宜 {diff} 元。一台电风扇多少元？",
+          "brief": "空调 {a} 元，电风扇比它便宜 {diff} 元，电风扇多少元？"
+        },
+        "B = A × n": {
+          "apply": "商场里一张书桌 {a} 元，一套沙发的价钱是书桌的 {n} 倍。一套沙发多少元？",
+          "brief": "书桌 {a} 元一张，沙发的价钱是它的 {n} 倍，沙发多少元？"
+        },
+        "total = per × groups": {
+          "apply": "学校采购图书，每套图书 {per} 元，采购了 {groups} 套。一共要花多少元？",
+          "brief": "每套图书 {per} 元，买 {groups} 套，一共多少元？"
+        },
+        "groups = total ÷ per": {
+          "apply": "商场把 {total} 瓶果汁摆上货架，每层摆 {per} 瓶。这些果汁能摆多少层？",
+          "brief": "{total} 瓶果汁每层摆 {per} 瓶，能摆几层？"
+        }
+      }
+    },
+    {
+      "id": "travel-mid",
+      "type": "travel",
+      "grades": [
+        3,
+        4
+      ],
+      "scene": "出行路程",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "distance = speed × time": {
+          "apply": "一辆汽车在公路上行驶，平均每小时行 {speed} 千米，行了 {time} 小时。一共行了多少千米？",
+          "brief": "汽车每小时行 {speed} 千米，行 {time} 小时，一共行多少千米？"
+        },
+        "total = part1 + part2": {
+          "apply": "小华家到学校有 {a} 米，学校到少年宫有 {b} 米。小华从家经过学校到少年宫，一共要走多少米？",
+          "brief": "家到学校 {a} 米，学校到少年宫 {b} 米，一共走多少米？"
+        },
+        "part2 = total - part1": {
+          "apply": "小林家离图书馆 {total} 米，他已经走了 {part1} 米。还剩多少米？",
+          "brief": "全程 {total} 米，已走 {part1} 米，还剩多少米？"
+        },
+        "B = A - diff": {
+          "apply": "小明每分钟走 {a} 米，小刚每分钟比小明慢走 {diff} 米。小刚每分钟走多少米？",
+          "brief": "小明每分钟走 {a} 米，小刚比他每分钟慢 {diff} 米，小刚每分钟走多少米？"
+        }
+      }
+    },
+    {
+      "id": "travel-high",
+      "type": "travel",
+      "grades": [
+        5,
+        6
+      ],
+      "scene": "长途行程",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "distance = speed × time": {
+          "apply": "一列动车平均每小时行 {speed} 千米，从甲城到乙城用了 {time} 小时。甲城到乙城的铁路全长多少千米？",
+          "brief": "动车每小时行 {speed} 千米，行 {time} 小时，全程多少千米？"
+        },
+        "total = part1 + part2": {
+          "apply": "一条公路，甲队负责的路段长 {a} 米，乙队负责的路段长 {b} 米。这条公路全长多少米？",
+          "brief": "甲队修 {a} 米，乙队修 {b} 米，公路全长多少米？"
+        },
+        "B = A + diff": {
+          "apply": "客车每小时行 {a} 千米，货车每小时比客车多行 {diff} 千米。货车每小时行多少千米？",
+          "brief": "客车每小时行 {a} 千米，货车比它每小时多行 {diff} 千米，货车速度是多少？"
+        },
+        "B = A - diff": {
+          "apply": "货车每小时行 {a} 千米，客车每小时比货车多行 {diff} 千米。客车每小时行多少千米？",
+          "brief": "货车每小时行 {a} 千米，客车比它每小时多行 {diff} 千米，客车速度是多少？"
+        }
+      }
+    },
+    {
+      "id": "work-high",
+      "type": "work",
+      "grades": [
+        4,
+        5,
+        6
+      ],
+      "scene": "车间加工",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "work = rate × time": {
+          "apply": "王师傅每小时加工 {rate} 个零件，加工了 {time} 小时。一共加工了多少个零件？",
+          "brief": "每小时加工 {rate} 个零件，加工 {time} 小时，一共加工多少个？"
+        },
+        "total = part1 + part2": {
+          "apply": "服装厂上旬生产服装 {a} 件，中旬生产 {b} 件。两旬一共生产多少件？",
+          "brief": "上旬生产 {a} 件、中旬生产 {b} 件，一共多少件？"
+        },
+        "part2 = total - part1": {
+          "apply": "车间计划生产 {total} 个零件，已经生产了 {part1} 个。还差多少个？",
+          "brief": "计划生产 {total} 个，已完成 {part1} 个，还差多少个？"
+        },
+        "total = per × groups": {
+          "apply": "包装车间每组每小时包装 {per} 盒礼品，{groups} 组同时工作 1 小时。一共包装多少盒？",
+          "brief": "每组每小时包装 {per} 盒，{groups} 组 1 小时包装多少盒？"
+        }
+      }
+    },
+    {
+      "id": "plant-low",
+      "type": "planting",
+      "grades": [
+        1,
+        2
+      ],
+      "scene": "校园植树",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "同学们植树，一班植了 {a} 棵，二班植了 {b} 棵。两个班一共植了多少棵？",
+          "brief": "一班植 {a} 棵、二班植 {b} 棵，一共植多少棵？"
+        },
+        "part2 = total - part1": {
+          "apply": "班级计划植 {total} 棵树，上午植了 {part1} 棵。下午还要植多少棵？",
+          "brief": "计划植 {total} 棵，已植 {part1} 棵，还要植多少棵？"
+        },
+        "total = per × groups": {
+          "apply": "同学们在校园里种花，每行种 {per} 棵，种了 {groups} 行。一共种了多少棵？",
+          "brief": "每行种 {per} 棵，种 {groups} 行，一共多少棵？"
+        },
+        "per = total ÷ groups": {
+          "apply": "少先队员采了 {total} 千克树种，平均分给 {groups} 个小队。每个小队分得多少千克？",
+          "brief": "{total} 千克树种平均分给 {groups} 个小队，每队分多少千克？"
+        }
+      }
+    },
+    {
+      "id": "plant-mid",
+      "type": "planting",
+      "grades": [
+        3,
+        4
+      ],
+      "scene": "果园种植",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = per × groups": {
+          "apply": "果园里栽了 {groups} 行苹果树，每行 {per} 棵。果园一共栽了多少棵苹果树？",
+          "brief": "栽 {groups} 行苹果树，每行 {per} 棵，一共多少棵？"
+        },
+        "groups = total ÷ per": {
+          "apply": "园林工人要栽 {total} 棵柳树，每行栽 {per} 棵。这些柳树要栽多少行？",
+          "brief": "{total} 棵柳树每行栽 {per} 棵，要栽几行？"
+        },
+        "total = part1 + part2": {
+          "apply": "果园里有梨树 {a} 棵，桃树 {b} 棵。梨树和桃树一共有多少棵？",
+          "brief": "梨树 {a} 棵、桃树 {b} 棵，一共多少棵？"
+        },
+        "B = A + diff": {
+          "apply": "果园里有 {a} 棵杏树，栽的柿子树比杏树多 {diff} 棵。柿子树有多少棵？",
+          "brief": "杏树 {a} 棵，柿子树比它多 {diff} 棵，柿子树多少棵？"
+        },
+        "per = total ÷ groups": {
+          "apply": "苗圃把 {total} 棵树苗平均种到 {groups} 块地里。每块地种多少棵？",
+          "brief": "{total} 棵树苗平均种到 {groups} 块地，每块地种几棵？"
+        },
+        "B = A ÷ n": {
+          "apply": "果园收了 {a} 千克苹果，收的樱桃质量是苹果的 {n} 分之一。果园收了多少千克樱桃？",
+          "brief": "苹果 {a} 千克，樱桃的质量是它的 {n} 分之一，樱桃多少千克？"
+        }
+      }
+    },
+    {
+      "id": "stat-mid",
+      "type": "statistics",
+      "grades": [
+        2,
+        3,
+        4
+      ],
+      "scene": "校园收集数据",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "环保小组收集废电池，第一组收集了 {a} 节，第二组收集了 {b} 节。两组一共收集了多少节？",
+          "brief": "第一组收集 {a} 节、第二组收集 {b} 节，一共多少节？"
+        },
+        "B = A + diff": {
+          "apply": "三（1）班图书角有 {a} 本故事书，科技书比故事书多 {diff} 本。科技书有多少本？",
+          "brief": "故事书 {a} 本，科技书比它多 {diff} 本，科技书多少本？"
+        },
+        "B = A - diff": {
+          "apply": "班级图书角有 {a} 本连环画，童话书比连环画少 {diff} 本。童话书有多少本？",
+          "brief": "连环画 {a} 本，童话书比它少 {diff} 本，童话书多少本？"
+        },
+        "total = per × groups": {
+          "apply": "同学们统计校园里的树，每个年级统计 {per} 棵，共有 {groups} 个年级参加。一共统计了多少棵？",
+          "brief": "每个年级统计 {per} 棵，{groups} 个年级一共统计多少棵？"
+        },
+        "per = total ÷ groups": {
+          "apply": "手工小组做了 {total} 朵纸花，平均布置 {groups} 个展板。每个展板用多少朵？",
+          "brief": "{total} 朵纸花平均布置 {groups} 个展板，每块展板用几朵？"
+        }
+      }
+    },
+    {
+      "id": "stat-high",
+      "type": "statistics",
+      "grades": [
+        5,
+        6
+      ],
+      "scene": "社会调查数据",
+      "reviewStatus": "confirmed",
+      "narratives": {
+        "total = part1 + part2": {
+          "apply": "节水小组统计用水量，上周节约用水 {a} 吨，本周节约用水 {b} 吨。两周一共节约用水多少吨？",
+          "brief": "上周节水 {a} 吨、本周节水 {b} 吨，一共节约多少吨？"
+        },
+        "B = A + diff": {
+          "apply": "图书馆上月借出科技书 {a} 册，借出的文艺书比科技书多 {diff} 册。文艺书借出多少册？",
+          "brief": "科技书借出 {a} 册，文艺书比它多 {diff} 册，文艺书多少册？"
+        },
+        "total = per × groups": {
+          "apply": "调查小组访问社区居民，每人每天访问 {per} 户，{groups} 人一天共访问多少户？",
+          "brief": "每人每天访问 {per} 户，{groups} 人一天共访问多少户？"
+        },
+        "groups = total ÷ per": {
+          "apply": "敬老院收到 {total} 千克水果，每 {per} 千克装一篮。这些水果能装多少篮？",
+          "brief": "{total} 千克水果每 {per} 千克装一篮，能装几篮？"
+        }
+      }
+    }
+  ],
+  "moneyApp": {
+    "note": "money.js rmb apply 消费段：op 锚（buy/change/total）× grade 档；{a}/{b} 槽由消费端填 formatRMB 金额字符串（如「3元5角」）",
+    "entries": [
+      {
+        "id": "money-shop-low",
+        "grades": [
+          1,
+          2
+        ],
+        "reviewStatus": "confirmed",
+        "narratives": {
+          "buy": [
+            "小明买了一支笔，花了{a}，又买了一块橡皮，花了{b}，一共花了多少钱？",
+            "小红买了一个卷笔刀，花了{a}，又买了一盒铅笔，花了{b}，一共花了多少钱？"
+          ],
+          "change": [
+            "小红有{a}，买文具花了{b}，还剩多少钱？",
+            "小明带了{a}去买本子，用去{b}，还剩多少钱？"
+          ],
+          "total": [
+            "一本书{a}，一本笔记本{b}，买这两样东西一共需要多少钱？",
+            "一个书包{a}，一个文具盒{b}，买这两样东西一共需要多少钱？"
+          ]
+        }
+      },
+      {
+        "id": "money-shop-mid",
+        "grades": [
+          3,
+          4
+        ],
+        "reviewStatus": "confirmed",
+        "narratives": {
+          "buy": [
+            "妈妈买了一条鱼，花了{a}，又买了一篮子鸡蛋，花了{b}，一共花了多少钱？",
+            "王叔叔买了一件汗衫，花了{a}，又买了一双凉鞋，花了{b}，一共花了多少钱？"
+          ],
+          "change": [
+            "李阿姨有{a}，买菜用去{b}，还剩多少钱？",
+            "小刚有{a}，买球拍用去{b}，还剩多少钱？"
+          ],
+          "total": [
+            "一个台灯{a}，一个闹钟{b}，买这两样东西一共需要多少钱？",
+            "一盒水彩笔{a}，一个调色盘{b}，买这两样东西一共需要多少钱？"
+          ]
+        }
+      }
+    ]
+  }
+}

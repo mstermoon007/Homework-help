@@ -18,6 +18,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_addsub",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -61,6 +63,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 2,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -106,6 +110,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 3,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -152,6 +158,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_addsub",
+      "stageOrder": 4,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -199,6 +207,8 @@
         "sequential"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 5,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -240,6 +250,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -277,6 +289,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -317,6 +331,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -356,6 +372,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 2,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -394,6 +412,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -428,6 +448,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 6,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -462,6 +484,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -497,6 +521,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 8,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 3,
       "maxSteps": 2,
@@ -534,6 +560,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_review",
+      "stageOrder": 1,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -569,6 +597,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 3,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -607,6 +637,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -644,6 +676,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -682,6 +716,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_addsub",
+      "stageOrder": 11,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -722,6 +758,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 4,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -760,6 +798,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -798,6 +838,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -836,6 +878,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 7,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -874,6 +918,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -914,6 +960,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -955,6 +1003,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 12,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -997,6 +1047,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1038,6 +1090,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 14,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1080,6 +1134,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1119,6 +1175,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 16,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 3,
       "maxSteps": 2,
@@ -1160,6 +1218,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 17,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1202,6 +1262,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 18,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1242,6 +1304,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 19,
       "cognitiveLevel": "understand",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -1279,6 +1343,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -1321,6 +1387,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_relation",
+      "stageOrder": 2,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1365,6 +1433,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_relation",
+      "stageOrder": 3,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 4,
@@ -1406,6 +1476,8 @@
         "money",
         "graph"
       ],
+      "familyId": "fam_money",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -1443,6 +1515,8 @@
         "money",
         "graph"
       ],
+      "familyId": "fam_money",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
@@ -1478,6 +1552,8 @@
       "families": [
         "money"
       ],
+      "familyId": "fam_money",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 2,
@@ -1518,6 +1594,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -1555,6 +1633,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -1588,6 +1668,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -1623,6 +1705,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -1658,6 +1742,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -1693,6 +1779,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -1731,6 +1819,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -1773,6 +1863,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -1815,6 +1907,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 2,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
@@ -1855,6 +1949,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 3,
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -1894,6 +1990,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 4,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -1932,6 +2030,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -1968,6 +2068,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2007,6 +2109,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2048,6 +2152,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2087,6 +2193,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 5,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -2124,6 +2232,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2160,6 +2270,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2196,6 +2308,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2230,6 +2344,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_direction",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2265,6 +2381,8 @@
         "ratio",
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2303,6 +2421,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2339,6 +2459,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 3,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2376,6 +2498,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2416,6 +2540,8 @@
         "ratio",
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2455,6 +2581,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2495,6 +2623,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 6,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2540,6 +2670,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 7,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -2586,6 +2718,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 3,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2624,6 +2758,8 @@
       "families": [
         "time"
       ],
+      "familyId": "fam_time",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2658,6 +2794,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_time",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2689,6 +2827,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_time",
+      "stageOrder": 3,
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2726,6 +2866,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 8,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2767,6 +2909,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2807,6 +2951,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 10,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -2849,6 +2995,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 11,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -2894,6 +3042,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_divide",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -2935,6 +3085,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -2974,6 +3126,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3011,6 +3165,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 6,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
@@ -3051,6 +3207,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3093,6 +3251,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3135,6 +3295,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3176,6 +3338,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3213,6 +3377,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3250,6 +3416,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 12,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3289,6 +3457,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3328,6 +3498,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3367,6 +3539,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3407,6 +3581,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 16,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3448,6 +3624,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 20,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3490,6 +3668,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3533,6 +3713,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 22,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3575,6 +3757,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 23,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3617,6 +3801,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3660,6 +3846,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 2,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3703,6 +3891,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3740,6 +3930,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -3781,6 +3973,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_review",
+      "stageOrder": 4,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3825,6 +4019,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_review",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
@@ -3862,6 +4058,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_review",
+      "stageOrder": 6,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 4,
@@ -3900,6 +4098,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -3937,6 +4137,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -3973,6 +4175,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4009,6 +4213,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4048,6 +4254,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 2,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4085,6 +4293,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 3,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4117,6 +4327,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 4,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4154,6 +4366,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 5,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 9,
       "maxSteps": 5,
@@ -4194,6 +4408,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4230,6 +4446,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4267,6 +4485,8 @@
         "money",
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4305,6 +4525,8 @@
         "time",
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 3,
@@ -4342,6 +4564,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_measure",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4375,6 +4599,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 11,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4412,6 +4638,8 @@
         "money",
         "measure"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4449,6 +4677,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_measure",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4487,6 +4717,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4528,6 +4760,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4569,6 +4803,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4609,6 +4845,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4649,6 +4887,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 11,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -4689,6 +4929,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4723,6 +4965,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4753,6 +4997,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 7,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4787,6 +5033,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -4820,6 +5068,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 9,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4853,6 +5103,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4889,6 +5141,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4926,6 +5180,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 3,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4961,6 +5217,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_line_angle",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -4998,6 +5256,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -5040,6 +5300,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -5083,6 +5345,8 @@
         "fraction",
         "ratio"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -5128,6 +5392,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 4,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -5172,6 +5438,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -5217,6 +5485,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 7,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -5256,6 +5526,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5292,6 +5564,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5328,6 +5602,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5364,6 +5640,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5403,6 +5681,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -5445,6 +5725,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -5486,6 +5768,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -5526,6 +5810,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 16,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -5566,6 +5852,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -5606,6 +5894,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 18,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -5645,6 +5935,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5683,6 +5975,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 6,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5721,6 +6015,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 7,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5758,6 +6054,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5795,6 +6093,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 14,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5834,6 +6134,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5872,6 +6174,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 16,
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5911,6 +6215,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5949,6 +6255,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 18,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -5987,6 +6295,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -6025,6 +6335,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -6065,6 +6377,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_statistics",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -6101,6 +6415,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 3,
@@ -6134,6 +6450,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_time",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -6170,6 +6488,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_time",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -6210,6 +6530,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 1,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6253,6 +6575,8 @@
         "decimal",
         "ratio"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6298,6 +6622,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 3,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6343,6 +6669,8 @@
         "decimal",
         "measure"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -6388,6 +6716,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 8,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6432,6 +6762,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_review",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -6473,6 +6805,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -6511,6 +6845,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
@@ -6546,6 +6882,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
@@ -6583,6 +6921,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -6622,6 +6962,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6661,6 +7003,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 18,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6700,6 +7044,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 19,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6739,6 +7085,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 20,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6780,6 +7128,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6820,6 +7170,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_integer",
+      "stageOrder": 22,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -6857,6 +7209,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -6894,6 +7248,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 6,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -6931,6 +7287,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_line_angle",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -6970,6 +7328,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7010,6 +7370,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7052,6 +7414,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7095,6 +7459,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_relation",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7138,6 +7504,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7179,6 +7547,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_relation",
+      "stageOrder": 12,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -7218,6 +7588,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 10,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7255,6 +7627,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7291,6 +7665,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 12,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7328,6 +7704,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7365,6 +7743,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7405,6 +7785,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_statistics",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7441,6 +7823,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7476,6 +7860,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 15,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -7520,6 +7906,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_integer",
+      "stageOrder": 23,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7558,6 +7946,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 6,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7596,6 +7986,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7630,6 +8022,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_direction",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -7669,6 +8063,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 11,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7712,6 +8108,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 24,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7756,6 +8154,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_divide",
+      "stageOrder": 19,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -7800,6 +8200,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 6,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7842,6 +8244,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_operation_law",
+      "stageOrder": 7,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -7881,6 +8285,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7919,6 +8325,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7954,6 +8362,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_observation",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -7988,6 +8398,8 @@
         "addition"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 25,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8024,6 +8436,8 @@
         "subtraction"
       ],
       "families": [],
+      "familyId": "fam_addsub",
+      "stageOrder": 26,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8060,6 +8474,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_multiply",
+      "stageOrder": 15,
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8101,6 +8517,8 @@
         "mixed"
       ],
       "families": [],
+      "familyId": "fam_operation_law",
+      "stageOrder": 8,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -8147,6 +8565,8 @@
         "decimal",
         "percent"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 5,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8194,6 +8614,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8235,6 +8657,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8277,6 +8701,8 @@
         "decimal",
         "ratio"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8322,6 +8748,8 @@
         "decimal",
         "percent"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8371,6 +8799,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8414,6 +8844,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8452,6 +8884,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8488,6 +8922,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8524,6 +8960,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 16,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8560,6 +8998,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8596,6 +9036,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 18,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8632,6 +9074,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 19,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8674,6 +9118,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 12,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8721,6 +9167,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 13,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8769,6 +9217,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 14,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8817,6 +9267,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 15,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -8858,6 +9310,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8897,6 +9351,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -8939,6 +9395,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -8976,6 +9434,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_motion",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -9011,6 +9471,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 9,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9053,6 +9515,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 16,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -9095,6 +9559,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -9136,6 +9602,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_statistics",
+      "stageOrder": 18,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -9175,6 +9643,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 19,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -9215,6 +9685,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 20,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -9251,6 +9723,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
@@ -9289,6 +9763,8 @@
       "families": [
         "equation"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 22,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9337,6 +9813,8 @@
         "decimal",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 12,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
@@ -9381,6 +9859,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9419,6 +9899,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9456,6 +9938,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9497,6 +9981,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 16,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9542,6 +10028,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 17,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9586,6 +10074,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 18,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9631,6 +10121,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 19,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -9676,6 +10168,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 20,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -9722,6 +10216,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9766,6 +10262,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 22,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9809,6 +10307,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_decimal",
+      "stageOrder": 23,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -9851,6 +10351,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 24,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9895,6 +10397,8 @@
       "families": [
         "decimal"
       ],
+      "familyId": "fam_decimal",
+      "stageOrder": 25,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -9933,6 +10437,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_decimal",
+      "stageOrder": 26,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
@@ -9972,6 +10478,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 10,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10013,6 +10521,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 11,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10053,6 +10563,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 12,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
@@ -10093,6 +10605,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 1,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 4,
@@ -10134,6 +10648,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
@@ -10175,6 +10691,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10213,6 +10731,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10250,6 +10770,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 19,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10288,6 +10810,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 20,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10326,6 +10850,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10367,6 +10893,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 22,
       "cognitiveLevel": "understand",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10411,6 +10939,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 23,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10453,6 +10983,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_measure",
+      "stageOrder": 24,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10489,6 +11021,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_probability",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10524,6 +11058,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_probability",
+      "stageOrder": 2,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10562,6 +11098,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_probability",
+      "stageOrder": 3,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10600,6 +11138,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_probability",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10637,6 +11177,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10671,6 +11213,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 23,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10705,6 +11249,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10744,6 +11290,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 12,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10791,6 +11339,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 13,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -10835,6 +11385,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10875,6 +11427,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10914,6 +11468,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_observation",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -10954,6 +11510,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -10995,6 +11553,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11035,6 +11595,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11075,6 +11637,8 @@
         "multiplication"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11115,6 +11679,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11153,6 +11719,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11190,6 +11758,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 24,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11228,6 +11798,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 25,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11266,6 +11838,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 26,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11304,6 +11878,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 27,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11342,6 +11918,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 28,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11381,6 +11959,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 29,
       "cognitiveLevel": "understand",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11425,6 +12005,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 6,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11470,6 +12052,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11513,6 +12097,8 @@
         "fraction",
         "ratio"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11558,6 +12144,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11603,6 +12191,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11648,6 +12238,8 @@
         "fraction",
         "decimal"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11689,6 +12281,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 13,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11728,6 +12322,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11765,6 +12361,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 15,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11804,6 +12402,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_motion",
+      "stageOrder": 16,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
@@ -11849,6 +12449,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 12,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11897,6 +12499,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11945,6 +12549,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 14,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -11993,6 +12599,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 15,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -12040,6 +12648,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 16,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -12087,6 +12697,8 @@
       "families": [
         "measure"
       ],
+      "familyId": "fam_statistics",
+      "stageOrder": 20,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12129,6 +12741,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_statistics",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12168,6 +12782,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_statistics",
+      "stageOrder": 22,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12208,6 +12824,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 30,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12245,6 +12863,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 31,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12278,6 +12898,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 32,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -12313,6 +12935,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 33,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
@@ -12355,6 +12979,8 @@
       "families": [
         "direction"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12395,6 +13021,8 @@
         "division"
       ],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 34,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12431,6 +13059,8 @@
       "families": [
         "time"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 4,
@@ -12469,6 +13099,8 @@
       "families": [
         "time"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12508,6 +13140,8 @@
       "families": [
         "time"
       ],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12545,6 +13179,8 @@
       },
       "operations": [],
       "families": [],
+      "familyId": "fam_problem_solving",
+      "stageOrder": 16,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
@@ -12590,6 +13226,8 @@
         "fraction",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 14,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -12639,6 +13277,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -12682,6 +13322,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -12726,6 +13368,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_direction",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -12771,6 +13415,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 17,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -12818,6 +13464,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 18,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -12871,6 +13519,8 @@
         "fraction",
         "decimal"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 19,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -12920,6 +13570,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 20,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -12967,6 +13619,8 @@
         "decimal",
         "direction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 21,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13015,6 +13669,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 22,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13061,6 +13717,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 23,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13110,6 +13768,8 @@
       "families": [
         "fraction"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 24,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13160,6 +13820,8 @@
         "fraction",
         "equation"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 25,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13205,6 +13867,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 35,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -13248,6 +13912,8 @@
         "ratio",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 36,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13293,6 +13959,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 37,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13336,6 +14004,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 38,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -13376,6 +14046,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 39,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 4,
@@ -13420,6 +14092,8 @@
         "percent",
         "ratio"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 11,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13468,6 +14142,8 @@
         "decimal",
         "percent"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -13515,6 +14191,8 @@
         "fraction",
         "percent"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 13,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13560,6 +14238,8 @@
         "percent",
         "money"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 14,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13605,6 +14285,8 @@
         "fraction",
         "percent"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 15,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13649,6 +14331,8 @@
         "percent",
         "ratio"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 16,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13696,6 +14380,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 15,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13739,6 +14425,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 1,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13778,6 +14466,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 2,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13818,6 +14508,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 3,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13859,6 +14551,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 4,
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13900,6 +14594,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 5,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13944,6 +14640,8 @@
         "measure",
         "direction"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13988,6 +14686,8 @@
         "negative",
         "ratio"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -14029,6 +14729,8 @@
       "families": [
         "negative"
       ],
+      "familyId": "fam_negative",
+      "stageOrder": 8,
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -14068,6 +14770,8 @@
       "families": [
         "percent"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 26,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -14108,6 +14812,8 @@
         "fraction",
         "percent"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 27,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -14149,6 +14855,8 @@
       "families": [
         "ratio"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 28,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14184,6 +14892,8 @@
       "families": [
         "money"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 29,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14223,6 +14933,8 @@
         "fraction",
         "percent"
       ],
+      "familyId": "fam_fraction",
+      "stageOrder": 30,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -14267,6 +14979,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 40,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -14307,6 +15021,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 41,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14345,6 +15061,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 42,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14382,6 +15100,8 @@
       "families": [
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 43,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14420,6 +15140,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 44,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14458,6 +15180,8 @@
         "measure",
         "graph"
       ],
+      "familyId": "fam_shape",
+      "stageOrder": 45,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 4,
@@ -14498,6 +15222,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 17,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -14537,6 +15263,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 18,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -14575,6 +15303,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 19,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -14616,6 +15346,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 20,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -14661,6 +15393,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 21,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
@@ -14705,6 +15439,8 @@
         "ratio",
         "proportion"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 22,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -14746,6 +15482,8 @@
         "ratio",
         "graph"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 23,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14790,6 +15528,8 @@
         "proportion",
         "graph"
       ],
+      "familyId": "fam_number_algebra",
+      "stageOrder": 24,
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -14832,6 +15572,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 46,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14862,6 +15604,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 47,
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14892,6 +15636,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 48,
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 3,
@@ -14923,6 +15669,8 @@
       "numberRange": null,
       "operations": [],
       "families": [],
+      "familyId": "fam_shape",
+      "stageOrder": 49,
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 4,
@@ -14966,6 +15714,8 @@
         "direction",
         "graph"
       ],
+      "familyId": "fam_review",
+      "stageOrder": 16,
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 3,

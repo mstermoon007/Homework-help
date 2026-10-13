@@ -1,0 +1,50 @@
+{
+  "task": "P40-T-12",
+  "generatedBy": "dev/p40/t12-regression-baseline.js",
+  "baseline": "基线即验收标准（非仅当前量）",
+  "counts": {
+    "KP": 375,
+    "capability": 375,
+    "relations": 373
+  },
+  "items": {
+    "evolution": {
+      "edges": 38,
+      "coverage": "38/38",
+      "bad": 0,
+      "pass": true
+    },
+    "stageOrder": {
+      "families": 22,
+      "duplicate": 0,
+      "gradeInversion": 0,
+      "pass": true
+    },
+    "familyId": {
+      "covered": "375/375",
+      "pass": true
+    },
+    "crossFamily": {
+      "kpGraphAcyclic": true,
+      "evolutionGraphAcyclic": true,
+      "familyProjectionAcyclic": false,
+      "familyEdges": 61,
+      "familyProjectionNote": "primary-family 折叠产物（共享单元如「7～9的表内乘、除法」多族归属），登记 needs-review 观察，非数据违规",
+      "pass": true
+    },
+    "qtIntentReplay": {
+      "sha256": "99115fa6868c432f7c7d4a322e92d1c155b2ab59ec23308e379dad40e85661ad",
+      "identical": true,
+      "rows": 1570,
+      "needsReview": 0,
+      "pass": true
+    },
+    "allowGeneration": {
+      "pass6a": 1570,
+      "fail": 0,
+      "pass": true
+    }
+  },
+  "problems": [],
+  "verdict": "PASS"
+}

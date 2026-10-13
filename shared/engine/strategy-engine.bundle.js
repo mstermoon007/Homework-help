@@ -3595,8 +3595,27 @@ function resolve(opts) {
   };
 }
 
+
+function orderByStageOrder(items, opts) {
+  opts = opts || {};
+  var getKp = opts.getKp;
+  var list = (items || []).slice();
+  if (typeof getKp !== 'function') return list;
+  var idOf = opts.idOf || function (x) { return typeof x === 'string' ? x : (x && (x.kpId || x.knowledgePointId || x.id)); };
+  return list.map(function (x, i) { return { x: x, i: i }; }).sort(function (a, b) {
+    var ka = getKp(idOf(a.x)) || {}, kb = getKp(idOf(b.x)) || {};
+    var fa = ka.familyId || '', fb = kb.familyId || '';
+    if (fa !== fb) return fa < fb ? -1 : 1;
+    var sa = ka.stageOrder == null ? Infinity : ka.stageOrder;
+    var sb = kb.stageOrder == null ? Infinity : kb.stageOrder;
+    if (sa !== sb) return sa - sb;
+    return a.i - b.i;
+  }).map(function (p) { return p.x; });
+}
+
 module.exports = {
   resolve: resolve,
+  orderByStageOrder: orderByStageOrder,
   masteryBandAdjustment: masteryBandAdjustment,
   applyStreakProtection: applyStreakProtection,
   dampenByConfidence: dampenByConfidence,
@@ -5499,6 +5518,111 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
   }
 
   
+  
+  
+  var _misconsIndex = null;
+  function getMiscons(kpId) {
+    try {
+      var KC = getGlobalKC();
+      if (KC && typeof KC.misconceptionsFor === 'function') {
+        var viaRuntime = KC.misconceptionsFor(kpId);
+        if (viaRuntime) return viaRuntime;
+      }
+    } catch (e) {  }
+    if (_misconsIndex === null) {
+      var doc = loadTeaching('misconception-profiles');
+      var index = {};
+      var kps = (doc && doc.kps) ? doc.kps : {};
+      for (var id in kps) {
+        if (Object.prototype.hasOwnProperty.call(kps, id)) index[id] = kps[id];
+      }
+      _misconsIndex = index;
+    }
+    return _misconsIndex[kpId] || null;
+  }
+
+  
+  
+  
+  function getUpstream(kpId) {
+    try {
+      var KC = getGlobalKC();
+      if (!KC || typeof KC.get !== 'function' || typeof KC.relationsFor !== 'function') return null;
+      var cur = KC.get(kpId);
+      var curCf = cur && cur.semantic ? cur.semantic.conceptFamily : null;
+      if (!curCf || curCf.id == null || curCf.stageOrder == null) return null;
+      var inc = (KC.relationsFor(kpId, 'in') || {}).incoming || [];
+      var best = null;
+      for (var i = 0; i < inc.length; i++) {
+        var r = inc[i];
+        if (!r || r.relation !== 'prerequisite') continue;
+        var pk = KC.get(r.fromId);
+        var pf = pk && pk.semantic ? pk.semantic.conceptFamily : null;
+        if (!pf || pf.id !== curCf.id || pf.stageOrder == null || pf.stageOrder >= curCf.stageOrder) continue;
+        if (!best || pf.stageOrder > best.stageOrder) {
+          var def = pk.semantic && typeof pk.semantic.concept === 'string' ? pk.semantic.concept : null;
+          best = {
+            knowledgeId: r.fromId,
+            name: pk.name || null,
+            definition: (def && def !== (pk.name || '')) ? def : null,
+            familyId: pf.id,
+            stageOrder: pf.stageOrder
+          };
+        }
+      }
+      return best;
+    } catch (e) { return null; }
+  }
+
+  function projectMiscons(kpId) {
+    var raw = getMiscons(kpId);
+    if (!raw || !Array.isArray(raw.slots) || raw.slots.length === 0) return [];
+    return raw.slots.map(function (s) {
+      return { errorType: s.errorType || null, basis: s.basis || null, feedback: s.feedback || null };
+    });
+  }
+
+  
+  
+  
+  
+  var _ctxLib = null;
+  function getContextData(grade) {
+    if (_ctxLib === null) {
+      var doc = null;
+      try {
+        var KC = getGlobalKC();
+        if (KC && typeof KC.contextLibrary === 'function') doc = KC.contextLibrary();
+      } catch (e) {  }
+      if (!doc) doc = loadTeaching('context-library');
+      _ctxLib = (doc && Array.isArray(doc.scenes)) ? doc : null;
+    }
+    var empty = { scenes: [], moneyEntries: [] };
+    if (!_ctxLib) return empty;
+    
+    
+    var gm = /^g(\d+)$/i.exec(String(grade));
+    var g = gm ? Number(gm[1]) : Number(grade);
+    var scenes = [];
+    _ctxLib.scenes.forEach(function (s) {
+      if (s && s.reviewStatus === 'confirmed' && Array.isArray(s.grades)
+        && s.grades.indexOf(g) !== -1 && s.narratives) {
+        scenes.push({ id: s.id, type: s.type, narratives: s.narratives });
+      }
+    });
+    var moneyEntries = [];
+    if (_ctxLib.moneyApp && Array.isArray(_ctxLib.moneyApp.entries)) {
+      _ctxLib.moneyApp.entries.forEach(function (e) {
+        if (e && e.reviewStatus === 'confirmed' && Array.isArray(e.grades)
+          && e.grades.indexOf(g) !== -1 && e.narratives) {
+          moneyEntries.push({ id: e.id, narratives: e.narratives });
+        }
+      });
+    }
+    return { scenes: scenes, moneyEntries: moneyEntries };
+  }
+
+  
 
   function reTest(re, text) {
     if (!text) return null;
@@ -5690,6 +5814,16 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
         questionType: questionType || null,
         name: facts.name,
         concept: facts.concept || null,
+        
+        
+        
+        
+        definition: (facts.concept && facts.concept !== facts.name) ? facts.concept : null,
+        
+        upstream: getUpstream(kpId),
+        
+        
+        contextScenes: getContextData(kp.grade),
         semanticFamily: primaryFamily,
         families: families,
         subTopic: derived.subTopic,
@@ -5697,6 +5831,8 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
         operations: facts.operations.slice(),
         representations: facts.representations.slice(),
         kind: kind,
+        
+        miscons: projectMiscons(kpId),
         intent: intent,
         expression: expression,
         graphic: graphic,
@@ -5731,9 +5867,22 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
     return { resolve: resolve, attachToPlan: attachToPlan };
   }
 
+  
+  
+  
+  function composeExplanation(parts) {
+    parts = parts || {};
+    var current = typeof parts.current === 'string' ? parts.current : '';
+    var up = parts.upstream, name = parts.name;
+    if (!up || !up.name || !name || up.name === name) return current;
+    var defCite = up.definition ? ('（' + up.definition + '）') : '';
+    return '我们之前学过〈' + up.name + '〉' + defCite + '。把〈' + up.name + '〉和〈' + name + '〉结合起来看：' + current;
+  }
+
   var singleton = createSemanticParameterResolver({});
 
   var api = {
+    composeExplanation: composeExplanation,
     SCHEMA_VERSION: SCHEMA_VERSION,
     SUBTOPIC_RULES: SUBTOPIC_RULES,
     createSemanticParameterResolver: createSemanticParameterResolver,
@@ -5759,6 +5908,10 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
   'use strict';
 
   var Rng = require("shared/generator/core/rng.js");
+  
+  
+  
+  var SVGCalculation = require("shared/svg/svg-calculation.js");
 
   var SCHEMA_VERSION = 'p25-07.1';
 
@@ -6064,6 +6217,27 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
     if (an) {
       var isTrue = rng() < 0.5;
       var shown = isTrue ? an.num : an.num + 1;
+      
+      
+      
+      
+      var vg = d.graphic;
+      if (vg && vg.type === 'calculation' && vg.params) {
+        if (!isTrue && (vg.subtype === 'add' || vg.subtype === 'sub' || vg.subtype === 'mul')) {
+          var vErrorType = vg.subtype === 'sub' ? 'no-borrow' : 'no-carry';
+          var errV = SVGCalculation.errorResultOf(vg.subtype, [vg.params.a, vg.params.b], vErrorType);
+          if (errV != null && errV !== an.num) {
+            shown = errV;
+            vg.params.options = { errorType: vErrorType };
+          } else {
+            delete d.graphic;
+          }
+        } else if (isTrue && vg.subtype !== 'div') {
+          vg.params.options = {};
+        } else {
+          delete d.graphic;
+        }
+      }
       var shownStr = numStr(shown) + an.suffix;
       if (/=\s*[？?]\s*$/.test(p)) {
         p = p.replace(/=\s*[？?]\s*$/, '= ' + shownStr + '（对还是错？）');
@@ -6436,6 +6610,494 @@ module.exports = {
 };
 
 };
+__defs["shared/svg/svg-calculation.js"] = function (module, exports, require) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function (global) {
+  'use strict';
+
+  var U = global.SVGUtil;
+  if (!U && typeof require !== 'undefined') U = require("shared/svg/svg-core.js");
+  if (!U) throw new Error('shared/svg/svg-calculation.js 依赖 shared/svg/svg-core.js，请先加载');
+
+  var RED = '#e05252';
+  var INK = '#27324a';
+
+  function checkInt(n, name) {
+    if (typeof n !== 'number' || !isFinite(n) || n < 0 || Math.floor(n) !== n) {
+      throw new RangeError(name + ' 必须为非负整数');
+    }
+    return n;
+  }
+  function digitsOf(n) { return String(n).split('').map(Number); }
+
+  
+  function errorResultOf(op, xs, errorType) {
+    try {
+      if (op === 'add') {
+        if (!Array.isArray(xs) || xs.length < 2 || errorType !== 'no-carry') return null;
+        var ns = xs.map(function (v) { return Number(v); });
+        for (var i0 = 0; i0 < ns.length; i0++) {
+          if (!isFinite(ns[i0]) || ns[i0] < 0 || Math.floor(ns[i0]) !== ns[i0]) return null;
+        }
+        var cols = Math.max.apply(null, ns.map(function (v) { return String(v).length; }));
+        var ds = [];
+        for (var k = 0; k < cols; k++) {
+          var s = 0;
+          ns.forEach(function (v) { var ch = String(v)[String(v).length - 1 - k]; if (ch != null) s += Number(ch); });
+          ds.unshift(s % 10);
+        }
+        return Number(ds.join(''));
+      }
+      if (op === 'sub') {
+        if (!Array.isArray(xs) || xs.length !== 2 || errorType !== 'no-borrow') return null;
+        var a = Number(xs[0]), b = Number(xs[1]);
+        if (!isFinite(a) || !isFinite(b) || a < 0 || b < 0 || a < b ||
+          Math.floor(a) !== a || Math.floor(b) !== b) return null;
+        var A = String(a), B = String(b), ds2 = [];
+        for (var k2 = 0; k2 < A.length; k2++) {
+          var bi = Number(B[B.length - 1 - k2] || 0);
+          ds2.unshift(Math.abs(Number(A[A.length - 1 - k2]) - bi) % 10);
+        }
+        while (ds2.length > 1 && ds2[0] === 0) ds2.shift();
+        return Number(ds2.join(''));
+      }
+      if (op === 'mul') {
+        if (!Array.isArray(xs) || xs.length !== 2 || errorType !== 'no-carry') return null;
+        var x = Number(xs[0]), y = Number(xs[1]);
+        if (!isFinite(x) || !isFinite(y) || x < 0 || y < 0 ||
+          Math.floor(x) !== x || Math.floor(y) !== y) return null;
+        var Bd = String(y), out = 0;
+        for (var i = Bd.length - 1; i >= 0; i--) {
+          var shift = Bd.length - 1 - i, Ad = String(x), pDs = [];
+          for (var k3 = Ad.length - 1; k3 >= 0; k3--) pDs.unshift((Number(Ad[k3]) * Number(Bd[i])) % 10);
+          out += Number(pDs.join('')) * Math.pow(10, shift);
+        }
+        return out;
+      }
+      return null;
+    } catch (e) { return null; }
+  }
+
+  
+  function Canvas(o) {
+    this.cellW = o.cellW || 26; this.rowH = o.rowH || o.rowH === 0 ? o.rowH : (o.rowH || 30);
+    this.fs = o.fontSize || 20;
+    this.color = o.color || INK;
+    this.markStyle = o.markStyle || 'dot';
+    
+    this.carryColor = o.carryColor || '#e0862c';
+    this.borrowColor = o.borrowColor || '#7c5cff';
+    this.minCol = 0; this.maxCol = 0; this.rowN = 0;
+    this.parts = [];
+  }
+  Canvas.prototype.x = function (col) { return col * this.cellW + this.cellW / 2; };
+  Canvas.prototype.y = function (row) { return row * this.rowH + this.rowH * 0.75; };
+  Canvas.prototype.put = function (row, col, ch, opt) {
+    opt = opt || {};
+    this.minCol = Math.min(this.minCol, col); this.maxCol = Math.max(this.maxCol, col);
+    this.rowN = Math.max(this.rowN, row + 1);
+    if (ch === '' || ch == null) return;
+    this.parts.push(U.svgText(this.x(col), this.y(row), String(ch), {
+      fontSize: opt.fs || this.fs,
+      fontFamily: 'Menlo, Consolas, monospace',
+      fill: opt.color || this.color,
+      fontWeight: opt.bold ? 700 : 400,
+      'text-anchor': 'middle'
+    }));
+  };
+  Canvas.prototype.rightPut = function (row, endCol, str, opt) {
+    var ds = String(str).split('');
+    for (var i = 0; i < ds.length; i++) this.put(row, endCol - (ds.length - 1 - i), ds[i], opt);
+    return endCol;
+  };
+  Canvas.prototype.dot = function (row, col, label, kind) {
+    this.minCol = Math.min(this.minCol, col); this.maxCol = Math.max(this.maxCol, col);
+    this.rowN = Math.max(this.rowN, row + 1);
+    var markColor = kind === 'borrow' ? this.borrowColor : this.carryColor;
+    if (this.markStyle === 'digit' && label != null) {
+      this.parts.push(U.svgText(this.x(col), this.y(row), String(label),
+        { fontSize: this.fs * 0.55, fill: markColor, 'text-anchor': 'middle' }));
+    } else {
+      this.parts.push(U.svgCircle(this.x(col), this.y(row), 2.6, { fill: markColor, stroke: 'none' }));
+    }
+  };
+  Canvas.prototype.hline = function (row, colFrom, colTo) {
+    this.parts.push(U.svgLine(this.x(colFrom) - this.cellW * 0.38, this.y(row) - this.rowH * 0.62,
+      this.x(colTo) + this.cellW * 0.38, this.y(row) - this.rowH * 0.62,
+      { stroke: this.color, strokeWidth: 2.2 }));
+  };
+  Canvas.prototype.render = function () {
+    var w = (this.maxCol - this.minCol + 1) * this.cellW + this.cellW;
+    var h = this.rowN * this.rowH + 6;
+    return U.svgWrap(this.parts.join(''),
+      { viewBox: (this.minCol * this.cellW - this.cellW / 2) + ' -4 ' + w + ' ' + h });
+  };
+
+  
+  function add(addends, opts) {
+    opts = opts || {};
+    if (!Array.isArray(addends) || addends.length < 2) throw new Error('add 需要至少两个加数');
+    addends = addends.map(function (n) { return checkInt(n, '加数'); });
+    var c = new Canvas(opts);
+    var noCarry = opts.errorType === 'no-carry';
+    var maxLen = Math.max.apply(null, addends.map(function (n) { return String(n).length; }));
+    if (!opts.maskResult) {
+      maxLen = Math.max(maxLen, String(addends.reduce(function (a, b) { return a + b; }, 0)).length);
+    }
+    var endCol = maxLen + 1;
+    
+    addends.forEach(function (n, i) {
+      c.rightPut(i, endCol, n);
+    });
+    c.put(addends.length - 1, endCol - maxLen - 1, '+', { bold: true });
+    c.hline(addends.length, endCol - maxLen - 1, endCol);
+    
+    var sumRow = addends.length;
+    var carry = 0;
+    var cols = maxLen;
+    for (var k = 0; k < cols; k++) {
+      var colIdx = endCol - k;
+      var s = carry, carryIn = carry;
+      addends.forEach(function (n) {
+        var ds = String(n);
+        var dch = ds[ds.length - 1 - k];
+        if (dch != null) s += Number(dch);
+      });
+      var newCarry = noCarry ? 0 : Math.floor(s / 10);
+      if (!noCarry && carryIn === 0 && newCarry > 0 && k < cols - 1) {
+        c.dot(sumRow - addends.length, colIdx - 1, newCarry, "carry"); 
+      } else if (!noCarry && newCarry > 0 && k < cols - 1) {
+        c.dot(sumRow - addends.length, colIdx - 1, newCarry, "carry");
+      }
+      carry = newCarry;
+    }
+    var resStr = noCarry ? String(errorResultOf('add', addends, 'no-carry'))
+      : String(addends.reduce(function (x, y) { return x + y; }, 0));
+    if (opts.maskResult) resStr = '?';
+    c.rightPut(sumRow, endCol, resStr, { bold: true });
+    return c.render();
+  }
+
+  
+  function sub(a, b, opts) {
+    opts = opts || {};
+    checkInt(a, '被减数'); checkInt(b, '减数');
+    if (a < b) throw new RangeError('被减数必须不小于减数');
+    var c = new Canvas(opts);
+    var noBorrow = opts.errorType === 'no-borrow';
+    var A = digitsOf(a), B = digitsOf(b);
+    var endCol = Math.max(A.length, B.length) + 1;
+    var borrowRow = 0;
+    c.rightPut(1, endCol, a);
+    c.rightPut(2, endCol, b);
+    c.put(2, endCol - Math.max(A.length, B.length) - 1, '−', { bold: true });
+    c.hline(3, endCol - Math.max(A.length, B.length) - 1, endCol);
+    
+    var diffRow = 3;
+    var borrow = 0, ds = [];
+    for (var k = 0; k < A.length; k++) {
+      var ai = A[A.length - 1 - k] - borrow;
+      var bi = B[B.length - 1 - k] || 0;
+      if (ai < bi) {
+        ai += 10;
+        if (!noBorrow) c.dot(borrowRow, endCol - k - 1, 1, "borrow"); 
+        borrow = 1;
+      } else { borrow = 0; }
+      var d = ai - bi;
+      ds.unshift(d);
+    }
+    while (ds.length > 1 && ds[0] === 0) ds.shift();
+    var resStr = noBorrow ? String(errorResultOf('sub', [a, b], 'no-borrow')) : ds.join('');
+    if (opts.maskResult) resStr = '?';
+    c.rightPut(diffRow, endCol, resStr, { bold: true });
+    return c.render();
+  }
+
+  
+  function mul(a, b, opts) {
+    opts = opts || {};
+    
+    if (typeof a === 'string' || typeof b === 'string') {
+      var dA = parseDec(a), dB = parseDec(b);
+      if (!dA || !dB) throw new Error("mul 小数参数需要形如 '12.5' 的非负数");
+      if (!opts.maskResult) throw new Error('mul 小数竖式仅支持 maskResult 遮蔽形态（calc 练习）');
+      return maskedMul(dA.frac ? dA.int + '.' + dA.frac : dA.int,
+        dB.frac ? dB.int + '.' + dB.frac : dB.int, opts);
+    }
+    checkInt(a, '因数'); checkInt(b, '因数');
+    if (opts.maskResult) return maskedMul(String(a), String(b), opts); 
+    var c = new Canvas(opts);
+    var noCarry = opts.errorType === 'no-carry';
+    var B = digitsOf(b), A = a;
+    var prod = a * b;
+    var endCol = Math.max(String(a).length, String(b).length, String(prod).length) + 1;
+    c.rightPut(0, endCol, a);
+    c.rightPut(1, endCol, b);
+    c.put(1, endCol - Math.max(String(a).length, String(b).length) - 1, '×', { bold: true });
+    c.hline(2, endCol - Math.max(String(a).length, String(b).length) - 1, endCol);
+    var row = 2;
+    if (B.length === 1) {
+      
+      var carry = 0, out = [];
+      var Ad = digitsOf(a);
+      for (var k = Ad.length - 1; k >= 0; k--) {
+        var v = Ad[k] * B[0] + carry;
+        out.unshift(v % 10);
+        if (!noCarry && Math.floor(v / 10) > 0 && k > 0) c.dot(row, endCol - (Ad.length - k), Math.floor(v / 10), "carry");
+        carry = noCarry ? 0 : Math.floor(v / 10);
+      }
+      if (!noCarry && carry > 0) out.unshift(carry);
+      var resStr = noCarry ? String(errorResultOf('mul', [a, b], 'no-carry')) : out.join('');
+      c.rightPut(++row, endCol, resStr, { bold: true });
+      return c.render();
+    }
+    
+    for (var i = B.length - 1; i >= 0; i--) {
+      row++;
+      var shift = B.length - 1 - i;
+      var carry2 = 0, pOut = [];
+      var Ad2 = digitsOf(a);
+      for (var k2 = Ad2.length - 1; k2 >= 0; k2--) {
+        var v2 = Ad2[k2] * B[i] + carry2;
+        pOut.unshift(v2 % 10);
+        if (!noCarry && Math.floor(v2 / 10) > 0 && k2 > 0) c.dot(row, endCol - shift - (Ad2.length - k2), Math.floor(v2 / 10), "carry");
+        carry2 = noCarry ? 0 : Math.floor(v2 / 10);
+      }
+      if (!noCarry && carry2 > 0) pOut.unshift(carry2);
+      c.rightPut(row, endCol - shift, pOut.join(''));
+      if (i > 0) continue;
+      c.hline(row + 1, endCol - String(prod).length + 1, endCol);
+    }
+    if (B.length > 1) {
+      c.rightPut(++row, endCol, String(noCarry ? errorResultOf('mul', [a, b], 'no-carry') : prod), { bold: true });
+    }
+    return c.render();
+  }
+
+  
+  function div(dividend, divisor, opts) {
+    opts = opts || {};
+    checkInt(dividend, '被除数'); checkInt(divisor, '除数');
+    if (divisor < 1) throw new RangeError('除数必须为正');
+    var c = new Canvas(opts);
+    var Dd = digitsOf(dividend);
+    var q = Math.floor(dividend / divisor), r = dividend % divisor;
+    var Q = digitsOf(q);
+    var dCols = Dd.length;
+    var divEndCol = dCols + 2;          
+    var divStartCol = 3;                
+    if (opts.maskResult) {
+      
+      c.put(0, divEndCol, '?', { bold: true });
+      c.rightPut(1, divStartCol - 1, divisor, {});
+      var dvxM = c.x(divStartCol - 1) + c.cellW * 0.42;
+      c.parts.push(U.svgLine(dvxM, c.y(1) - c.rowH * 0.85, dvxM, c.y(1) + c.rowH * 0.35, { stroke: INK, strokeWidth: 2 }));
+      c.parts.push(U.svgLine(dvxM, c.y(1) - c.rowH * 0.85, c.x(divEndCol) + c.cellW * 0.38, c.y(1) - c.rowH * 0.85, { stroke: INK, strokeWidth: 2 }));
+      c.rightPut(1, divEndCol, dividend);
+      return c.render();
+    }
+    
+    var qStart = divStartCol + (Dd.length - Q.length);
+    for (var i = 0; i < Q.length; i++) c.put(0, qStart + i, Q[i], { bold: true });
+    
+    c.rightPut(1, divStartCol - 1, divisor, {});
+    c.put(1, divStartCol - 1, null);
+    var dvx = c.x(divStartCol - 1) + c.cellW * 0.42;
+    c.parts.push(U.svgLine(dvx, c.y(1) - c.rowH * 0.85, dvx, c.y(1) + c.rowH * 0.35, { stroke: INK, strokeWidth: 2 }));
+    c.parts.push(U.svgLine(dvx, c.y(1) - c.rowH * 0.85, c.x(divEndCol) + c.cellW * 0.38, c.y(1) - c.rowH * 0.85, { stroke: INK, strokeWidth: 2 }));
+    c.rightPut(1, divEndCol, dividend);
+    
+    var row = 2, idx = 0, cur = 0;
+    while (idx < Dd.length) {
+      cur = cur * 10 + Dd[idx];
+      if (cur >= divisor || idx === Dd.length - 1) {
+        var qd = Math.floor(cur / divisor);
+        var prod = qd * divisor;
+        var prodStr = String(prod);
+        c.rightPut(row + 1, divStartCol + idx, '-' + prodStr, { color: RED });
+        c.hline(row + 2, divStartCol + idx - prodStr.length + 1, divStartCol + idx);
+        cur -= prod;
+        if (!(idx === Dd.length - 1 && cur === 0)) {
+          var bringDown = '';
+        }
+        row += 2;
+        if (idx < Dd.length - 1) {
+          c.rightPut(row, divStartCol + idx + 1, String(Dd[idx + 1]), { fs: c.fs });
+        }
+      }
+      idx++;
+      if (idx < Dd.length && cur < divisor && cur !== 0) {
+        
+      }
+    }
+    if (r > 0) {
+      c.rightPut(++row, divEndCol, r, { bold: true, color: RED });
+    }
+    return c.render();
+  }
+
+  
+  
+  function parseDec(s) {
+    var m = /^(\d+)(?:\.(\d+))?$/.exec(String(s).trim());
+    return m ? { int: m[1], frac: m[2] || '' } : null;
+  }
+
+  
+  function maskedMul(aDisp, bDisp, opts) {
+    var c = new Canvas(opts);
+    var w = Math.max(String(aDisp).length, String(bDisp).length);
+    var endCol = w + 1;
+    c.rightPut(0, endCol, aDisp);
+    c.rightPut(1, endCol, bDisp);
+    c.put(1, endCol - w - 1, '×', { bold: true });
+    c.hline(2, endCol - w - 1, endCol);
+    c.put(3, endCol, '?', { bold: true });
+    return c.render();
+  }
+  
+  function dec(aText, bText, op, opts) {
+    opts = opts || {};
+    if (op !== '+' && op !== '−' && op !== '-') throw new Error("dec 的 op 仅支持 '+' / '-'");
+    var isSub = op === '−' || op === '-';
+    var A = parseDec(aText), B = parseDec(bText);
+    if (!A || !B) throw new Error("dec 需要形如 '12.5' / '48' 的非负小数");
+    
+    var fracMax = Math.max(A.frac.length, B.frac.length);
+    var scale = Math.pow(10, fracMax);
+    var ai = Number(A.int + A.frac + '0'.repeat(fracMax - A.frac.length));
+    var bi = Number(B.int + B.frac + '0'.repeat(fracMax - B.frac.length));
+    if (isSub && ai < bi) throw new RangeError('dec 被减数必须不小于减数');
+    var ri = isSub ? ai - bi : ai + bi;
+    var rRaw = String(ri);
+    while (rRaw.length <= fracMax) rRaw = '0' + rRaw;   
+    var rStr = fracMax > 0 ? rRaw.slice(0, -fracMax) + '.' + rRaw.slice(-fracMax) : rRaw;
+    var R = parseDec(rStr);
+
+    var intMax = opts.maskResult ? Math.max(A.int.length, B.int.length)
+      : Math.max(A.int.length, B.int.length, R.int.length);
+    
+    var pointCol = fracMax > 0 ? intMax : -1;
+    var endCol = intMax - 1 + (fracMax > 0 ? 1 + fracMax : 0);
+    var c = new Canvas(opts);
+    
+    function colOf(r) {
+      return endCol - r - (fracMax > 0 && r >= fracMax ? 1 : 0);
+    }
+    function putNum(row, numObj) {
+      var Li = numObj.int.length;
+      for (var i = 0; i < Li; i++) c.put(row, (intMax - Li) + i, numObj.int.charAt(i));
+      if (pointCol >= 0) c.put(row, pointCol, '.', { bold: true });
+      for (var f = 0; f < numObj.frac.length; f++) {
+        c.put(row, intMax + 1 + f, numObj.frac.charAt(f));
+      }
+    }
+    putNum(0, A);
+    putNum(1, B);
+    c.put(1, -1, isSub ? '−' : '+', { bold: true });
+    c.hline(2, -1, endCol);
+    if (opts.maskResult) c.put(2, endCol, '?', { bold: true });
+    else putNum(2, R);
+
+    
+    var aD = [], bD = [];
+    var sa = A.int + A.frac + '0'.repeat(fracMax - A.frac.length);
+    var sb = B.int + B.frac + '0'.repeat(fracMax - B.frac.length);
+    var padLen = Math.max(sa.length, sb.length);
+    while (sa.length < padLen) sa = '0' + sa;
+    while (sb.length < padLen) sb = '0' + sb;
+    for (var t = 0; t < padLen; t++) { aD.push(Number(sa.charAt(padLen - 1 - t))); bD.push(Number(sb.charAt(padLen - 1 - t))); }
+    var carryRow = 0;
+    if (!isSub) {
+      var carry = 0;
+      for (var ka = 0; ka < padLen; ka++) {
+        var sumC = aD[ka] + bD[ka] + carry;
+        carry = Math.floor(sumC / 10);
+        if (carry > 0 && ka < padLen - 1) c.dot(carryRow, colOf(ka + 1), carry, 'carry');
+      }
+    } else {
+      var borrow = 0;
+      for (var kb = 0; kb < padLen; kb++) {
+        if (aD[kb] - borrow < bD[kb]) {
+          if (kb < padLen - 1) c.dot(carryRow, colOf(kb + 1), 1, 'borrow');
+          borrow = 1;
+        } else borrow = 0;
+      }
+    }
+    return c.render();
+  }
+
+  
+  
+  function gcd(x, y) { while (y) { var t = x % y; x = y; y = t; } return x; }
+  function frac(n1, d1, n2, d2, op, opts) {
+    opts = opts || {};
+    [n1, d1, n2, d2].forEach(function (v, i) {
+      if (!(typeof v === 'number' && isFinite(v) && v > 0 && Math.floor(v) === v)) {
+        throw new RangeError('frac 分子分母必须为正整数（参数 #' + (i + 1) + '）');
+      }
+    });
+    if (op !== '+' && op !== '-' && op !== '−') throw new Error("frac 的 op 仅支持 '+' / '-'");
+    var fs = opts.fontSize || 22;
+    var color = opts.color || INK;
+    var cellW = fs * 2.4, barHalf = fs * 1.05, gapY = fs * 0.62;
+    var midY = 46;
+    function fraction(cx, n, d) {
+      return U.svgText(cx, midY - gapY, String(n), { fontSize: fs, fill: color, fontFamily: 'Menlo, monospace', fontWeight: 700 }) +
+        U.svgLine(cx - barHalf, midY, cx + barHalf, midY, { stroke: color, strokeWidth: 2.2 }) +
+        U.svgText(cx, midY + fs * 0.55 + gapY, String(d), { fontSize: fs, fill: color, fontFamily: 'Menlo, monospace', fontWeight: 700 });
+    }
+    var x1 = 40, x2 = x1 + cellW + 26, eqX = x2 + cellW + 30, resX = eqX + 44;
+    var inner =
+      fraction(x1, n1, d1) +
+      U.svgText((x1 + x2) / 2, midY, op,
+        { fontSize: fs + 4, fill: color, fontWeight: 700 }) +
+      fraction(x2, n2, d2) +
+      U.svgText(eqX, midY, '=', { fontSize: fs + 4, fill: color, fontWeight: 700 });
+    if (opts.resultBox === false) {
+      var dn = n1 * d2 + (op === '+' ? 1 : -1) * n2 * d1;
+      var dd = d1 * d2;
+      if (dn < 0) throw new RangeError('frac 结果为负，请调换操作数');
+      var g2 = gcd(Math.abs(dn), dd); dn /= g2; dd /= g2;
+      inner += fraction(resX + 10, dn, dd);
+    } else {
+      
+      var bw = fs * 2.2, bh = fs * 3.2;
+      inner += U.svgRect(resX, midY - bh / 2, bw, bh, { rx: 8, fill: '#ffffff', stroke: '#c9d4e6', strokeWidth: 2, dasharray: '6 4' }) +
+        U.svgText(resX + bw / 2, midY + fs * 0.36, '?', { fontSize: fs + 6, fill: RED, fontWeight: 700 });
+    }
+    return U.svgWrap(inner, { padding: 14 });
+  }
+
+  global.SVGCalculation = { add: add, sub: sub, mul: mul, div: div, dec: dec, frac: frac, errorResultOf: errorResultOf };
+
+  
+  global.SVGGenerators = global.SVGGenerators || {};
+  global.SVGGenerators.math = global.SVGGenerators.math || {};
+  global.SVGGenerators.math.calculation = global.SVGCalculation;
+
+  if (typeof module !== 'undefined') module.exports = global.SVGCalculation;
+})(typeof window !== 'undefined' ? window : global);
+
+};
 __defs["shared/generator/generators/arithmetic.js"] = function (module, exports, require) {
 
 'use strict';
@@ -6589,21 +7251,68 @@ function buildApplyStory(structure, op) {
 }
 
 
-function buildDistractorExpressions(structure, correctAnswer) {
+
+
+
+
+function conjugateOp(o) { return o === '+' ? '−' : (o === '−' ? '+' : (o === '*' ? '/' : (o === '/' ? '*' : null))); }
+
+function buildDistractorExpressions(structure, correctAnswer, miscons) {
   var baseOps = structure.operands.slice();
   var oprs = structure.operators;
   var last = baseOps.length - 1;
   var out = [];
+  var provenance = [];
+
+  function tryExpr(trialOps, trialOprs, errorType, source) {
+    var res = Arith.calculateAnswer(trialOps, trialOprs);
+    if (String(res) === String(correctAnswer)) return false;
+    var expr = Arith.formatExpression(trialOps, trialOprs);
+    if (out.indexOf(expr) !== -1) return false;
+    out.push(expr);
+    provenance.push({ expr: expr, errorType: errorType || null, source: source });
+    return true;
+  }
+
+  
+  if (Array.isArray(miscons)) {
+    for (var m = 0; m < miscons.length && out.length < 3; m++) {
+      var et = miscons[m] && miscons[m].errorType;
+      if (!et) continue;
+      if (et === '概念混淆' || et === '符号错误') {
+        var conj = conjugateOp(oprs[oprs.length - 1]);
+        if (conj) {
+          var cOps = baseOps.slice();
+          var cOprs = oprs.slice();
+          cOprs[cOprs.length - 1] = conj;
+          tryExpr(cOps, cOprs, et, 'misconception');
+        }
+      } else if (et === '口诀混淆' && (oprs[oprs.length - 1] === '*' || oprs[oprs.length - 1] === '/')) {
+        [-1, 1].forEach(function (d) {
+          if (out.length >= 3) return;
+          var mOps = baseOps.slice();
+          var nv = mOps[last] + d;
+          if (nv < 1) return; 
+          mOps[last] = nv;
+          tryExpr(mOps, oprs.slice(), et, 'misconception');
+        });
+      }
+    }
+  }
+
+  
+  var calcSlot = Array.isArray(miscons) && miscons.some(function (s) {
+    return s && (s.errorType === '计算错误' || s.errorType === '步骤错误');
+  });
   var deltas = [1, 2, -1, -2];
   for (var i = 0; i < deltas.length && out.length < 3; i++) {
     var nv = baseOps[last] + deltas[i];
     if (nv < 0) continue;
     var trialOps = baseOps.slice();
     trialOps[last] = nv;
-    var res = Arith.calculateAnswer(trialOps, oprs);
-    if (String(res) === String(correctAnswer)) continue;
-    var expr = Arith.formatExpression(trialOps, oprs);
-    if (out.indexOf(expr) === -1) out.push(expr);
+    tryExpr(trialOps, oprs.slice(),
+      calcSlot ? (miscons.filter(function (s) { return s.errorType === '计算错误' || s.errorType === '步骤错误'; })[0] || {}).errorType : null,
+      calcSlot ? 'misconception' : 'adjacent-fallback');
   }
   
   var guard = 0;
@@ -6613,13 +7322,14 @@ function buildDistractorExpressions(structure, correctAnswer) {
     if (nv2 < 0) continue;
     var t2 = baseOps.slice();
     t2[last - 1] = nv2;
-    var r2 = Arith.calculateAnswer(t2, oprs);
-    if (String(r2) === String(correctAnswer)) continue;
-    var e2 = Arith.formatExpression(t2, oprs);
-    if (out.indexOf(e2) === -1) out.push(e2);
+    tryExpr(t2, oprs.slice(), null, 'adjacent-fallback');
   }
-  while (out.length < 3) out.push(baseOps.join(' + ') + ' + ' + (out.length + 1));
-  return out.slice(0, 3);
+  while (out.length < 3) {
+    var filler = baseOps.join(' + ') + ' + ' + (out.length + 1);
+    out.push(filler);
+    provenance.push({ expr: filler, errorType: null, source: 'adjacent-fallback' });
+  }
+  return { exprs: out.slice(0, 3), provenance: provenance.slice(0, 3) };
 }
 
 
@@ -6628,6 +7338,9 @@ function intentWantsGraphic(plan) {
   return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
     plan.semanticParams.graphic.role != null);
 }
+
+
+
 
 
 
@@ -6744,18 +7457,50 @@ function createArithmeticGenerator(spec) {
         var semKind = (op === 'div' && plan.semanticParams) ? plan.semanticParams.kind : null;
         var kind = constraints.kind ||
           ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || semKind;
-        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
-        if (!structure) {
-          structure = Arith.generateStructure(rng, {
-            operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
-            operationSet: opSet,
-            exactSteps: constraints.exactSteps,
-            numberRange: genRange,
-            maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
-            allowBracket: constraints.allowBracket,
-            allowMultDiv: constraints.allowMultDiv,
-            noNegative: true
-          });
+        
+        
+        
+        
+        var isPureAddSub = true;
+        var structGuard = 0;
+        var structure;
+        function structInRange(s) {
+          var a = s.answer != null ? s.answer : Arith.calculateAnswer(s.operands, s.operators);
+          if (genRange && typeof genRange.max === 'number' && a > genRange.max) return false;
+          if (genRange && typeof genRange.min === 'number' && a < genRange.min) return false;
+          return true;
+        }
+        do {
+          isPureAddSub = true;
+          var structure0 = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
+          if (!structure0) {
+            structure0 = Arith.generateStructure(rng, {
+              operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
+              operationSet: opSet,
+              exactSteps: constraints.exactSteps,
+              numberRange: genRange,
+              maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
+              allowBracket: constraints.allowBracket,
+              allowMultDiv: constraints.allowMultDiv,
+              noNegative: true
+            });
+          }
+          structure = structure0;
+          for (var oi = 0; oi < structure.operators.length; oi++) {
+            if (structure.operators[oi] !== '+' && structure.operators[oi] !== '−') { isPureAddSub = false; break; }
+          }
+          if (!isPureAddSub) break; 
+          structGuard++;
+        } while (!structInRange(structure) && structGuard < 12);
+        if (isPureAddSub && !structInRange(structure) && structure.operators[structure.operators.length - 1] === '+') {
+          
+          var prefixSum = 0;
+          for (var pi = 0; pi < structure.operands.length - 1; pi++) prefixSum += structure.operands[pi];
+          var clamped = genRange.max - prefixSum;
+          if (clamped >= 1) {
+            structure.operands[structure.operands.length - 1] = clamped;
+            structure.answer = Arith.calculateAnswer(structure.operands, structure.operators);
+          }
         }
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var qt = plan.questionTypeId;
@@ -6766,6 +7511,7 @@ function createArithmeticGenerator(spec) {
         
         var fullExpr = Arith.formatExpression(structure.operands, structure.operators);
         var explanationText;
+        var choiceDistractors = null; 
 
         if (qt === 'fill') {
           
@@ -6797,16 +7543,46 @@ function createArithmeticGenerator(spec) {
           
           var correctExpr = Arith.formatExpression(structure.operands, structure.operators);
           prompt = '下面哪个算式等于 ' + answer + '？';
-          var distractorExprs = buildDistractorExpressions(structure, answer);
+          
+          var miscons = (plan.semanticParams && Array.isArray(plan.semanticParams.miscons))
+            ? plan.semanticParams.miscons : [];
+          var distractorBuild = buildDistractorExpressions(structure, answer, miscons);
+          var distractorExprs = distractorBuild.exprs;
           options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
           outAnswer = correctExpr;
           if (wantsG) calcGraphic = buildCalcGraphic('choice', structure, answer);
           
           explanationText = '结果等于 ' + answer + ' 的算式是 ' + correctExpr +
             '（验算：' + correctExpr + ' = ' + answer + '）';
+          choiceDistractors = distractorBuild.provenance;
         } else {
           prompt = fullExpr + ' = ?';
-          if (wantsG) calcGraphic = buildCalcGraphic(qt, structure, answer);
+          
+          
+          
+          
+          
+          var vPlan = null;
+          if (structure.operands.length === 2 && structure.operators.length === 1) {
+            vPlan = Arith.verticalPlan(Arith.gradeOfKp(pkp(plan)),
+              structure.operands[0], structure.operands[1], structure.operators[0]);
+          }
+          if (vPlan && !wantsG) {
+            if (vPlan.kind === 'dec') {
+              calcGraphic = vPlan.sub === 'mul'
+                ? { type: 'calculation', subtype: 'mul', role: 'calculation-support',
+                    params: { a: Arith.trimDec(structure.operands[0]), b: Arith.trimDec(structure.operands[1]),
+                      options: { maskResult: true } } }
+                : { type: 'calculation', subtype: 'dec', role: 'calculation-support',
+                    params: { a: Arith.trimDec(structure.operands[0]), b: Arith.trimDec(structure.operands[1]),
+                      op: structure.operators[0], options: { maskResult: true } } };
+            } else {
+              calcGraphic = { type: 'calculation', subtype: vPlan.sub, role: 'calculation-support',
+                params: { a: structure.operands[0], b: structure.operands[1], options: { maskResult: true } } };
+            }
+          } else if (wantsG) {
+            calcGraphic = buildCalcGraphic(qt, structure, answer);
+          }
           
           explanationText = OP_MEANING[op] + '：' + fullExpr + ' = ' + answer;
         }
@@ -6835,7 +7611,9 @@ function createArithmeticGenerator(spec) {
           hint: null,
           data: {
             operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
-            steps: structure.steps
+            steps: structure.steps,
+            
+            distractors: choiceDistractors
           }
         };
         if (calcGraphic) pushedQ.data.graphic = calcGraphic;
@@ -7126,8 +7904,11 @@ var SHAPE_FEATURES = {
   'cone': { name: '圆锥', features: ['1个圆形底面', '1个顶点', '侧面展开是扇形'], examples: ['路锥', '帽子'] },
   'sphere': { name: '球', features: ['没有棱和面', '滚动最快', '任意剖面是圆'], examples: ['皮球', '地球仪'] },
   'flat': { name: '平面图形', features: ['只有长和宽', '没有厚度', '在平面上'], examples: ['长方形', '正方形', '三角形', '圆'] },
-  'rectangle': { name: '长方形', features: ['4个角都是直角', '对边相等', '对角线相等'], examples: ['课本', '黑板'] },
-  'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '对角线相等且互相垂直平分'], examples: ['手帕', '棋盘格'] },
+  
+  
+  
+  'rectangle': { name: '长方形', features: ['4个角都是直角', '对边相等', '有4条边'], examples: ['课本', '黑板'] },
+  'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '有4个角'], examples: ['手帕', '棋盘格'] },
   'triangle': { name: '三角形', features: ['3条边', '3个角', '内角和180度'], examples: ['三角尺', '屋顶'] },
   'circle': { name: '圆', features: ['没有直线边', '到圆心距离相等', '周长=2πr'], examples: ['硬币', '时钟面'] },
   
@@ -7572,13 +8353,22 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   var num = Rng.randInt(rng, 1, den - 2);
   var times = Rng.pick(rng, [2, 3]);
   var numerator = num * times;
-  var mixedWhole = Math.floor(numerator / den);
-  var mixedRemain = numerator % den;
-  var fracStr = numerator + '/' + den;
+  
+  
+  
+  
+  var rawFrac = numerator + '/' + den;
+  var gg = numerator, gd = den, gt;
+  while (gd) { gt = gg % gd; gg = gd; gd = gt; }
+  var sNum = numerator / gg, sDen = den / gg;
+  var fracStr = sDen === 1 ? String(sNum) : sNum + '/' + sDen;
+  var mixedWhole = Math.floor(sNum / sDen);
+  var mixedRemain = sNum % sDen;
   var answerStr = fracStr;
   var acceptable = [];
-  if (mixedWhole > 0 && mixedRemain > 0) acceptable.push(mixedWhole + '又' + mixedRemain + '/' + den);
+  if (mixedWhole > 0 && mixedRemain > 0) acceptable.push(mixedWhole + '又' + mixedRemain + '/' + sDen);
   if (mixedRemain === 0) answerStr = String(mixedWhole);
+  var simpNote = gg > 1 ? '，约分得 ' + fracStr : '';
   var expr = num + '/' + den + ' × ' + times;
 
   function fracGraphic(unitPx) {
@@ -7598,7 +8388,8 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   };
   var prompt, answerObj, answerMode = 'input';
   
-  var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + answerStr;
+  
+  var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + rawFrac + simpNote;
 
   if (qt === 'geometry') {
     prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
@@ -7611,9 +8402,17 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'choice') {
     
+    
+    
+    var simpFrac = function (x, dd) {
+      var a = x, b = dd, t;
+      while (b) { t = a % b; a = b; b = t; }
+      var n2 = x / a, d2 = dd / a;
+      return d2 === 1 ? String(n2) : n2 + '/' + d2;
+    };
     var pool = [answerStr];
     [num * (times + 1), numerator + 1, numerator - 1, numerator + 2, numerator - 2].forEach(function (x) {
-      var s = x + '/' + den;
+      var s = simpFrac(x, den);
       if (x >= 1 && pool.indexOf(s) === -1 && pool.length < 4) pool.push(s);
     });
     var options = Rng.shuffle(rng, pool);
@@ -7633,9 +8432,11 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     answerObj = {
       value: isTrue,
       acceptable: [],
+      
+      
       explanation: isTrue
-        ? expr + ' = ' + fracStr + '，分子乘整数、分母不变，说法正确。'
-        : expr + ' = ' + fracStr + '，不是 ' + shownNum + '/' + den + '，说法错误。'
+        ? expr + ' = ' + rawFrac + '，分子乘整数、分母不变，说法正确。'
+        : expr + ' = ' + rawFrac + '，不是 ' + shownNum + '/' + den + '，说法错误。'
     };
     answerMode = 'judge';
   } else { 
@@ -7936,7 +8737,7 @@ function shapeTheme(facts, wrongs, nums, scenes, opts) {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; }),
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null }; }),
     judgeGraphic: (opts && opts.judgeGraphic) || null,
     applyGraphic: (opts && opts.applyGraphic) || null
   };
@@ -8223,10 +9024,28 @@ var SHAPE_THEME = {
     [['对应点可以随便描，只要在对称轴另一侧就行', '对应点到对称轴的格数必须和原来的点相等。'],
      ['补全时先连线再找点', '正确顺序是找点→数格→描点→连线。'],
      ['对应点在对称轴的同一侧', '对应点必须在对称轴的另一侧，且距离相等。']],
-    [['一个点到对称轴的距离是 3 格，它的对应点到对称轴的距离是____格', '3', 3], ['关键点距对称轴 2 格，对应点应描在对称轴另一侧第____格', '2', 2], ['一个点到对称轴 5 格，它的对应点距对称轴____格', '5', 5]],
-    [['先在方格纸上数出对称轴左边半图有几个顶点，再补全右边的另一半', '按对应点到对称轴格数相等逐点描出后连线'],
-     ['先找出半图的 3 个关键点到对称轴的距离，再描出对应点并数一数一共补了几个点', '补 3 个对应点，距离与原点相等'],
-     ['先补全以虚线为对称轴的「小房子」半图，再数一数一共补了几个对应点', '按半图顶点数确定，如 5 个']]),
+    
+    
+    [['一个点到对称轴的距离是 3 格，它的对应点到对称轴的距离是____格', '3', 3,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[1, 2]], unit: 'cm', unitPx: 25 } }],
+     ['关键点距对称轴 2 格，对应点应描在对称轴另一侧第____格', '2', 2,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[2, 1]], unit: 'cm', unitPx: 25 } }],
+     ['一个点到对称轴 5 格，它的对应点距对称轴____格', '5', 5,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 6, gridH: 4, axisX: 5, points: [[0, 2]], unit: 'cm', unitPx: 25 } }]],
+    [['先在方格纸上数出对称轴左边半图有几个顶点，再补全右边的另一半', '按对应点到对称轴格数相等逐点描出后连线',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 5, axisX: 4, points: [[1, 1], [2, 3], [1, 4]], unit: 'cm', unitPx: 25 } }],
+     ['先找出半图的 3 个关键点到对称轴的距离，再描出对应点并数一数一共补了几个点', '补 3 个对应点，距离与原点相等',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 5, axisX: 4, points: [[2, 1], [1, 3], [2, 4]], unit: 'cm', unitPx: 25 } }],
+     ['先补全以虚线为对称轴的「小房子」半图，再数一数一共补了几个对应点', '按半图顶点数确定，如 5 个',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 8, gridH: 5, axisX: 4, points: [[2, 1], [1, 3], [2, 4]], unit: 'cm', unitPx: 25 } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[1, 2], [2, 1]], unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u05-k003': shapeTheme( 
     ['对称点到对称轴的距离相等，对称点的连线与对称轴垂直', '在方格纸上补全轴对称图形：找点、数格、描点、连线', '汉字和字母中也有轴对称，如「中」「A」'],
     [['对称点的连线与对称轴平行', '对称点的连线与对称轴垂直，且被对称轴平分。'],
@@ -8261,10 +9080,27 @@ var SHAPE_THEME = {
     [['设计图案只能用旋转一种方法', '平移、旋转、轴对称都可以用于设计图案。'],
      ['图案设计中的基本图形经过运动会变形', '平移、旋转、轴对称都不改变图形的形状和大小。'],
      ['同一个基本图形只能设计出一种图案', '运动方式、次数不同，可以设计出多种图案。']],
-    [['把一个基本图形绕一点每次旋转 90°，旋转____次后回到原位置', '4', 4], ['把一个图形每次旋转 60°，旋转____次后回到原位置', '6', 6], ['把一个图形每次旋转 180°，旋转____次后回到原位置', '2', 2]],
-    [['先选一个基本图形（如三角形），再把它绕一点每次旋转 90°，画出得到的图案', '旋转 3 次（连原图共 4 个）组成风车样图案'],
-     ['先用一个正方形通过平移设计一条花边，再说说用了几次平移', '每次平移一个边长，图案连续排列'],
-     ['先画一个基本图形，再分别用轴对称和旋转各设计一个图案，比较它们的相同点', '运动后形状、大小都不变，只是位置方向不同']]),
+    
+    [['把一个基本图形绕一点每次旋转 90°，旋转____次后回到原位置', '4', 4,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 90, unitPx: 34, unit: 'cm' } }],
+     ['把一个图形每次旋转 60°，旋转____次后回到原位置', '6', 6,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 60, unitPx: 34, unit: 'cm' } }],
+     ['把一个图形每次旋转 180°，旋转____次后回到原位置', '2', 2,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 180, unitPx: 34, unit: 'cm' } }]],
+    [['先选一个基本图形（如三角形），再把它绕一点每次旋转 90°，画出得到的图案', '旋转 3 次（连原图共 4 个）组成风车样图案',
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[0, 0], [2, 0], [1, 1.5]], cx: 0, cy: 0, deg: 90, unitPx: 25, unit: 'cm' } }],
+     ['先用一个正方形通过平移设计一条花边，再说说用了几次平移', '每次平移一个边长，图案连续排列',
+      { type: 'geometry', subtype: 'translationDemo', role: 'number-position',
+        params: { points: [[0, 0], [1, 0], [1, 1], [0, 1]], dx: 2, dy: 0, unitPx: 25, unit: 'cm' } }],
+     ['先画一个基本图形，再分别用轴对称和旋转各设计一个图案，比较它们的相同点', '运动后形状、大小都不变，只是位置方向不同',
+      { type: 'geometry', subtype: 'reflectionDemo', role: 'number-position',
+        params: { points: [[0, 0], [2, 0], [1, 1.5]], axis: 'y', unitPx: 25, unit: 'cm' } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 90, unitPx: 25, unit: 'cm' } } }),
   'math-g6-up-u04-k004': shapeTheme( 
     ['圆是轴对称图形，有无数条对称轴', '利用圆的对称性，绕圆心旋转同样的图形可以设计出美丽的图案', '用圆规和直尺可以画出由圆弧组成的各种图案'],
     [['用圆设计图案时，圆规两脚间的距离可以随便改变', '同一图案中半径要保持一致或有规律变化，图案才整齐。'],
@@ -8319,10 +9155,30 @@ var SHAPE_THEME = {
     [['周长相等的长方形，面积一定相等', '如 6×2 与 5×3 周长都是 16 厘米，面积 12≠15，不一定相等。'],
      ['面积大的图形周长一定大', '面积和周长没有必然大小关系，要分别计算。'],
      ['边长 4 厘米的正方形，周长和面积完全一样', '周长 16 厘米、面积 16 平方厘米，数值相同但意义和单位不同。']],
-    [['长 6 厘米、宽 2 厘米的长方形，面积是____平方厘米', '12', 12], ['长 5 厘米、宽 3 厘米的长方形，面积是____平方厘米', '15', 15], ['边长 4 厘米的正方形，周长是____厘米', '16', 16]],
-    [['先用 12 根同样长的小棒围一个长方形，再说说它的周长是多少、面积是否确定', '周长是 12 根小棒的长；面积随长宽不同而不同'],
-     ['先算出边长 4 厘米正方形的周长和面积各是多少，再说说两个结果表示什么', '周长 16 厘米（边线长度），面积 16 平方厘米（面的大小）'],
-     ['一个长方形长 6 厘米、宽 2 厘米，先算周长再算面积，说说两个结果各是多少、单位为什么不同', '周长 16 厘米用长度单位，面积 12 平方厘米用面积单位']]),
+    
+    
+    [['长 6 厘米、宽 2 厘米的长方形，面积是____平方厘米', '12', 12,
+      { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }],
+     ['长 5 厘米、宽 3 厘米的长方形，面积是____平方厘米', '15', 15,
+      { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 5, height: 3, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }],
+     ['边长 4 厘米的正方形，周长是____厘米', '16', 16,
+      { type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+        params: { size: 4, labelSides: true, unit: 'cm', unitPx: 25 } }]],
+    
+    
+    [['先用 12 根同样长的小棒围一个长方形，再说说它的周长是多少、面积是否确定', '周长是 12 根小棒的长；面积随长宽不同而不同',
+      { type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+        params: { width: 4, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } }],
+     ['先算出边长 4 厘米正方形的周长和面积各是多少，再说说两个结果表示什么', '周长 16 厘米（边线长度），面积 16 平方厘米（面的大小）',
+      { type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+        params: { size: 4, labelSides: true, unit: 'cm', unitPx: 25 } }],
+     ['一个长方形长 6 厘米、宽 2 厘米，先算周长再算面积，说说两个结果各是多少、单位为什么不同', '周长 16 厘米用长度单位，面积 12 平方厘米用面积单位',
+      { type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } } }),
 
   
   'math-g5-up-u06-k001': shapeTheme( 
@@ -8710,7 +9566,13 @@ function numDistractors(n) {
 
 
 var VIEW_DIR_CN = { front: '前面', top: '上面', left: '左面' };
+
+var THEMED_GRAPHIC_LABELS = {
+  'symmetry-grid': '对称轴格网', rotationDemo: '旋转演示', translationDemo: '平移演示', reflectionDemo: '轴对称演示'
+};
 function graphicLabelOf(d) {
+  var lab = d && THEMED_GRAPHIC_LABELS[d.subtype];
+  if (lab) return lab;
   var views = d && d.params && d.params.views;
   if (!Array.isArray(views) || !views.length) return null;
   var names = views.map(function (v) { return v && VIEW_DIR_CN[v.direction]; }).filter(Boolean);
@@ -8816,6 +9678,9 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     answer = { value: fItem.a, acceptable: [], explanation: themedExpl(fItem.q, fItem.a) };
   } else if (qt === 'geometry') {
     var gItem = nums[v % nums.length];
+    
+    
+    
     if (noGraphic) {
       
       data.operands = [gItem.n];
@@ -8827,7 +9692,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       data.operands = [gItem.n];
       var graphicName = (gMeta ? gMeta.meta.name : qMeta.meta.name);
       if (qMeta.legacyType === 'symmetry' || qMeta.legacyType === 'solid') {
-        graphicName = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'].name;
+        var gFeat = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'];
+        graphicName = (gFeat && gFeat.name) || graphicName;
       }
       prompt = '观察下图（' + graphicName + '），想一想——' + gItem.q;
       answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
@@ -8840,6 +9706,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
     var sItem = sList[v % sList.length];
+    
+    if (sItem.g) data.graphic = JSON.parse(JSON.stringify(sItem.g));
     data.steps = 2;
     prompt = sItem.t;
     
@@ -9831,7 +10699,11 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var bStr = formatRMB(bFen);
   var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
-  var answer = formatRMB(answerFen);
+  
+  
+  var answer = answerFen === 0
+    ? '0' + (aFen >= 100 ? '元' : aFen >= 10 ? '角' : '分')
+    : formatRMB(answerFen);
   
   var calcWhy = (op === 'add' ? '把两部分钱合起来用加法' : '求剩余的钱用减法')
     + '，单位相同直接相加减：' + aStr + ' ' + opChar + ' ' + bStr + ' = ' + answer;
@@ -10072,15 +10944,32 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     var op = Rng.pick(rng, ['buy', 'change', 'total']);
     var aStr = formatRMB(aFen);
     var bStr = formatRMB(bFen);
+
     
+    
+    
+    var prompt = null;
+    var cs = plan && plan.semanticParams && plan.semanticParams.contextScenes;
+    if (cs && Array.isArray(cs.moneyEntries) && cs.moneyEntries.length) {
+      var moneyPool = [];
+      cs.moneyEntries.forEach(function (e) {
+        var arr = e.narratives ? e.narratives[op] : null;
+        if (Array.isArray(arr)) arr.forEach(function (t) { moneyPool.push(t); });
+      });
+      if (moneyPool.length) {
+        prompt = moneyPool[Math.floor(rng() * moneyPool.length)]
+          .replace('{a}', aStr).replace('{b}', bStr);
+      }
+    }
+
     if (op === 'buy') {
-      var prompt = '小明买了一支笔，花了' + aStr + '，又买了一块橡皮，花了' + bStr + '，一共花了多少钱？';
+      prompt = prompt || '小明买了一支笔，花了' + aStr + '，又买了一块橡皮，花了' + bStr + '，一共花了多少钱？';
       var answer = formatRMB(aFen + bFen);
     } else if (op === 'change') {
-      var prompt = '小红有' + aStr + '，买文具花了' + bStr + '，还剩多少钱？';
+      prompt = prompt || '小红有' + aStr + '，买文具花了' + bStr + '，还剩多少钱？';
       var answer = formatRMB(aFen - bFen);
     } else {
-      var prompt = '一本书' + aStr + '，一本笔记本' + bStr + '，买这两样东西一共需要多少钱？';
+      prompt = prompt || '一本书' + aStr + '，一本笔记本' + bStr + '，买这两样东西一共需要多少钱？';
       var answer = formatRMB(aFen + bFen);
     }
     var wordWhy = (op === 'change'
@@ -10624,9 +11513,9 @@ function buildRelationGraphic(template, nums, ans, qt, expr) {
   return null;
 }
 
-function formatTemplate(template, nums) {
+function formatTemplate(template, nums, tplText) {
   var tpl = PROBLEM_TEMPLATES[template];
-  var str = tpl.zh;
+  var str = tplText || tpl.zh;
   
   Object.keys(nums).forEach(function(key) {
     var placeholder = '{' + key + '}';
@@ -10697,9 +11586,25 @@ function makeApplicationQuestion(plan, context, i, meta) {
   if (!template) return null; 
   var nums = generateNumbers(rng, template, nr);
   var answer = computeAnswer(template, nums);
-  var prompt = formatTemplate(template, nums);
   
-  var choiceZh = PROBLEM_TEMPLATES[template].choiceZh || PROBLEM_TEMPLATES[template].zh;
+  
+  
+  
+  var narrative = null;
+  var cs = plan && plan.semanticParams && plan.semanticParams.contextScenes;
+  if (cs && Array.isArray(cs.scenes) && cs.scenes.length) {
+    var rel = PROBLEM_TEMPLATES[template].relation;
+    var pool = [];
+    cs.scenes.forEach(function (s) {
+      var n = s.narratives ? s.narratives[rel] : null;
+      if (n && n.apply && n.brief) pool.push(n);
+    });
+    if (pool.length) narrative = pool[Math.floor(rng() * pool.length)];
+  }
+  var prompt = formatTemplate(template, nums, narrative ? narrative.apply : null);
+  
+  var choiceZh = narrative ? narrative.brief
+    : (PROBLEM_TEMPLATES[template].choiceZh || PROBLEM_TEMPLATES[template].zh);
   var choicePrompt = choiceZh;
   Object.keys(nums).forEach(function (key) {
     choicePrompt = choicePrompt.replace('{' + key + '}', String(nums[key]));
@@ -11002,6 +11907,16 @@ function createCompositeGenerator(spec) {
         : (plan && plan.knowledgePointId ? [plan.knowledgePointId] : []);
       if (kpIds.length < 2) {
         throw new Error('Composite generator 需要至少 2 个知识点');
+      }
+      
+      
+      if (context && typeof context.relationsFor === 'function' && typeof context.familyOf === 'function') {
+        var cv = require("shared/validator/composite-validator.js").validateCrossFamilyPrerequisite(kpIds, {
+          relationsFor: context.relationsFor, familyOf: context.familyOf
+        });
+        if (!cv.valid) {
+          throw new Error('Composite 跨族前置未满足，组合被拒: ' + cv.missing.map(function (m) { return m.a + '~' + m.b; }).join(','));
+        }
       }
       var count = plan.count || 1;
       var questions = [];
@@ -11540,7 +12455,10 @@ function makeReasoningQuestion(plan, context, i, kp) {
 
   
   
-  var prompt, answer, steps, logicOptions = null, choicePool = null, nativeWhy = null;
+  
+  
+  
+  var prompt, answer, steps, logicOptions = null, choicePool = null, nativeWhy = null, fillP = null;
   var v = i; 
   if (type === 'drawer') {
     var DRAWER = [
@@ -11551,6 +12469,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var d = DRAWER[v % DRAWER.length];
     prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
+    fillP = '要保证有' + d.k + '个球颜色相同，最少要摸出____个球（球共有' + d.c.length + '种颜色）。';
     answer = d.ans; steps = 2;
     nativeWhy = '抽屉原理按最不利情况算：每种颜色先各摸 ' + (d.k - 1) + ' 个，再摸 1 个就一定有 '
       + d.k + ' 个同色，' + d.c.length + ' × ' + (d.k - 1) + ' + 1 = ' + d.ans;
@@ -11559,6 +12478,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var twoSum = riC(rng, 10, 50, nr);
       var half = Math.floor(twoSum / 2);
       prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
+      fillP = '两个数的和是' + twoSum + '，这两个数越接近乘积越大，最大乘积是____。';
       answer = half * (twoSum - half); steps = 2;
       nativeWhy = '和一定时，两数越接近乘积越大，取 ' + half + ' 和 ' + (twoSum - half)
         + '：' + half + ' × ' + (twoSum - half) + ' = ' + answer;
@@ -11566,6 +12486,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var twoSum2 = riC(rng, 10, 50, nr);
       var half2 = Math.floor(twoSum2 / 2);
       prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
+      fillP = '两个数的和是' + twoSum2 + '，相差最小时这两个数是____。';
       answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
       nativeWhy = '和一定，两数最接近时相差最小（差 0 或 1），所以是 ' + half2 + ' 和 ' + (twoSum2 - half2);
     } else {
@@ -11574,6 +12495,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var rem = threeSum - 3 * base;
       var parts = [base, base, base]; parts[2] += rem;
       prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
+      fillP = '把' + threeSum + '分成尽可能接近的三个数时乘积最大，这个最大乘积是____。';
       answer = parts[0] * parts[1] * parts[2]; steps = 2;
       nativeWhy = '三数尽量接近时乘积最大，' + threeSum + ' 分成 ' + parts.join('、')
         + '，乘积 ' + parts[0] + ' × ' + parts[1] + ' × ' + parts[2] + ' = ' + answer;
@@ -11584,6 +12506,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var rabb0 = riC(rng, 3, Math.max(3, heads - 2), nr);
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，从上面数共有' + heads + '个头，从下面数共有' + feet + '只脚。鸡和兔各有几只？____';
       var r0 = (feet - heads * 2) / 2;
       answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
       nativeWhy = '假设全是鸡应有 ' + heads + ' × 2 = ' + heads * 2 + ' 只脚，多出 '
@@ -11598,6 +12521,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var R = riC(rng, 3, 8, nr);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，鸡的只数比兔多' + D + '只，脚一共有' + F + '只。鸡和兔各有几只？____';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
       nativeWhy = '把兔先按 2 只脚算，' + (R + D) + ' 只鸡和 ' + R + ' 只兔共 ' + F + ' 只脚（2×'
         + (R + D) + ' + 6×' + R + ' = ' + F + '），所以兔 ' + R + ' 只、鸡 ' + (R + D) + ' 只';
@@ -11610,6 +12534,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var C = riC(rng, 3, 8, nr);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，兔的只数比鸡多' + D2 + '只，脚一共有' + F2 + '只。鸡和兔各有几只？____';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
       nativeWhy = '兔有 4 只脚、鸡有 2 只脚（兔是鸡的 2 倍），' + F2 + ' 只脚按鸡 ' + C
         + ' 只、兔 ' + (C + D2) + ' 只正好：6×' + C + ' + 4×' + D2 + ' = ' + F2;
@@ -11629,6 +12554,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var tp = TP[v % TP.length];
     prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
+    fillP = '一条' + L + '米长的小路一边植树，每隔' + G + '米栽一棵，植树要求：' + tp.desc + '。一共要栽____棵树。';
     answer = tp.ans; steps = 2;
     nativeWhy = '先算间隔数：' + L + ' ÷ ' + G + ' = ' + Math.floor(L / G) + '；'
       + tp.desc + '，棵数 = 间隔数 ' + (tp.ans > Math.floor(L / G) ? '+ 1' : tp.ans < Math.floor(L / G) ? '− 1' : '')
@@ -11639,18 +12565,20 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var df = DEFECT[v % DEFECT.length];
     prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
+    fillP = df.n + '瓶水里有1瓶略轻的次品，用天平最少称____次一定能把它找出来。';
     answer = df.ans; steps = 2;
     nativeWhy = '每次把待测瓶数尽量平均分成 3 份，称其中两份可把范围缩小到 1/3；'
       + df.n + ' 在 3 的 ' + (df.ans - 1) + ' 次方到 ' + df.ans + ' 次方之间，所以至少称 ' + df.ans + ' 次';
   } else if (type === 'handshake') {
     var HSK = [
-      { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
-      { w: '支球队进行单循环比赛，每两队赛一场', ans: function (n) { return n * (n - 1) / 2; } },
-      { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
+      { w: '个人，每两个人握一次手', fp: function (m) { return '有' + m + '个人两两握手，每两个人只握一次，一共要握____次手。'; }, ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '支球队进行单循环比赛，每两队赛一场', fp: function (m) { return '有' + m + '支球队进行单循环赛，每两队只赛一场，一共要赛____场。'; }, ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '个点，每两个点连一条线段', fp: function (m) { return '有' + m + '个点，每两点只连一条线段，一共能连____条线段。'; }, ans: function (n) { return n * (n - 1) / 2; } }
     ];
     var hs = HSK[v % HSK.length];
     var n = riC(rng, 4, 12, nr);
     prompt = n + hs.w + '，一共需要多少次？';
+    fillP = hs.fp(n);
     answer = hs.ans(n); steps = 2;
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
@@ -11658,15 +12586,18 @@ function makeReasoningQuestion(plan, context, i, kp) {
     if (v % 3 === 0) {
       var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
+      fillP = '一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙' + pans + '张饼最少需要____分钟。';
       answer = pans * 2; steps = 3;
       nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
         + ' × 2 = ' + pans * 2 + ' 个面，每锅 2 分钟烙两个面，共 ' + answer + ' 分钟';
     } else if (v % 3 === 1) {
       prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
+      fillP = '煮一个鸡蛋需要8分钟，洗锅的2分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 8; steps = 2;
       nativeWhy = '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
     } else {
       prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
+      fillP = '看一集动画需要15分钟，写作业的10分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 15; steps = 2;
       nativeWhy = '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
     }
@@ -11693,11 +12624,13 @@ function makeReasoningQuestion(plan, context, i, kp) {
     } else if (LGV === 1) {
       var ageTop = riC(rng, 9, 12, nr);
       prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
+      fillP = '已知小红比小明小2岁，小刚比小红又小3岁，小明今年' + ageTop + '岁。三人中年龄最大的是____。';
       answer = '小明'; steps = 2;
       logicOptions = ['小明', '小红', '小刚'];
       nativeWhy = '小明比小红大 2 岁，小红又比小刚大 3 岁，年龄关系可传递，所以小明最大';
     } else {
       prompt = '三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。应该从哪个盒子摸？';
+      fillP = '三个盒子上的标签「苹果」「橘子」「混合」全都贴错了，只摸出其中一个盒子里的一个水果，就能判断三个盒子里各装什么。应该摸____的盒子。';
       answer = '标着「混合」的盒子'; steps = 3;
       logicOptions = ['标着「苹果」的盒子', '标着「橘子」的盒子', '标着「混合」的盒子'];
       nativeWhy = '三个标签全贴错，标「混合」的盒子里一定是单一水果，从中摸一个即可确定它；再由「标签全错」推出另外两个盒子';
@@ -11719,24 +12652,19 @@ function makeReasoningQuestion(plan, context, i, kp) {
       .replace(/至少/g, '最少').replace(/最多/g, '至多')
       .replace(/每隔/g, '每间隔').replace(/平均/g, '均等');
   }
-  
-  function splitClauses(s) {
-    return String(s).split(/[。，、；！？\n]+/).filter(function (c) { return c.trim().length > 0; });
-  }
   if (qt2 === 'fill') {
+    
+    
     
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 中，____ 是下一项';
     } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
       
       
-      
-      
       stemPrompt = '有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，' +
         '丙则称甲、乙两人都撒了谎。说真话的是 ____。';
     } else {
-      var cls = splitClauses(prompt);
-      stemPrompt = cls.reverse().join('，') + '，____';
+      stemPrompt = fillP;
     }
   } else if (qt2 === 'choice') {
     
@@ -11748,8 +12676,14 @@ function makeReasoningQuestion(plan, context, i, kp) {
       stemPrompt = '甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」' +
         '乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？';
     } else {
+      
+      
+      
+      
       var condChoice = rewordCond(String(prompt).replace(/[^。！？]*[？?]\s*$/, ''));
-      stemPrompt = condChoice + '正确选项是哪一个？';
+      stemPrompt = condChoice
+        ? condChoice + '正确选项是哪一个？'
+        : rewordCond(String(prompt)) + ' 正确选项是哪一个？';
     }
   }
 
@@ -13135,12 +14069,17 @@ function makeStatsQuestion(plan, context, i, kp) {
     steps = 1;
     if (qt === 'calc') {
       var CLK_CALC = [
-        { q: '钟面上有12个大格，每个大格有5个小格，整个钟面总共有多少个小格？列式：12 × 5 = ？', a: 60 },
-        { q: '分针从12走到6，走了6个大格，一共走了多少分钟？列式：6 × 5 = ？', a: 30 },
-        { q: '时针从2走到5，走了几个大格、是多少小时？列式：(5 − 2) × 1 = ？', a: 3 }
+        
+        { q: '钟面上有12个大格，每个大格有5个小格，整个钟面总共有多少个小格？列式：12 × 5 = ？', a: 60,
+          e: '每个大格有 5 个小格，12 个大格就是 12×5＝60 个小格。' },
+        { q: '分针从12走到6，走了6个大格，一共走了多少分钟？列式：6 × 5 = ？', a: 30,
+          e: '分针走 1 大格是 5 分钟，走 6 个大格就是 6×5＝30 分钟。' },
+        { q: '时针从2走到5，走了几个大格、是多少小时？列式：(5 − 2) × 1 = ？', a: 3,
+          e: '时针每走 1 个大格是 1 小时，5－2＝3 个大格，所以是 3 小时。' }
       ];
       var clkC = CLK_CALC[i % CLK_CALC.length];
       prompt = name + '：' + clkC.q; answer = clkC.a; data.calcForm = true;
+      nativeExpl = clkC.e;
     } else if (qt === 'choice') {
       var CLK_OPTS = [
         { q: '钟面上一共有多少个大格？', a: '12个', o: ['10个', '11个', '12个', '24个'],
@@ -13176,13 +14115,19 @@ function makeStatsQuestion(plan, context, i, kp) {
     steps = 1;
     if (qt === 'calc') {
       var TC_CALC = [
-        { q: '3时等于多少分？列式：3 × 60 = ？', a: 180 },
-        { q: '2分等于多少秒？列式：2 × 60 = ？', a: 120 },
-        { q: '1时20分等于多少分？列式：60 + 20 = ？', a: 80 },
-        { q: '180秒等于多少分？列式：180 ÷ 60 = ？', a: 3 }
+        
+        { q: '3时等于多少分？列式：3 × 60 = ？', a: 180,
+          e: '1 时＝60 分，3 时就是 3×60＝180 分。' },
+        { q: '2分等于多少秒？列式：2 × 60 = ？', a: 120,
+          e: '1 分＝60 秒，2 分就是 2×60＝120 秒。' },
+        { q: '1时20分等于多少分？列式：60 + 20 = ？', a: 80,
+          e: '1 时＝60 分，60＋20＝80，所以 1 时 20 分＝80 分。' },
+        { q: '180秒等于多少分？列式：180 ÷ 60 = ？', a: 3,
+          e: '60 秒＝1 分，180÷60＝3，所以 180 秒＝3 分。' }
       ];
       var tcC = TC_CALC[i % TC_CALC.length];
       prompt = name + '：' + tcC.q; answer = tcC.a; data.calcForm = true;
+      nativeExpl = tcC.e;
     } else if (qt === 'choice') {
       var TC_OPTS = [
         { q: '3时换算成分是多少？', a: '180分', o: ['30分', '60分', '180分', '300分'],
@@ -14384,6 +15329,19 @@ function pkp(plan) {
   return null;
 }
 
+
+
+
+function defOf(plan) {
+  var sp = plan && plan.semanticParams;
+  return (sp && typeof sp.definition === 'string' && sp.definition) ? sp.definition : null;
+}
+
+
+function citeDef(def) {
+  return def + (/[。！？]$/.test(def) ? '' : '。');
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -14430,7 +15388,7 @@ function finish(q, prompt, answer, acceptable, explanation) {
 }
 
 
-function finishChoice(q, rng, correct, wrongs, explanation) {
+function finishChoice(q, rng, correct, wrongs, explanation, provenance) {
   var seen = {}, pool = [];
   [correct].concat(wrongs).forEach(function (o) {
     o = String(o);
@@ -14451,6 +15409,13 @@ function finishChoice(q, rng, correct, wrongs, explanation) {
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
   q.data.correctIndex = options.indexOf(String(correct));
+  
+  
+  if (Array.isArray(provenance)) {
+    q.data.distractors = provenance.filter(function (p) {
+      return p && options.indexOf(String(p.expr)) !== -1 && String(p.expr) !== String(correct);
+    });
+  }
   return finish(q, q.prompt, String(correct), [], explanation || null);
 }
 
@@ -14513,10 +15478,32 @@ function makeTimesChoice(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   q.prompt = '下面哪个算式表示「' + base + ' 的 ' + times + ' 倍」？（  ）';
   var correctExpr = base + ' × ' + times;
-  return finishChoice(q, rng, correctExpr,
-    [base + ' + ' + times, base + ' − ' + times, times + ' − ' + base],
+  
+  
+  
+  var miscons = (plan.semanticParams && Array.isArray(plan.semanticParams.miscons))
+    ? plan.semanticParams.miscons : [];
+  var wrongs = [], provenance = [];
+  function addW(expr, et, src) {
+    if (wrongs.indexOf(expr) !== -1 || expr === correctExpr || wrongs.length >= 3) return;
+    wrongs.push(expr);
+    provenance.push({ expr: expr, errorType: et || null, source: src });
+  }
+  for (var m = 0; m < miscons.length; m++) {
+    var et = miscons[m] && miscons[m].errorType;
+    if (et === '口诀混淆') {
+      if (times + 1 <= 9) addW(base + ' × ' + (times + 1), et, 'misconception');
+      if (times - 1 >= 2) addW(base + ' × ' + (times - 1), et, 'misconception');
+    } else if (et === '概念混淆' || et === '符号错误') {
+      if (base % times === 0) addW(base + ' ÷ ' + times, et, 'misconception');
+    }
+  }
+  addW(base + ' + ' + times, null, 'adjacent-fallback');
+  addW(base + ' − ' + times, null, 'adjacent-fallback');
+  addW(times + ' − ' + base, null, 'adjacent-fallback');
+  return finishChoice(q, rng, correctExpr, wrongs,
     '「' + base + ' 的 ' + times + ' 倍」就是 ' + times + ' 个 ' + base + '，用乘法表示为 '
-      + correctExpr + '，正确选项是「' + correctExpr + '」。');
+      + correctExpr + '，正确选项是「' + correctExpr + '」。', provenance);
 }
 
 
@@ -14633,9 +15620,14 @@ function makeAngleChoice(plan, context, i) {
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
   var angleDef = '从一点引出两条射线所组成的图形';
+  
+  
+  var adef = defOf(plan);
   return finishChoice(q, rng, angleDef,
     ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形'],
-    '角的定义是从一点引出两条射线所组成的图形，这一点是顶点、两条射线是角的两条边，正确选项是「' + angleDef + '」。');
+    adef
+      ? '依据定义：' + citeDef(adef) + '这一点是顶点，两条射线是角的两条边，正确选项是「' + angleDef + '」。'
+      : '角的定义是从一点引出两条射线所组成的图形，这一点是顶点、两条射线是角的两条边，正确选项是「' + angleDef + '」。');
 }
 
 function makeAngleGeometry(plan, context, i) {
@@ -14646,24 +15638,33 @@ function makeAngleGeometry(plan, context, i) {
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
   return finish(q, '观察一个角：把它的两条边画得更长，这个角的大小 ____。（填“变大”“变小”或“不变”）',
-    '不变', ['不变'], '角的大小与两边张开的程度有关，与边的长短无关');
+    '不变', ['不变'],
+    
+    '依据：角的大小只与两边张开的程度有关，与边的长短无关。所以把两条边画得更长，角的大小不变');
 }
 
 function makeAngleJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  
+  var adef = defOf(plan);
   var items = [
     {
       text: '角的两条边越长，这个角就越大。', value: false,
-      explanation: '角的大小只与两边张开的程度有关，与边的长短无关，边画得再长角也不会变大，说法错误。',
+      explanation: '判断依据：角的大小只与两边张开的程度有关，与边的长短无关。边画得再长角也不会变大，说法错误。',
       misconception: '误认为角的大小由边的长短决定：角的大小只取决于两边张开的程度。'
     },
     {
       text: '一个角有一个顶点和两条边。', value: true,
-      explanation: '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
     },
     {
       text: '从一点引出两条射线所组成的图形叫做角。', value: true,
-      explanation: '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
     }
   ];
   var s = Rng.pick(rng, items);
@@ -14705,8 +15706,12 @@ function makeAreaFill(plan, context, i) {
     type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
     params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
   };
+  
+  var adef = defOf(plan);
   return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'],
-    '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
+    adef
+      ? '依据定义：' + citeDef(adef) + '这个量就是面积，所以测量、比较表面大小要用面积单位，空格填面积'
+      : '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
 }
 
 function makeAreaApply(plan, context, i) {
@@ -14732,8 +15737,11 @@ function makeAreaChoice(plan, context, i) {
     type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
     params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
   };
+  
+  var adef = defOf(plan);
   return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒'],
-    '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
+    (adef ? '依据定义：' + citeDef(adef) : '')
+      + '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
 }
 
 function makeAreaGeometry(plan, context, i) {
@@ -14755,24 +15763,33 @@ function makeAreaGeometry(plan, context, i) {
     }
   };
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
-    winner[0], [winner[0], '图形' + winner[0]], '小方格同样大时，占的格子越多面积越大：' + winner[0] + ' 用了 ' + winner[1] + ' 个');
+    winner[0], [winner[0], '图形' + winner[0]],
+    
+    '依据：小方格同样大时，占的格子越多面积越大。' + winner[0] + ' 用了 ' + winner[1] + ' 个，所以面积最大的是' + winner[0]);
 }
 
 function makeAreaJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  
+  var adef = defOf(plan);
   var items = [
     {
       text: '黑板面的大小就是黑板面的面积。', value: true,
-      explanation: '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '黑板面的大小就是黑板面的面积，说法正确。'
+        : '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
     },
     {
       text: '1 平方米比 1 米大。', value: false,
-      explanation: '平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
+      explanation: '判断依据：平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
       misconception: '面积单位与长度单位混淆：不同类的计量单位之间不能比较大小。'
     },
     {
       text: '物体表面或封闭图形的大小叫做它们的面积。', value: true,
-      explanation: '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
     }
   ];
   var s = Rng.pick(rng, items);
@@ -15000,6 +16017,9 @@ function buildNumberConceptItem(rng, name, nr) {
     var n5 = riC(rng, 2, 5, nr);
     return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
+      
+      
+      choice: '排队报数，小明前面有 ' + (n5 - 2) + ' 人，小明报几？',
       apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
@@ -15033,6 +16053,12 @@ function buildNumberConceptItem(rng, name, nr) {
     var num0 = tens * 10 + ones;
     return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
+      
+      
+      
+      choice: '有一个数是 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一），数字 ' + tens + ' 在哪一位上？',
+      fill: tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ____',
+      fillAnswer: String(num0),
       apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
@@ -15143,6 +16169,9 @@ function buildNegativeItem(rng, name, nr) {
   
   return { stem: '读出下面的数：−5 与 +8（参考：0 − 5 = −5），−5 读作什么？',
     answer: '负五', options: ['负五', '正五', '五', '减五'],
+    
+    
+    choice: '支出 5 元记作 −5，这个数读作什么？',
     calc: '列式计算：0 − 5 = ？', calcAnswer: '−5',
     fill: '根据算式把答案填在横线上：0 − 5 = ____', fillAnswer: '−5',
     apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
@@ -15381,10 +16410,39 @@ function makeByItem(plan, context, i, builder, subType) {
   
   
   
-  var stem0 = String(prompt).replace(/（参考[^）]*）/g, '').replace(/[?？]\s*$/, '');
+  
+  
+  
   var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer))
     ? '；' + item.answer : '';
-  var explanation = stem0 + '，答案是 ' + answer + conceptConclusion;
+  var srcExpr = /[+\-−×÷*＝=]/.test(String(prompt)) ? String(prompt) : String(item.stem || '');
+  var sup = extractSupport(srcExpr);
+  var expr = null, exprAns = null;
+  if (/[+\-−×÷*]/.test(sup) && /\d/.test(sup)) {
+    var supCore = sup.replace(/[?？]\s*$/, '');
+    expr = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    var eqTail = /[=＝]\s*([^=＝？?]+)$/.exec(supCore);
+    if (eqTail && /^[−-]?\d+$/.test(eqTail[1].replace(/[、\s]/g, ''))) exprAns = eqTail[1].trim();
+  }
+  var isNumAns = /^[-−]?\d+$/.test(String(answer).replace('−', '-'));
+  if (exprAns == null && isNumAns) exprAns = String(answer);
+  var explanation;
+  if (qt === 'calc') {
+    explanation = expr
+      ? expr + ' = ' + answer + conceptConclusion + '。'
+      : '答案是 ' + answer + conceptConclusion + '。';
+  } else if (qt === 'fill') {
+    explanation = expr
+      ? (expr + (exprAns != null ? ' = ' + exprAns : '') + '，所以答案是 ' + answer + conceptConclusion + '。')
+      : '答案是 ' + answer + conceptConclusion + '。';
+  } else {
+    var stem0 = String(prompt).replace(/（参考[^）]*）/g, '')
+      .replace(/[=＝]\s*[？?]?\s*$/, '').replace(/[?？]\s*$/, '');
+    var stemQ = /[?？]$/.test(String(prompt).trim()) ? '？' : '。';
+    explanation = '题意：' + stem0 + stemQ
+      + (expr ? ' 列式：' + expr + (exprAns != null ? '，计算：' + expr + ' = ' + exprAns : '') + '。' : '')
+      + '答：' + answer + conceptConclusion + '。';
+  }
   return finish(q, prompt, answer, [answer].concat(extraAcceptable), explanation);
 }
 
@@ -15455,7 +16513,17 @@ function createConceptMeaningGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
+      var applied = VariationApply.applyToAll(out, plan);
+      
+      var upstream = params && params.upstream;
+      if (upstream && upstream.name) {
+        applied.forEach(function (q) {
+          if (q && q.answer && typeof q.answer.explanation === 'string' && q.answer.explanation) {
+            q.answer.explanation = SemanticParameters.composeExplanation({ upstream: upstream, name: params.name, current: q.answer.explanation });
+          }
+        });
+      }
+      return SemanticEvidence.attachAll(applied, plan);
     }
   };
 }
@@ -16441,6 +17509,7 @@ __defs["shared/generator/generators/decimal.js"] = function (module, exports, re
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var Arith = require("shared/generator/core/arithmetic-core.js");
 var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
 var VariationApply = require("shared/generator/core/variation-apply.js");
 
@@ -16877,6 +17946,28 @@ function buildQuestion(plan, context, i) {
     data.options = options;
     data.correctIndex = options.map(String).indexOf(String(answer));
   }
+  
+  
+  
+  
+  
+  
+  if (qt === 'calc' || qt === 'apply') {
+    if (sub === 'addsub' || sub === 'mult' || sub === 'word') {
+      var vm = /^列式计算：([\d.]+)\s*([+−×÷])\s*([\d.]+)\s*=\s*？$/.exec(String(prompt)) ||
+        /列式求[^：]*：([\d.]+)\s*([+−×÷])\s*([\d.]+)\s*=\s*？$/.exec(String(prompt));
+      if (vm && (/\./.test(vm[1]) || /\./.test(vm[3]))) {
+        var vPlan = Arith.verticalPlan(Arith.gradeOfKp(pkp(plan)), Number(vm[1]), Number(vm[3]), vm[2]);
+        if (vPlan) {
+          data.graphic = vPlan.sub === 'mul'
+            ? { type: 'calculation', subtype: 'mul', role: 'calculation-support',
+                params: { a: Arith.trimDec(vm[1]), b: Arith.trimDec(vm[3]), options: { maskResult: true } } }
+            : { type: 'calculation', subtype: 'dec', role: 'calculation-support',
+                params: { a: Arith.trimDec(vm[1]), b: Arith.trimDec(vm[3]), op: vm[2], options: { maskResult: true } } };
+        }
+      }
+    }
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -17062,9 +18153,16 @@ function exprOptionsFrac(rng, expr, correctVal) {
 }
 
 
-function calcItem(expr, ansF, hint, why) {
-  var explain = why || ((hint ? hint + '：' : '') + expr + ' = ' + fs(ansF) + '。');
-  return { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+
+function calcItem(expr, ansF, hint, why, graphic) {
+  
+  
+  var explain = why
+    ? why + expr + ' = ' + fs(ansF) + '。'
+    : ((hint ? hint + '：' : '') + expr + ' = ' + fs(ansF) + '。');
+  var it = { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+  if (graphic) it.graphic = graphic;
+  return it;
 }
 function choiceExprItem(rng, expr, ansF, stemPrefix, why) {
   var explain = why || ('逐个计算四个选项，只有「' + expr + '」的得数是 ' + fs(ansF) + '。');
@@ -17138,18 +18236,33 @@ function arithmeticTyped(sub, qt, rng, nr) {
   if (sub === 'addsub-diff') {
     var s2 = diffDenomAdd(rng, nr);
     var de = s2.expr, da = s2.ans;
+    
+    var c1 = s2.n1 * (s2.lcm / s2.d1), c2 = s2.n2 * (s2.lcm / s2.d2), cnum = c1 + c2;
+    var tongfen = '先通分：分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm +
+      '，' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '，' + s2.n2 + '/' + s2.d2 +
+      ' = ' + c2 + '/' + s2.lcm + '；再按同分母相加：' + c1 + '/' + s2.lcm + ' + ' + c2 + '/' + s2.lcm +
+      ' = ' + cnum + '/' + s2.lcm + (da.d !== s2.lcm ? '，约分得 ' + fs(da) : '');
+    
+    
+    
+    
+    var fracG = {
+      type: 'calculation', subtype: 'frac', role: 'calculation-support',
+      params: { a: s2.n1, b: s2.d1, c: s2.n2, d: s2.d2, op: '+', options: { resultBox: true } }
+    };
     if (qt === 'calc') return calcItem(de, da, '列式计算（先通分）',
-      '异分母分数相加，先通分化成同分母分数，再按同分母加法计算：');
+      '异分母分数相加，' + tongfen + '。', fracG);
     if (qt === 'fill') {
-      var c1 = s2.n1 * (s2.lcm / s2.d1);
       return { prompt: '先通分再填空：' + s2.n1 + '/' + s2.d1 + ' = ____/' + s2.lcm,
         answer: c1 + '/' + s2.lcm, options: null,
         explain: '异分母分数先通分，分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm
           + '，分子也要乘相同的数：' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '。' };
     }
-    if (qt === 'choice') return choiceExprItem(rng, de, da);
+    if (qt === 'choice') return choiceExprItem(rng, de, da, null,
+      '四个选项中只有「' + de + '」的得数是 ' + fs(da) + '。计算它要' + tongfen + '，所以选「' + de + '」。');
     return applyItem('修路队第一天修了这条路的 ' + s2.n1 + '/' + s2.d1 + '，第二天修了 ' + s2.n2 + '/' + s2.d2 +
-      '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da);
+      '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da,
+      '把两天修的部分合起来用加法：' + de + '，' + tongfen + '，两天一共修了这条路的 ' + fs(da) + '。');
   }
 
   if (sub === 'mix') {
@@ -17371,6 +18484,9 @@ function buildQuestion(plan, context, i) {
   var options = typed.options || null;
 
   var data = { mode: 'fraction', subType: sub, steps: 1 };
+  
+  
+  if (typed.graphic) data.graphic = typed.graphic;
   if (qt === 'choice' && options) {
     data.options = options;
     data.correctIndex = options.map(String).indexOf(String(answer));
@@ -17423,6 +18539,349 @@ module.exports = {
   createFractionGenerator: createFractionGenerator,
   buildAll: buildAll
 };
+
+};
+__defs["shared/svg/svg-core.js"] = function (module, exports, require) {
+
+
+
+
+
+
+
+
+
+
+
+(function (global) {
+  'use strict';
+
+  
+  var SVG_DEFAULTS = {
+    width: 220,            
+    height: 160,           
+    padding: 10,           
+    fill: '#eef3fb',       
+    stroke: '#27324a',     
+    strokeWidth: 2,
+    fontSize: 14,
+    fontFamily: 'Menlo, Consolas, monospace',
+    textColor: '#27324a'
+  };
+
+  
+  function escAttr(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function escText(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  
+  function merge(defaults, opts) {
+    var out = {};
+    Object.keys(defaults).forEach(function (k) { out[k] = defaults[k]; });
+    if (opts) Object.keys(opts).forEach(function (k) {
+      if (opts[k] != null) out[k] = opts[k];
+    });
+    return out;
+  }
+  
+  function attrsStr(attrs) {
+    var s = '';
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (attrs[k] == null) return;
+      s += ' ' + k + '="' + escAttr(attrs[k]) + '"';
+    });
+    return s;
+  }
+
+  
+  
+  function svgElement(tag, attrs, children) {
+    var inner = Array.isArray(children) ? children.join('') : (children || '');
+    if (!inner) return '<' + tag + attrsStr(attrs) + '/>';
+    return '<' + tag + attrsStr(attrs) + '>' + inner + '</' + tag + '>';
+  }
+
+  function svgText(x, y, str, opts) {
+    var o = merge({ fontSize: SVG_DEFAULTS.fontSize, fontFamily: SVG_DEFAULTS.fontFamily,
+      fill: SVG_DEFAULTS.textColor, 'text-anchor': 'middle' }, opts);
+    var attrs = { x: x, y: y, 'font-size': o.fontSize, 'font-family': o.fontFamily,
+      fill: o.fill, 'text-anchor': o['text-anchor'], 'font-weight': o.fontWeight };
+    if (o.transform) attrs.transform = o.transform;
+    return svgElement('text', attrs, escText(str));
+  }
+
+  function svgLine(x1, y1, x2, y2, opts) {
+    var o = merge({ stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    return svgElement('line', { x1: x1, y1: y1, x2: x2, y2: y2,
+      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linecap': o.linecap || 'round', 'stroke-dasharray': o.dasharray });
+  }
+
+  
+  function normPoints(points) {
+    if (Array.isArray(points)) return points.map(function (p) { return p[0] + ',' + p[1]; }).join(' ');
+    return String(points);
+  }
+
+  function svgPolygon(points, opts) {
+    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    return svgElement('polygon', { points: normPoints(points), fill: o.fill,
+      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linejoin': o.linejoin || 'round', 'stroke-dasharray': o.dasharray });
+  }
+
+  function svgPolyline(points, opts) {
+    var o = merge({ fill: 'none', stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    return svgElement('polyline', { points: normPoints(points), fill: o.fill,
+      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+  }
+
+  function svgCircle(cx, cy, r, opts) {
+    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    return svgElement('circle', { cx: cx, cy: cy, r: r, fill: o.fill,
+      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-dasharray': o.dasharray });
+  }
+
+  function svgPath(d, opts) {
+    var o = merge({ fill: 'none', stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    var attrs = { d: d, fill: o.fill, stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-dasharray': o.dasharray };
+    if (o.transform) attrs.transform = o.transform;
+    return svgElement('path', attrs);
+  }
+
+  function svgRect(x, y, w, h, opts) {
+    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
+    return svgElement('rect', { x: x, y: y, width: w, height: h, rx: o.rx || 0,
+      fill: o.fill, stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-dasharray': o.dasharray });
+  }
+
+  
+  
+  
+  
+  
+  var __vbCache = (typeof Map !== 'undefined') ? new Map() : null;
+  var __wrapCache = (typeof Map !== 'undefined') ? new Map() : null;
+  var EMPTY_BOX = { minX: 0, minY: 0, width: SVG_DEFAULTS.width, height: SVG_DEFAULTS.height };
+  
+  function memoize(fn, resolver) {
+    var cache = (typeof Map !== 'undefined') ? new Map() : {};
+    return function () {
+      var key = resolver ? resolver.apply(this, arguments) : arguments[0];
+      var hit = (cache instanceof Map) ? cache.has(key) : Object.prototype.hasOwnProperty.call(cache, key);
+      if (hit) return (cache instanceof Map) ? cache.get(key) : cache[key];
+      var val = fn.apply(this, arguments);
+      if (cache instanceof Map) cache.set(key, val); else cache[key] = val;
+      return val;
+    };
+  }
+  
+  function clearCache() {
+    if (__vbCache) __vbCache.clear();
+    if (__wrapCache) __wrapCache.clear();
+  }
+
+  function computeViewBox(elements, options) {
+    var pad = options && options.padding != null ? options.padding : SVG_DEFAULTS.padding;
+    var src = Array.isArray(elements) ? elements.join('') : String(elements || '');
+    var cacheKey = src + '|' + pad;
+    if (__vbCache && __vbCache.has(cacheKey)) return __vbCache.get(cacheKey);
+    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    function grow(x1, y1, x2, y2) {
+      if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) return;
+      if (x1 < minX) minX = x1; if (y1 < minY) minY = y1;
+      if (x2 > maxX) maxX = x2; if (y2 > maxY) maxY = y2;
+    }
+    var tagRe = /<(circle|ellipse|rect|line|text|polygon|polyline|path)\b([^>]*)>/g;
+    var tm;
+    while ((tm = tagRe.exec(src))) {
+      var tag = tm[1], attrStr = tm[2];
+      var attrs = {};
+      var am, attrRe = /([\w:-]+)\s*=\s*"([^"]*)"|([\w:-]+)\s*=\s*'([^']*)'/g;
+      while ((am = attrRe.exec(attrStr))) {
+        if (am[1]) attrs[am[1]] = am[2]; else attrs[am[3]] = am[4];
+      }
+      var num = function (k, dv) { var v = parseFloat(attrs[k]); return isFinite(v) ? v : dv; };
+      var sw = num('stroke-width', 0) / 2;
+      if (tag === 'circle') {
+        var cr = num('r', 0);
+        grow(num('cx') - cr - sw, num('cy') - cr - sw, num('cx') + cr + sw, num('cy') + cr + sw);
+      } else if (tag === 'ellipse') {
+        grow(num('cx') - num('rx') - sw, num('cy') - num('ry') - sw,
+             num('cx') + num('rx') + sw, num('cy') + num('ry') + sw);
+      } else if (tag === 'rect') {
+        grow(num('x', 0) - sw, num('y', 0) - sw, num('x', 0) + num('width', 0) + sw, num('y', 0) + num('height', 0) + sw);
+      } else if (tag === 'line') {
+        grow(Math.min(num('x1'), num('x2')) - sw, Math.min(num('y1'), num('y2')) - sw,
+             Math.max(num('x1'), num('x2')) + sw, Math.max(num('y1'), num('y2')) + sw);
+      } else if (tag === 'polygon' || tag === 'polyline') {
+        var pts = String(attrs.points || '').trim().split(/[\s,]+/).map(Number);
+        for (var i = 0; i + 1 < pts.length; i += 2) grow(pts[i] - sw, pts[i + 1] - sw, pts[i] + sw, pts[i + 1] + sw);
+      } else if (tag === 'text') {
+        var fs = num('font-size', SVG_DEFAULTS.fontSize);
+        var content = '';
+        var closeIdx = src.indexOf('</text>', tm.index);
+        if (closeIdx > tm.index) {
+          var seg = src.slice(tm.index + tm[0].length, closeIdx).replace(/<[^>]*>/g, '');
+          content = seg.replace(/&[a-z]+;|&#\d+;/gi, 'x');
+        }
+        var estW = fs * 0.62 * Math.max(content.length, 1);
+        var anchor = attrs['text-anchor'] || 'start';
+        var tx = num('x', 0), ty = num('y', 0);
+        var x1 = anchor === 'middle' ? tx - estW / 2 : anchor === 'end' ? tx - estW : tx;
+        grow(x1 - sw, ty - fs, x1 + estW + sw, ty + fs * 0.35);
+      } else if (tag === 'path') {
+        var nums = String(attrs.d || '').match(/-?\d+(?:\.\d+)?/g);
+        if (nums) {
+          for (var j = 0; j + 1 < nums.length; j += 2) {
+            var px = parseFloat(nums[j]), py = parseFloat(nums[j + 1]);
+            grow(px - sw, py - sw, px + sw, py + sw);
+          }
+        }
+      }
+    }
+    if (!isFinite(minX)) return EMPTY_BOX;
+    minX -= pad; minY -= pad; maxX += pad; maxY += pad;
+    var vbResult = { minX: Math.floor(minX), minY: Math.floor(minY),
+      width: Math.ceil(maxX - minX), height: Math.ceil(maxY - minY) };
+    if (__vbCache) __vbCache.set(cacheKey, vbResult);
+    return vbResult;
+  }
+
+  
+  
+  function hexLighten(hex, f) {
+    var m = /^#([0-9a-fA-F]{6})$/.exec(hex);
+    if (!m) return hex;
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    function mix(c) { return Math.round(c + (255 - c) * f); }
+    return '#' + ((1 << 24) + (mix(r) << 16) + (mix(g) << 8) + mix(b)).toString(16).slice(1);
+  }
+  
+  var PRINT_AUX_STYLE = '<style>' +
+    '[stroke-dasharray]{opacity:.42}' +
+    '.svg-grid-line{opacity:.38}' +
+    '</style>';
+  function printTransform(innerSvg) {
+    var out = String(innerSvg || '').replace(/#[0-9a-fA-F]{6}\b/g, function (hex) {
+      return hexLighten(hex, 0.22);
+    });
+    return PRINT_AUX_STYLE + out;
+  }
+
+  
+  function svgWrap(innerSvg, options) {
+    var o = options || {};
+    var body = (innerSvg || '');
+    if (o.printMode) body = printTransform(body);
+    
+    var wrapKey = body + '|' + JSON.stringify(o);
+    if (__wrapCache && __wrapCache.has(wrapKey)) return __wrapCache.get(wrapKey);
+    var vb = o.viewBox ||
+      (function () { var b = computeViewBox(body, { padding: o.padding }); return b.minX + ' ' + b.minY + ' ' + b.width + ' ' + b.height; })();
+    var parts = vb.split(/\s+/).map(Number);
+    var w = o.width != null ? o.width : (parts[2] || SVG_DEFAULTS.width);
+    var h = o.height != null ? o.height : (parts[3] || SVG_DEFAULTS.height);
+    var attrs = {
+      xmlns: 'http://www.w3.org/2000/svg',
+      viewBox: vb, width: w, height: h,
+      role: 'img', preserveAspectRatio: o.preserveAspectRatio || 'xMidYMid meet'
+    };
+    if (o.className) attrs.class = o.className;
+    if (o.printMode) attrs.class = attrs.class ? (attrs.class + ' svg-print') : 'svg-print';
+    var bg = o.background ? svgElement('rect', { x: parts[0], y: parts[1], width: parts[2], height: parts[3], fill: o.background }) : '';
+    var style = o.style ? ' style="' + escAttr(o.style) + '"' : '';
+    var out = '<svg' + attrsStr(attrs) + style + '>' + bg + body + '</svg>';
+    if (__wrapCache) __wrapCache.set(wrapKey, out);
+    return out;
+  }
+
+  
+  
+  function svgGrid(kind, o) {
+    o = o || {};
+    var x = o.x || 0, y = o.y || 0;
+    
+    
+    var isFourLine = kind === 'four-line';
+    var frame = o.frameColor || 'var(--grid-tianzige-frame)';
+    var aux = o.lineColor || (isFourLine ? 'var(--grid-fourline-line)' : 'var(--grid-tianzige-aux)');
+    var baseline = o.baselineColor || 'var(--grid-fourline-baseline)';
+    var parts = [];
+    function rect(xx, yy, s) {
+      parts.push(svgElement('rect', { x: xx, y: yy, width: s, height: s,
+        fill: '#ffffff', class: 'svg-grid-frame',
+        style: 'stroke:' + frame + ';stroke-width:2' }));
+    }
+    function gLine(x1, y1, x2, y2, color, sw, dash) {
+      var style = 'stroke:' + color + ';stroke-width:' + sw + (dash ? ';stroke-dasharray:' + dash : '');
+      parts.push(svgElement('line', { x1: x1, y1: y1, x2: x2, y2: y2,
+        'class': 'svg-grid-line', style: style }));
+    }
+    if (kind === 'tian' || kind === 'mi' || kind === 'cross') {
+      var s = o.size || 100;
+      rect(x, y, s);
+      var mx = x + s / 2, my = y + s / 2;
+      if (kind === 'cross') {           
+        gLine(x, my, x + s, my, aux, 1.4);
+        gLine(mx, y, mx, y + s, aux, 1.4);
+      } else {                          
+        gLine(x, my, x + s, my, aux, 1.5, '6 4');
+        gLine(mx, y, mx, y + s, aux, 1.5, '6 4');
+      }
+      if (kind === 'mi') {              
+        gLine(x, y, x + s, y + s, aux, 1.2, '5 5');
+        gLine(x + s, y, x, y + s, aux, 1.2, '5 5');
+      }
+    } else if (kind === 'four-line') {
+      var topY = o.topY != null ? o.topY : 0;
+      var gap = o.gap || 22;
+      var lines = o.lines || 4;         
+      for (var i = 0; i < lines; i++) {
+        var isBase = i === lines - 1;
+        gLine(x, topY + i * gap, x + (o.width || 120), topY + i * gap,
+          isBase ? baseline : aux, isBase ? 1.8 : 1.3);
+      }
+    } else {
+      throw new Error('svgGrid: 未知格线类型 ' + kind);
+    }
+    return parts.join('');
+  }
+
+  
+  var SVGUtil = {
+    SVG_DEFAULTS: SVG_DEFAULTS,
+    escAttr: escAttr,
+    escText: escText,
+    svgElement: svgElement,
+    svgText: svgText,
+    svgLine: svgLine,
+    svgPolygon: svgPolygon,
+    svgPolyline: svgPolyline,
+    svgCircle: svgCircle,
+    svgRect: svgRect,
+    svgPath: svgPath,
+    computeViewBox: computeViewBox,
+    svgWrap: svgWrap,
+    svgGrid: svgGrid,
+    hexLighten: hexLighten,
+    memo: memoize,
+    clearCache: clearCache
+  };
+
+  global.SVGUtil = SVGUtil;
+  global.SVG_DEFAULTS = SVG_DEFAULTS;
+
+  
+  
+  global.SVGGenerators = global.SVGGenerators || {};
+  global.SVGGenerators.core = SVGUtil;
+
+  if (typeof module !== 'undefined') module.exports = SVGUtil;
+})(typeof window !== 'undefined' ? window : global);
 
 };
 __defs["shared/generator/core/arithmetic-core.js"] = function (module, exports, require) {
@@ -17944,6 +19403,37 @@ function buildSpecialKind(rng, cfg) {
   return entry.needsRange ? entry.build(rng, cfg.numberRange) : entry.build(rng);
 }
 
+
+
+function verticalPlan(grade, a, b, op) {
+  var g = Number(grade);
+  if (!(g >= 1 && g <= 6)) return null;
+  if (typeof a !== 'number' || typeof b !== 'number' || !isFinite(a) || !isFinite(b)) return null;
+  if (a < 0 || b < 0) return null; 
+  var isDec = !(a === Math.floor(a) && b === Math.floor(b));
+  var sub = op === OP_ADD ? 'add' : op === OP_SUB ? 'sub'
+    : op === OP_MUL ? 'mul' : op === OP_DIV ? 'div' : null;
+  if (!sub) return null;
+  
+  
+  if (sub === 'sub' && a < b) return null;
+  if (isDec) {
+    if (sub === 'div') return null;
+    if (sub === 'add' || sub === 'sub') return g >= 4 ? { kind: 'dec', sub: sub } : null;
+    return g >= 5 ? { kind: 'dec', sub: 'mul' } : null;
+  }
+  var maxDigits = Math.max(String(Math.abs(a)).length, String(Math.abs(b)).length);
+  if (sub === 'add' || sub === 'sub') return (g >= 2 && maxDigits >= 2) ? { kind: 'int', sub: sub } : null;
+  if (sub === 'mul') return (g >= 3 && maxDigits >= 2) ? { kind: 'int', sub: 'mul' } : null;
+  return (g >= 3 && String(Math.abs(a)).length >= 2) ? { kind: 'int', sub: 'div' } : null;
+}
+
+
+function gradeOfKp(kpId) {
+  var m = /-g(\d+)-/.exec(String(kpId || ''));
+  return m ? Number(m[1]) : 0;
+}
+
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   normalizeOperation: normalizeOperation,
@@ -17972,7 +19462,9 @@ module.exports = {
   buildDecMult: buildDecMult,
   trimDec: trimDec,
   buildSpecialKind: buildSpecialKind,
-  SPECIAL_KINDS: SPECIAL_KINDS
+  SPECIAL_KINDS: SPECIAL_KINDS,
+  verticalPlan: verticalPlan,
+  gradeOfKp: gradeOfKp
 };
 
 };
@@ -18395,6 +19887,1347 @@ __defs["shared/generator/core/op-semantics.js"] = function (module, exports, req
   global.GenOpSemantics = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+};
+__defs["shared/validator/composite-validator.js"] = function (module, exports, require) {
+'use strict';
+
+
+
+var Validator = require("shared/validator/question-validator.js");
+var ERROR_CODES = Validator.ERROR_CODES;
+var SEVERITY = Validator.SEVERITY;
+var createError = Validator.createError;
+
+function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
+
+function validateComposite(sq, context) {
+  context = context || {};
+  var errors = [];
+  var warnings = [];
+  var info = [];
+
+  var params = sq.difficultyParams || sq.constraints || {};
+  var data = sq.data || {};
+  var plan = context.plan || {};
+
+  
+  var expectedSteps = coerceInteger(params.exactSteps || params.maxSteps || data.steps);
+  var actualSteps = coerceInteger(data.steps);
+  if (expectedSteps != null && actualSteps != null && expectedSteps !== actualSteps) {
+    errors.push(createError(ERROR_CODES.COMPOSITE_STEPS_MISMATCH, 'data.steps', '步数不匹配: 期望 ' + expectedSteps + ', 实际 ' + actualSteps, SEVERITY.ERROR, { expected: expectedSteps, actual: actualSteps }));
+  }
+
+  
+  var expectedOps = params.operation || data.operators || [];
+  if (!Array.isArray(expectedOps) && typeof expectedOps === 'string') expectedOps = [expectedOps];
+  var actualOps = data.operators || [];
+  if (!Array.isArray(actualOps) && typeof actualOps === 'string') actualOps = [actualOps];
+  if (expectedOps.length && actualOps.length) {
+    var expectedSet = new Set(expectedOps.map(String).map(function (s) { return s.toLowerCase(); }));
+    var actualSet = new Set(actualOps.map(String).map(function (s) { return s.toLowerCase(); }));
+    var missing = Array.from(expectedSet).filter(function (o) { return !actualSet.has(o); });
+    var extra = Array.from(actualSet).filter(function (o) { return !expectedSet.has(o); });
+    if (missing.length) {
+      errors.push(createError(ERROR_CODES.COMPOSITE_OPERATOR_MISMATCH, 'data.operators', '缺少要求的运算符: ' + missing.join(','), SEVERITY.ERROR, { expected: Array.from(expectedSet), actual: Array.from(actualSet), missing: missing }));
+    }
+    if (extra.length) {
+      warnings.push({ code: 'COMPOSITE_EXTRA_OPERATOR', field: 'data.operators', message: '包含额外运算符: ' + extra.join(','), severity: 'WARNING', detail: { expected: Array.from(expectedSet), actual: Array.from(actualSet), extra: extra } });
+    }
+  }
+
+  
+  var expectedBracket = params.allowBracket === true || data.allowBracket === true;
+  var hasBracket = data.hasBracket === true || /[()（）]/.test(sq.prompt || '');
+  if (expectedBracket && !hasBracket) {
+    warnings.push({ code: 'COMPOSITE_BRACKET_MISSING', field: 'structure', message: '要求括号但题干未含括号', severity: 'WARNING', detail: { expectedBracket: expectedBracket, hasBracket: hasBracket } });
+  } else if (!expectedBracket && hasBracket) {
+    warnings.push({ code: 'COMPOSITE_BRACKET_UNEXPECTED', field: 'structure', message: '未要求括号但题干含括号', severity: 'WARNING', detail: { expectedBracket: expectedBracket, hasBracket: hasBracket } });
+  }
+
+  
+  if (data.mode === 'inverse' || data.inverse === true) {
+    var inverseOps = actualOps.filter(function (o) { return ['inverse', 'reverse', 'unknown', '求被加数', '求减数', '求乘数', '求除数'].indexOf(String(o).toLowerCase()) !== -1; });
+    if (inverseOps.length === 0 && actualOps.length > 0) {
+      
+      info.push({ code: 'COMPOSITE_INVERSE_MODE', field: 'data.mode', message: '检测到逆运算模式', severity: 'INFO', detail: { mode: data.mode, inverse: data.inverse } });
+    }
+  }
+
+  
+  var expectedFamily = params.structure && params.structure.family;
+  if (expectedFamily) {
+    var actualFamily = data.structure && data.structure.family;
+    if (actualFamily && expectedFamily !== actualFamily) {
+      errors.push(createError(ERROR_CODES.COMPOSITE_STRUCTURE_MISMATCH, 'data.structure.family', '结构族不匹配: 期望 ' + expectedFamily + ', 实际 ' + actualFamily, SEVERITY.ERROR, { expected: expectedFamily, actual: actualFamily }));
+    }
+  }
+
+  var valid = errors.length === 0;
+  var hasWarning = warnings.length > 0;
+
+  return {
+    valid: valid,
+    errors: errors,
+    warnings: warnings,
+    info: info,
+    score: valid ? (hasWarning ? 0.8 : 1) : 0.5,
+    checks: { composite: valid ? (hasWarning ? 'warn' : 'pass') : 'fail' }
+  };
+}
+
+
+function validateBatchComposite(questions, context) {
+  var errors = [];
+  var warnings = [];
+  var info = [];
+
+  var compositeTypes = {};
+  questions.forEach(function (sq) {
+    var data = sq.data || {};
+    var type = data.mode || (data.structure && data.structure.family) || 'simple';
+    compositeTypes[type] = (compositeTypes[type] || 0) + 1;
+  });
+
+  info.push({ code: 'COMPOSITE_DISTRIBUTION', field: 'batch', message: '复合题类型分布: ' + JSON.stringify(compositeTypes), severity: 'INFO' });
+
+  return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { composite: 'pass' } };
+}
+
+
+function validateCrossFamilyPrerequisite(kpIds, opts) {
+  opts = opts || {};
+  var relationsFor = opts.relationsFor, familyOf = opts.familyOf;
+  if (typeof relationsFor !== 'function' || typeof familyOf !== 'function') {
+    return { valid: true, checked: 0, missing: [], skipped: 'no-resolver' };
+  }
+  var ids = (kpIds || []).filter(function (x, i, a) { return typeof x === 'string' && a.indexOf(x) === i; });
+  function fam(id) { var f = familyOf(id); return f && f.familyId ? f.familyId : f; }
+  function reachable(a, b) {
+    var seen = {}, q = [a];
+    while (q.length) {
+      var cur = q.shift();
+      if (cur === b) return true;
+      if (seen[cur]) continue; seen[cur] = 1;
+      var out = relationsFor(cur, 'out') || {};
+      (out.outgoing || []).forEach(function (r) { if (!seen[r.toId]) q.push(r.toId); });
+    }
+    return false;
+  }
+  var missing = [], seenPair = {};
+  for (var i = 0; i < ids.length; i++) {
+    for (var j = 0; j < ids.length; j++) {
+      if (i === j) continue;
+      var a = ids[i], b = ids[j];
+      if (fam(a) === fam(b)) continue;
+      var key = [a, b].sort().join('|');
+      if (seenPair[key]) continue; seenPair[key] = 1;
+      if (!reachable(a, b) && !reachable(b, a)) {
+        missing.push({ a: a, b: b, aFamily: fam(a), bFamily: fam(b) });
+      }
+    }
+  }
+  return { valid: missing.length === 0, checked: ids.length, missing: missing };
+}
+
+module.exports = {
+  validateComposite: validateComposite,
+  validateBatchComposite: validateBatchComposite,
+  validateCrossFamilyPrerequisite: validateCrossFamilyPrerequisite
+};
+};
+__defs["shared/validator/question-validator.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Schema = require("shared/schemas/semantic-question.schema.js");
+var ERROR_CODES = Schema.ERROR_CODES;
+var SEVERITY = Schema.SEVERITY;
+
+function createError(code, field, message, severity, detail) {
+  return { code: code, field: field, message: message, severity: severity || SEVERITY.ERROR, detail: detail };
+}
+
+
+function validateSchemaOnly(sq) {
+  return require("shared/semantic/semantic-question.js").validateSchema(sq);
+}
+
+
+function noopValidator(sq, context) {
+  return { valid: true, errors: [], warnings: [], info: [], score: 1, checks: {} };
+}
+
+
+function combineResults(results) {
+  var allErrors = [];
+  var allWarnings = [];
+  var allInfo = [];
+  var scores = [];
+  var checks = {};
+
+  results.forEach(function (r) {
+    if (r.errors) allErrors.push.apply(allErrors, r.errors);
+    if (r.warnings) allWarnings.push.apply(allWarnings, r.warnings);
+    if (r.info) allInfo.push.apply(allInfo, r.info);
+    if (typeof r.score === 'number') scores.push(r.score);
+    if (r.checks) Object.assign(checks, r.checks);
+  });
+
+  var valid = allErrors.length === 0;
+  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
+
+  return { valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks };
+}
+
+
+function validate(question, context) {
+  context = context || {};
+
+  
+  var schemaResult = validateSchemaOnly(question);
+  if (!schemaResult.valid) {
+    return combineResults([schemaResult]);
+  }
+
+  
+  
+  return combineResults([schemaResult]);
+}
+
+
+function validateBatch(questions, context) {
+  if (!Array.isArray(questions)) return [];
+  return questions.map(function (q) { return validate(q, context); });
+}
+
+
+function isRetryableError(code) {
+  var retryable = [
+    ERROR_CODES.ANSWER_MISMATCH,
+    ERROR_CODES.DUPLICATE_QUESTION,
+    ERROR_CODES.DIFFICULTY_MISMATCH,
+    ERROR_CODES.GRAPHIC_INVALID,
+    ERROR_CODES.DISTRACTOR_DUPLICATE,
+    ERROR_CODES.DISTRACTOR_EQUALS_ANSWER,
+    ERROR_CODES.DISTRACTOR_OUT_OF_DOMAIN,
+    ERROR_CODES.STRUCTURE_INVALID,
+    ERROR_CODES.STEPS_EXCEED,
+    ERROR_CODES.OPERATIONS_VIOLATION
+  ];
+  return retryable.indexOf(code) !== -1;
+}
+
+
+function isFatalError(code) {
+  var fatal = [
+    ERROR_CODES.SCHEMA_INVALID,
+    ERROR_CODES.REQUIRED_FIELD_MISSING,
+    ERROR_CODES.KP_MISSING,
+    ERROR_CODES.KP_MISMATCH,
+    ERROR_CODES.GENERATOR_NOT_FOUND
+  ];
+  return fatal.indexOf(code) !== -1;
+}
+
+module.exports = {
+  validate: validate,
+  validateBatch: validateBatch,
+  validateSchemaOnly: validateSchemaOnly,
+  combineResults: combineResults,
+  createError: createError,
+  isRetryableError: isRetryableError,
+  isFatalError: isFatalError,
+  ERROR_CODES: ERROR_CODES,
+  SEVERITY: SEVERITY
+};
+};
+__defs["shared/schemas/semantic-question.schema.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var VERSION = 1;
+
+  
+  var QuestionTypeRegistry = (typeof require === 'function')
+    ? (function () { try { return require("shared/knowledge/question-type-registry.js"); } catch (e) { return null; } })()
+    : (global.QuestionTypeRegistry || null);
+
+  
+  var QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
+    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
+    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+
+  
+  var DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  
+  var COGNITIVE_LEVELS = ['了解', '认识', '理解', '掌握', '运用'];
+
+  
+  var ANSWER_MODES = ['input', 'choice', 'multi', 'none', 'read-aloud'];
+
+  
+  
+  
+  var RESPONSE_LAYOUTS = ['inline-after-equals', 'block'];
+
+  
+  
+  
+  var GRAPHIC_TYPES = [
+    'geometry',   
+    'chart',      
+    'diagram',    
+    'currency',   
+    'custom'      
+  ];
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  var GRAPHIC_SUBTYPES = {
+    geometry: ['triangle', 'rectangle', 'circle', 'angle', 'position-grid',
+      'square', 'cube', 'cuboid', 'star', 'view-cards', 'segment'],
+    chart: ['bar', 'line', 'pie', 'scatter'],
+    diagram: ['brace', 'segment', 'balance', 'scale', 'pattern', 'groups', 'ratio'],
+    currency: ['rmb'],
+    custom: []
+  };
+
+  
+  var DISTRACTOR_ERROR_TYPES = [
+    '口诀混淆',
+    '计算错误',
+    '进位错误',
+    '退位错误',
+    '概念混淆',
+    '单位混淆',
+    '顺序错误',
+    '符号错误',
+    '估算偏差',
+    '逻辑跳跃'
+  ];
+
+  
+  var ERROR_CODES = {
+    
+    SCHEMA_INVALID: 'SCHEMA_INVALID',
+    REQUIRED_FIELD_MISSING: 'REQUIRED_FIELD_MISSING',
+    FIELD_TYPE_MISMATCH: 'FIELD_TYPE_MISMATCH',
+    ENUM_VALUE_INVALID: 'ENUM_VALUE_INVALID',
+
+    
+    KP_MISSING: 'KP_MISSING',
+    KP_MISMATCH: 'KP_MISMATCH',
+    KP_OPERATION_INVALID: 'KP_OPERATION_INVALID',
+    KP_FORMAT_INVALID: 'KP_FORMAT_INVALID',
+    KP_COGNITIVE_INVALID: 'KP_COGNITIVE_INVALID',
+    KP_CONTEXT_INVALID: 'KP_CONTEXT_INVALID',
+    KP_GRAPHIC_INVALID: 'KP_GRAPHIC_INVALID',
+
+    
+    ANSWER_INVALID: 'ANSWER_INVALID',
+    ANSWER_MISMATCH: 'ANSWER_MISMATCH',
+    ANSWER_TYPE_MISMATCH: 'ANSWER_TYPE_MISMATCH',
+    ANSWER_OUT_OF_DOMAIN: 'ANSWER_OUT_OF_DOMAIN',
+
+    
+    DISTRACTOR_COUNT_INVALID: 'DISTRACTOR_COUNT_INVALID',
+    DISTRACTOR_DUPLICATE: 'DISTRACTOR_DUPLICATE',
+    DISTRACTOR_EQUALS_ANSWER: 'DISTRACTOR_EQUALS_ANSWER',
+    DISTRACTOR_TYPE_MISMATCH: 'DISTRACTOR_TYPE_MISMATCH',
+    DISTRACTOR_OUT_OF_DOMAIN: 'DISTRACTOR_OUT_OF_DOMAIN',
+    DISTRACTOR_ERROR_TYPE_INVALID: 'DISTRACTOR_ERROR_TYPE_INVALID',
+
+    
+    STRUCTURE_INVALID: 'STRUCTURE_INVALID',
+    STEPS_EXCEED: 'STEPS_EXCEED',
+    BRACKETS_VIOLATION: 'BRACKETS_VIOLATION',
+    OPERATIONS_VIOLATION: 'OPERATIONS_VIOLATION',
+    OPERAND_COUNT_INVALID: 'OPERAND_COUNT_INVALID',
+    OPERAND_RANGE_INVALID: 'OPERAND_RANGE_INVALID',
+
+    
+    DIFFICULTY_MISMATCH: 'DIFFICULTY_MISMATCH',
+    DIFFICULTY_OUT_OF_RANGE: 'DIFFICULTY_OUT_OF_RANGE',
+
+    
+    DUPLICATE_QUESTION: 'DUPLICATE_QUESTION',
+
+    
+    KP_COVERAGE_INSUFFICIENT: 'KP_COVERAGE_INSUFFICIENT',
+    KP_COVERAGE_MISSING: 'KP_COVERAGE_MISSING',
+
+    
+    COMPOSITE_INVALID: 'COMPOSITE_INVALID',
+    COMPOSITE_STRUCTURE_MISMATCH: 'COMPOSITE_STRUCTURE_MISMATCH',
+    COMPOSITE_OPERATOR_MISMATCH: 'COMPOSITE_OPERATOR_MISMATCH',
+    COMPOSITE_STEPS_MISMATCH: 'COMPOSITE_STEPS_MISMATCH',
+    
+    COMPOSITE_UNSUPPORTED: 'COMPOSITE_UNSUPPORTED',
+
+    
+    DIFFICULTY_INTEGRITY_VIOLATION: 'DIFFICULTY_INTEGRITY_VIOLATION',
+    DIFFICULTY_CONSTRAINT_MISMATCH: 'DIFFICULTY_CONSTRAINT_MISMATCH',
+    DIFFICULTY_STRUCTURE_DRIFT: 'DIFFICULTY_STRUCTURE_DRIFT',
+
+    
+    DUPLICATE_INTEGRITY_VIOLATION: 'DUPLICATE_INTEGRITY_VIOLATION',
+    DUPLICATE_FINGERPRINT_MISMATCH: 'DUPLICATE_FINGERPRINT_MISMATCH',
+
+    
+    GRAPHIC_INVALID: 'GRAPHIC_INVALID',
+    GRAPHIC_TYPE_UNREGISTERED: 'GRAPHIC_TYPE_UNREGISTERED',
+    GRAPHIC_PARAMS_INCOMPLETE: 'GRAPHIC_PARAMS_INCOMPLETE',
+    GRAPHIC_RENDERER_MISSING: 'GRAPHIC_RENDERER_MISSING',
+
+    
+    RENDER_PREFLIGHT_FAILED: 'RENDER_PREFLIGHT_FAILED',
+    HTML_GENERATION_FAILED: 'HTML_GENERATION_FAILED',
+    SVG_GENERATION_FAILED: 'SVG_GENERATION_FAILED',
+    PRINT_GENERATION_FAILED: 'PRINT_GENERATION_FAILED',
+
+    
+    KP_SEMANTIC_IDENTITY: 'KP_SEMANTIC_IDENTITY',
+    KP_SEMANTIC_QUESTION_TYPE: 'KP_SEMANTIC_QUESTION_TYPE',
+    KP_SEMANTIC_OPERATION: 'KP_SEMANTIC_OPERATION',
+    KP_SEMANTIC_NUMERIC: 'KP_SEMANTIC_NUMERIC',
+    KP_SEMANTIC_STRUCTURE: 'KP_SEMANTIC_STRUCTURE',
+    KP_SEMANTIC_CONTENT: 'KP_SEMANTIC_CONTENT',
+    KP_SEMANTIC_COMPOSITE: 'KP_SEMANTIC_COMPOSITE',
+
+    
+    KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE',
+
+    
+    KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT',
+
+    
+    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT',
+
+    
+    KP_SEMANTIC_INTENT_ALIGNMENT: 'KP_SEMANTIC_INTENT_ALIGNMENT'
+  };
+
+  
+  var SEVERITY = {
+    ERROR: 'ERROR',     
+    WARNING: 'WARNING', 
+    INFO: 'INFO'        
+  };
+
+  
+  function defaultMetadata() {
+    return {
+      generator: null,           
+      generatorVersion: null,    
+      seed: null,                
+      timestamp: null,           
+      retryCount: 0,             
+      validationScore: null,     
+      tags: []                   
+    };
+  }
+
+  function defaultGraphic() {
+    return {
+      type: null,
+      subtype: null,
+      params: {},
+      renderHints: {}
+    };
+  }
+
+  function defaultContent() {
+    return {
+      prompt: '',           
+      stem: null,           
+      language: 'zh-CN',    
+      readingLevel: null    
+    };
+  }
+
+  function defaultQuestion() {
+    return {
+      prompt: '',           
+      hint: null,           
+      answerMode: 'input',  
+      expectedFormat: null  
+    };
+  }
+
+  function defaultAnswer() {
+    return {
+      value: null,          
+      acceptable: [],       
+      unit: null,           
+      precision: null,      
+      explanation: null     
+    };
+  }
+
+  function defaultDistractor() {
+    return {
+      value: null,
+      errorType: null,      
+      weight: 1             
+    };
+  }
+
+  
+  var API = {
+    VERSION: VERSION,
+    QUESTION_TYPES: QUESTION_TYPES,
+    DIFFICULTY_LEVELS: DIFFICULTY_LEVELS,
+    COGNITIVE_LEVELS: COGNITIVE_LEVELS,
+    ANSWER_MODES: ANSWER_MODES,
+    RESPONSE_LAYOUTS: RESPONSE_LAYOUTS,
+    GRAPHIC_TYPES: GRAPHIC_TYPES,
+    GRAPHIC_SUBTYPES: GRAPHIC_SUBTYPES,
+    DISTRACTOR_ERROR_TYPES: DISTRACTOR_ERROR_TYPES,
+    ERROR_CODES: ERROR_CODES,
+    SEVERITY: SEVERITY,
+    defaultMetadata: defaultMetadata,
+    defaultGraphic: defaultGraphic,
+    defaultContent: defaultContent,
+    defaultQuestion: defaultQuestion,
+    defaultAnswer: defaultAnswer,
+    defaultDistractor: defaultDistractor,
+
+    
+    isValidQuestionType: function (t) {
+      if (QUESTION_TYPES.indexOf(t) !== -1) return true;
+      if (QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
+        var n = QuestionTypeRegistry.normalizeQuestionType(t);
+        
+        if (n && n.confidence !== 'heuristic' && n.id && QUESTION_TYPES.indexOf(n.id) !== -1) return true;
+      }
+      return false;
+    },
+    isValidDifficulty: function (d) { return DIFFICULTY_LEVELS.indexOf(d) !== -1; },
+    isValidCognitiveLevel: function (c) { return COGNITIVE_LEVELS.indexOf(c) !== -1; },
+    isValidAnswerMode: function (m) { return ANSWER_MODES.indexOf(m) !== -1; },
+    isValidResponseLayout: function (l) { return RESPONSE_LAYOUTS.indexOf(l) !== -1; },
+    isValidGraphicType: function (t) { return GRAPHIC_TYPES.indexOf(t) !== -1; },
+    isValidGraphicSubtype: function (type, subtype) {
+      var list = GRAPHIC_SUBTYPES[type];
+      return list && list.indexOf(subtype) !== -1;
+    },
+    isValidDistractorErrorType: function (e) { return DISTRACTOR_ERROR_TYPES.indexOf(e) !== -1; },
+    isValidSeverity: function (s) { return SEVERITY[s] != null; }
+  };
+
+  
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = API;
+  } else if (global) {
+    global.SemanticQuestionSchema = API;
+  }
+})(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+};
+__defs["shared/semantic/semantic-question.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Schema = require("shared/schemas/semantic-question.schema.js");
+var QTR = require("shared/knowledge/question-type-registry.js");
+var QID = require("shared/knowledge/question-id.js");
+
+var UUID_COUNTER = 0;
+
+function uuid() {
+  UUID_COUNTER++;
+  return 'sq_' + Date.now().toString(36) + '_' + UUID_COUNTER.toString(36);
+}
+
+function nowISO() {
+  return new Date().toISOString();
+}
+
+function deepClone(obj) {
+  if (obj == null) return obj;
+  if (Array.isArray(obj)) return obj.map(deepClone);
+  if (typeof obj === 'object') {
+    var out = {};
+    Object.keys(obj).forEach(function (k) { out[k] = deepClone(obj[k]); });
+    return out;
+  }
+  return obj;
+}
+
+function coerceNumber(v) {
+  if (v == null) return null;
+  var n = Number(v);
+  return isNaN(n) ? null : n;
+}
+
+function coerceInteger(v) {
+  var n = coerceNumber(v);
+  return n == null ? null : Math.floor(n);
+}
+
+function coerceString(v) {
+  if (v == null) return '';
+  return String(v);
+}
+
+function ensureArray(v) {
+  if (v == null) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+
+var VALID_QUESTION_TYPES = null;
+function isValidQuestionType(t) {
+  if (!t) return false;
+  if (VALID_QUESTION_TYPES == null) {
+    var set = Schema.QUESTION_TYPES.slice();
+    (QTR.TYPES || []).forEach(function (tt) { if (set.indexOf(tt.id) === -1) set.push(tt.id); });
+    if (set.indexOf('read-aloud') === -1) set.push('read-aloud');
+    VALID_QUESTION_TYPES = set;
+  }
+  return VALID_QUESTION_TYPES.indexOf(t) !== -1;
+}
+
+
+function createSemanticQuestion(raw) {
+  raw = raw || {};
+
+  
+  var questionId = raw.id || QID.generateQuestionId(raw.seed || QID.generateBaseSeed(), {
+    generatorId: raw.generator || raw.metadata && raw.metadata.generator,
+    index: raw.index,
+    knowledgePointId: raw.knowledgePoint || raw.knowledgePointId,
+    difficulty: raw.difficulty,
+    questionType: raw.questionType
+  });
+
+  
+  var metadata = raw.metadata || {};
+  if (!metadata.generator && raw.generator) metadata.generator = raw.generator;
+  if (!metadata.generatorVersion && raw.generatorVersion) metadata.generatorVersion = raw.generatorVersion;
+  if (!metadata.seed && raw.seed) metadata.seed = raw.seed;
+  metadata = QID.createMetadata({
+    generatorId: metadata.generator,
+    generatorVersion: metadata.generatorVersion,
+    seed: metadata.seed,
+    planId: metadata.planId,
+    timestamp: metadata.timestamp,
+    retryCount: metadata.retryCount,
+    tags: metadata.tags
+  });
+
+  var sq = {
+    
+    id: questionId,
+    version: raw.version || Schema.VERSION,
+
+    
+    knowledgePoint: coerceString(raw.knowledgePoint || raw.knowledgePointId),
+    knowledgePointId: coerceString(raw.knowledgePointId || raw.knowledgePoint),
+    skill: coerceString(raw.skill || ''),
+
+    
+    
+    difficulty: coerceInteger(raw.difficulty),
+    difficultyParams: deepClone(raw.difficultyParams) || {},
+    numberRange: deepClone(raw.numberRange) || { min: 1, max: 1 },
+    spiralLevel: coerceInteger(raw.spiralLevel) || 1,
+    context: coerceString(raw.context),
+    seed: raw.seed || null,
+    cognitiveLevel: coerceString(raw.cognitiveLevel || ''),
+
+    
+    content: deepClone(raw.content) || Schema.defaultContent(),
+
+    
+    question: deepClone(raw.question) || Schema.defaultQuestion(),
+
+    
+    answer: deepClone(raw.answer) || Schema.defaultAnswer(),
+
+    
+    distractors: ensureArray(raw.distractors).map(function (d) {
+      return deepClone(d) || Schema.defaultDistractor();
+    }),
+
+    
+    
+    
+    
+    
+    graphic: deepClone(raw.graphic) || null,
+
+    
+    constraints: deepClone(raw.constraints) || {},
+
+    
+    metadata: metadata
+  };
+
+  
+  if (raw.render != null) sq.render = raw.render;
+  if (raw.check != null) sq.check = raw.check;
+  if (raw.svg != null) sq.svg = raw.svg;
+  if (raw.options != null) sq.options = raw.options;
+
+  
+  if (raw.data != null) sq.data = deepClone(raw.data);
+  if (raw.hint != null) sq.hint = raw.hint;
+
+  
+  
+  if (raw.response != null) sq.response = deepClone(raw.response);
+
+  
+  if (sq.data && !Array.isArray(sq.data.options) && Array.isArray(sq.options) && sq.options.length) {
+    sq.data.options = sq.options.slice();
+  }
+  if (sq.data && Array.isArray(sq.data.options) && sq.answer && sq.answer.value != null && sq.data.correctIndex == null) {
+    var ci = sq.data.options.indexOf(coerceString(sq.answer.value));
+    if (ci !== -1) sq.data.correctIndex = ci;
+  }
+
+  
+  sq.prompt = sq.content && sq.content.prompt ? sq.content.prompt : (sq.question && sq.question.prompt ? sq.question.prompt : '');
+  sq.questionType = raw.questionType || raw.type || null;
+  sq.answerMode = (sq.question && sq.question.answerMode) || raw.answerMode || 'input';
+
+  
+  sq.questionFingerprint = computeFingerprint(sq);
+
+  return sq;
+}
+
+
+function computeFingerprint(sq) {
+  try {
+    var Dup = require("shared/validator/duplicate-validator.js");
+    if (Dup && typeof Dup.buildQuestionFingerprint === 'function') return Dup.buildQuestionFingerprint(sq);
+  } catch (e) {  }
+  return null;
+}
+
+
+function normalizeSemanticQuestion(raw) {
+  if (!raw || typeof raw !== 'object') {
+    return createSemanticQuestion({});
+  }
+
+  
+  if (raw.id && raw.version && raw.metadata && raw.metadata.generator) {
+    return raw;
+  }
+
+  
+  var mapped = {
+    id: raw.id || raw.questionId,
+    version: raw.version || Schema.VERSION,
+    knowledgePoint: raw.knowledgePointId || raw.knowledgePoint || raw.kpId,
+    skill: raw.skill || raw.ability || '',
+    questionType: raw.questionType || raw.type,
+    difficulty: coerceInteger(raw.difficulty || raw.difficultyLevel),
+    numberRange: raw.numberRange,
+    cognitiveLevel: raw.cognitiveLevel || raw.cognitive || '',
+    content: raw.content || { prompt: coerceString(raw.prompt || raw.stem || raw.q || raw.question) },
+    question: raw.question || (function () {
+      var q = { prompt: coerceString(raw.prompt || raw.stem || raw.q || raw.question) };
+      if (raw.answerMode) q.answerMode = raw.answerMode;
+      return q;
+    })(),
+    answerMode: raw.answerMode,
+    
+    
+    context: raw.context,
+    
+    
+    
+    spiralLevel: raw.spiralLevel,
+    
+    
+    answer: (function () {
+      var rawHasAnswer = (typeof raw !== 'undefined' && raw !== null) &&
+        Object.prototype.hasOwnProperty.call(raw, 'answer') && raw.answer != null;
+      if (rawHasAnswer) {
+        return typeof raw.answer === 'object' ? raw.answer : { value: raw.answer };
+      }
+      return { value: raw.answerValue != null ? raw.answerValue : (raw.correctAnswer != null ? raw.correctAnswer : undefined) };
+    })(),
+    distractors: ensureArray(raw.distractors || raw.options || raw.choices).map(function (d) {
+      if (typeof d === 'object') return d;
+      return { value: d };
+    }),
+    
+    
+    options: (function () {
+      var o = raw.options || raw.choices;
+      if (!Array.isArray(o)) return undefined;
+      return o.slice();
+    })(),
+    data: (function () {
+      var opts = raw.options || raw.choices;
+      if (!Array.isArray(opts) && !raw.data) return undefined;
+      var base = (raw.data && typeof raw.data === 'object') ? raw.data : {};
+      var out = {};
+      Object.keys(base).forEach(function (k) { out[k] = base[k]; });
+      if (Array.isArray(opts)) {
+        out.options = opts.slice();
+        if (out.correctIndex == null && typeof raw.answer !== 'object' && raw.answer != null) {
+          out.correctIndex = opts.indexOf(coerceString(raw.answer));
+        }
+      } else if (out.options == null && Array.isArray(out.distractors)) {
+        out.options = out.distractors;
+      }
+      return out;
+    })(),
+    
+    
+    
+    
+    graphic: (raw.graphic && typeof raw.graphic === 'object')
+      ? deepClone(raw.graphic)
+      : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
+    constraints: deepClone(raw.constraints) || {},
+    response: deepClone(raw.response),  
+    metadata: raw.metadata || {
+      generator: raw.generator || raw.pluginId || raw.source,
+      generatorVersion: raw.generatorVersion || raw.version,
+      seed: raw.seed || raw.randomSeed,
+      timestamp: raw.timestamp || nowISO()
+    }
+  };
+
+  
+  if (!mapped.content.prompt) {
+    mapped.content.prompt = coerceString(mapped.question.prompt || mapped.question.stem || mapped.question.q);
+  }
+
+  return createSemanticQuestion(mapped);
+}
+
+
+function validateSchema(sq) {
+  var errors = [];
+  var warnings = [];
+  var info = [];
+
+  if (!sq || typeof sq !== 'object') {
+    errors.push({ code: Schema.ERROR_CODES.SCHEMA_INVALID, field: 'root', message: '题目对象为空或非对象', severity: Schema.SEVERITY.ERROR });
+    return { valid: false, errors: errors, warnings: warnings, info: info };
+  }
+
+  
+  if (typeof sq.render === 'function' || typeof sq.check === 'function') {
+    errors.push({ code: Schema.ERROR_CODES.SCHEMA_INVALID, field: 'root', message: 'SemanticQuestion 禁止携带 render/check 执行字段（禁止字段）', severity: Schema.SEVERITY.ERROR });
+  }
+
+  
+  
+  sq = normalizeSemanticQuestion(sq);
+
+  
+  if (!sq.id) {
+    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'id', message: '缺少题目 ID', severity: Schema.SEVERITY.ERROR });
+  }
+  if (typeof sq.version !== 'number' && typeof sq.version !== 'string') {
+    warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'version', message: 'version 应为数字或字符串', severity: Schema.SEVERITY.WARNING });
+  }
+
+  
+  if (!sq.knowledgePoint) {
+    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'knowledgePoint', message: '缺少 knowledgePoint 绑定', severity: Schema.SEVERITY.ERROR });
+  }
+
+  
+  if (sq.difficulty != null) {
+    var diff = coerceInteger(sq.difficulty);
+    if (diff === null || Schema.DIFFICULTY_LEVELS.indexOf(diff) === -1) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'difficulty', message: 'difficulty 超出已知范围 (1-10)', severity: Schema.SEVERITY.WARNING });
+    }
+  }
+
+  
+  if (!sq.questionType) {
+    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'questionType', message: '缺少 questionType', severity: Schema.SEVERITY.ERROR });
+  } else if (!isValidQuestionType(sq.questionType)) {
+    errors.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'questionType', message: '未知 questionType: ' + sq.questionType, severity: Schema.SEVERITY.ERROR });
+  }
+
+  
+  if (sq.numberRange) {
+    if (typeof sq.numberRange !== 'object') {
+      errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'numberRange', message: 'numberRange 必须为对象 { min, max }', severity: Schema.SEVERITY.ERROR });
+    } else if (sq.numberRange.min != null && sq.numberRange.max != null &&
+               sq.numberRange.min > sq.numberRange.max) {
+      errors.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'numberRange', message: 'numberRange.min 不得大于 max', severity: Schema.SEVERITY.ERROR });
+    }
+  }
+
+  
+  if (sq.content && typeof sq.content !== 'object') {
+    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'content', message: 'content 必须为对象', severity: Schema.SEVERITY.ERROR });
+  }
+  if (sq.content && sq.content.prompt != null && typeof sq.content.prompt !== 'string') {
+    warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'content.prompt', message: 'prompt 应为字符串', severity: Schema.SEVERITY.WARNING });
+  }
+  var promptVal = (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || sq.prompt;
+  if (!promptVal) {
+    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'prompt', message: '缺少 prompt（题干）', severity: Schema.SEVERITY.ERROR });
+  }
+
+  
+  if (sq.question && typeof sq.question !== 'object') {
+    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'question', message: 'question 必须为对象', severity: Schema.SEVERITY.ERROR });
+  }
+  if (sq.question && sq.question.answerMode && !Schema.isValidAnswerMode(sq.question.answerMode)) {
+    warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'question.answerMode', message: '未知 answerMode: ' + sq.question.answerMode, severity: Schema.SEVERITY.WARNING });
+  }
+
+  
+  
+  if (sq.response != null) {
+    if (typeof sq.response !== 'object') {
+      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'response', message: 'response 必须为对象', severity: Schema.SEVERITY.WARNING });
+    } else if (sq.response.layout != null && !Schema.isValidResponseLayout(sq.response.layout)) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'response.layout', message: '未知 response.layout: ' + sq.response.layout, severity: Schema.SEVERITY.WARNING });
+    }
+  }
+
+  
+  var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
+  if (!sq.answer || typeof sq.answer !== 'object') {
+    
+    if (answerMode !== 'read-aloud') {
+      errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'answer', message: '缺少 answer 对象', severity: Schema.SEVERITY.ERROR });
+    }
+  } else {
+    
+    if (answerMode !== 'read-aloud' && sq.answer.value == null && (!sq.answer.acceptable || sq.answer.acceptable.length === 0)) {
+      errors.push({ code: Schema.ERROR_CODES.ANSWER_INVALID, field: 'answer.value', message: '答案值缺失且无可接受替代答案', severity: Schema.SEVERITY.ERROR });
+    }
+    if (sq.answer.precision != null && (typeof sq.answer.precision !== 'number' || sq.answer.precision < 0)) {
+      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'answer.precision', message: 'precision 应为非负数', severity: Schema.SEVERITY.WARNING });
+    }
+  }
+
+  
+  if (sq.distractors && !Array.isArray(sq.distractors)) {
+    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'distractors', message: 'distractors 必须为数组', severity: Schema.SEVERITY.ERROR });
+  }
+  if (Array.isArray(sq.distractors)) {
+    sq.distractors.forEach(function (d, i) {
+      if (!d || typeof d !== 'object') {
+        warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'distractors[' + i + ']', message: '干扰项应为对象', severity: Schema.SEVERITY.WARNING });
+        return;
+      }
+      if (d.errorType && !Schema.isValidDistractorErrorType(d.errorType)) {
+        warnings.push({ code: Schema.ERROR_CODES.DISTRACTOR_ERROR_TYPE_INVALID, field: 'distractors[' + i + '].errorType', message: '未知错误类型: ' + d.errorType, severity: Schema.SEVERITY.WARNING });
+      }
+    });
+  }
+
+  
+  if (sq.graphic && typeof sq.graphic !== 'object') {
+    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'graphic', message: 'graphic 必须为对象', severity: Schema.SEVERITY.ERROR });
+  }
+  if (sq.graphic) {
+    if (sq.graphic.type && !Schema.isValidGraphicType(sq.graphic.type)) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'graphic.type', message: '未知 graphic type: ' + sq.graphic.type, severity: Schema.SEVERITY.WARNING });
+    }
+    if (sq.graphic.type && sq.graphic.subtype && !Schema.isValidGraphicSubtype(sq.graphic.type, sq.graphic.subtype)) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'graphic.subtype', message: 'type ' + sq.graphic.type + ' 下未知 subtype: ' + sq.graphic.subtype, severity: Schema.SEVERITY.WARNING });
+    }
+    
+    if (sq.graphic.rawSvg || sq.graphic.svg || sq.graphic.html) {
+      errors.push({ code: Schema.ERROR_CODES.GRAPHIC_INVALID, field: 'graphic', message: 'graphic 不得包含原始 SVG/HTML 字符串（请使用描述性 params）', severity: Schema.SEVERITY.ERROR });
+    }
+  }
+
+  
+  if (!sq.metadata || typeof sq.metadata !== 'object') {
+    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata', message: '缺少 metadata', severity: Schema.SEVERITY.ERROR });
+  } else {
+    if (!sq.metadata.generator) {
+      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.generator', message: '缺少 generator 来源标识', severity: Schema.SEVERITY.WARNING });
+    }
+    if (!sq.metadata.generatorVersion) {
+      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.generatorVersion', message: '缺少 generatorVersion', severity: Schema.SEVERITY.WARNING });
+    }
+    if (!sq.metadata.seed) {
+      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.seed', message: '缺少 seed（不可复现）', severity: Schema.SEVERITY.WARNING });
+    }
+  }
+
+  var valid = errors.length === 0;
+  return { valid: valid, errors: errors, warnings: warnings, info: info };
+}
+
+
+function isValidSemanticQuestion(sq) {
+  return validateSchema(sq).valid;
+}
+
+
+function normalizeQuestions(raws) {
+  if (!Array.isArray(raws)) return [];
+  return raws.map(normalizeSemanticQuestion);
+}
+
+
+function validateQuestions(sqs) {
+  if (!Array.isArray(sqs)) return [];
+  return sqs.map(validateSchema);
+}
+
+module.exports = {
+  createSemanticQuestion: createSemanticQuestion,
+  normalizeSemanticQuestion: normalizeSemanticQuestion,
+  validateSchema: validateSchema,
+  isValidSemanticQuestion: isValidSemanticQuestion,
+  normalizeQuestions: normalizeQuestions,
+  validateQuestions: validateQuestions,
+  Schema: Schema
+};
+};
+__defs["shared/knowledge/question-id.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+
+var ID_PREFIX = 'q';
+var SEED_DELIMITER = '|';
+var SEED_PART_DELIMITER = ':';
+var SEED_COUNTER = 0;
+
+
+function generateQuestionId(seed, context) {
+  var rng = Rng.createSeededRandom(seed);
+  var parts = [ID_PREFIX];
+
+  
+  var ctxStr = '';
+  if (context) {
+    ctxStr = (context.generatorId || '') + SEED_DELIMITER +
+             (context.index != null ? context.index : '') + SEED_DELIMITER +
+             (context.knowledgePointId || '') + SEED_DELIMITER +
+             (context.difficulty != null ? context.difficulty : '') + SEED_DELIMITER +
+             (context.questionType || '');
+  }
+  var hash = Rng.hashSeed(String(seed) + ctxStr);
+  parts.push(hash.toString(36));
+
+  
+  
+
+  return parts.join('_');
+}
+
+
+function deriveSeed(baseSeed, generatorId, index) {
+  var cleanBase = String(baseSeed || 'auto').replace(/\|/g, '-');
+  var cleanGen = String(generatorId).replace(/\|/g, '-');
+  return [cleanBase, cleanGen, index].join(SEED_DELIMITER);
+}
+
+
+function generateSeedsForPlan(plan) {
+  var base = plan.seed || 'plan-' + Date.now();
+  var genId = plan.generatorId || 'unknown';
+  var count = plan.count || 1;
+  var seeds = [];
+  for (var i = 0; i < count; i++) {
+    seeds.push(deriveSeed(base, genId, i));
+  }
+  return seeds;
+}
+
+
+function parseSeed(seedStr) {
+  if (!seedStr) return { base: null, generatorId: null, index: null, raw: null };
+  var parts = seedStr.split(SEED_DELIMITER);
+  if (parts.length >= 3) {
+    return {
+      base: parts[0],
+      generatorId: parts[1],
+      index: parseInt(parts[2], 10),
+      raw: seedStr
+    };
+  }
+  return { base: seedStr, generatorId: null, index: null, raw: seedStr };
+}
+
+
+function generateBaseSeed(seed) {
+  if (seed != null) return String(seed);
+  
+  SEED_COUNTER = (SEED_COUNTER || 0) + 1;
+  return 'auto-' + Date.now().toString(36) + '-' + SEED_COUNTER.toString(36);
+}
+
+
+function normalizeVersion(v) {
+  if (typeof v === 'string' && /^\d+\.\d+\.\d+/.test(v)) return v;
+  var n = parseInt(v, 10);
+  if (!isNaN(n)) return n + '.0.0';
+  return '1.0.0';
+}
+
+
+function createMetadata(opts) {
+  opts = opts || {};
+  return {
+    generator: opts.generatorId || null,
+    generatorVersion: normalizeVersion(opts.generatorVersion),
+    seed: opts.seed || null,
+    planId: opts.planId || null,
+    timestamp: opts.timestamp || new Date().toISOString(),
+    retryCount: opts.retryCount || 0,
+    validationScore: null,
+    tags: opts.tags || []
+  };
+}
+
+module.exports = {
+  generateQuestionId: generateQuestionId,
+  deriveSeed: deriveSeed,
+  generateSeedsForPlan: generateSeedsForPlan,
+  parseSeed: parseSeed,
+  generateBaseSeed: generateBaseSeed,
+  normalizeVersion: normalizeVersion,
+  createMetadata: createMetadata,
+  Rng: Rng  
+};
+};
+__defs["shared/validator/duplicate-validator.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Validator = require("shared/validator/question-validator.js");
+var ERROR_CODES = Validator.ERROR_CODES;
+var SEVERITY = Validator.SEVERITY;
+var createError = Validator.createError;
+
+function coerceString(v) { return v == null ? '' : String(v); }
+function sortObj(o) { return JSON.stringify(o, Object.keys(o).sort()); }
+
+
+function toHalfWidth(str) {
+  return String(str == null ? '' : str).replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+}
+
+
+function extractOperands(sq) {
+  var data = sq && sq.data;
+  if (Array.isArray(data && data.operands) && data.operands.length) {
+    return data.operands.map(function (n) { return parseInt(n, 10); }).filter(function (n) { return !isNaN(n); });
+  }
+  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
+  return (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).filter(function (n) { return !isNaN(n); });
+}
+
+
+
+
+var FAMILY_OP_LABELS = { mixed: true, combined: true, combine: true, mix: true, composite: true };
+function extractOperators(sq) {
+  var ops = [];
+  var data = sq && sq.data;
+  var opSeeds = [];
+  if (data && data.operation) opSeeds.push(data.operation);
+  if (Array.isArray(data && data.operators)) opSeeds.push.apply(opSeeds, data.operators);
+  opSeeds.forEach(function (op) {
+    if (typeof op === 'string') {
+      var v = op.toLowerCase();
+      if (!FAMILY_OP_LABELS[v]) ops.push(v);
+    } else if (op && typeof op.symbol === 'string' && !FAMILY_OP_LABELS[String(op.symbol).toLowerCase()]) {
+      ops.push(op.symbol);
+    }
+  });
+  if (ops.length) return ops;
+
+  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
+  return (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
+    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
+    return o === '−' ? '-' : o;
+  });
+}
+
+
+function extractStructureKey(sq) {
+  var parts = [];
+  var data = sq && sq.data;
+  var dp = sq && sq.difficultyParams;
+  parts.push(coerceString(data && data.steps));
+  parts.push(coerceString(data && data.mode));
+  parts.push(coerceString(data && data.operation));
+  if (Array.isArray(data && data.operators)) parts.push(coerceString(data.operators.join(',')));
+  if (dp) {
+    if (dp.steps != null) parts.push('s' + dp.steps);
+    if (dp.allowBracket != null) parts.push('b' + (dp.allowBracket ? 1 : 0));
+  }
+  return parts.join('|');
+}
+
+
+
+
+
+function promptHash(sq) {
+  var p = coerceString(sq.prompt || (sq.content && sq.content.prompt) || '');
+  p = p.replace(/\s+/g, '').replace(/[，。、？！：；,.?!:;（）()'"'""'']/g, '');
+  var h = 5381;
+  for (var i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
+function buildQuestionFingerprint(sq) {
+  var parts = [];
+  parts.push('v2');
+  parts.push(coerceString(sq.knowledgePoint));
+  parts.push(coerceString(sq.questionType || sq.type));
+  var ops = extractOperators(sq).sort();
+  var operands = extractOperands(sq).sort(function (a, b) { return a - b; });
+  parts.push(ops.join(','));
+  parts.push(operands.join(','));
+  parts.push(extractStructureKey(sq));
+  parts.push(coerceString(sq.content && sq.content.context));
+  parts.push(coerceString(sq.content && sq.content.format));
+  
+  
+  
+  
+  
+  var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
+  var qt = sq.questionType || sq.type;
+  var hasOperands = operands.length > 0;
+  if (SEMANTIC_TYPES[qt] || ((qt === 'fill' || qt === 'choice') && !hasOperands)) {
+    parts.push('ph:' + promptHash(sq));
+  }
+  return parts.join('|');
+}
+
+function buildCanonicalKey(sq) {
+  var parts = [];
+  parts.push(coerceString(sq.knowledgePoint));
+  parts.push(coerceString(sq.questionType || sq.type));
+  parts.push(coerceString(sq.question && sq.question.operation));
+
+  
+  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
+  var nums = (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).sort(function (a, b) { return a - b; });
+  parts.push(nums.join(','));
+
+  
+  var ops = (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
+    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
+    return o === '−' ? '-' : o;
+  }).sort().join('');
+  parts.push(ops);
+
+  
+  parts.push(coerceString(sq.content && sq.content.context));
+  parts.push(coerceString(sq.content && sq.content.format));
+
+  return parts.join('|');
+}
+
+
+
+
+function buildMathFingerprint(sq) {
+  var parts = buildQuestionFingerprint(sq).split('|');
+  parts.splice(1, 1); 
+  return parts.join('|');
+}
+
+function validateDuplicate(sq, context) {
+  var errors = [];
+  var warnings = [];
+  var info = [];
+
+  context = context || {};
+  var seenKeys = context.seenKeys || new Set();
+  var mathSeenKeys = context.mathSeenKeys || null; 
+  
+  
+  
+  var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+  if (!sq.questionFingerprint) sq.questionFingerprint = key;
+  var mathKey = buildMathFingerprint(sq);
+  var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
+  var diagKey = buildCanonicalKey(sq);
+
+  var isDup = false;
+  var dupMsg = '';
+  if (seenKeys.has(key)) {
+    isDup = true;
+    dupMsg = '重复题目(含知识点): ' + key;
+  } else if (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp) {
+    isDup = true;
+    dupMsg = '跨知识点同数学重复: ' + mathKey;
+  }
+
+  if (isDup) {
+    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', dupMsg, SEVERITY.ERROR, { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
+  } else {
+    seenKeys.add(key);
+    if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
+    info.push({ code: 'UNIQUE', field: 'questionFingerprint', message: '题目唯一: ' + key, severity: 'INFO', canonicalKey: diagKey });
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors: errors,
+    warnings: warnings,
+    info: info,
+    score: errors.length === 0 ? 1 : 0,
+    checks: { duplicate: errors.length === 0 ? 'pass' : 'fail' },
+    seenKeys: seenKeys 
+  };
+}
+
+function validateBatchDuplicate(questions, context) {
+  context = context || {};
+  var seenKeys = context.seenKeys || new Set();
+  var mathSeenKeys = context.mathSeenKeys || null; 
+  var results = questions.map(function (sq) {
+    var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+    if (!sq.questionFingerprint) sq.questionFingerprint = key;
+    var mathKey = buildMathFingerprint(sq);
+    var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
+    var diagKey = buildCanonicalKey(sq);
+    var errors = [];
+    var warnings = [];
+    var isDup = seenKeys.has(key) || (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp);
+    if (isDup) {
+      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
+    } else {
+      seenKeys.add(key);
+      if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
+    }
+    return { valid: errors.length === 0, errors: errors, warnings: warnings, info: [], score: errors.length === 0 ? 1 : 0, checks: { duplicate: errors.length === 0 ? 'pass' : 'fail' } };
+  });
+  return { results: results, seenKeys: seenKeys };
+}
+
+module.exports = {
+  validateDuplicate: validateDuplicate,
+  validateBatchDuplicate: validateBatchDuplicate,
+  buildCanonicalKey: buildCanonicalKey,
+  buildQuestionFingerprint: buildQuestionFingerprint,
+  buildMathFingerprint: buildMathFingerprint,
+  extractOperands: extractOperands,
+  extractOperators: extractOperators,
+  extractStructureKey: extractStructureKey
+};
 };
 global.StrategyEngine = __req('shared/strategy/strategy-engine.js');
 global.StrategyValidator = __req('shared/strategy/strategy-validator.js');

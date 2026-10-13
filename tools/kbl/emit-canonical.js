@@ -96,6 +96,7 @@ function buildKpEntry(k) {
     type: bucketType(k.domain),
     semantic: {
       family: familyOf(c),
+      conceptFamily: { id: c.familyId || null, stageOrder: c.stageOrder != null ? c.stageOrder : null },
       concept: def,
       operations: ops,
       representations: representations,

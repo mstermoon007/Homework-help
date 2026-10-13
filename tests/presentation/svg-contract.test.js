@@ -227,3 +227,34 @@ test('P35-CLOSE-01 view-cards descriptor → SUCCESS（题设视图方格数与�
   assert.ok(result.svg.indexOf('从前面看') !== -1, '含「从前面看」方向标注');
   assert.ok(result.svg.indexOf('从上面看') !== -1, '含「从上面看」方向标注');
 });
+
+// ===== P40-Q-15（R22 无障碍）：SVG 可访问名 <title> 单点注入 =====
+// 测试自包含：注册最小 fake 生成器（不依赖 svg-calculation 等引擎文件加载顺序）
+SVGRegistry.register('calculation', 'p40frag', function () { return '<rect x="1" y="1" width="2" height="2"/>'; });
+SVGRegistry.register('calculation', 'p40full', function () { return '<svg xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="2" height="2"/></svg>'; });
+
+test('P40-Q-15 render() 注入 <title>，role 优先于 type；renderFor 不注入（单点收口）', function () {
+  const r1 = SVGRegistry.render({ type: 'calculation', subtype: 'p40frag', role: 'calculation-support' });
+  assert.strictEqual(r1.status, 'SUCCESS');
+  const open = r1.svg.match(/^<svg\b[^>]*>/i)[0];
+  assert.ok(r1.svg.slice(open.length).indexOf('<title>计算辅助图</title>') === 0, 'title 紧跟 <svg> 开标签且 role 优先（svgWrap 路径）');
+  const r2 = SVGRegistry.render({ type: 'calculation', subtype: 'p40full' });
+  assert.ok(r2.svg.indexOf('<title>竖式计算图</title>') !== -1, '无 role 时回退 type 标签（full-svg 路径）');
+  const raw = SVGRegistry.renderFor({ type: 'calculation', subtype: 'p40full' });
+  assert.ok(raw.svg.indexOf('<title>') === -1, 'renderFor 原始产物不注入（唯一注入点在 render）');
+  const r3 = SVGRegistry.render({ type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
+    params: { views: [{ direction: 'front', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } });
+  assert.ok(r3.svg.indexOf('<title>数量对应图</title>') !== -1, 'role=quantity-correspondence → 数量对应图（真实引擎路径）');
+});
+
+test('P40-Q-15 <title> 不含数值语义（6g 防泄题口径）', function () {
+  const r = SVGRegistry.render({ type: 'calculation', subtype: 'p40full', role: 'calculation-support' });
+  const title = r.svg.match(/<title>([\s\S]*?)<\/title>/)[1];
+  assert.ok(!/[0-9]/.test(title), 'title 不得含任何数字：' + title);
+});
+
+test('P40-Q-15 title 唯一不叠加；custom 产物注入通用标签', function () {
+  const once = SVGRegistry.render({ type: 'custom', params: { rawSvg: '<circle r="5"/>' } });
+  assert.ok(once.svg.indexOf('<title>题目示意图</title>') !== -1, 'custom → 题目示意图');
+  assert.strictEqual((once.svg.match(/<title>/g) || []).length, 1, 'title 唯一');
+});

@@ -65,8 +65,11 @@ var SHAPE_FEATURES = {
   'cone': { name: '圆锥', features: ['1个圆形底面', '1个顶点', '侧面展开是扇形'], examples: ['路锥', '帽子'] },
   'sphere': { name: '球', features: ['没有棱和面', '滚动最快', '任意剖面是圆'], examples: ['皮球', '地球仪'] },
   'flat': { name: '平面图形', features: ['只有长和宽', '没有厚度', '在平面上'], examples: ['长方形', '正方形', '三角形', '圆'] },
-  'rectangle': { name: '长方形', features: ['4个角都是直角', '对边相等', '对角线相等'], examples: ['课本', '黑板'] },
-  'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '对角线相等且互相垂直平分'], examples: ['手帕', '棋盘格'] },
+  // P40-Q-04（R18/#17）：features 直接作为 judge 命题/choice 正确项出给学生（P34-01 注释同款口径）。
+  // 「对角线」类结论性特征对 G1 直观认识（平面图形认识走通用 makeFeatureQuestion，无 SHAPE_THEME 条目）
+  // 超纲且无诊断性，换为低年级可感知的真特征（边/角计数，与 FALSE_FEATURE_POOL 假计数句真值互斥）。
+  'rectangle': { name: '长方形', features: ['4个角都是直角', '对边相等', '有4条边'], examples: ['课本', '黑板'] },
+  'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '有4个角'], examples: ['手帕', '棋盘格'] },
   'triangle': { name: '三角形', features: ['3条边', '3个角', '内角和180度'], examples: ['三角尺', '屋顶'] },
   'circle': { name: '圆', features: ['没有直线边', '到圆心距离相等', '周长=2πr'], examples: ['硬币', '时钟面'] },
   // P34-01：「对角互补」是初中性质，非平行四边形认识（一年级下直观认识）年级适切特征，
@@ -511,13 +514,22 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   var num = Rng.randInt(rng, 1, den - 2);
   var times = Rng.pick(rng, [2, 3]);
   var numerator = num * times;
-  var mixedWhole = Math.floor(numerator / den);
-  var mixedRemain = numerator % den;
-  var fracStr = numerator + '/' + den;
+  // P40-Q-18（D10 收口）：答案 SSOT 约分化——课标「计算结果能约分的要约分」，
+  // 与 fraction.js simp/「约分得」先例同构，覆盖全部 seed 面（Q-07 挂账⑥仅冻结面
+  // 成立的缺口就此闭合）。rawFrac 保留原始积：judge 份计数主张材料 + 约分句前项；
+  // 图形 params（total/part）仍表达题设原始份计数不动（图文一致）。
+  var rawFrac = numerator + '/' + den;
+  var gg = numerator, gd = den, gt;
+  while (gd) { gt = gg % gd; gg = gd; gd = gt; }
+  var sNum = numerator / gg, sDen = den / gg;
+  var fracStr = sDen === 1 ? String(sNum) : sNum + '/' + sDen;
+  var mixedWhole = Math.floor(sNum / sDen);
+  var mixedRemain = sNum % sDen;
   var answerStr = fracStr;
   var acceptable = [];
-  if (mixedWhole > 0 && mixedRemain > 0) acceptable.push(mixedWhole + '又' + mixedRemain + '/' + den);
+  if (mixedWhole > 0 && mixedRemain > 0) acceptable.push(mixedWhole + '又' + mixedRemain + '/' + sDen);
   if (mixedRemain === 0) answerStr = String(mixedWhole);
+  var simpNote = gg > 1 ? '，约分得 ' + fracStr : '';
   var expr = num + '/' + den + ' × ' + times;
 
   function fracGraphic(unitPx) {
@@ -536,8 +548,9 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     times: times
   };
   var prompt, answerObj, answerMode = 'input';
-  // P34-14：分数乘整数的方法讲解（素材仅取该题 num/den/times/answer）
-  var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + answerStr;
+  // P34-14：分数乘整数的方法讲解（素材仅取该题 num/den/times/answer）；
+  // P40-Q-18：先示原始积再约分（积未最简时追加约分句），答案与解析同源不二次计算
+  var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + rawFrac + simpNote;
 
   if (qt === 'geometry') {
     prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
@@ -549,10 +562,18 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
       + '。同样的涂色部分有 ' + times + ' 条，合起来是 ' + expr + ' = ____。';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'choice') {
-    // 四个互异分数选项（同分母，含正确值），correctIndex 随洗牌定位
+    // 四个互异分数选项（含正确值），correctIndex 随洗牌定位。
+    // P40-Q-18：候选项逐个约分到最简再判重——同值异形（如未约分积 6/4 vs 答案 3/2）
+    // 不得同时在场（R11 双正确项防护）；干扰项与正确项同为最简形态，保持干扰诊断性。
+    var simpFrac = function (x, dd) {
+      var a = x, b = dd, t;
+      while (b) { t = a % b; a = b; b = t; }
+      var n2 = x / a, d2 = dd / a;
+      return d2 === 1 ? String(n2) : n2 + '/' + d2;
+    };
     var pool = [answerStr];
     [num * (times + 1), numerator + 1, numerator - 1, numerator + 2, numerator - 2].forEach(function (x) {
-      var s = x + '/' + den;
+      var s = simpFrac(x, den);
       if (x >= 1 && pool.indexOf(s) === -1 && pool.length < 4) pool.push(s);
     });
     var options = Rng.shuffle(rng, pool);
@@ -572,9 +593,11 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     answerObj = {
       value: isTrue,
       acceptable: [],
+      // P40-Q-18：judge 解析保持原始积形态（rawFrac）——与判断主张 shownNum/den
+      // 同形态直接对照，不随答案约分变化（份计数主张材料的对照可读性）。
       explanation: isTrue
-        ? expr + ' = ' + fracStr + '，分子乘整数、分母不变，说法正确。'
-        : expr + ' = ' + fracStr + '，不是 ' + shownNum + '/' + den + '，说法错误。'
+        ? expr + ' = ' + rawFrac + '，分子乘整数、分母不变，说法正确。'
+        : expr + ' = ' + rawFrac + '，不是 ' + shownNum + '/' + den + '，说法错误。'
     };
     answerMode = 'judge';
   } else { // apply，steps=2
@@ -891,7 +914,7 @@ function shapeTheme(facts, wrongs, nums, scenes, opts) {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; }),
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null }; }),
     judgeGraphic: (opts && opts.judgeGraphic) || null,
     applyGraphic: (opts && opts.applyGraphic) || null
   };
@@ -1178,10 +1201,28 @@ var SHAPE_THEME = {
     [['对应点可以随便描，只要在对称轴另一侧就行', '对应点到对称轴的格数必须和原来的点相等。'],
      ['补全时先连线再找点', '正确顺序是找点→数格→描点→连线。'],
      ['对应点在对称轴的同一侧', '对应点必须在对称轴的另一侧，且距离相等。']],
-    [['一个点到对称轴的距离是 3 格，它的对应点到对称轴的距离是____格', '3', 3], ['关键点距对称轴 2 格，对应点应描在对称轴另一侧第____格', '2', 2], ['一个点到对称轴 5 格，它的对应点距对称轴____格', '5', 5]],
-    [['先在方格纸上数出对称轴左边半图有几个顶点，再补全右边的另一半', '按对应点到对称轴格数相等逐点描出后连线'],
-     ['先找出半图的 3 个关键点到对称轴的距离，再描出对应点并数一数一共补了几个点', '补 3 个对应点，距离与原点相等'],
-     ['先补全以虚线为对称轴的「小房子」半图，再数一数一共补了几个对应点', '按半图顶点数确定，如 5 个']]),
+    // P40-Q-08：格数题配 symmetry-grid 材料图（格网 + 对称轴 + 原侧关键点），
+    // 只画题设半图材料不画对应侧——补全动作是题目所求，画即泄题（P34 H6 同口径）
+    [['一个点到对称轴的距离是 3 格，它的对应点到对称轴的距离是____格', '3', 3,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[1, 2]], unit: 'cm', unitPx: 25 } }],
+     ['关键点距对称轴 2 格，对应点应描在对称轴另一侧第____格', '2', 2,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[2, 1]], unit: 'cm', unitPx: 25 } }],
+     ['一个点到对称轴 5 格，它的对应点距对称轴____格', '5', 5,
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 6, gridH: 4, axisX: 5, points: [[0, 2]], unit: 'cm', unitPx: 25 } }]],
+    [['先在方格纸上数出对称轴左边半图有几个顶点，再补全右边的另一半', '按对应点到对称轴格数相等逐点描出后连线',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 5, axisX: 4, points: [[1, 1], [2, 3], [1, 4]], unit: 'cm', unitPx: 25 } }],
+     ['先找出半图的 3 个关键点到对称轴的距离，再描出对应点并数一数一共补了几个点', '补 3 个对应点，距离与原点相等',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 5, axisX: 4, points: [[2, 1], [1, 3], [2, 4]], unit: 'cm', unitPx: 25 } }],
+     ['先补全以虚线为对称轴的「小房子」半图，再数一数一共补了几个对应点', '按半图顶点数确定，如 5 个',
+      { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 8, gridH: 5, axisX: 4, points: [[2, 1], [1, 3], [2, 4]], unit: 'cm', unitPx: 25 } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'symmetry-grid', role: 'number-position',
+        params: { gridW: 7, gridH: 4, axisX: 4, points: [[1, 2], [2, 1]], unit: 'cm', unitPx: 25 } } }),
   'math-g5-down-u05-k003': shapeTheme( // 轴对称的再认识
     ['对称点到对称轴的距离相等，对称点的连线与对称轴垂直', '在方格纸上补全轴对称图形：找点、数格、描点、连线', '汉字和字母中也有轴对称，如「中」「A」'],
     [['对称点的连线与对称轴平行', '对称点的连线与对称轴垂直，且被对称轴平分。'],
@@ -1216,10 +1257,27 @@ var SHAPE_THEME = {
     [['设计图案只能用旋转一种方法', '平移、旋转、轴对称都可以用于设计图案。'],
      ['图案设计中的基本图形经过运动会变形', '平移、旋转、轴对称都不改变图形的形状和大小。'],
      ['同一个基本图形只能设计出一种图案', '运动方式、次数不同，可以设计出多种图案。']],
-    [['把一个基本图形绕一点每次旋转 90°，旋转____次后回到原位置', '4', 4], ['把一个图形每次旋转 60°，旋转____次后回到原位置', '6', 6], ['把一个图形每次旋转 180°，旋转____次后回到原位置', '2', 2]],
-    [['先选一个基本图形（如三角形），再把它绕一点每次旋转 90°，画出得到的图案', '旋转 3 次（连原图共 4 个）组成风车样图案'],
-     ['先用一个正方形通过平移设计一条花边，再说说用了几次平移', '每次平移一个边长，图案连续排列'],
-     ['先画一个基本图形，再分别用轴对称和旋转各设计一个图案，比较它们的相同点', '运动后形状、大小都不变，只是位置方向不同']]),
+    // P40-Q-08：旋转次数题配 rotationDemo（原形虚线灰 + 旋转后实线叠加，deg 与题设一致）
+    [['把一个基本图形绕一点每次旋转 90°，旋转____次后回到原位置', '4', 4,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 90, unitPx: 34, unit: 'cm' } }],
+     ['把一个图形每次旋转 60°，旋转____次后回到原位置', '6', 6,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 60, unitPx: 34, unit: 'cm' } }],
+     ['把一个图形每次旋转 180°，旋转____次后回到原位置', '2', 2,
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 180, unitPx: 34, unit: 'cm' } }]],
+    [['先选一个基本图形（如三角形），再把它绕一点每次旋转 90°，画出得到的图案', '旋转 3 次（连原图共 4 个）组成风车样图案',
+      { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[0, 0], [2, 0], [1, 1.5]], cx: 0, cy: 0, deg: 90, unitPx: 25, unit: 'cm' } }],
+     ['先用一个正方形通过平移设计一条花边，再说说用了几次平移', '每次平移一个边长，图案连续排列',
+      { type: 'geometry', subtype: 'translationDemo', role: 'number-position',
+        params: { points: [[0, 0], [1, 0], [1, 1], [0, 1]], dx: 2, dy: 0, unitPx: 25, unit: 'cm' } }],
+     ['先画一个基本图形，再分别用轴对称和旋转各设计一个图案，比较它们的相同点', '运动后形状、大小都不变，只是位置方向不同',
+      { type: 'geometry', subtype: 'reflectionDemo', role: 'number-position',
+        params: { points: [[0, 0], [2, 0], [1, 1.5]], axis: 'y', unitPx: 25, unit: 'cm' } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
+        params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0, deg: 90, unitPx: 25, unit: 'cm' } } }),
   'math-g6-up-u04-k004': shapeTheme( // 利用圆设计图案
     ['圆是轴对称图形，有无数条对称轴', '利用圆的对称性，绕圆心旋转同样的图形可以设计出美丽的图案', '用圆规和直尺可以画出由圆弧组成的各种图案'],
     [['用圆设计图案时，圆规两脚间的距离可以随便改变', '同一图案中半径要保持一致或有规律变化，图案才整齐。'],
@@ -1274,10 +1332,30 @@ var SHAPE_THEME = {
     [['周长相等的长方形，面积一定相等', '如 6×2 与 5×3 周长都是 16 厘米，面积 12≠15，不一定相等。'],
      ['面积大的图形周长一定大', '面积和周长没有必然大小关系，要分别计算。'],
      ['边长 4 厘米的正方形，周长和面积完全一样', '周长 16 厘米、面积 16 平方厘米，数值相同但意义和单位不同。']],
-    [['长 6 厘米、宽 2 厘米的长方形，面积是____平方厘米', '12', 12], ['长 5 厘米、宽 3 厘米的长方形，面积是____平方厘米', '15', 15], ['边长 4 厘米的正方形，周长是____厘米', '16', 16]],
-    [['先用 12 根同样长的小棒围一个长方形，再说说它的周长是多少、面积是否确定', '周长是 12 根小棒的长；面积随长宽不同而不同'],
-     ['先算出边长 4 厘米正方形的周长和面积各是多少，再说说两个结果表示什么', '周长 16 厘米（边线长度），面积 16 平方厘米（面的大小）'],
-     ['一个长方形长 6 厘米、宽 2 厘米，先算周长再算面积，说说两个结果各是多少、单位为什么不同', '周长 16 厘米用长度单位，面积 12 平方厘米用面积单位']]),
+    // P40-Q-08：面积/周长条配题设同名图形（长 6 宽 2/长 5 宽 3/边长 4 均为题面已述条件，
+    // 边长标注复述题设不泄所求——所求面积/周长数值不标）
+    [['长 6 厘米、宽 2 厘米的长方形，面积是____平方厘米', '12', 12,
+      { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }],
+     ['长 5 厘米、宽 3 厘米的长方形，面积是____平方厘米', '15', 15,
+      { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 5, height: 3, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }],
+     ['边长 4 厘米的正方形，周长是____厘米', '16', 16,
+      { type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+        params: { size: 4, labelSides: true, unit: 'cm', unitPx: 25 } }]],
+    // P40-Q-08：场景配题设情境同名图形（小棒围形/边长 4 正方形/长 6 宽 2 长方形，
+    // 标注仅复述题面已述条件，所求周长/面积数值不标——judge 标注为主张材料不遮口径）
+    [['先用 12 根同样长的小棒围一个长方形，再说说它的周长是多少、面积是否确定', '周长是 12 根小棒的长；面积随长宽不同而不同',
+      { type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+        params: { width: 4, height: 2, labelSides: false, unit: 'cm', unitPx: 25 } }],
+     ['先算出边长 4 厘米正方形的周长和面积各是多少，再说说两个结果表示什么', '周长 16 厘米（边线长度），面积 16 平方厘米（面的大小）',
+      { type: 'geometry', subtype: 'square', role: 'quantity-correspondence',
+        params: { size: 4, labelSides: true, unit: 'cm', unitPx: 25 } }],
+     ['一个长方形长 6 厘米、宽 2 厘米，先算周长再算面积，说说两个结果各是多少、单位为什么不同', '周长 16 厘米用长度单位，面积 12 平方厘米用面积单位',
+      { type: 'geometry', subtype: 'rectangle', role: 'quantity-correspondence',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } }]],
+    { judgeGraphic: { type: 'geometry', subtype: 'rectangle', role: 'area-measure',
+        params: { width: 6, height: 2, labelSides: { width: true, height: true }, unit: 'cm', unitPx: 25 } } }),
 
   // ---- 形态族 9：多边形面积（area-polygon）----
   'math-g5-up-u06-k001': shapeTheme( // 平行四边形的面积
@@ -1665,7 +1743,13 @@ function numDistractors(n) {
 // P35-CLOSE-01：视图卡片 descriptor 的图形标签——由 params.views 方向推导
 // （「观察下图（从前面、上面看到的形状）」）；无 views 时返回 null 沿用 KP 名。
 var VIEW_DIR_CN = { front: '前面', top: '上面', left: '左面' };
+// P40-Q-08：主题演示图形标签（symmetry-grid/变换演示族），供 themedItemMeta 与 geometry 题面图形名复用
+var THEMED_GRAPHIC_LABELS = {
+  'symmetry-grid': '对称轴格网', rotationDemo: '旋转演示', translationDemo: '平移演示', reflectionDemo: '轴对称演示'
+};
 function graphicLabelOf(d) {
+  var lab = d && THEMED_GRAPHIC_LABELS[d.subtype];
+  if (lab) return lab;
   var views = d && d.params && d.params.views;
   if (!Array.isArray(views) || !views.length) return null;
   var names = views.map(function (v) { return v && VIEW_DIR_CN[v.direction]; }).filter(Boolean);
@@ -1771,6 +1855,9 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     answer = { value: fItem.a, acceptable: [], explanation: themedExpl(fItem.q, fItem.a) };
   } else if (qt === 'geometry') {
     var gItem = nums[v % nums.length];
+    // P38 冻结判例维持：视图 3 KP geometry 行一律纯文字（H6 签批 + T2 intent.graphicRole=null
+    // /allowedRepresentations 不含 graphic，校验器强制无图；条目自声明 view-cards 在
+    // choice/fill/judge/apply 行已放行，geometry 行不放行——P40-Q-08 实测放行即 NON_RETRYABLE 归零）
     if (noGraphic) {
       // P34-H1：三视图推算题无图（H6 签批），纯文字引导，设问本体不动
       data.operands = [gItem.n];
@@ -1782,7 +1869,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       data.operands = [gItem.n];
       var graphicName = (gMeta ? gMeta.meta.name : qMeta.meta.name);
       if (qMeta.legacyType === 'symmetry' || qMeta.legacyType === 'solid') {
-        graphicName = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'].name;
+        var gFeat = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'];
+        graphicName = (gFeat && gFeat.name) || graphicName;
       }
       prompt = '观察下图（' + graphicName + '），想一想——' + gItem.q;
       answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
@@ -1795,6 +1883,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       ? theme.scenes
       : nums.map(function (x) { return { t: x.q, a: x.a }; });
     var sItem = sList[v % sList.length];
+    // P40-Q-08：场景自带图形（scenes 第 3 元 g 槽）优先于主题原材料图——场景图与题设情境逐条呼应
+    if (sItem.g) data.graphic = JSON.parse(JSON.stringify(sItem.g));
     data.steps = 2;
     prompt = sItem.t;
     // scenes 的答案本身是解题过程陈述（如「8 个，都在顶点处」），直接用作解析；

@@ -1,0 +1,551 @@
+{
+  "task": "P40-T-07",
+  "generatedBy": "dev/p40/t07-family-difficulty-scan.js",
+  "rule": "同 familyId 内 stageOrder 靠后者 seedDifficulty ≥ 前序（倒挂→needs-review，不自动改数）",
+  "rowsScanned": 375,
+  "checkedInFamilies": 375,
+  "families": 22,
+  "violations": 54,
+  "needsReview": [
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-up-u01-k002",
+      "fromStageOrder": 2,
+      "fromDifficulty": 5,
+      "toId": "math-g1-up-u01-k003",
+      "toStageOrder": 3,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-up-u02-k002",
+      "fromStageOrder": 5,
+      "fromDifficulty": 4,
+      "toId": "math-g1-up-u05-k001",
+      "toStageOrder": 6,
+      "toDifficulty": 2,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-up-u05-k003",
+      "fromStageOrder": 8,
+      "fromDifficulty": 3,
+      "toId": "math-g1-down-u02-k001",
+      "toStageOrder": 9,
+      "toDifficulty": 2,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-down-u02-k003",
+      "fromStageOrder": 11,
+      "fromDifficulty": 5,
+      "toId": "math-g1-down-u04-k001",
+      "toStageOrder": 12,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-down-u04-k004",
+      "fromStageOrder": 15,
+      "fromDifficulty": 4,
+      "toId": "math-g1-down-u04-k005",
+      "toStageOrder": 16,
+      "toDifficulty": 3,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g1-down-u05-k002",
+      "fromStageOrder": 18,
+      "fromDifficulty": 4,
+      "toId": "math-g1-down-u05-k003",
+      "toStageOrder": 19,
+      "toDifficulty": 2,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_addsub",
+      "fromId": "math-g4-down-u01-k001",
+      "fromStageOrder": 24,
+      "fromDifficulty": 7,
+      "toId": "math-g4-down-u03-k001",
+      "toStageOrder": 25,
+      "toDifficulty": 5,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g3-down-u08-k006",
+      "fromStageOrder": 9,
+      "fromDifficulty": 7,
+      "toId": "math-g4-up-u05-k001",
+      "toStageOrder": 10,
+      "toDifficulty": 5,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g4-down-u09-k003",
+      "fromStageOrder": 22,
+      "fromDifficulty": 9,
+      "toId": "math-g5-up-u08-k002",
+      "toStageOrder": 23,
+      "toDifficulty": 6,
+      "difficultyDelta": -3
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g5-down-u08-k002",
+      "fromStageOrder": 31,
+      "fromDifficulty": 8,
+      "toId": "math-g5-down-u08-k003",
+      "toStageOrder": 32,
+      "toDifficulty": 6,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g5-down-u09-k001",
+      "fromStageOrder": 33,
+      "fromDifficulty": 9,
+      "toId": "math-g5-down-u09-k003",
+      "toStageOrder": 34,
+      "toDifficulty": 8,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g5-down-u09-k003",
+      "fromStageOrder": 34,
+      "fromDifficulty": 8,
+      "toId": "math-g6-up-u04-k001",
+      "toStageOrder": 35,
+      "toDifficulty": 7,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g6-up-u04-k003",
+      "fromStageOrder": 37,
+      "fromDifficulty": 9,
+      "toId": "math-g6-up-u04-k004",
+      "toStageOrder": 38,
+      "toDifficulty": 7,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g6-down-u03-k001",
+      "fromStageOrder": 40,
+      "fromDifficulty": 9,
+      "toId": "math-g6-down-u03-k002",
+      "toStageOrder": 41,
+      "toDifficulty": 7,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_shape",
+      "fromId": "math-g6-down-u03-k006",
+      "fromStageOrder": 45,
+      "fromDifficulty": 8,
+      "toId": "math-g6-down-u05-k001",
+      "toStageOrder": 46,
+      "toDifficulty": 7,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_integer",
+      "fromId": "math-g1-up-u04-k002",
+      "fromStageOrder": 2,
+      "fromDifficulty": 4,
+      "toId": "math-g1-up-u04-k003",
+      "toStageOrder": 3,
+      "toDifficulty": 2,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_review",
+      "fromId": "math-g3-down-u08-k002",
+      "fromStageOrder": 9,
+      "fromDifficulty": 7,
+      "toId": "math-g3-down-u08-k005",
+      "toStageOrder": 10,
+      "toDifficulty": 4,
+      "difficultyDelta": -3
+    },
+    {
+      "familyId": "fam_review",
+      "fromId": "math-g5-up-u09-k001",
+      "fromStageOrder": 13,
+      "fromDifficulty": 10,
+      "toId": "math-g5-down-u11-k001",
+      "toStageOrder": 14,
+      "toDifficulty": 9,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_relation",
+      "fromId": "math-g1-down-u06-k003",
+      "fromStageOrder": 3,
+      "fromDifficulty": 5,
+      "toId": "math-g2-down-u03-k001",
+      "toStageOrder": 4,
+      "toDifficulty": 3,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_relation",
+      "fromId": "math-g2-down-u03-k002",
+      "fromStageOrder": 5,
+      "fromDifficulty": 5,
+      "toId": "math-g2-down-u03-k003",
+      "toStageOrder": 6,
+      "toDifficulty": 3,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_statistics",
+      "fromId": "math-g2-up-u01-k003",
+      "fromStageOrder": 3,
+      "fromDifficulty": 5,
+      "toId": "math-g2-up-u01-k004",
+      "toStageOrder": 4,
+      "toDifficulty": 3,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_statistics",
+      "fromId": "math-g3-down-u05-k003",
+      "fromStageOrder": 9,
+      "fromDifficulty": 6,
+      "toId": "math-g3-down-u05-k004",
+      "toStageOrder": 10,
+      "toDifficulty": 5,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_statistics",
+      "fromId": "math-g4-up-u06-k002",
+      "fromStageOrder": 13,
+      "fromDifficulty": 7,
+      "toId": "math-g4-up-u06-k003",
+      "toStageOrder": 14,
+      "toDifficulty": 5,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_statistics",
+      "fromId": "math-g4-up-u06-k004",
+      "fromStageOrder": 15,
+      "fromDifficulty": 8,
+      "toId": "math-g4-down-u08-k001",
+      "toStageOrder": 16,
+      "toDifficulty": 7,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_multiply",
+      "fromId": "math-g2-up-u02-k001",
+      "fromStageOrder": 1,
+      "fromDifficulty": 5,
+      "toId": "math-g2-up-u02-k002",
+      "toStageOrder": 2,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_multiply",
+      "fromId": "math-g2-up-u02-k002",
+      "fromStageOrder": 2,
+      "fromDifficulty": 4,
+      "toId": "math-g2-up-u02-k003",
+      "toStageOrder": 3,
+      "toDifficulty": 3,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_multiply",
+      "fromId": "math-g4-up-u03-k003",
+      "fromStageOrder": 14,
+      "fromDifficulty": 7,
+      "toId": "math-g4-down-u03-k003",
+      "toStageOrder": 15,
+      "toDifficulty": 5,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_divide",
+      "fromId": "math-g2-up-u03-k004",
+      "fromStageOrder": 4,
+      "fromDifficulty": 5,
+      "toId": "math-g2-up-u03-k005",
+      "toStageOrder": 5,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_divide",
+      "fromId": "math-g2-up-u07-k002",
+      "fromStageOrder": 7,
+      "fromDifficulty": 6,
+      "toId": "math-g2-down-u02-k001",
+      "toStageOrder": 8,
+      "toDifficulty": 5,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_direction",
+      "fromId": "math-g4-up-u08-k002",
+      "fromStageOrder": 7,
+      "fromDifficulty": 7,
+      "toId": "math-g4-up-u08-k003",
+      "toStageOrder": 8,
+      "toDifficulty": 6,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_direction",
+      "fromId": "math-g4-up-u08-k003",
+      "fromStageOrder": 8,
+      "fromDifficulty": 6,
+      "toId": "math-g4-down-u02-k001",
+      "toStageOrder": 9,
+      "toDifficulty": 5,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_direction",
+      "fromId": "math-g6-up-u01-k001",
+      "fromStageOrder": 12,
+      "fromDifficulty": 9,
+      "toId": "math-g6-up-u01-k002",
+      "toStageOrder": 13,
+      "toDifficulty": 8,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_measure",
+      "fromId": "math-g2-up-u05-k005",
+      "fromStageOrder": 5,
+      "fromDifficulty": 5,
+      "toId": "math-g3-up-u03-k001",
+      "toStageOrder": 6,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_measure",
+      "fromId": "math-g3-up-u03-k004",
+      "fromStageOrder": 9,
+      "fromDifficulty": 5,
+      "toId": "math-g3-up-u04-k001",
+      "toStageOrder": 10,
+      "toDifficulty": 4,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_measure",
+      "fromId": "math-g3-up-u04-k004",
+      "fromStageOrder": 13,
+      "fromDifficulty": 6,
+      "toId": "math-g3-down-u04-k001",
+      "toStageOrder": 14,
+      "toDifficulty": 4,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_measure",
+      "fromId": "math-g5-up-u06-k005",
+      "fromStageOrder": 23,
+      "fromDifficulty": 8,
+      "toId": "math-g5-up-u06-k006",
+      "toStageOrder": 24,
+      "toDifficulty": 6,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_problem_solving",
+      "fromId": "math-g2-down-u06-k001",
+      "fromStageOrder": 1,
+      "fromDifficulty": 6,
+      "toId": "math-g2-down-u06-k002",
+      "toStageOrder": 2,
+      "toDifficulty": 5,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_problem_solving",
+      "fromId": "math-g3-up-u06-k001",
+      "fromStageOrder": 5,
+      "fromDifficulty": 6,
+      "toId": "math-g3-up-u06-k002",
+      "toStageOrder": 6,
+      "toDifficulty": 4,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_problem_solving",
+      "fromId": "math-g3-up-u06-k004",
+      "fromStageOrder": 8,
+      "fromDifficulty": 6,
+      "toId": "math-g3-up-u06-k005",
+      "toStageOrder": 9,
+      "toDifficulty": 4,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_problem_solving",
+      "fromId": "math-g5-up-u08-k004",
+      "fromStageOrder": 12,
+      "fromDifficulty": 8,
+      "toId": "math-g5-down-u10-k001",
+      "toStageOrder": 13,
+      "toDifficulty": 7,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_observation",
+      "fromId": "math-g5-down-u01-k002",
+      "fromStageOrder": 9,
+      "fromDifficulty": 8,
+      "toId": "math-g5-down-u01-k003",
+      "toStageOrder": 10,
+      "toDifficulty": 6,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_operation_law",
+      "fromId": "math-g3-up-u02-k005",
+      "fromStageOrder": 5,
+      "fromDifficulty": 9,
+      "toId": "math-g4-down-u01-k003",
+      "toStageOrder": 6,
+      "toDifficulty": 5,
+      "difficultyDelta": -4
+    },
+    {
+      "familyId": "fam_fraction",
+      "fromId": "math-g6-up-u03-k005",
+      "fromStageOrder": 25,
+      "fromDifficulty": 10,
+      "toId": "math-g6-down-u02-k001",
+      "toStageOrder": 26,
+      "toDifficulty": 8,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_fraction",
+      "fromId": "math-g6-down-u02-k002",
+      "fromStageOrder": 27,
+      "fromDifficulty": 10,
+      "toId": "math-g6-down-u02-k003",
+      "toStageOrder": 28,
+      "toDifficulty": 7,
+      "difficultyDelta": -3
+    },
+    {
+      "familyId": "fam_motion",
+      "fromId": "math-g4-down-u07-k003",
+      "fromStageOrder": 7,
+      "fromDifficulty": 7,
+      "toId": "math-g4-down-u07-k004",
+      "toStageOrder": 8,
+      "toDifficulty": 5,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_motion",
+      "fromId": "math-g5-up-u04-k001",
+      "fromStageOrder": 10,
+      "fromDifficulty": 8,
+      "toId": "math-g5-up-u04-k002",
+      "toStageOrder": 11,
+      "toDifficulty": 6,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_motion",
+      "fromId": "math-g5-up-u04-k003",
+      "fromStageOrder": 12,
+      "fromDifficulty": 7,
+      "toId": "math-g5-down-u05-k001",
+      "toStageOrder": 13,
+      "toDifficulty": 6,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_decimal",
+      "fromId": "math-g5-up-u02-k005",
+      "fromStageOrder": 20,
+      "fromDifficulty": 10,
+      "toId": "math-g5-up-u03-k001",
+      "toStageOrder": 21,
+      "toDifficulty": 9,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_decimal",
+      "fromId": "math-g5-up-u03-k002",
+      "fromStageOrder": 22,
+      "fromDifficulty": 9,
+      "toId": "math-g5-up-u03-k003",
+      "toStageOrder": 23,
+      "toDifficulty": 8,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_decimal",
+      "fromId": "math-g5-up-u03-k005",
+      "fromStageOrder": 25,
+      "fromDifficulty": 9,
+      "toId": "math-g5-up-u03-k006",
+      "toStageOrder": 26,
+      "toDifficulty": 7,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_number_algebra",
+      "fromId": "math-g5-up-u05-k002",
+      "fromStageOrder": 2,
+      "fromDifficulty": 9,
+      "toId": "math-g5-up-u05-k003",
+      "toStageOrder": 3,
+      "toDifficulty": 8,
+      "difficultyDelta": -1
+    },
+    {
+      "familyId": "fam_number_algebra",
+      "fromId": "math-g6-up-u05-k006",
+      "fromStageOrder": 16,
+      "fromDifficulty": 10,
+      "toId": "math-g6-down-u04-k001",
+      "toStageOrder": 17,
+      "toDifficulty": 8,
+      "difficultyDelta": -2
+    },
+    {
+      "familyId": "fam_number_algebra",
+      "fromId": "math-g6-down-u04-k006",
+      "fromStageOrder": 22,
+      "fromDifficulty": 10,
+      "toId": "math-g6-down-u04-k007",
+      "toStageOrder": 23,
+      "toDifficulty": 7,
+      "difficultyDelta": -3
+    },
+    {
+      "familyId": "fam_negative",
+      "fromId": "math-g6-up-u07-k003",
+      "fromStageOrder": 3,
+      "fromDifficulty": 10,
+      "toId": "math-g6-down-u01-k001",
+      "toStageOrder": 4,
+      "toDifficulty": 9,
+      "difficultyDelta": -1
+    }
+  ]
+}

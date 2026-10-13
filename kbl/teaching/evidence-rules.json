@@ -39219,11 +39219,12 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "value": "symmetry-grid"
         },
         {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "kind": "field",
+          "path": "data.graphic.params.unitPx",
+          "value": 25
         },
         {
           "kind": "field",
@@ -39290,11 +39291,12 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "value": "symmetry-grid"
         },
         {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "kind": "field",
+          "path": "data.graphic.params.unitPx",
+          "value": 25
         },
         {
           "kind": "field",
@@ -39361,11 +39363,12 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "value": "symmetry-grid"
         },
         {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "kind": "field",
+          "path": "data.graphic.params.unitPx",
+          "value": 25
         },
         {
           "kind": "field",
@@ -39432,11 +39435,12 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "value": "symmetry-grid"
         },
         {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "kind": "field",
+          "path": "data.graphic.params.unitPx",
+          "value": 25
         },
         {
           "kind": "field",
@@ -39508,7 +39512,7 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "value": "symmetry-grid"
         },
         {
           "kind": "field",

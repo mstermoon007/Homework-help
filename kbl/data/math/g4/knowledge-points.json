@@ -18,6 +18,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 17
+        },
         "concept": "一（个）、十、百、千、万、十万、百万、千万、亿都是计数单位，每相邻两个计数单位之间的进率是10",
         "operations": [],
         "representations": [
@@ -131,6 +135,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 18
+        },
         "concept": "计数单位按一定顺序排列所占的位置叫数位。从右边起每四个数位为一级，个级（个位、十位、百位、千位）、万级（万位、十万位、百万位、千万位）、亿级。亿以内数位从低到高依次为：个位、十位、百位、千位、万位、十万位、百万位、千万位",
         "operations": [],
         "representations": [
@@ -247,6 +255,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 19
+        },
         "concept": "先分级，再从最高级读起；每级末尾的0不读，中间连续几个0只读一个零。写法从最高位写起，哪一位上一个单位也没有就写0占位",
         "operations": [],
         "representations": [
@@ -363,6 +375,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 20
+        },
         "concept": "亿以上数的读法、写法与亿以内数方法一致，扩展至亿级、十亿级、百亿级、千亿级",
         "operations": [],
         "representations": [
@@ -479,6 +495,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 21
+        },
         "concept": "位数多的数就大；位数相同时，从最高位比起，最高位上的数大的那个数就大，如果最高位上的数相同，就比较下一个数位上的数",
         "operations": [],
         "representations": [
@@ -592,6 +612,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 22
+        },
         "concept": "将整万数改写成用“万”作单位的数，去掉末尾4个0，加“万”字；整亿数同理。求近似数用“四舍五入”法，根据要求省略的尾数最高位上的数决定“舍”或“入”",
         "operations": [
           "addition"
@@ -707,6 +731,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 5
+        },
         "concept": "从旋转的角度重新认识角，理解平角和周角的概念，将平角和周角的认识与角的分类整合",
         "operations": [],
         "representations": [
@@ -829,6 +857,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 6
+        },
         "concept": "认识角的度量单位“度”（°），认识量角器，掌握量角的方法（中心对顶点、零线对一边、看另一边所指刻度）。将量角和画角整合在一起，从度量的角度认识角的单位",
         "operations": [],
         "representations": [
@@ -951,6 +983,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 7
+        },
         "concept": "锐角（小于90°）、直角（等于90°）、钝角（大于90°小于180°）、平角（等于180°）、周角（等于360°）",
         "operations": [],
         "representations": [
@@ -1073,6 +1109,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 12
+        },
         "concept": "分层拆解，采用拆数法、实物模型、竖式对照三种思路并行，重算理不重速度",
         "operations": [
           "multiplication"
@@ -1188,6 +1228,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 13
+        },
         "concept": "统一两位数乘两位数和三位数乘两位数的笔算逻辑，从部分积到最终积的竖式规范",
         "operations": [
           "multiplication"
@@ -1306,6 +1350,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 14
+        },
         "concept": "一个因数不变，另一个因数乘几，积就乘几；一个因数乘a，另一个因数乘b，积就乘a×b",
         "operations": [
           "multiplication"
@@ -1421,6 +1469,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 10
+        },
         "concept": "核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 − 另一个分量。涵盖“加法求和”“比多比少”等模型",
         "operations": [
           "addition",
@@ -1537,6 +1589,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 11
+        },
         "concept": "核心关系为每份数 × 份数 = 总数，以及总价 = 单价 × 数量和路程 = 速度 × 时间。由此引出除法变形公式：每份数 = 总数 ÷ 份数，份数 = 总数 ÷ 每份数",
         "operations": [
           "multiplication",
@@ -1653,6 +1709,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 12
+        },
         "concept": "系统梳理和差问题、倍数问题、归一归总应用题模型。购物问题（单价、数量、总价），行程问题（速度、时间、路程）",
         "operations": [
           "multiplication"
@@ -1768,6 +1828,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 10
+        },
         "concept": "在同一平面内，不相交的两条直线互相平行；两条直线相交成直角时，互相垂直。理解平行线和垂线的概念，会用三角尺和直尺画平行线和垂线",
         "operations": [],
         "representations": [
@@ -1890,6 +1954,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 11
+        },
         "concept": "两组对边分别平行的四边形叫平行四边形。平行四边形的对边平行且相等，对角相等，容易变形（不稳定性）",
         "operations": [],
         "representations": [
@@ -2012,6 +2080,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 12
+        },
         "concept": "只有一组对边平行的四边形叫梯形。认识梯形的各部分名称（上底、下底、腰、高），认识等腰梯形和直角梯形",
         "operations": [],
         "representations": [
@@ -2134,6 +2206,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 13
+        },
         "concept": "用集合图表示四边形、平行四边形、长方形、正方形、梯形之间的关系",
         "operations": [],
         "representations": [
@@ -2256,6 +2332,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 12
+        },
         "concept": "用直条的长短表示数量的多少，能直观地看出数量的差异。掌握绘制方法：确定横轴和纵轴、确定1格代表多少单位、画直条并标注数据",
         "operations": [],
         "representations": [
@@ -2377,6 +2457,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 13
+        },
         "concept": "在同一张统计图中，用不同颜色（或不同图案、底纹）的直条表示两组或多组数据，便于比较不同类别之间的差异。复式条形统计图必须配有图例来区分不同数据系列",
         "operations": [],
         "representations": [
@@ -2498,6 +2582,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 14
+        },
         "concept": "复式条形统计图有横向和纵向两种绘制形式",
         "operations": [],
         "representations": [
@@ -2619,6 +2707,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 15
+        },
         "concept": "能根据条形统计图解决简单的实际问题，根据数据的大小确定1格代表多少",
         "operations": [],
         "representations": [
@@ -2740,6 +2832,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 23
+        },
         "concept": "从多个角度探究1亿有多大，通过“1亿张纸有多高”“1亿有多大”等活动，借助实物模型和推算，建立对大数的直观感知。新版实操活动简化，侧重直观感知，减少复杂推算计算",
         "operations": [
           "subtraction"
@@ -2848,6 +2944,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 6
+        },
         "concept": "结合校园平面图，在认识四面的基础上认识八方（东、南、西、北、东南、东北、西南、西北）",
         "operations": [],
         "representations": [
@@ -2953,6 +3053,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 7
+        },
         "concept": "学会结合参照物、距离描述物体的位置，例如“1号宝藏在校园北面中间建筑的2层，从西面数第一间教室里，离前黑板1m处”",
         "operations": [],
         "representations": [
@@ -3058,6 +3162,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 8
+        },
         "concept": "读懂并设计简单的“寻宝指令”与藏宝图，在推理判断中应用方位，发展空间观念",
         "operations": [],
         "representations": [
@@ -3163,6 +3271,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 11
+        },
         "concept": "侧重知识串联整合而非单纯刷题回顾，包括：数与运算、数量关系、图形的认识与测量、数据的收集整理与表达、认识方向等板块的整理复习，明确评价导向由终结性知识考核转向结构性认知建构。",
         "operations": [
           "mixed"
@@ -3271,6 +3383,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 24
+        },
         "concept": "把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 − 减数。减法是加法的逆运算",
         "operations": [
           "addition",
@@ -3387,6 +3503,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 19
+        },
         "concept": "求几个相同加数的和的简便运算叫做乘法。已知两个因数的积与其中一个因数，求另一个因数的运算叫做除法。积 = 因数 × 因数；商 = 被除数 ÷ 除数。除法是乘法的逆运算。0不能作除数，0除以任何非0的数都得0",
         "operations": [
           "addition",
@@ -3504,6 +3624,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 6
+        },
         "concept": "没有括号时，只有加减法或只有乘除法从左往右依次计算；既有加减又有乘除，先算乘除再算加减。有小括号先算小括号里面的。有中括号先算小括号里面的，再算中括号里面的",
         "operations": [
           "addition",
@@ -3623,6 +3747,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 7
+        },
         "concept": "解题策略包括比较单价，优先租人均费用低的方案；尽量坐满减少空位；列举几种方案比较总费用选出最优。租船/租车类问题需要列出所有可行方案再比较，不能只算一种",
         "operations": [
           "subtraction"
@@ -3738,6 +3866,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 9
+        },
         "concept": "从前面、上面、左面观察由小正方体组成的立体图形，看到的形状可能不同",
         "operations": [],
         "representations": [
@@ -3860,6 +3992,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_observation",
+          "stageOrder": 4
+        },
         "concept": "根据从不同方向看到的平面图形，推断和还原立体图形的形状",
         "operations": [],
         "representations": [
@@ -3982,6 +4118,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_observation",
+          "stageOrder": 5
+        },
         "concept": "通过观察、操作、想象、推理等活动，发展空间观念和推理能力",
         "operations": [],
         "representations": [
@@ -4104,6 +4244,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 25
+        },
         "concept": "加法交换律（a + b = b + a）；加法结合律（(a + b) + c = a + (b + c)）",
         "operations": [
           "addition"
@@ -4219,6 +4363,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 26
+        },
         "concept": "减法的性质：a − b − c = a − (b + c)；a − (b + c) = a − b − c",
         "operations": [
           "subtraction"
@@ -4334,6 +4482,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 15
+        },
         "concept": "乘法交换律（a × b = b × a）；乘法结合律（(a × b) × c = a × (b × c)）；乘法分配律（(a + b) × c = a × c + b × c）",
         "operations": [
           "multiplication"
@@ -4449,6 +4601,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 8
+        },
         "concept": "综合运用运算律进行简便计算，如将接近整十整百的数拆分成整十整百数加减一个数",
         "operations": [
           "addition",
@@ -4566,6 +4722,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 5
+        },
         "concept": "把单位“1”平均分成10份、100份、1000份……这样的1份或几份可以用小数表示。一位小数表示十分之几，两位小数表示百分之几，三位小数表示千分之几。小数的计数单位是十分之一、百分之一、千分之一，分别写作0.1、0.01、0.001。每相邻两个计数单位之间的进率是10",
         "operations": [
           "division"
@@ -4684,6 +4844,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 6
+        },
         "concept": "整数部分按整数的读法读，小数点读作“点”，小数部分依次读出每个数字",
         "operations": [],
         "representations": [
@@ -4797,6 +4961,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 7
+        },
         "concept": "小数的末尾添上“0”或去掉“0”，小数的大小不变",
         "operations": [],
         "representations": [
@@ -4910,6 +5078,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 8
+        },
         "concept": "先比较整数部分，整数部分大的数就大；整数部分相同，再比较十分位，依次类推",
         "operations": [],
         "representations": [
@@ -5023,6 +5195,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 9
+        },
         "concept": "小数点向右移动一位、两位、三位，小数就扩大到原来的10倍、100倍、1000倍；向左移动则缩小到原来的十分之一、百分之一、千分之一",
         "operations": [
           "multiplication"
@@ -5141,6 +5317,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 10
+        },
         "concept": "掌握单名数和复名数的相互改写方法，高级单位化低级单位乘进率，低级单位化高级单位除以进率",
         "operations": [
           "multiplication",
@@ -5257,6 +5437,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 11
+        },
         "concept": "用“四舍五入”法保留一定的小数位数。把较大的数改写成用“万”或“亿”作单位的数，再求近似数",
         "operations": [],
         "representations": [
@@ -5370,6 +5554,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 14
+        },
         "concept": "三角形有3条边、3个角和3个顶点。三角形具有稳定性",
         "operations": [],
         "representations": [
@@ -5492,6 +5680,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 15
+        },
         "concept": "从三角形的一个顶点向它的对边作一条垂线，顶点和垂足之间的线段叫做三角形的高，这条对边叫做三角形的底。三角形有3条高",
         "operations": [],
         "representations": [
@@ -5614,6 +5806,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 16
+        },
         "concept": "三角形任意两边的和大于第三边",
         "operations": [],
         "representations": [
@@ -5736,6 +5932,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 17
+        },
         "concept": "按角分类分为锐角三角形（三个角都是锐角）、直角三角形（有一个角是直角）、钝角三角形（有一个角是钝角）。按边分类分为不等边三角形和等腰三角形（等边三角形是特殊的等腰三角形）",
         "operations": [],
         "representations": [
@@ -5858,6 +6058,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 18
+        },
         "concept": "三角形的内角和是180°",
         "operations": [],
         "representations": [
@@ -5980,6 +6184,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 19
+        },
         "concept": "四边形的内角和是360°。可以通过将四边形分成两个三角形来推导",
         "operations": [],
         "representations": [
@@ -6102,6 +6310,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 12
+        },
         "concept": "小数点对齐，相同数位对齐，按整数加减法法则计算，得数的小数点与横线上的小数点对齐",
         "operations": [
           "addition",
@@ -6218,6 +6430,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 13
+        },
         "concept": "根据小数的性质，在位数较少的小数末尾添“0”补足位数，再按小数加减法法则计算",
         "operations": [
           "addition",
@@ -6334,6 +6550,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 14
+        },
         "concept": "运算顺序与整数加减混合运算相同，有括号先算括号里面的",
         "operations": [
           "addition",
@@ -6451,6 +6671,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 15
+        },
         "concept": "整数的加法交换律、结合律和减法的性质在小数运算中同样适用，可以运用这些运算律进行简便计算",
         "operations": [
           "addition",
@@ -6567,6 +6791,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 5
+        },
         "concept": "将图形沿一条直线对折，如果直线两侧的部分能够完全重合，这样的图形叫做轴对称图形，折痕所在的这条直线叫做它的对称轴。在轴对称图形中，对称点到对称轴的距离相等",
         "operations": [],
         "representations": [
@@ -6689,6 +6917,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 6
+        },
         "concept": "根据对称轴补全轴对称图形的方法：找关键点→数格数→描对应点→连线成形",
         "operations": [],
         "representations": [
@@ -6811,6 +7043,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 7
+        },
         "concept": "确定方格中图形平移的方向和距离的方法，根据箭头的指向确定平移方向，找出平移前后两个图形的一组对应点，对应点之间的格数就是图形平移的格数",
         "operations": [],
         "representations": [
@@ -6933,6 +7169,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 8
+        },
         "concept": "选点→移点→连点成形",
         "operations": [],
         "representations": [
@@ -7055,6 +7295,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 9
+        },
         "concept": "利用平移知识将不规则图形转化为规则图形，计算面积",
         "operations": [],
         "representations": [
@@ -7177,6 +7421,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 16
+        },
         "concept": "平均数是表示一组数据集中趋势的统计量。平均数是一个“虚拟”的数，它不代表某一具体数据，而是反映一组数据的整体水平",
         "operations": [
           "division"
@@ -7300,6 +7548,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 17
+        },
         "concept": "移多补少法；公式法：平均数 = 总数量 ÷ 总份数",
         "operations": [
           "division"
@@ -7423,6 +7675,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 18
+        },
         "concept": "在同一张统计图中用不同颜色（或底纹）的直条表示两组或多组数据，便于比较。绘制时需标明图例",
         "operations": [],
         "representations": [
@@ -7544,6 +7800,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 19
+        },
         "concept": "运用统计知识分析午餐营养搭配，体会数学在生活中的应用",
         "operations": [],
         "representations": [
@@ -7665,6 +7925,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 20
+        },
         "concept": "逐一列举鸡和兔的数量，找到符合条件的答案",
         "operations": [],
         "representations": [
@@ -7770,6 +8034,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 21
+        },
         "concept": "假设全是鸡（或全是兔），根据脚数的差异推算出兔（或鸡）的数量",
         "operations": [],
         "representations": [
@@ -7875,6 +8143,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 22
+        },
         "concept": "鸡兔同笼问题的核心是“头数固定，脚数不同”的二元一次方程组的算术解法。解题思路可推广到类似“租船”“得分”等实际问题",
         "operations": [],
         "representations": [
@@ -7980,6 +8252,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 12
+        },
         "concept": "按“数与代数”“图形与几何”“统计与数学广角”三个板块进行系统整理和复习。数与代数板块涵盖四则运算、运算律、小数的意义和性质、小数的加法和减法；图形与几何板块涵盖观察物体、三角形、图形的运动；统计与数学广角板块涵盖平均数与条形统计图、鸡兔同笼",
         "operations": [
           "addition",

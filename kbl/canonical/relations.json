@@ -2,8 +2,185 @@
   "schemaVersion": "1.0.0",
   "source": "llm-derived-dev（开发期 LLM 统筹定案；上线零 LLM 依赖）",
   "reviewStatus": "llm-finalized-dev",
-  "note": "前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（R-REL-01 同单元序号 + R-REL-02 同册跨单元 + R-REL-03 跨册/跨年级概念主干链）。inferred=true 为溯源标记；reviewStatus=llm-finalized-dev 表示无人工确认环节、LLM 即最终确认者（用户 2026-09-30 显式指令）。三元组全局去重，链内年级严格递增收敛无环。",
+  "note": "前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（R-REL-01 同单元序号 + R-REL-02 同册跨单元 + R-REL-03 概念主干链/族表声明化）。inferred=true 为溯源标记；reviewStatus=llm-finalized-dev 表示无人工确认环节、LLM 即最终确认者（用户 2026-09-30 显式指令）。三元组全局去重，链内年级严格递增收敛无环。P40 战役二起 R-REL-03 边携带 evolution{familyId,fromStageOrder,toStageOrder,op}。",
   "inferredCount": 373,
+  "conceptFamilies": [
+    {
+      "familyId": "fam_integer",
+      "name": "整数认识",
+      "stages": [
+        "g1/up/11～20的认识",
+        "g1/down/100以内数的认识",
+        "g2/down/万以内数的认识",
+        "g4/up/万以上数的认识"
+      ],
+      "ops": [
+        "extend_number",
+        "extend_number",
+        "extend_number"
+      ]
+    },
+    {
+      "familyId": "fam_addsub",
+      "name": "加减运算",
+      "stages": [
+        "g1/up/20以内的进位加法",
+        "g1/down/20以内的退位减法",
+        "g1/down/100以内的口算加、减法",
+        "g1/down/100以内的笔算加、减法",
+        "g2/down/万以内的加法和减法"
+      ],
+      "ops": [
+        "inverse",
+        "increase_complexity",
+        "increase_complexity",
+        "extend_number"
+      ]
+    },
+    {
+      "familyId": "fam_multiply",
+      "name": "乘法",
+      "stages": [
+        "g2/up/1～6的表内乘法",
+        "g2/up/7～9的表内乘、除法",
+        "g3/up/多位数乘一位数",
+        "g4/up/多位数乘两位数"
+      ],
+      "ops": [
+        "extend_number",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_divide",
+      "name": "除法",
+      "stages": [
+        "g2/up/1～6的表内除法",
+        "g2/up/7～9的表内乘、除法",
+        "g2/down/有余数的除法",
+        "g3/down/除数是一位数的除法"
+      ],
+      "ops": [
+        "extend_number",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_fraction",
+      "name": "分数",
+      "stages": [
+        "g3/up/分数的初步认识",
+        "g5/down/分数的意义和性质",
+        "g5/down/分数的加法和减法",
+        "g6/up/分数乘法",
+        "g6/up/分数除法"
+      ],
+      "ops": [
+        "abstract_up",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_decimal",
+      "name": "小数",
+      "stages": [
+        "g3/down/小数的初步认识",
+        "g4/down/小数的意义和性质",
+        "g4/down/小数的加法和减法",
+        "g5/up/小数乘法",
+        "g5/up/小数除法"
+      ],
+      "ops": [
+        "abstract_up",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_shape",
+      "name": "图形认识",
+      "stages": [
+        "g1/up/认识立体图形",
+        "g1/down/认识平面图形",
+        "g3/down/长方形和正方形",
+        "g4/up/平行四边形和梯形",
+        "g4/down/三角形",
+        "g5/down/长方体和正方体",
+        "g6/up/圆",
+        "g6/down/圆柱与圆锥"
+      ],
+      "ops": [
+        "abstract_up",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_measure",
+      "name": "测量",
+      "stages": [
+        "g2/up/厘米和米",
+        "g3/up/毫米、分米和千米",
+        "g3/down/图形的面积",
+        "g5/up/多边形的面积"
+      ],
+      "ops": [
+        "extend_number",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_line_angle",
+      "name": "线与角",
+      "stages": [
+        "g3/up/线和角",
+        "g4/up/角的度量"
+      ],
+      "ops": [
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_number_algebra",
+      "name": "数系与代数",
+      "stages": [
+        "g5/up/用字母表示数和数量关系",
+        "g5/down/因数与倍数",
+        "g6/up/百分数",
+        "g6/down/比例"
+      ],
+      "ops": [
+        "increase_complexity",
+        "abstract_up",
+        "increase_complexity"
+      ]
+    },
+    {
+      "familyId": "fam_motion",
+      "name": "图形运动",
+      "stages": [
+        "g3/down/生活中的运动现象",
+        "g4/down/图形的运动（二）",
+        "g5/up/图形的运动",
+        "g5/down/图形的运动（三）"
+      ],
+      "ops": [
+        "abstract_up",
+        "increase_complexity",
+        "increase_complexity"
+      ]
+    }
+  ],
   "relations": [
     {
       "fromId": "math-g1-up-u01-k001",
@@ -2691,7 +2868,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(整数认识)"
+      "rule": "R-REL-03:概念主干链(整数认识)",
+      "evolution": {
+        "familyId": "fam_integer",
+        "fromStageOrder": 1,
+        "toStageOrder": 4,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g1-down-u03-k001",
@@ -2699,7 +2882,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(整数认识)"
+      "rule": "R-REL-03:概念主干链(整数认识)",
+      "evolution": {
+        "familyId": "fam_integer",
+        "fromStageOrder": 4,
+        "toStageOrder": 10,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g2-down-u04-k001",
@@ -2707,7 +2896,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(整数认识)"
+      "rule": "R-REL-03:概念主干链(整数认识)",
+      "evolution": {
+        "familyId": "fam_integer",
+        "fromStageOrder": 10,
+        "toStageOrder": 17,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g1-up-u05-k001",
@@ -2715,7 +2910,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(加减运算)"
+      "rule": "R-REL-03:概念主干链(加减运算)",
+      "evolution": {
+        "familyId": "fam_addsub",
+        "fromStageOrder": 6,
+        "toStageOrder": 9,
+        "op": "inverse"
+      }
     },
     {
       "fromId": "math-g1-down-u02-k001",
@@ -2723,7 +2924,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(加减运算)"
+      "rule": "R-REL-03:概念主干链(加减运算)",
+      "evolution": {
+        "familyId": "fam_addsub",
+        "fromStageOrder": 9,
+        "toStageOrder": 12,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g1-down-u04-k001",
@@ -2731,7 +2938,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(加减运算)"
+      "rule": "R-REL-03:概念主干链(加减运算)",
+      "evolution": {
+        "familyId": "fam_addsub",
+        "fromStageOrder": 12,
+        "toStageOrder": 17,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g1-down-u05-k001",
@@ -2739,7 +2952,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(加减运算)"
+      "rule": "R-REL-03:概念主干链(加减运算)",
+      "evolution": {
+        "familyId": "fam_addsub",
+        "fromStageOrder": 17,
+        "toStageOrder": 20,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g2-up-u02-k001",
@@ -2747,7 +2966,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(乘法)"
+      "rule": "R-REL-03:概念主干链(乘法)",
+      "evolution": {
+        "familyId": "fam_multiply",
+        "fromStageOrder": 1,
+        "toStageOrder": 6,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g2-up-u07-k001",
@@ -2755,7 +2980,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(乘法)"
+      "rule": "R-REL-03:概念主干链(乘法)",
+      "evolution": {
+        "familyId": "fam_multiply",
+        "fromStageOrder": 6,
+        "toStageOrder": 7,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-up-u05-k001",
@@ -2763,7 +2994,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(乘法)"
+      "rule": "R-REL-03:概念主干链(乘法)",
+      "evolution": {
+        "familyId": "fam_multiply",
+        "fromStageOrder": 7,
+        "toStageOrder": 12,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g2-up-u03-k001",
@@ -2771,7 +3008,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(除法)"
+      "rule": "R-REL-03:概念主干链(除法)",
+      "evolution": {
+        "familyId": "fam_divide",
+        "fromStageOrder": 1,
+        "toStageOrder": 6,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g2-up-u07-k001",
@@ -2779,7 +3022,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(除法)"
+      "rule": "R-REL-03:概念主干链(除法)",
+      "evolution": {
+        "familyId": "fam_divide",
+        "fromStageOrder": 6,
+        "toStageOrder": 8,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g2-down-u02-k001",
@@ -2787,7 +3036,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(除法)"
+      "rule": "R-REL-03:概念主干链(除法)",
+      "evolution": {
+        "familyId": "fam_divide",
+        "fromStageOrder": 8,
+        "toStageOrder": 13,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-up-u08-k001",
@@ -2795,7 +3050,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(分数)"
+      "rule": "R-REL-03:概念主干链(分数)",
+      "evolution": {
+        "familyId": "fam_fraction",
+        "fromStageOrder": 1,
+        "toStageOrder": 6,
+        "op": "abstract_up"
+      }
     },
     {
       "fromId": "math-g5-down-u04-k001",
@@ -2803,7 +3064,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(分数)"
+      "rule": "R-REL-03:概念主干链(分数)",
+      "evolution": {
+        "familyId": "fam_fraction",
+        "fromStageOrder": 6,
+        "toStageOrder": 12,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-down-u06-k001",
@@ -2811,7 +3078,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(分数)"
+      "rule": "R-REL-03:概念主干链(分数)",
+      "evolution": {
+        "familyId": "fam_fraction",
+        "fromStageOrder": 12,
+        "toStageOrder": 17,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g6-up-u02-k001",
@@ -2819,7 +3092,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(分数)"
+      "rule": "R-REL-03:概念主干链(分数)",
+      "evolution": {
+        "familyId": "fam_fraction",
+        "fromStageOrder": 17,
+        "toStageOrder": 21,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-down-u07-k001",
@@ -2827,7 +3106,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(小数)"
+      "rule": "R-REL-03:概念主干链(小数)",
+      "evolution": {
+        "familyId": "fam_decimal",
+        "fromStageOrder": 1,
+        "toStageOrder": 5,
+        "op": "abstract_up"
+      }
     },
     {
       "fromId": "math-g4-down-u04-k001",
@@ -2835,7 +3120,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(小数)"
+      "rule": "R-REL-03:概念主干链(小数)",
+      "evolution": {
+        "familyId": "fam_decimal",
+        "fromStageOrder": 5,
+        "toStageOrder": 12,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g4-down-u06-k001",
@@ -2843,7 +3134,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(小数)"
+      "rule": "R-REL-03:概念主干链(小数)",
+      "evolution": {
+        "familyId": "fam_decimal",
+        "fromStageOrder": 12,
+        "toStageOrder": 16,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-up-u02-k001",
@@ -2851,7 +3148,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(小数)"
+      "rule": "R-REL-03:概念主干链(小数)",
+      "evolution": {
+        "familyId": "fam_decimal",
+        "fromStageOrder": 16,
+        "toStageOrder": 21,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g1-up-u03-k001",
@@ -2859,7 +3162,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 1,
+        "toStageOrder": 3,
+        "op": "abstract_up"
+      }
     },
     {
       "fromId": "math-g1-down-u01-k001",
@@ -2867,7 +3176,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 3,
+        "toStageOrder": 5,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-down-u03-k001",
@@ -2875,7 +3190,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 5,
+        "toStageOrder": 10,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g4-up-u05-k001",
@@ -2883,7 +3204,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 10,
+        "toStageOrder": 14,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g4-down-u05-k001",
@@ -2891,7 +3218,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 14,
+        "toStageOrder": 24,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-down-u03-k001",
@@ -2899,7 +3232,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 24,
+        "toStageOrder": 35,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g6-up-u04-k001",
@@ -2907,7 +3246,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形认识)"
+      "rule": "R-REL-03:概念主干链(图形认识)",
+      "evolution": {
+        "familyId": "fam_shape",
+        "fromStageOrder": 35,
+        "toStageOrder": 40,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g2-up-u05-k001",
@@ -2915,7 +3260,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(测量)"
+      "rule": "R-REL-03:概念主干链(测量)",
+      "evolution": {
+        "familyId": "fam_measure",
+        "fromStageOrder": 1,
+        "toStageOrder": 6,
+        "op": "extend_number"
+      }
     },
     {
       "fromId": "math-g3-up-u03-k001",
@@ -2923,7 +3274,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(测量)"
+      "rule": "R-REL-03:概念主干链(测量)",
+      "evolution": {
+        "familyId": "fam_measure",
+        "fromStageOrder": 6,
+        "toStageOrder": 14,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-down-u04-k001",
@@ -2931,7 +3288,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(测量)"
+      "rule": "R-REL-03:概念主干链(测量)",
+      "evolution": {
+        "familyId": "fam_measure",
+        "fromStageOrder": 14,
+        "toStageOrder": 19,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-up-u07-k001",
@@ -2939,7 +3302,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(线与角)"
+      "rule": "R-REL-03:概念主干链(线与角)",
+      "evolution": {
+        "familyId": "fam_line_angle",
+        "fromStageOrder": 1,
+        "toStageOrder": 5,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-up-u05-k001",
@@ -2947,7 +3316,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(数系与代数)"
+      "rule": "R-REL-03:概念主干链(数系与代数)",
+      "evolution": {
+        "familyId": "fam_number_algebra",
+        "fromStageOrder": 1,
+        "toStageOrder": 5,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-down-u02-k001",
@@ -2955,7 +3330,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(数系与代数)"
+      "rule": "R-REL-03:概念主干链(数系与代数)",
+      "evolution": {
+        "familyId": "fam_number_algebra",
+        "fromStageOrder": 5,
+        "toStageOrder": 11,
+        "op": "abstract_up"
+      }
     },
     {
       "fromId": "math-g6-up-u05-k001",
@@ -2963,7 +3344,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(数系与代数)"
+      "rule": "R-REL-03:概念主干链(数系与代数)",
+      "evolution": {
+        "familyId": "fam_number_algebra",
+        "fromStageOrder": 11,
+        "toStageOrder": 17,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g3-down-u01-k001",
@@ -2971,7 +3358,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形运动)"
+      "rule": "R-REL-03:概念主干链(图形运动)",
+      "evolution": {
+        "familyId": "fam_motion",
+        "fromStageOrder": 1,
+        "toStageOrder": 5,
+        "op": "abstract_up"
+      }
     },
     {
       "fromId": "math-g4-down-u07-k001",
@@ -2979,7 +3372,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形运动)"
+      "rule": "R-REL-03:概念主干链(图形运动)",
+      "evolution": {
+        "familyId": "fam_motion",
+        "fromStageOrder": 5,
+        "toStageOrder": 10,
+        "op": "increase_complexity"
+      }
     },
     {
       "fromId": "math-g5-up-u04-k001",
@@ -2987,7 +3386,13 @@
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
-      "rule": "R-REL-03:LLM概念链(图形运动)"
+      "rule": "R-REL-03:概念主干链(图形运动)",
+      "evolution": {
+        "familyId": "fam_motion",
+        "fromStageOrder": 10,
+        "toStageOrder": 13,
+        "op": "increase_complexity"
+      }
     }
   ]
 }

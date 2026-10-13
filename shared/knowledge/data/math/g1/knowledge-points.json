@@ -18,6 +18,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 1
+        },
         "concept": "认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系",
         "operations": [],
         "representations": [
@@ -134,6 +138,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 2
+        },
         "concept": "理解加法是“把两个部分合起来”的运算；掌握“数手指”“数小棒”“想数的组成”等口算方法；规范书写加法算式，会读算式 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式",
         "operations": [
           "addition",
@@ -253,6 +261,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 3
+        },
         "concept": "理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。",
         "operations": [
           "addition",
@@ -372,6 +384,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 4
+        },
         "concept": "数的认识、大小比较、加减法运算及运用。10以内数的分解（凑十法的基础）、加减法运算及运用。",
         "operations": [
           "addition",
@@ -491,6 +507,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 5
+        },
         "concept": "理解连加连减的运算顺序，按从左到右依次计算。掌握加减混合运算的顺序与计算方法。",
         "operations": [
           "addition",
@@ -612,6 +632,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 1
+        },
         "concept": "直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "operations": [],
         "representations": [
@@ -734,6 +758,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 2
+        },
         "concept": "经历从实物到图形、由具体到一般的抽象过程，形成对立体图形的直观认识，经历从实物到图形、由具体到一般的抽象过程，形成对立体图形的直观认识",
         "operations": [],
         "representations": [
@@ -856,6 +884,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 1
+        },
         "concept": "数数（一个一个数、两个两个数等）、数的读写、大小比较",
         "operations": [],
         "representations": [
@@ -969,6 +1001,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 2
+        },
         "concept": "理解11—20各数是由几个十和几个一组成的（如12是1个十和2个一）",
         "operations": [],
         "representations": [
@@ -1082,6 +1118,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 3
+        },
         "concept": "10加几、十几加几与相应的减法",
         "operations": [
           "addition",
@@ -1198,6 +1238,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 6
+        },
         "concept": "运用“凑十法”灵活计算",
         "operations": [],
         "representations": [
@@ -1311,6 +1355,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 7
+        },
         "concept": "进一步巩固凑十法，熟练口算",
         "operations": [
           "addition"
@@ -1426,6 +1474,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 8
+        },
         "concept": "能根据情境图提出并解决用加法计算的实际问题",
         "operations": [
           "addition"
@@ -1541,6 +1593,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 1
+        },
         "concept": "熟练掌握以上知识点",
         "operations": [
           "mixed"
@@ -1648,6 +1704,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 3
+        },
         "concept": "直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
         "operations": [],
         "representations": [
@@ -1770,6 +1830,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 9
+        },
         "concept": "掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算",
         "operations": [
           "addition",
@@ -1886,6 +1950,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 10
+        },
         "concept": "进一步巩固退位减法的口算",
         "operations": [
           "subtraction"
@@ -2001,6 +2069,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 11
+        },
         "concept": "能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题",
         "operations": [],
         "representations": [
@@ -2114,6 +2186,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 4
+        },
         "concept": "一个一个地数、十个十个地数；理解10个一是1个十，10个十是100",
         "operations": [],
         "representations": [
@@ -2227,6 +2303,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 5
+        },
         "concept": "知道100以内的数是由几个十和几个一组成的",
         "operations": [],
         "representations": [
@@ -2343,6 +2423,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 6
+        },
         "concept": "掌握100以内数的读法和写法",
         "operations": [],
         "representations": [
@@ -2459,6 +2543,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 7
+        },
         "concept": "认识个位、十位、百位，理解各数位的意义",
         "operations": [],
         "representations": [
@@ -2572,6 +2660,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 8
+        },
         "concept": "掌握100以内数的排列顺序",
         "operations": [],
         "representations": [
@@ -2688,6 +2780,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 9
+        },
         "concept": "会比较100以内数的大小",
         "operations": [],
         "representations": [
@@ -2804,6 +2900,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 12
+        },
         "concept": "理解算理，正确口算",
         "operations": [
           "addition"
@@ -2922,6 +3022,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 13
+        },
         "concept": "掌握进位加法的口算方法",
         "operations": [
           "addition"
@@ -3040,6 +3144,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 14
+        },
         "concept": "理解算理，正确口算",
         "operations": [
           "subtraction"
@@ -3158,6 +3266,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 15
+        },
         "concept": "掌握退位减法的口算方法",
         "operations": [
           "subtraction"
@@ -3276,6 +3388,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 16
+        },
         "concept": "能用加、减法解决实际问题",
         "operations": [
           "addition",
@@ -3392,6 +3508,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 17
+        },
         "concept": "掌握竖式计算的方法，理解“相同数位对齐”的规则",
         "operations": [
           "addition"
@@ -3510,6 +3630,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 18
+        },
         "concept": "掌握竖式减法，注意退位情况",
         "operations": [
           "subtraction"
@@ -3628,6 +3752,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 19
+        },
         "concept": "系统梳理笔算加减法的计算方法与注意事项",
         "operations": [
           "addition",
@@ -3744,6 +3872,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 1
+        },
         "concept": "理解“分量+分量=总量”的加法模型",
         "operations": [
           "addition"
@@ -3859,6 +3991,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 2
+        },
         "concept": "借助画图等策略理解数量间的加减关系",
         "operations": [
           "addition",
@@ -3984,6 +4120,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 3
+        },
         "concept": "能解决“比多比少”以及多步加减关系的实际问题",
         "operations": [
           "addition",
@@ -4100,6 +4240,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_money",
+          "stageOrder": 1
+        },
         "concept": "元、角、分。",
         "operations": [],
         "representations": [
@@ -4206,6 +4350,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_money",
+          "stageOrder": 2
+        },
         "concept": "知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算",
         "operations": [],
         "representations": [
@@ -4312,6 +4460,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_money",
+          "stageOrder": 3
+        },
         "concept": "了解人民币在生活中的作用，学会简单的购物付钱和找零",
         "operations": [],
         "representations": [
@@ -4417,6 +4569,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 2
+        },
         "concept": "对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固",
         "operations": [
           "mixed"

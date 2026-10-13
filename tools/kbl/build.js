@@ -53,6 +53,24 @@ distCurriculum.units = distCurriculum.units.map(function (u) {
   return copy;
 });
 
+// ---- 2b. P40 T-03：T2 副本重冻自检（kbl/teaching ↔ shared/knowledge/teaching，漂移即 FAIL） ----
+// 在 emit 覆盖镜像之前比对既有副本：人为制造漂移 → 拦截 FAIL；一致 → PASS 后再重冻。
+function assertTeachingMirrorInSync() {
+  var srcDir = path.join(SRC, 'teaching'), dstDir = path.join(DST, 'teaching');
+  // 仅原样镜像进运行时的 teaching 产物参与副本比对；投影类（qt-intent→qt-intent-runtime）与 dev-only 源不在此列。
+  var MIRRORED = ['misconception-profiles.json', 'context-library.json'];
+  var drift = [];
+  MIRRORED.forEach(function (f) {
+    var dstPath = path.join(dstDir, f);
+    if (!fs.existsSync(dstPath)) { drift.push(f + '(缺失镜像)'); return; }
+    var a = JSON.stringify(JSON.parse(fs.readFileSync(path.join(srcDir, f), 'utf8')));
+    var b = JSON.stringify(JSON.parse(fs.readFileSync(dstPath, 'utf8')));
+    if (a !== b) drift.push(f);
+  });
+  if (drift.length) throw new Error('[T-03 副本漂移] kbl/teaching 与 shared/knowledge/teaching 不一致: ' + drift.join(', '));
+}
+assertTeachingMirrorInSync();
+
 // ---- 3. 写入分发目录并计算数据文件哈希（rootHash 仅覆盖数据，manifest 不入指纹） ----
 var files = {};
 function emit(rel, text) {
@@ -74,6 +92,11 @@ emit('index/index.json', JSON.stringify(index));
 
 // teaching overlay 原样镜像（derived 产物已带 schema/counts 溯源，不剥离字段）
 emit('teaching/misconception-profiles.json', JSON.stringify(misconceptions));
+
+// P40-Q-12：情境语料库原样镜像（T2 评审冻结产物，reviewStatus=confirmed；
+// 供 KBL Runtime 公开 API contextLibrary 分发、application/money 生成器按 grade×relation 选取）。
+var contextLibrary = readJson(path.join(SRC, 'teaching/context-library.json'));
+emit('teaching/context-library.json', JSON.stringify(contextLibrary));
 
 // P38-DATA-01：qt-intent 运行时投影（T2 全文 3.9MB 不上运行时；仅投影机器约束字段
 // status + assessment，供 KBL Runtime 公开 API intentFor 分发、Generator 图形/意图闸门消费）。
@@ -101,7 +124,7 @@ emit('teaching/qt-intent-runtime.json', JSON.stringify(qtIntentRuntime));
 // 否则每次重建都脏 tracked 文件。packageVersion 继承 kbl/manifest 源清单（稳定），时间溯源在源清单。
 var srcManifestForBuild = readJson(path.join(SRC, 'manifest/manifest.json'));
 var kpCount = Object.keys(grades).reduce(function (n, g) { return n + grades[g].knowledgePoints.length; }, 0);
-var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json'];
+var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json', 'teaching/context-library.json'];
 var rootInput = DATA_RELS.map(function (rel) { return rel + ':' + files[rel] + '\n'; }).join('');
 var rootHash = sha(rootInput);
 var manifest = {

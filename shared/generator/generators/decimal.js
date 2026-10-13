@@ -13,6 +13,7 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var Arith = require('../core/arithmetic-core.js');
 var SemanticEvidence = require('../core/semantic-evidence.js');
 var VariationApply = require('../core/variation-apply.js');
 
@@ -462,6 +463,28 @@ function buildQuestion(plan, context, i) {
   if (qt === 'choice' && options) {
     data.options = options;
     data.correctIndex = options.map(String).indexOf(String(answer));
+  }
+  // P40-Q-19（D18 分桶收口）：小数两数单步尾式挂课标竖式（遮蔽形态防泄题），镜像
+  // arithmetic.js Q-06 descriptor 契约（dec-mul → subtype 'mul'、dec-addsub → subtype
+  // 'dec' + op，均 trimDec 字符串 params）。范围仅小数操作数（int 轨归 Q-06 整数面）：
+  // calc「列式计算：A op B = ？」与 word 情境 apply「列式求…：A op B = ？」尾式。
+  // 仍不配：addsub-mix 两步以上 / div（小数除渲染能力缺口 D4 挂账）/ mult-estimate（估算）；
+  // verticalPlan 年级规则不满足或解析失败一律 fail-closed 不挂图。
+  if (qt === 'calc' || qt === 'apply') {
+    if (sub === 'addsub' || sub === 'mult' || sub === 'word') {
+      var vm = /^列式计算：([\d.]+)\s*([+−×÷])\s*([\d.]+)\s*=\s*？$/.exec(String(prompt)) ||
+        /列式求[^：]*：([\d.]+)\s*([+−×÷])\s*([\d.]+)\s*=\s*？$/.exec(String(prompt));
+      if (vm && (/\./.test(vm[1]) || /\./.test(vm[3]))) {
+        var vPlan = Arith.verticalPlan(Arith.gradeOfKp(pkp(plan)), Number(vm[1]), Number(vm[3]), vm[2]);
+        if (vPlan) {
+          data.graphic = vPlan.sub === 'mul'
+            ? { type: 'calculation', subtype: 'mul', role: 'calculation-support',
+                params: { a: Arith.trimDec(vm[1]), b: Arith.trimDec(vm[3]), options: { maskResult: true } } }
+            : { type: 'calculation', subtype: 'dec', role: 'calculation-support',
+                params: { a: Arith.trimDec(vm[1]), b: Arith.trimDec(vm[3]), op: vm[2], options: { maskResult: true } } };
+        }
+      }
+    }
   }
 
   return {

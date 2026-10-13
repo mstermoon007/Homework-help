@@ -1,0 +1,924 @@
+{
+  "task": "P40-T-14",
+  "generatedBy": "dev/p40/t14-mainline-audit.js",
+  "mainlines": [
+    {
+      "familyId": "fam_addsub",
+      "name": "加法（加减运算）",
+      "members": 26,
+      "checks": {
+        "familyIdConsistent": true,
+        "stageOrderStrict": true,
+        "difficultyMonotonic": false,
+        "explanationContinuity": true,
+        "compositeCompliance": true
+      },
+      "difficultyInversions": [
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-up-u01-k002",
+          "fromStageOrder": 2,
+          "fromDifficulty": 5,
+          "toId": "math-g1-up-u01-k003",
+          "toStageOrder": 3,
+          "toDifficulty": 4,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-up-u02-k002",
+          "fromStageOrder": 5,
+          "fromDifficulty": 4,
+          "toId": "math-g1-up-u05-k001",
+          "toStageOrder": 6,
+          "toDifficulty": 2,
+          "difficultyDelta": -2
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-up-u05-k003",
+          "fromStageOrder": 8,
+          "fromDifficulty": 3,
+          "toId": "math-g1-down-u02-k001",
+          "toStageOrder": 9,
+          "toDifficulty": 2,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-down-u02-k003",
+          "fromStageOrder": 11,
+          "fromDifficulty": 5,
+          "toId": "math-g1-down-u04-k001",
+          "toStageOrder": 12,
+          "toDifficulty": 4,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-down-u04-k004",
+          "fromStageOrder": 15,
+          "fromDifficulty": 4,
+          "toId": "math-g1-down-u04-k005",
+          "toStageOrder": 16,
+          "toDifficulty": 3,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g1-down-u05-k002",
+          "fromStageOrder": 18,
+          "fromDifficulty": 4,
+          "toId": "math-g1-down-u05-k003",
+          "toStageOrder": 19,
+          "toDifficulty": 2,
+          "difficultyDelta": -2
+        },
+        {
+          "familyId": "fam_addsub",
+          "fromId": "math-g4-down-u01-k001",
+          "fromStageOrder": 24,
+          "fromDifficulty": 7,
+          "toId": "math-g4-down-u03-k001",
+          "toStageOrder": 25,
+          "toDifficulty": 5,
+          "difficultyDelta": -2
+        }
+      ],
+      "withUpstream": 22,
+      "upstreamWrongFamily": [],
+      "crossFamilyCombos": 5,
+      "comboOk": 5,
+      "comboBad": [],
+      "chain": [
+        {
+          "knowledgeId": "math-g1-up-u01-k001",
+          "name": "1-5数的认识",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 1,
+          "seedDifficulty": 4,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g1-up-u01-k002",
+          "name": "5以内的加减法",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 2,
+          "seedDifficulty": 5,
+          "upstream": "math-g1-up-u01-k001"
+        },
+        {
+          "knowledgeId": "math-g1-up-u01-k003",
+          "name": "0的认识和加减法",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 3,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-up-u01-k002"
+        },
+        {
+          "knowledgeId": "math-g1-up-u02-k001",
+          "name": "6和10的认识",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 4,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-up-u01-k003"
+        },
+        {
+          "knowledgeId": "math-g1-up-u02-k002",
+          "name": "10以内连加连减",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 5,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-up-u02-k001"
+        },
+        {
+          "knowledgeId": "math-g1-up-u05-k001",
+          "name": "凑十法",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 6,
+          "seedDifficulty": 2,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g1-up-u05-k002",
+          "name": "加法口算",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 7,
+          "seedDifficulty": 2,
+          "upstream": "math-g1-up-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g1-up-u05-k003",
+          "name": "解决问题",
+          "grade": "g1",
+          "book": "up",
+          "stageOrder": 8,
+          "seedDifficulty": 3,
+          "upstream": "math-g1-up-u05-k002"
+        },
+        {
+          "knowledgeId": "math-g1-down-u02-k001",
+          "name": "运算方法（平十、破十）",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 9,
+          "seedDifficulty": 2,
+          "upstream": "math-g1-up-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g1-down-u02-k002",
+          "name": "减法口算",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 10,
+          "seedDifficulty": 2,
+          "upstream": "math-g1-down-u02-k001"
+        },
+        {
+          "knowledgeId": "math-g1-down-u02-k003",
+          "name": "解决问题",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 11,
+          "seedDifficulty": 5,
+          "upstream": "math-g1-down-u02-k002"
+        },
+        {
+          "knowledgeId": "math-g1-down-u04-k001",
+          "name": "两位数不进位加法",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 12,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u02-k001"
+        },
+        {
+          "knowledgeId": "math-g1-down-u04-k002",
+          "name": "两位数进位加法",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 13,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g1-down-u04-k003",
+          "name": "两位数不退位减法",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 14,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u04-k002"
+        },
+        {
+          "knowledgeId": "math-g1-down-u04-k004",
+          "name": "两位数退位减法",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 15,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u04-k003"
+        },
+        {
+          "knowledgeId": "math-g1-down-u04-k005",
+          "name": "解决问题",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 16,
+          "seedDifficulty": 3,
+          "upstream": "math-g1-down-u04-k004"
+        },
+        {
+          "knowledgeId": "math-g1-down-u05-k001",
+          "name": "两位数加（竖式计算）",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 17,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u04-k005"
+        },
+        {
+          "knowledgeId": "math-g1-down-u05-k002",
+          "name": "两位数减（竖式计算）",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 18,
+          "seedDifficulty": 4,
+          "upstream": "math-g1-down-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g1-down-u05-k003",
+          "name": "整理和复习",
+          "grade": "g1",
+          "book": "down",
+          "stageOrder": 19,
+          "seedDifficulty": 2,
+          "upstream": "math-g1-down-u05-k002"
+        },
+        {
+          "knowledgeId": "math-g2-down-u05-k001",
+          "name": "三位数加法竖式",
+          "grade": "g2",
+          "book": "down",
+          "stageOrder": 20,
+          "seedDifficulty": 5,
+          "upstream": "math-g1-down-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g2-down-u05-k002",
+          "name": "三位数减法竖式",
+          "grade": "g2",
+          "book": "down",
+          "stageOrder": 21,
+          "seedDifficulty": 5,
+          "upstream": "math-g2-down-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g2-down-u05-k003",
+          "name": "加减法各部分名称与关系",
+          "grade": "g2",
+          "book": "down",
+          "stageOrder": 22,
+          "seedDifficulty": 5,
+          "upstream": "math-g2-down-u05-k002"
+        },
+        {
+          "knowledgeId": "math-g2-down-u05-k004",
+          "name": "解决问题",
+          "grade": "g2",
+          "book": "down",
+          "stageOrder": 23,
+          "seedDifficulty": 6,
+          "upstream": "math-g2-down-u05-k003"
+        },
+        {
+          "knowledgeId": "math-g4-down-u01-k001",
+          "name": "加减法的意义和各部分间的关系",
+          "grade": "g4",
+          "book": "down",
+          "stageOrder": 24,
+          "seedDifficulty": 7,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g4-down-u03-k001",
+          "name": "加法运算律",
+          "grade": "g4",
+          "book": "down",
+          "stageOrder": 25,
+          "seedDifficulty": 5,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g4-down-u03-k002",
+          "name": "减法运算律",
+          "grade": "g4",
+          "book": "down",
+          "stageOrder": 26,
+          "seedDifficulty": 5,
+          "upstream": "math-g4-down-u03-k001"
+        }
+      ]
+    },
+    {
+      "familyId": "fam_fraction",
+      "name": "分数",
+      "members": 30,
+      "checks": {
+        "familyIdConsistent": true,
+        "stageOrderStrict": true,
+        "difficultyMonotonic": false,
+        "explanationContinuity": true,
+        "compositeCompliance": true
+      },
+      "difficultyInversions": [
+        {
+          "familyId": "fam_fraction",
+          "fromId": "math-g6-up-u03-k005",
+          "fromStageOrder": 25,
+          "fromDifficulty": 10,
+          "toId": "math-g6-down-u02-k001",
+          "toStageOrder": 26,
+          "toDifficulty": 8,
+          "difficultyDelta": -2
+        },
+        {
+          "familyId": "fam_fraction",
+          "fromId": "math-g6-down-u02-k002",
+          "fromStageOrder": 27,
+          "fromDifficulty": 10,
+          "toId": "math-g6-down-u02-k003",
+          "toStageOrder": 28,
+          "toDifficulty": 7,
+          "difficultyDelta": -3
+        }
+      ],
+      "withUpstream": 28,
+      "upstreamWrongFamily": [],
+      "crossFamilyCombos": 5,
+      "comboOk": 5,
+      "comboBad": [],
+      "chain": [
+        {
+          "knowledgeId": "math-g3-up-u08-k001",
+          "name": "初步认识分数",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 1,
+          "seedDifficulty": 7,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g3-up-u08-k002",
+          "name": "分数的读写",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 2,
+          "seedDifficulty": 7,
+          "upstream": "math-g3-up-u08-k001"
+        },
+        {
+          "knowledgeId": "math-g3-up-u08-k003",
+          "name": "比较分数大小",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 3,
+          "seedDifficulty": 7,
+          "upstream": "math-g3-up-u08-k002"
+        },
+        {
+          "knowledgeId": "math-g3-up-u08-k004",
+          "name": "分数的简单计算",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 4,
+          "seedDifficulty": 7,
+          "upstream": "math-g3-up-u08-k003"
+        },
+        {
+          "knowledgeId": "math-g3-up-u08-k005",
+          "name": "进一步认识分数",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 5,
+          "seedDifficulty": 8,
+          "upstream": "math-g3-up-u08-k004"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k001",
+          "name": "分数的意义",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 6,
+          "seedDifficulty": 9,
+          "upstream": "math-g3-up-u08-k001"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k002",
+          "name": "分数与除法的关系",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 7,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k003",
+          "name": "真分数和假分数",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 8,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k002"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k004",
+          "name": "分数的基本性质",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 9,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k003"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k005",
+          "name": "约分与通分",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 10,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k004"
+        },
+        {
+          "knowledgeId": "math-g5-down-u04-k006",
+          "name": "分数和小数的互化",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 11,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k005"
+        },
+        {
+          "knowledgeId": "math-g5-down-u06-k001",
+          "name": "同分母分数加减法",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 12,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g5-down-u06-k002",
+          "name": "异分母分数加减法",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 13,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u06-k001"
+        },
+        {
+          "knowledgeId": "math-g5-down-u06-k003",
+          "name": "分数加减混合运算",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 14,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u06-k002"
+        },
+        {
+          "knowledgeId": "math-g5-down-u06-k004",
+          "name": "整数加法运算律推广到分数",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 15,
+          "seedDifficulty": 9,
+          "upstream": "math-g5-down-u06-k003"
+        },
+        {
+          "knowledgeId": "math-g5-down-u06-k005",
+          "name": "解决问题",
+          "grade": "g5",
+          "book": "down",
+          "stageOrder": 16,
+          "seedDifficulty": 10,
+          "upstream": "math-g5-down-u06-k004"
+        },
+        {
+          "knowledgeId": "math-g6-up-u02-k001",
+          "name": "分数乘整数",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 17,
+          "seedDifficulty": 10,
+          "upstream": "math-g5-down-u06-k001"
+        },
+        {
+          "knowledgeId": "math-g6-up-u02-k002",
+          "name": "一个数乘分数",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 18,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u02-k001"
+        },
+        {
+          "knowledgeId": "math-g6-up-u02-k003",
+          "name": "分数、小数混合运算及运算律",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 19,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u02-k002"
+        },
+        {
+          "knowledgeId": "math-g6-up-u02-k004",
+          "name": "解决问题",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 20,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u02-k003"
+        },
+        {
+          "knowledgeId": "math-g6-up-u03-k001",
+          "name": "倒数的认识",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 21,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u02-k004"
+        },
+        {
+          "knowledgeId": "math-g6-up-u03-k002",
+          "name": "分数除以整数",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 22,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u03-k001"
+        },
+        {
+          "knowledgeId": "math-g6-up-u03-k003",
+          "name": "一个数除以分数",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 23,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u03-k002"
+        },
+        {
+          "knowledgeId": "math-g6-up-u03-k004",
+          "name": "分数混合运算",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 24,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u03-k003"
+        },
+        {
+          "knowledgeId": "math-g6-up-u03-k005",
+          "name": "解决问题",
+          "grade": "g6",
+          "book": "up",
+          "stageOrder": 25,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-up-u03-k004"
+        },
+        {
+          "knowledgeId": "math-g6-down-u02-k001",
+          "name": "折扣",
+          "grade": "g6",
+          "book": "down",
+          "stageOrder": 26,
+          "seedDifficulty": 8,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g6-down-u02-k002",
+          "name": "成数",
+          "grade": "g6",
+          "book": "down",
+          "stageOrder": 27,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-down-u02-k001"
+        },
+        {
+          "knowledgeId": "math-g6-down-u02-k003",
+          "name": "税率",
+          "grade": "g6",
+          "book": "down",
+          "stageOrder": 28,
+          "seedDifficulty": 7,
+          "upstream": "math-g6-down-u02-k002"
+        },
+        {
+          "knowledgeId": "math-g6-down-u02-k004",
+          "name": "利率",
+          "grade": "g6",
+          "book": "down",
+          "stageOrder": 29,
+          "seedDifficulty": 7,
+          "upstream": "math-g6-down-u02-k003"
+        },
+        {
+          "knowledgeId": "math-g6-down-u02-k005",
+          "name": "生活与百分数",
+          "grade": "g6",
+          "book": "down",
+          "stageOrder": 30,
+          "seedDifficulty": 10,
+          "upstream": "math-g6-down-u02-k004"
+        }
+      ]
+    },
+    {
+      "familyId": "fam_measure",
+      "name": "面积（测量）",
+      "members": 24,
+      "checks": {
+        "familyIdConsistent": true,
+        "stageOrderStrict": true,
+        "difficultyMonotonic": false,
+        "explanationContinuity": true,
+        "compositeCompliance": true
+      },
+      "difficultyInversions": [
+        {
+          "familyId": "fam_measure",
+          "fromId": "math-g2-up-u05-k005",
+          "fromStageOrder": 5,
+          "fromDifficulty": 5,
+          "toId": "math-g3-up-u03-k001",
+          "toStageOrder": 6,
+          "toDifficulty": 4,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_measure",
+          "fromId": "math-g3-up-u03-k004",
+          "fromStageOrder": 9,
+          "fromDifficulty": 5,
+          "toId": "math-g3-up-u04-k001",
+          "toStageOrder": 10,
+          "toDifficulty": 4,
+          "difficultyDelta": -1
+        },
+        {
+          "familyId": "fam_measure",
+          "fromId": "math-g3-up-u04-k004",
+          "fromStageOrder": 13,
+          "fromDifficulty": 6,
+          "toId": "math-g3-down-u04-k001",
+          "toStageOrder": 14,
+          "toDifficulty": 4,
+          "difficultyDelta": -2
+        },
+        {
+          "familyId": "fam_measure",
+          "fromId": "math-g5-up-u06-k005",
+          "fromStageOrder": 23,
+          "fromDifficulty": 8,
+          "toId": "math-g5-up-u06-k006",
+          "toStageOrder": 24,
+          "toDifficulty": 6,
+          "difficultyDelta": -2
+        }
+      ],
+      "withUpstream": 22,
+      "upstreamWrongFamily": [],
+      "crossFamilyCombos": 3,
+      "comboOk": 3,
+      "comboBad": [],
+      "chain": [
+        {
+          "knowledgeId": "math-g2-up-u05-k001",
+          "name": "认识厘米和米",
+          "grade": "g2",
+          "book": "up",
+          "stageOrder": 1,
+          "seedDifficulty": 3,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g2-up-u05-k002",
+          "name": "测量物体长度的方法",
+          "grade": "g2",
+          "book": "up",
+          "stageOrder": 2,
+          "seedDifficulty": 3,
+          "upstream": "math-g2-up-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g2-up-u05-k003",
+          "name": "认识线段",
+          "grade": "g2",
+          "book": "up",
+          "stageOrder": 3,
+          "seedDifficulty": 3,
+          "upstream": "math-g2-up-u05-k002"
+        },
+        {
+          "knowledgeId": "math-g2-up-u05-k004",
+          "name": "画线段的方法",
+          "grade": "g2",
+          "book": "up",
+          "stageOrder": 4,
+          "seedDifficulty": 3,
+          "upstream": "math-g2-up-u05-k003"
+        },
+        {
+          "knowledgeId": "math-g2-up-u05-k005",
+          "name": "选择合适的长度单位",
+          "grade": "g2",
+          "book": "up",
+          "stageOrder": 5,
+          "seedDifficulty": 5,
+          "upstream": "math-g2-up-u05-k004"
+        },
+        {
+          "knowledgeId": "math-g3-up-u03-k001",
+          "name": "常用长度单位（从小到大）",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 6,
+          "seedDifficulty": 4,
+          "upstream": "math-g2-up-u05-k001"
+        },
+        {
+          "knowledgeId": "math-g3-up-u03-k002",
+          "name": "单位进率",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 7,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-up-u03-k001"
+        },
+        {
+          "knowledgeId": "math-g3-up-u03-k003",
+          "name": "适用场景",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 8,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-up-u03-k002"
+        },
+        {
+          "knowledgeId": "math-g3-up-u03-k004",
+          "name": "解决问题",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 9,
+          "seedDifficulty": 5,
+          "upstream": "math-g3-up-u03-k003"
+        },
+        {
+          "knowledgeId": "math-g3-up-u04-k001",
+          "name": "等量代换",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 10,
+          "seedDifficulty": 4,
+          "upstream": null
+        },
+        {
+          "knowledgeId": "math-g3-up-u04-k002",
+          "name": "认识质量单位及换算",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 11,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-up-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g3-up-u04-k003",
+          "name": "单位适用场景",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 12,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-up-u04-k002"
+        },
+        {
+          "knowledgeId": "math-g3-up-u04-k004",
+          "name": "称重实践",
+          "grade": "g3",
+          "book": "up",
+          "stageOrder": 13,
+          "seedDifficulty": 6,
+          "upstream": "math-g3-up-u04-k003"
+        },
+        {
+          "knowledgeId": "math-g3-down-u04-k001",
+          "name": "面积的认识",
+          "grade": "g3",
+          "book": "down",
+          "stageOrder": 14,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-up-u03-k001"
+        },
+        {
+          "knowledgeId": "math-g3-down-u04-k002",
+          "name": "常用面积单位",
+          "grade": "g3",
+          "book": "down",
+          "stageOrder": 15,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-down-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g3-down-u04-k003",
+          "name": "长方形和正方形的面积计算",
+          "grade": "g3",
+          "book": "down",
+          "stageOrder": 16,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-down-u04-k002"
+        },
+        {
+          "knowledgeId": "math-g3-down-u04-k004",
+          "name": "面积单位间的进率",
+          "grade": "g3",
+          "book": "down",
+          "stageOrder": 17,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-down-u04-k003"
+        },
+        {
+          "knowledgeId": "math-g3-down-u04-k005",
+          "name": "周长与面积的联系与区分",
+          "grade": "g3",
+          "book": "down",
+          "stageOrder": 18,
+          "seedDifficulty": 4,
+          "upstream": "math-g3-down-u04-k004"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k001",
+          "name": "平行四边形的面积",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 19,
+          "seedDifficulty": 6,
+          "upstream": "math-g3-down-u04-k001"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k002",
+          "name": "三角形的面积",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 20,
+          "seedDifficulty": 6,
+          "upstream": "math-g5-up-u06-k001"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k003",
+          "name": "梯形的面积",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 21,
+          "seedDifficulty": 6,
+          "upstream": "math-g5-up-u06-k002"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k004",
+          "name": "组合图形的面积",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 22,
+          "seedDifficulty": 6,
+          "upstream": "math-g5-up-u06-k003"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k005",
+          "name": "格点多边形的面积（选学）",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 23,
+          "seedDifficulty": 8,
+          "upstream": "math-g5-up-u06-k004"
+        },
+        {
+          "knowledgeId": "math-g5-up-u06-k006",
+          "name": "等底等高的图形面积关系",
+          "grade": "g5",
+          "book": "up",
+          "stageOrder": 24,
+          "seedDifficulty": 6,
+          "upstream": "math-g5-up-u06-k005"
+        }
+      ]
+    }
+  ],
+  "problems": [],
+  "verdict": "PASS",
+  "needsReview": {
+    "difficultyInversions": 13
+  }
+}

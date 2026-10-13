@@ -57,6 +57,9 @@
     // P38-DATA-01：qt-intent 机器约束投影（status+assessment，教学文本不进运行时），
     // 完整性纳入 manifest.integrity 校验；消费口 = Query.intentFor
     'teaching/qt-intent-runtime.json',
+    // P40-Q-12：情境语料库（T2 评审冻结产物，reviewStatus=confirmed）；
+    // 完整性纳入 manifest.integrity 校验；消费口 = Query.contextLibrary → application/money
+    'teaching/context-library.json',
     'manifest/manifest.json'
   ];
 
@@ -100,6 +103,8 @@
         misconceptions: data['teaching/misconception-profiles.json'],
         // P38-DATA-01：qt-intent 机器约束投影（status+assessment），消费口 = Query.intentFor
         qtIntents: data['teaching/qt-intent-runtime.json'],
+        // P40-Q-12：情境语料库，消费口 = Query.contextLibrary → application/money
+        contextLibrary: data['teaching/context-library.json'],
         manifest: manifest,
         rootHash: manifest.integrity.rootHash
       };

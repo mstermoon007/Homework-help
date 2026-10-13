@@ -18,6 +18,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_observation",
+          "stageOrder": 1
+        },
         "concept": "从不同位置（正面、侧面、上面）观察立体图形，判断看到的平面图形，位置不同，看到的形状可能不同。",
         "operations": [],
         "representations": [
@@ -140,6 +144,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_observation",
+          "stageOrder": 2
+        },
         "concept": "能根据观察到的平面图形反推观察角度。",
         "operations": [],
         "representations": [
@@ -262,6 +270,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_observation",
+          "stageOrder": 3
+        },
         "concept": "多个相同正方体拼组的图形，需逐一对照不同视角，不能凭直觉判断。",
         "operations": [],
         "representations": [
@@ -384,6 +396,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 1
+        },
         "concept": "一道算式中包含两种及以上运算。",
         "operations": [
           "mixed"
@@ -499,6 +515,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 2
+        },
         "concept": "先算乘除，后算加减；同级运算从左往右依次计算",
         "operations": [
           "addition",
@@ -617,6 +637,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 3
+        },
         "concept": "先算小括号里面的，再算括号外面的",
         "operations": [],
         "representations": [
@@ -730,6 +754,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 4
+        },
         "concept": "等号上下对齐，一步一计算，不跳步",
         "operations": [],
         "representations": [
@@ -843,6 +871,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_operation_law",
+          "stageOrder": 5
+        },
         "concept": "先分析数量关系，确定先算什么再算什么，列综合算式解答",
         "operations": [
           "mixed"
@@ -958,6 +990,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 6
+        },
         "concept": "毫米(mm)、厘米(cm)、分米(dm)、米(m)、千米(km)",
         "operations": [],
         "representations": [
@@ -1080,6 +1116,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 7
+        },
         "concept": "1厘米=10毫米，1分米=10厘米，1米=10分米，1米=100厘米，1千米=1000米。",
         "operations": [],
         "representations": [
@@ -1202,6 +1242,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 8
+        },
         "concept": "毫米适用场景：测量较短、较精细的物体（硬币厚度、书本厚度）；分米适用场景：测量不长不短的物体（课桌长度、课本宽度）；千米适用场景：测量较长距离、路程（公路长度、城市距离）。",
         "operations": [],
         "representations": [
@@ -1324,6 +1368,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 9
+        },
         "concept": "量感建立：操场跑道一圈200米，5圈约1千米；正常步行10分钟约1千米；测量规范：刻度尺0刻度对齐物体一端，另一端对应刻度即为长度。",
         "operations": [],
         "representations": [
@@ -1446,6 +1494,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 10
+        },
         "concept": "把大象重量转化为石头重量，化整为零、化难为易。",
         "operations": [],
         "representations": [
@@ -1559,6 +1611,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 11
+        },
         "concept": "克(g)、千克(kg)、吨(t)；单位换算：1千克=1000克，1吨=1000千克",
         "operations": [],
         "representations": [
@@ -1672,6 +1728,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 12
+        },
         "concept": "克计量较轻物品（鸡蛋、硬币）；千克计量较重物品（人体体重、大米）；吨计量大宗物品（卡车载重）。",
         "operations": [],
         "representations": [
@@ -1785,6 +1845,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 13
+        },
         "concept": "校准秤体、物品轻放、平视读数。",
         "operations": [],
         "representations": [
@@ -1890,6 +1954,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 7
+        },
         "concept": "整十、整百数乘一位数的口算方法。",
         "operations": [
           "multiplication"
@@ -2008,6 +2076,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 8
+        },
         "concept": "从个位乘起，用一位数依次乘多位数的每一位；哪一位上的乘积满几十，就向前一位进几。",
         "operations": [
           "multiplication"
@@ -2126,6 +2198,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 9
+        },
         "concept": "进位数字不能遗漏。",
         "operations": [
           "multiplication"
@@ -2241,6 +2317,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 10
+        },
         "concept": "0和任何数相乘都得0。",
         "operations": [
           "multiplication"
@@ -2356,6 +2436,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 11
+        },
         "concept": "运用乘法解决“物品总价”“人数统计”等实际问题，理解乘法意义与算理。",
         "operations": [
           "multiplication"
@@ -2471,6 +2555,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 5
+        },
         "concept": "身份证号码、邮政编码、学号等。",
         "operations": [],
         "representations": [
@@ -2576,6 +2664,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 6
+        },
         "concept": "前6位为地址码，中间8位为出生日期码，后4位为顺序码和校验码。",
         "operations": [],
         "representations": [
@@ -2681,6 +2773,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 7
+        },
         "concept": "邮政编码的结构与含义。",
         "operations": [],
         "representations": [
@@ -2786,6 +2882,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 8
+        },
         "concept": "简洁性、唯一性、规范性。",
         "operations": [],
         "representations": [
@@ -2891,6 +2991,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 9
+        },
         "concept": "为班级同学编制学号，经历“认识编码—解读编码—设计编码”的过程",
         "operations": [],
         "representations": [
@@ -2996,6 +3100,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 1
+        },
         "concept": "线段有两个端点，可以测量长度；射线有一个端点，向一端无限延伸；直线没有端点，向两端无限延伸",
         "operations": [],
         "representations": [
@@ -3118,6 +3226,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 2
+        },
         "concept": "从一点引出两条射线所组成的图形叫做角，角的各部分名称：顶点、边。",
         "operations": [],
         "representations": [
@@ -3240,6 +3352,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 3
+        },
         "concept": "认识直角、锐角、钝角，能直观判断角的大小。",
         "operations": [],
         "representations": [
@@ -3362,6 +3478,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_line_angle",
+          "stageOrder": 4
+        },
         "concept": "线段、射线、直线的区别与联系",
         "operations": [],
         "representations": [
@@ -3484,6 +3604,10 @@
       "type": "calculation",
       "semantic": {
         "family": "fraction",
+        "conceptFamily": {
+          "id": "fam_fraction",
+          "stageOrder": 1
+        },
         "concept": "几分之一、几分之几的含义",
         "operations": [],
         "representations": [
@@ -3597,6 +3721,10 @@
       "type": "calculation",
       "semantic": {
         "family": "fraction",
+        "conceptFamily": {
+          "id": "fam_fraction",
+          "stageOrder": 2
+        },
         "concept": "分子、分母、分数线的认识",
         "operations": [],
         "representations": [
@@ -3710,6 +3838,10 @@
       "type": "calculation",
       "semantic": {
         "family": "fraction",
+        "conceptFamily": {
+          "id": "fam_fraction",
+          "stageOrder": 3
+        },
         "concept": "同分母分数比较大小，分子大的分数大；同分子分数比较大小，分母小的分数大",
         "operations": [],
         "representations": [
@@ -3823,6 +3955,10 @@
       "type": "calculation",
       "semantic": {
         "family": "fraction",
+        "conceptFamily": {
+          "id": "fam_fraction",
+          "stageOrder": 4
+        },
         "concept": "同分母分数的加法和减法",
         "operations": [
           "addition",
@@ -3939,6 +4075,10 @@
       "type": "calculation",
       "semantic": {
         "family": "fraction",
+        "conceptFamily": {
+          "id": "fam_fraction",
+          "stageOrder": 5
+        },
         "concept": "理解分数表示“部分与整体”的关系，能在具体情境中运用分数",
         "operations": [],
         "representations": [
@@ -4052,6 +4192,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 7
+        },
         "concept": "梳理全册“数与运算”“数量关系”“图形的认识与测量”“常见的量”等板块内容，综合运用所学知识解决跨单元的实际问题",
         "operations": [
           "mixed"
@@ -4160,6 +4304,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 1
+        },
         "concept": "对折后两边能完全重合的图形；折痕所在的直线叫对称轴",
         "operations": [],
         "representations": [
@@ -4282,6 +4430,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 2
+        },
         "concept": "沿直线运动，大小和方向不变",
         "operations": [],
         "representations": [
@@ -4404,6 +4556,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 3
+        },
         "concept": "绕同一个点转动，渗透顺时针、逆时针方向概念",
         "operations": [],
         "representations": [
@@ -4526,6 +4682,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_motion",
+          "stageOrder": 4
+        },
         "concept": "通过剪一个纸人、两个手拉手纸人、四个围合纸人，分层运用轴对称知识",
         "operations": [],
         "representations": [
@@ -4648,6 +4808,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 13
+        },
         "concept": "整十、整百、整千数除以一位数；几百几十除以一位数；两位数除以一位数",
         "operations": [
           "division"
@@ -4766,6 +4930,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 14
+        },
         "concept": "从最高位除起，除到哪一位商就写在哪一位上面；不够商1时商0占位；每步余数必须小于除数",
         "operations": [
           "division"
@@ -4884,6 +5052,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 15
+        },
         "concept": "0除以任何不是0的数都得0；0不能做除数；商中间有0和末尾有0的除法：注意0的占位",
         "operations": [
           "division"
@@ -4999,6 +5171,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 16
+        },
         "concept": "无余数时商×除数=被除数；有余数时商×除数+余数=被除数。",
         "operations": [
           "division"
@@ -5114,6 +5290,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 17
+        },
         "concept": "把被除数看作接近的整十、整百数进行估算。",
         "operations": [
           "division"
@@ -5229,6 +5409,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 18
+        },
         "concept": "分析数量关系，用除法解决实际问题。",
         "operations": [
           "division"
@@ -5344,6 +5528,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 5
+        },
         "concept": "长方形对边相等，四个角都是直角；正方形四条边都相等，四个角都是直角",
         "operations": [],
         "representations": [
@@ -5466,6 +5654,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 6
+        },
         "concept": "封闭图形一周的长度",
         "operations": [],
         "representations": [
@@ -5588,6 +5780,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 7
+        },
         "concept": "长方形周长=(长+宽)×2；正方形周长=边长×4",
         "operations": [],
         "representations": [
@@ -5710,6 +5906,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 8
+        },
         "concept": "用多个相同的小正方形拼成不同形状的图形，探究周长变化规律",
         "operations": [],
         "representations": [
@@ -5832,6 +6032,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 14
+        },
         "concept": "物体表面或封闭图形的大小",
         "operations": [],
         "representations": [
@@ -5954,6 +6158,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 15
+        },
         "concept": "平方厘米、平方分米、平方米",
         "operations": [],
         "representations": [
@@ -6076,6 +6284,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 16
+        },
         "concept": "长方形面积=长×宽；正方形面积=边长×边长",
         "operations": [],
         "representations": [
@@ -6198,6 +6410,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 17
+        },
         "concept": "1平方分米=100平方厘米，1平方米=100平方分米",
         "operations": [],
         "representations": [
@@ -6320,6 +6536,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 18
+        },
         "concept": "周长量化一维长度，面积量化二维区域",
         "operations": [],
         "representations": [
@@ -6442,6 +6662,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 7
+        },
         "concept": "调查、测量、实验等。",
         "operations": [],
         "representations": [
@@ -6563,6 +6787,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 8
+        },
         "concept": "画“正”字、画“○”等符号记录。",
         "operations": [],
         "representations": [
@@ -6684,6 +6912,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 9
+        },
         "concept": "将两个或多个单式统计表合并，能同时呈现多组数据，便于比较。",
         "operations": [],
         "representations": [
@@ -6805,6 +7037,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 10
+        },
         "concept": "从统计表中获取信息，提出并回答简单的问题",
         "operations": [],
         "representations": [
@@ -6926,6 +7162,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_time",
+          "stageOrder": 4
+        },
         "concept": "一年有12个月，大月31天，小月30天，二月平年28天、闰年29天",
         "operations": [],
         "representations": [
@@ -7039,6 +7279,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_time",
+          "stageOrder": 5
+        },
         "concept": "公历年份是4的倍数通常是闰年，整百年份需是400的倍数才是闰年。",
         "operations": [
           "multiplication"
@@ -7154,6 +7398,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 1
+        },
         "concept": "小数的读法、写法，小数点各部分名称。",
         "operations": [],
         "representations": [
@@ -7267,6 +7515,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 2
+        },
         "concept": "先比较整数部分，整数部分相同再比较小数部分。",
         "operations": [],
         "representations": [
@@ -7380,6 +7632,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 3
+        },
         "concept": "小数点对齐，按整数加减法的方法计算。",
         "operations": [
           "addition",
@@ -7496,6 +7752,10 @@
       "type": "calculation",
       "semantic": {
         "family": "decimal",
+        "conceptFamily": {
+          "id": "fam_decimal",
+          "stageOrder": 4
+        },
         "concept": "价格标签、长度测量等",
         "operations": [],
         "representations": [
@@ -7609,6 +7869,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 8
+        },
         "concept": "除数是一位数的除法、小数的初步认识。",
         "operations": [
           "division"
@@ -7719,6 +7983,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 9
+        },
         "concept": "用除法和乘法解决实际问题。",
         "operations": [
           "multiplication",
@@ -7827,6 +8095,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 5
+        },
         "concept": "长方形和正方形的周长与面积、轴对称、平移、旋转。",
         "operations": [],
         "representations": [
@@ -7933,6 +8205,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 11
+        },
         "concept": "复式统计表。",
         "operations": [],
         "representations": [
@@ -8038,6 +8314,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 10
+        },
         "concept": "年、月、日，质量单位，长度单位。",
         "operations": [],
         "representations": [
@@ -8143,6 +8423,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 9
+        },
         "concept": "用集合思想解决简单的重叠问题",
         "operations": [],
         "representations": [

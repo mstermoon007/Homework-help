@@ -217,7 +217,10 @@ function makeReasoningQuestion(plan, context, i, kp) {
 
   // P25-07：choicePool/logicOptions 供 choice 题型构建选项（值约定）；其余题型忽略。
   // P34-14：讲解只复述该题型自身的解题模型，答案均可由题内已知量机械验证
-  var prompt, answer, steps, logicOptions = null, choicePool = null, nativeWhy = null;
+  // P40-Q-09（R13 复现 #131/#162）：fillP 为 builder 级 fill 题面素材（正序合规语序），
+  // 取代 splitClauses+reverse 机械倒序——倒序产出「设问先行条件后置」病句，且切分器
+  // 不保护括号/顿号把「有4种颜色的球（红、黄、蓝、绿）」碎裂倒排（#162）。
+  var prompt, answer, steps, logicOptions = null, choicePool = null, nativeWhy = null, fillP = null;
   var v = i; // 变体序号：同 KP 同题型下轮换不同结构/设问，提升语义容量（R6）
   if (type === 'drawer') {
     var DRAWER = [
@@ -228,6 +231,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var d = DRAWER[v % DRAWER.length];
     prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
+    fillP = '要保证有' + d.k + '个球颜色相同，最少要摸出____个球（球共有' + d.c.length + '种颜色）。';
     answer = d.ans; steps = 2;
     nativeWhy = '抽屉原理按最不利情况算：每种颜色先各摸 ' + (d.k - 1) + ' 个，再摸 1 个就一定有 '
       + d.k + ' 个同色，' + d.c.length + ' × ' + (d.k - 1) + ' + 1 = ' + d.ans;
@@ -236,6 +240,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var twoSum = riC(rng, 10, 50, nr);
       var half = Math.floor(twoSum / 2);
       prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
+      fillP = '两个数的和是' + twoSum + '，这两个数越接近乘积越大，最大乘积是____。';
       answer = half * (twoSum - half); steps = 2;
       nativeWhy = '和一定时，两数越接近乘积越大，取 ' + half + ' 和 ' + (twoSum - half)
         + '：' + half + ' × ' + (twoSum - half) + ' = ' + answer;
@@ -243,6 +248,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var twoSum2 = riC(rng, 10, 50, nr);
       var half2 = Math.floor(twoSum2 / 2);
       prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
+      fillP = '两个数的和是' + twoSum2 + '，相差最小时这两个数是____。';
       answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
       nativeWhy = '和一定，两数最接近时相差最小（差 0 或 1），所以是 ' + half2 + ' 和 ' + (twoSum2 - half2);
     } else {
@@ -251,6 +257,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var rem = threeSum - 3 * base;
       var parts = [base, base, base]; parts[2] += rem;
       prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
+      fillP = '把' + threeSum + '分成尽可能接近的三个数时乘积最大，这个最大乘积是____。';
       answer = parts[0] * parts[1] * parts[2]; steps = 2;
       nativeWhy = '三数尽量接近时乘积最大，' + threeSum + ' 分成 ' + parts.join('、')
         + '，乘积 ' + parts[0] + ' × ' + parts[1] + ' × ' + parts[2] + ' = ' + answer;
@@ -261,6 +268,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var rabb0 = riC(rng, 3, Math.max(3, heads - 2), nr);
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，从上面数共有' + heads + '个头，从下面数共有' + feet + '只脚。鸡和兔各有几只？____';
       var r0 = (feet - heads * 2) / 2;
       answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
       nativeWhy = '假设全是鸡应有 ' + heads + ' × 2 = ' + heads * 2 + ' 只脚，多出 '
@@ -275,6 +283,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var R = riC(rng, 3, 8, nr);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，鸡的只数比兔多' + D + '只，脚一共有' + F + '只。鸡和兔各有几只？____';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
       nativeWhy = '把兔先按 2 只脚算，' + (R + D) + ' 只鸡和 ' + R + ' 只兔共 ' + F + ' 只脚（2×'
         + (R + D) + ' + 6×' + R + ' = ' + F + '），所以兔 ' + R + ' 只、鸡 ' + (R + D) + ' 只';
@@ -287,6 +296,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var C = riC(rng, 3, 8, nr);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
+      fillP = '笼中养着鸡和兔，兔的只数比鸡多' + D2 + '只，脚一共有' + F2 + '只。鸡和兔各有几只？____';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
       nativeWhy = '兔有 4 只脚、鸡有 2 只脚（兔是鸡的 2 倍），' + F2 + ' 只脚按鸡 ' + C
         + ' 只、兔 ' + (C + D2) + ' 只正好：6×' + C + ' + 4×' + D2 + ' = ' + F2;
@@ -306,6 +316,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var tp = TP[v % TP.length];
     prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
+    fillP = '一条' + L + '米长的小路一边植树，每隔' + G + '米栽一棵，植树要求：' + tp.desc + '。一共要栽____棵树。';
     answer = tp.ans; steps = 2;
     nativeWhy = '先算间隔数：' + L + ' ÷ ' + G + ' = ' + Math.floor(L / G) + '；'
       + tp.desc + '，棵数 = 间隔数 ' + (tp.ans > Math.floor(L / G) ? '+ 1' : tp.ans < Math.floor(L / G) ? '− 1' : '')
@@ -316,18 +327,20 @@ function makeReasoningQuestion(plan, context, i, kp) {
     ];
     var df = DEFECT[v % DEFECT.length];
     prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
+    fillP = df.n + '瓶水里有1瓶略轻的次品，用天平最少称____次一定能把它找出来。';
     answer = df.ans; steps = 2;
     nativeWhy = '每次把待测瓶数尽量平均分成 3 份，称其中两份可把范围缩小到 1/3；'
       + df.n + ' 在 3 的 ' + (df.ans - 1) + ' 次方到 ' + df.ans + ' 次方之间，所以至少称 ' + df.ans + ' 次';
   } else if (type === 'handshake') {
     var HSK = [
-      { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
-      { w: '支球队进行单循环比赛，每两队赛一场', ans: function (n) { return n * (n - 1) / 2; } },
-      { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
+      { w: '个人，每两个人握一次手', fp: function (m) { return '有' + m + '个人两两握手，每两个人只握一次，一共要握____次手。'; }, ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '支球队进行单循环比赛，每两队赛一场', fp: function (m) { return '有' + m + '支球队进行单循环赛，每两队只赛一场，一共要赛____场。'; }, ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '个点，每两个点连一条线段', fp: function (m) { return '有' + m + '个点，每两点只连一条线段，一共能连____条线段。'; }, ans: function (n) { return n * (n - 1) / 2; } }
     ];
     var hs = HSK[v % HSK.length];
     var n = riC(rng, 4, 12, nr);
     prompt = n + hs.w + '，一共需要多少次？';
+    fillP = hs.fp(n);
     answer = hs.ans(n); steps = 2;
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
@@ -335,15 +348,18 @@ function makeReasoningQuestion(plan, context, i, kp) {
     if (v % 3 === 0) {
       var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
+      fillP = '一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙' + pans + '张饼最少需要____分钟。';
       answer = pans * 2; steps = 3;
       nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
         + ' × 2 = ' + pans * 2 + ' 个面，每锅 2 分钟烙两个面，共 ' + answer + ' 分钟';
     } else if (v % 3 === 1) {
       prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
+      fillP = '煮一个鸡蛋需要8分钟，洗锅的2分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 8; steps = 2;
       nativeWhy = '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
     } else {
       prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
+      fillP = '看一集动画需要15分钟，写作业的10分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 15; steps = 2;
       nativeWhy = '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
     }
@@ -370,11 +386,13 @@ function makeReasoningQuestion(plan, context, i, kp) {
     } else if (LGV === 1) {
       var ageTop = riC(rng, 9, 12, nr);
       prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
+      fillP = '已知小红比小明小2岁，小刚比小红又小3岁，小明今年' + ageTop + '岁。三人中年龄最大的是____。';
       answer = '小明'; steps = 2;
       logicOptions = ['小明', '小红', '小刚'];
       nativeWhy = '小明比小红大 2 岁，小红又比小刚大 3 岁，年龄关系可传递，所以小明最大';
     } else {
       prompt = '三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。应该从哪个盒子摸？';
+      fillP = '三个盒子上的标签「苹果」「橘子」「混合」全都贴错了，只摸出其中一个盒子里的一个水果，就能判断三个盒子里各装什么。应该摸____的盒子。';
       answer = '标着「混合」的盒子'; steps = 3;
       logicOptions = ['标着「苹果」的盒子', '标着「橘子」的盒子', '标着「混合」的盒子'];
       nativeWhy = '三个标签全贴错，标「混合」的盒子里一定是单一水果，从中摸一个即可确定它；再由「标签全错」推出另外两个盒子';
@@ -396,24 +414,19 @@ function makeReasoningQuestion(plan, context, i, kp) {
       .replace(/至少/g, '最少').replace(/最多/g, '至多')
       .replace(/每隔/g, '每间隔').replace(/平均/g, '均等');
   }
-  // 把题面按句读拆成子句，供 fill 倒序重组（打散与 apply/choice 的连续共享 3-gram）
-  function splitClauses(s) {
-    return String(s).split(/[。，、；！？\n]+/).filter(function (c) { return c.trim().length > 0; });
-  }
   if (qt2 === 'fill') {
-    // fill：子句倒序 + 末尾 ____（结构与 apply 正序、choice 换词都互异）
+    // P40-Q-09：fill 题面全部走 builder 级 fillP 正序素材；seq 与说谎引语为既有特例保留。
+    // 旧 splitClauses+reverse 机械倒序已随 fillP 全类型覆盖物理删除（倒序产出
+    // 「设问先行条件后置」病句且引语/顿号碎裂，复现 #131/#162，见 docs/P40/change-log.md）。
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 中，____ 是下一项';
     } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
-      // P32-AS-16E：直接引语内含句读（说谎模板「甲说：「乙在说谎。」…」）时禁止机械倒序——
-      // splitClauses 会把引语句号与「甲、乙、丙」顿号当子句边界，倒序后引号截断、
-      // 语序错乱成病句。改为正序命题的换词填空式（引语是逻辑命题本体，仅换叙述措辞），
-      // 答案（乙）与三步推理不变。
+      // P32-AS-16E：直接引语内含句读（说谎模板「甲说：「乙在说谎。」…」），
+      // 引语是逻辑命题本体，仅换叙述措辞；答案（乙）与三步推理不变。
       stemPrompt = '有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，' +
         '丙则称甲、乙两人都撒了谎。说真话的是 ____。';
     } else {
-      var cls = splitClauses(prompt);
-      stemPrompt = cls.reverse().join('，') + '，____';
+      stemPrompt = fillP;
     }
   } else if (qt2 === 'choice') {
     // choice：条件同义换词 + 选择问式
@@ -425,8 +438,14 @@ function makeReasoningQuestion(plan, context, i, kp) {
       stemPrompt = '甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」' +
         '乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？';
     } else {
+      // P40-Q-03（#161）：去尾问句正则 [^。！？]*[？?]$ 会把「无句读分隔的整句题面」
+      // 连条件一起删空（如抽屉原理「有4种颜色的球（…），至少要摸出多少个，才能保证…？」
+      // 无句号 → condChoice 为空 → choice 只剩「正确选项是哪一个？」空壳）。
+      // 回退：保留原问句 + 追加选择问式（与上方 seq 分支同型），条件完整承载设问。
       var condChoice = rewordCond(String(prompt).replace(/[^。！？]*[？?]\s*$/, ''));
-      stemPrompt = condChoice + '正确选项是哪一个？';
+      stemPrompt = condChoice
+        ? condChoice + '正确选项是哪一个？'
+        : rewordCond(String(prompt)) + ' 正确选项是哪一个？';
     }
   }
 

@@ -127,11 +127,106 @@ var TYPE_SCOPE = {
   apply:   { carry: '在情境中运用与迁移', forbid: '方法定义的复述' }
 };
 
+// ---------- 3. 声明式决策表（P40-T-01：推导规则收敛为声明式表，行为等价） ----------
+// 每张表为「有序规则数组」，规则 = {id?, when(ctx)→bool, text(ctx)|role}；按数组序求值。
+// 决策表仅重组既有 if 分支，判定谓词与产出文本逐字不变（重放逐字节一致，见 T-01 出口判据）。
 function typeMeta(qt) {
   var t = null;
   QTR.TYPES.forEach(function (x) { if (x.id === qt) t = x; });
   assert(t, '未知题型 ' + qt);
   return t;
+}
+
+// ② whyThisType「题型选取证据」表：命中 ≥1 条 → ai-verified，否则 needs-review(no-type-evidence)
+var WHY_MATCH_RULES = [
+  {
+    id: 'cognitive-match',
+    when: function (c) { return (c.t.cognitiveLevels || []).indexOf(c.f.level) !== -1; },
+    text: function (c) { return '认知匹配：本知识点认知层级「' + (LEVEL_CN[c.f.level] || c.f.level) + '」在' + c.qt + '题型认知区间[' + c.cats + ']内'; }
+  },
+  {
+    id: 'representation-support',
+    when: function (c) { return c.f.graphic && c.t.supports && c.t.supports.graphic; },
+    text: function (c) { return '表征支持：本知识点含图形表征，' + c.qt + '题型支持图形呈现'; }
+  },
+  {
+    id: 'numeric-representation',
+    when: function (c) { return !c.f.graphic && c.qt === 'calc'; },
+    text: function (c) { return '数值表征：本知识点为数值表征，与计算题的算式形态一致'; }
+  },
+  {
+    id: 'category-geometry',
+    when: function (c) { return c.f.module === 'geometry' && c.qt === 'geometry'; },
+    text: function (c) { return '范畴对应：图形与几何域知识点对应操作/作图题型'; }
+  },
+  {
+    id: 'category-practice-context',
+    when: function (c) { return c.f.module === 'practice' && c.t.supports && c.t.supports.context; },
+    text: function (c) { return '情境支持：综合与实践域知识点适合有情境载体的题型'; }
+  }
+];
+
+// ③ differentiation「与同 KP 其他题型差异」维度表：每维对「其他题型 o」产出一句差异
+var DIFF_DIM_RULES = [
+  {
+    when: function (c) { return (c.ot.category || '') !== (c.t.category || ''); },
+    text: function (c) { return c.o + '属' + (CATEGORY_CN[c.ot.category] || c.ot.category) + '而本题型属' + (CATEGORY_CN[c.t.category] || c.t.category); }
+  },
+  {
+    when: function (c) { return !!c.osup.distractors !== !!c.sup.distractors; },
+    text: function (c) { return c.o + (c.osup.distractors ? '含干扰项（辨认成分重）' : '无干扰项（需独立产出）'); }
+  },
+  {
+    when: function (c) { return !!c.osup.context !== !!c.sup.context; },
+    text: function (c) { return c.o + (c.osup.context ? '带情境' : '不带情境'); }
+  },
+  {
+    when: function (c) { return !!c.osup.graphic !== !!c.sup.graphic; },
+    text: function (c) { return c.o + (c.osup.graphic ? '支持图形' : '仅文字/算式'); }
+  },
+  {
+    when: function (c) { return (c.ot.cognitiveLevels || []).length !== (c.t.cognitiveLevels || []).length; },
+    text: function (c) { return c.o + '认知跨度[' + (c.ot.cognitiveLevels || []).map(function (l) { return LEVEL_CN[l] || l; }).join('/') + ']与本题型[' + c.cats + ']不同'; }
+  }
+];
+
+// P30-05 assessment.allowedRepresentations 表：按序命中即纳入
+var ALLOWED_REP_RULES = [
+  {
+    rep: 'numeric',
+    when: function (c) { return c.qt !== 'geometry' && c.f.representations.indexOf('numeric') !== -1; }
+  },
+  {
+    rep: 'graphic',
+    when: function (c) { return c.f.graphic && c.t.supports && c.t.supports.graphic; }
+  }
+];
+
+// P30-05/P30-15 assessment.graphicRole 决策表：按序取首个命中（无命中 → null）
+var GRAPHIC_ROLE_RULES = [
+  {
+    role: 'auxiliary',
+    when: function (c) { return c.f.graphic && c.t.supports && c.t.supports.graphic && c.f.module === 'geometry' && c.qt === 'geometry' && GEN_CONCEPT_KP.indexOf(c.knowledgeId) !== -1; }
+  },
+  {
+    role: 'carrier',
+    when: function (c) { return c.f.graphic && c.t.supports && c.t.supports.graphic && c.f.module === 'geometry' && c.qt === 'geometry'; }
+  },
+  {
+    role: 'auxiliary',
+    when: function (c) { return c.f.graphic && c.t.supports && c.t.supports.graphic; }
+  }
+];
+
+function evalTable(table, ctx, out) {
+  for (var i = 0; i < table.length; i++) {
+    if (table[i].when(ctx)) { out.push(table[i]); }
+  }
+  return out;
+}
+function firstMatch(table, ctx) {
+  for (var i = 0; i < table.length; i++) { if (table[i].when(ctx)) return table[i]; }
+  return null;
 }
 
 // ---------- 3. KP 静态事实 ----------
@@ -179,23 +274,9 @@ function deriveRow(knowledgeId, questionType) {
     '；题型限定：不承载' + scope.forbid;
   st.trainsWhat = 'kbl-derived';
 
-  // ② whyThisType —— 认知/表征/范畴匹配证据，≥1 条才可推导
-  var matches = [];
-  if ((t.cognitiveLevels || []).indexOf(f.level) !== -1) {
-    matches.push('认知匹配：本知识点认知层级「' + (LEVEL_CN[f.level] || f.level) + '」在' + questionType + '题型认知区间[' + cats + ']内');
-  }
-  if (f.graphic && t.supports && t.supports.graphic) {
-    matches.push('表征支持：本知识点含图形表征，' + questionType + '题型支持图形呈现');
-  }
-  if (!f.graphic && questionType === 'calc') {
-    matches.push('数值表征：本知识点为数值表征，与计算题的算式形态一致');
-  }
-  if (f.module === 'geometry' && questionType === 'geometry') {
-    matches.push('范畴对应：图形与几何域知识点对应操作/作图题型');
-  }
-  if (f.module === 'practice' && t.supports && t.supports.context) {
-    matches.push('情境支持：综合与实践域知识点适合有情境载体的题型');
-  }
+  // ② whyThisType —— 认知/表征/范畴匹配证据（声明式表 WHY_MATCH_RULES），≥1 条才可推导
+  var matchCtx = { f: f, t: t, qt: questionType, cats: cats, sup: t.supports || {} };
+  var matches = evalTable(WHY_MATCH_RULES, matchCtx, []).map(function (r) { return r.text(matchCtx); });
   var why = matches.length ? questionType + '（' + t.name + '，' + (CATEGORY_CN[t.category] || t.category) + '）选取依据——' + matches.join('；') : null;
   st.whyThisType = matches.length ? 'ai-verified' : 'needs-review';
   if (!matches.length) flags.push('no-type-evidence');
@@ -208,12 +289,8 @@ function deriveRow(knowledgeId, questionType) {
     var sup = t.supports || {};
     others.forEach(function (o) {
       var ot = typeMeta(o); var osup = ot.supports || {};
-      if ((ot.category || '') !== (t.category || '')) dims.push(o + '属' + (CATEGORY_CN[ot.category] || ot.category) + '而本题型属' + (CATEGORY_CN[t.category] || t.category));
-      if (!!osup.distractors !== !!sup.distractors) dims.push(o + (osup.distractors ? '含干扰项（辨认成分重）' : '无干扰项（需独立产出）'));
-      if (!!osup.context !== !!sup.context) dims.push(o + (osup.context ? '带情境' : '不带情境'));
-      if (!!osup.graphic !== !!sup.graphic) dims.push(o + (osup.graphic ? '支持图形' : '仅文字/算式'));
-      var spanO = (ot.cognitiveLevels || []).length, spanT = (t.cognitiveLevels || []).length;
-      if (spanO !== spanT) dims.push(o + '认知跨度[' + (ot.cognitiveLevels || []).map(function (l) { return LEVEL_CN[l] || l; }).join('/') + ']与本题型[' + cats + ']不同');
+      var diffCtx = { o: o, ot: ot, osup: osup, t: t, sup: sup, cats: cats };
+      evalTable(DIFF_DIM_RULES, diffCtx, []).forEach(function (r) { dims.push(r.text(diffCtx)); });
     });
     if (dims.length) {
       diff = '同 KP 其他允许题型：' + others.join('、') + '。本题型差异——' + dims.slice(0, 3).join('；');
@@ -249,18 +326,12 @@ function deriveRow(knowledgeId, questionType) {
   }
 
   // P30-05 机器可执行 assessment（全部字段机械投影；空集 = 该事实不存在，非猜测）
-  var allowedReps = [];
-  if (questionType !== 'geometry' && f.representations.indexOf('numeric') !== -1) allowedReps.push('numeric');
-  if (f.graphic && t.supports && t.supports.graphic) allowedReps.push('graphic');
-  var graphicRole = null;
-  if (f.graphic && t.supports && t.supports.graphic) {
-    if (f.module === 'geometry' && questionType === 'geometry') {
-      // P30-15：concept-meaning 承载的 geometry×geometry 行产纯文字概念题，graphicRole 降为 auxiliary（不强制产图）
-      graphicRole = (GEN_CONCEPT_KP.indexOf(knowledgeId) !== -1) ? 'auxiliary' : 'carrier';
-    } else {
-      graphicRole = 'auxiliary';
-    }
-  }
+  // 声明式表：ALLOWED_REP_RULES 按序命中即纳入；GRAPHIC_ROLE_RULES 取首个命中（无 → null）。
+  var assessCtx = { f: f, t: t, qt: questionType, sup: t.supports || {}, knowledgeId: knowledgeId };
+  var allowedReps = evalTable(ALLOWED_REP_RULES, assessCtx, []).map(function (r) { return r.rep; });
+  // P30-15：concept-meaning 承载的 geometry×geometry 行产纯文字概念题，graphicRole 降为 auxiliary（不强制产图）
+  var roleHit = firstMatch(GRAPHIC_ROLE_RULES, assessCtx);
+  var graphicRole = roleHit ? roleHit.role : null;
   var assessment = {
     targetCodes: [knowledgeId],
     focus: t.category,

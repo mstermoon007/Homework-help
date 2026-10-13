@@ -18,6 +18,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 1
+        },
         "concept": "根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "operations": [],
         "representations": [
@@ -139,6 +143,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 2
+        },
         "concept": "先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。",
         "operations": [],
         "representations": [
@@ -260,6 +268,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 3
+        },
         "concept": "同一组物体可以按不同维度分类（如铅笔可按颜色分，也可按长短分）；分类标准不同，结果不同，但总数不变",
         "operations": [],
         "representations": [
@@ -381,6 +393,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 4
+        },
         "concept": "先按一级标准分成大类，再对每个大类按二级标准细分。",
         "operations": [],
         "representations": [
@@ -502,6 +518,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 5
+        },
         "concept": "用计数法直接数出每类数量；用符号记录法（画“○”、画“正”字等）对应计数，“正”字一笔代表1个，一个“正”字代表5个",
         "operations": [],
         "representations": [
@@ -623,6 +643,10 @@
       "type": "statistics",
       "semantic": {
         "family": "statistics",
+        "conceptFamily": {
+          "id": "fam_statistics",
+          "stageOrder": 6
+        },
         "concept": "能看懂包含“分类标准—类别列—数量列”的统计表，并根据统计表回答简单问题",
         "operations": [],
         "representations": [
@@ -744,6 +768,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 1
+        },
         "concept": "理解乘法是求几个相同加数和的简便运算；认识乘号，会读、写乘法算式",
         "operations": [
           "addition",
@@ -860,6 +888,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 2
+        },
         "concept": "掌握2、3、4、5、6的乘法口诀，能熟练背诵并运用口诀进行乘法计算",
         "operations": [
           "multiplication"
@@ -978,6 +1010,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 3
+        },
         "concept": "理解乘加、乘减算式的含义，掌握先算乘法、再算加减的运算顺序",
         "operations": [
           "addition",
@@ -1095,6 +1131,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_multiply",
+          "stageOrder": 4
+        },
         "concept": "能用乘法解决“求几个几相加”的实际问题",
         "operations": [
           "addition",
@@ -1211,6 +1251,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 1
+        },
         "concept": "理解“每份分得同样多”叫做平均分；掌握平均分的两种情况——等分（把一些物品平均分成几份，求每份是多少）和包含（把一些物品按每几个一份分，求能分成几份）",
         "operations": [
           "division"
@@ -1326,6 +1370,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 2
+        },
         "concept": "只要是平均分的过程，就可以用除法算式表示；认识除号，会读、写除法算式",
         "operations": [
           "division"
@@ -1441,6 +1489,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 3
+        },
         "concept": "除法算式各部分名称：被除数÷除数=商",
         "operations": [
           "division"
@@ -1556,6 +1608,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 4
+        },
         "concept": "想乘法口诀，除数和几相乘得被除数，商就是几；一句乘法口诀一般可以写出两道除法算式（乘数相同的除外）",
         "operations": [
           "multiplication",
@@ -1675,6 +1731,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 5
+        },
         "concept": "能用除法解决平均分的实际问题",
         "operations": [
           "division"
@@ -1790,6 +1850,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 1
+        },
         "concept": "借助生活经验（如早晨面向太阳，前面是东、后面是西、左面是北、右面是南）和指南针辨认东、南、西、北四个方向。",
         "operations": [],
         "representations": [
@@ -1912,6 +1976,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 2
+        },
         "concept": "地图通常按“上北、下南、左西、右东”绘制；东和西相对，南和北相对，确定一个方向即可推出其余三个方向",
         "operations": [],
         "representations": [
@@ -2034,6 +2102,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 3
+        },
         "concept": "先确定观测点，以观测点为中心标出四个方向，再用方向描述两个物体间的位置关系",
         "operations": [],
         "representations": [
@@ -2156,6 +2228,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_direction",
+          "stageOrder": 4
+        },
         "concept": "用“从……出发，先向……走到……再向……走到……最后向……走到……”来描述路线",
         "operations": [],
         "representations": [
@@ -2278,6 +2354,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 1
+        },
         "concept": "量比较短的物体用“厘米（cm）”作单位，量比较长的物体用“米（m）”作单位；1米=100厘米",
         "operations": [],
         "representations": [
@@ -2400,6 +2480,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 2
+        },
         "concept": "把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度−起始刻度",
         "operations": [],
         "representations": [
@@ -2522,6 +2606,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 3
+        },
         "concept": "线段是直的，可以量出长度，两端各有一个点；连接两点之间只有一条线段",
         "operations": [],
         "representations": [
@@ -2644,6 +2732,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 4
+        },
         "concept": "通常从尺子的刻度0画起，是几厘米长的线段就画到刻度几的地方",
         "operations": [],
         "representations": [
@@ -2766,6 +2858,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_measure",
+          "stageOrder": 5
+        },
         "concept": "结合数据和单位，借助熟知的标准长度（如食指宽度约1厘米，小朋友身高约1米多）去比较或推测",
         "operations": [],
         "representations": [
@@ -2888,6 +2984,10 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
+        "conceptFamily": {
+          "id": "fam_shape",
+          "stageOrder": 4
+        },
         "concept": "通过用身体部位（如手指、手掌、手臂等）进行估测和测量，进一步建立长度观念，培养估测意识和动手实践能力",
         "operations": [],
         "representations": [
@@ -3010,6 +3110,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 6
+        },
         "concept": "掌握7、8、9的乘法口诀，能熟练背诵并运用口诀进行乘法计算 用乘法口诀求商，想“除数×商=被除数”",
         "operations": [
           "multiplication",
@@ -3129,6 +3233,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 7
+        },
         "concept": "能运用7～9的乘除法口诀解决较复杂的实际问题，培养综合运用能力",
         "operations": [
           "multiplication",
@@ -3249,6 +3357,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 3
+        },
         "concept": "对全册知识进行系统梳理与综合运用，沟通各单元之间的内在联系，涵盖数与代数、图形与几何、综合实践等领域",
         "operations": [
           "mixed"
@@ -3357,6 +3469,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_time",
+          "stageOrder": 1
+        },
         "concept": "时针、分针、秒针；钟面大格、小格含义，认读几时几分、几时几秒；识别接近整时的时刻（易错点）",
         "operations": [],
         "representations": [
@@ -3470,6 +3586,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_time",
+          "stageOrder": 2
+        },
         "concept": "1 时 = 60 分，1 分 = 60 秒",
         "operations": [],
         "representations": [
@@ -3583,6 +3703,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_time",
+          "stageOrder": 3
+        },
         "concept": "结束时间−开始时间，生活时间感知，制作作息时间小书，建立时间观念",
         "operations": [],
         "representations": [
@@ -3696,6 +3820,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 8
+        },
         "concept": "平均分物品时，有时会有剩余，剩余的部分叫做余数",
         "operations": [
           "division"
@@ -3811,6 +3939,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 9
+        },
         "concept": "核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数",
         "operations": [
           "division"
@@ -3926,6 +4058,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 10
+        },
         "concept": "掌握有余数除法的竖式计算方法，理解竖式中各部分的含义",
         "operations": [
           "division"
@@ -4041,6 +4177,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 11
+        },
         "concept": "能运用有余数除法解决实际问题，并结合生活实际进行判断和取舍，进一法：租船、乘车、装箱（剩余也要多一份）；去尾法：购物、裁剪材料（剩余不足一份直接舍弃）",
         "operations": [
           "multiplication",
@@ -4157,6 +4297,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_divide",
+          "stageOrder": 12
+        },
         "concept": "利用有余数除法找图形、彩旗排列规律",
         "operations": [
           "division"
@@ -4281,6 +4425,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 4
+        },
         "concept": "一道乘法算式对应两道除法算式",
         "operations": [
           "multiplication",
@@ -4397,6 +4545,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 5
+        },
         "concept": "按份数分、按每份数量分",
         "operations": [
           "division"
@@ -4512,6 +4664,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 6
+        },
         "concept": "圈一圈，理解 “几倍” 就是几份",
         "operations": [
           "multiplication"
@@ -4627,6 +4783,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 7
+        },
         "concept": "求一个数是另一个数的几倍：除法；求一个数的几倍是多少：乘法",
         "operations": [
           "multiplication",
@@ -4743,6 +4903,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 8
+        },
         "concept": "已知一个数的几倍是多少，求这个数",
         "operations": [
           "multiplication"
@@ -4858,6 +5022,10 @@
       "type": "calculation",
       "semantic": {
         "family": "multiplication-division",
+        "conceptFamily": {
+          "id": "fam_relation",
+          "stageOrder": 9
+        },
         "concept": "看图列式，画线段图表达数量关系，解决复合乘除应用题",
         "operations": [
           "multiplication",
@@ -4974,6 +5142,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 10
+        },
         "concept": "10 个一百是一千，10 个一千是一万；数位顺序（个、十、百、千、万）",
         "operations": [],
         "representations": [
@@ -5087,6 +5259,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 11
+        },
         "concept": "一个数由几个千、几个百、几个十、几个一组成",
         "operations": [],
         "representations": [
@@ -5200,6 +5376,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 12
+        },
         "concept": "读法：高位读起；中间 0 读零，末尾 0 不读；写法：高位写起，空位用 0 占位",
         "operations": [],
         "representations": [
@@ -5316,6 +5496,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 13
+        },
         "concept": "上珠代表 5，下珠代表 1",
         "operations": [],
         "representations": [
@@ -5429,6 +5613,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 14
+        },
         "concept": "位数多的数更大；位数相同从高位依次比较",
         "operations": [],
         "representations": [
@@ -5545,6 +5733,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 15
+        },
         "concept": "找接近整百、整千的数；简单估算",
         "operations": [],
         "representations": [
@@ -5658,6 +5850,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_integer",
+          "stageOrder": 16
+        },
         "concept": "整百、整千数加减法口算",
         "operations": [
           "addition",
@@ -5774,6 +5970,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 20
+        },
         "concept": "相同数位对齐，从个位加起；满十向前一位进 1；连续进位加法；加法验算方法",
         "operations": [
           "addition"
@@ -5892,6 +6092,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 21
+        },
         "concept": "相同数位对齐，从个位减起；不够减向前一位借 1；连续退位减法；减法验算方法",
         "operations": [
           "subtraction"
@@ -6010,6 +6214,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 22
+        },
         "concept": "和 = 加数 + 加数；加数 = 和 − 另一个加数；差 = 被减数 − 减数；被减数 = 差 + 减数；减数 = 被减数 − 差",
         "operations": [
           "addition",
@@ -6126,6 +6334,10 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
+        "conceptFamily": {
+          "id": "fam_addsub",
+          "stageOrder": 23
+        },
         "concept": "万以内加减法估算解决生活问题，填数字谜、错中求解类变式题",
         "operations": [
           "addition",
@@ -6245,6 +6457,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 1
+        },
         "concept": "从连环画故事场景提取数学信息，发现并提出数学问题",
         "operations": [],
         "representations": [
@@ -6350,6 +6566,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 2
+        },
         "concept": "有余数除法、倍数、加减乘除、万以内计算",
         "operations": [
           "addition",
@@ -6464,6 +6684,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 3
+        },
         "concept": "用图画 + 文字构建包含数学问题的小故事",
         "operations": [],
         "representations": [
@@ -6569,6 +6793,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_problem_solving",
+          "stageOrder": 4
+        },
         "concept": "讲解故事中的数量关系，列式解答",
         "operations": [],
         "representations": [
@@ -6674,6 +6902,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 4
+        },
         "concept": "有余数除法、万以内加减、整百整千口算",
         "operations": [
           "addition",
@@ -6786,6 +7018,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 5
+        },
         "concept": "平均分模型、倍数模型、时间相关量",
         "operations": [
           "multiplication",
@@ -6894,6 +7130,10 @@
       "type": "application",
       "semantic": {
         "family": "application-word",
+        "conceptFamily": {
+          "id": "fam_review",
+          "stageOrder": 6
+        },
         "concept": "多步混合情境题",
         "operations": [
           "mixed"

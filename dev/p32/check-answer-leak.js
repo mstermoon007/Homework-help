@@ -70,7 +70,7 @@ function gradeOf(kp) {
 // 首跑观察模式收集 freezeSeed 口径实际命中后，逐条对照裁决家族登记；
 // 未登记命中 → FAIL（新泄露或口径漂移，须人工裁决后更新本表）。
 var WHITELIST = [
-  // [kp, qt, token, layer, bucket, reason] — 167 条：AS-18 观察运行（freeze 口径 1570 行）逐行人工裁决
+  // [kp, qt, token, layer, bucket, reason] — 174 条：AS-18 观察运行（freeze 口径 1570 行）逐行人工裁决
   ['math-g1-down-u03-k001', 'apply', '6', 'L1', 'P-KNOWN', '已知角 90°/1 瓶次品/试验统计等题面给定数量，非所求答案'],
   ['math-g1-down-u03-k006', 'apply', '<', 'L1', 'C-OPTIONSET', 'AS-16C #10/#11：选项集语义（比较符号/判断词），答案为集合语义非数值复述'],
   ['math-g1-down-u04-k003', 'calc', '34', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
@@ -78,6 +78,7 @@ var WHITELIST = [
   ['math-g1-down-u07-k003', 'choice', '5分', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g1-up-u01-k001', 'calc', '1', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g1-up-u01-k001', 'fill', '1', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
+  ['math-g1-up-u01-k002', 'fill', '1', 'L1', 'B-OPERAND', 'P40-Q-05 #1 结果域守卫后产出「1 + ____ + 1 = 3」，答案 token 以操作数身份在题面，非答案复述'],
   ['math-g1-up-u01-k002', 'fill', '3', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g1-up-u02-k002', 'fill', '6', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g2-down-u02-k005', 'fill', '□', 'L1', 'P-KNOWN', '人名/规律符号/已知量等题面给定材料，非所求答案'],
@@ -274,13 +275,30 @@ function candidatesOf(sq) {
   }
   return out;
 }
-// SVG 只扫 text 内容（>…< 之间），不扫属性（宽高/坐标数字非标注）
+// SVG 只扫 text 内容（>…< 之间），不扫属性（宽高/坐标数字非标注）。
+// P40-Q-15（R22）：<title> 为无障碍可访问名（非可见题面材料），从扫描文本剥离；
+// 但 title 逐一校验 ∈ SVGRegistry.A11Y_*_LABELS 固定枚举（防借 title 夹带答案绕过——门禁不放松）。
 function svgTexts(svg) {
+  var s = String(svg).replace(/<title>[\s\S]*?<\/title>/g, '');
   var out = [];
-  var m = String(svg).match(/>([^<>]+)</g) || [];
-  m.forEach(function (s) { out.push(s.slice(1, -1)); });
+  var m = s.match(/>([^<>]+)</g) || [];
+  m.forEach(function (t) { out.push(t.slice(1, -1)); });
   return out.join('\n');
 }
+function svgTitles(svg) {
+  var out = [];
+  var m = String(svg).match(/<title>([\s\S]*?)<\/title>/g) || [];
+  m.forEach(function (t) { out.push(t.slice(7, -8)); });
+  return out;
+}
+var A11Y_TITLE_LABELS = {};
+(function () {
+  function absorb(map) {
+    Object.keys(map || {}).forEach(function (k) { A11Y_TITLE_LABELS[map[k]] = true; });
+  }
+  absorb(SVGRegistry.A11Y_TYPE_LABELS);
+  absorb(SVGRegistry.A11Y_ROLE_LABELS);
+})();
 function snippetAround(text, token) {
   var i = String(text).indexOf(String(token));
   if (i < 0) return String(text).slice(0, 60);
@@ -373,6 +391,12 @@ var l3aOk = l3Source.indexOf('explanation') === -1;
           var w2 = whitelistKey(p.kp, p.qt, tok, 'L2');
           if (w2) return;
           l2Bad.push(p.kp + '/' + p.qt + ' token=「' + tok + '」 | …' + snippetAround(texts, tok) + '…');
+        });
+        // P40-Q-15：无障碍 <title> 合法性校验（非注册枚举标签 = 新泄露形态，FAIL）
+        svgTitles(svgStr).forEach(function (t) {
+          if (!A11Y_TITLE_LABELS[t]) {
+            l2Bad.push(p.kp + '/' + p.qt + ' title=「' + t + '」 | 非注册无障碍标签（P40-Q-15 口径）');
+          }
         });
       }
     }

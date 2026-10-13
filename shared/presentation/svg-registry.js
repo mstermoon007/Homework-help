@@ -267,6 +267,41 @@
   }
 
   /**
+   * P40-Q-15（R22 无障碍）：SVG 可访问名单点注入。
+   * 标签只取描述符既有 type/role 字段的固定枚举映射，不含数值/答案语义（6g 安全）；
+   * <title> 已在 SVGSanitizer 白名单（P28-23），安全边界零改动。
+   */
+  var A11Y_TYPE_LABELS = {
+    geometry: '几何图形图', calculation: '竖式计算图', makeTen: '凑十法演示图', 'make-ten': '凑十法演示图',
+    diagram: '示意图', chart: '统计图表', currency: '人民币演示图', fraction: '分数示意图',
+    clock: '钟面图', area: '面积演示图', dataStats: '数据统计图', draw: '作图演示图',
+    competition: '竞赛示意图', segment: '线段图', 'view-cards': '视图观察卡',
+    custom: '题目示意图', illustration: '题目插图'
+  };
+  var A11Y_ROLE_LABELS = {
+    'quantity-correspondence': '数量对应图', 'number-position': '数与位置图',
+    'angle-measure': '角度度量图', 'fraction-part': '分数份数图',
+    'area-measure': '面积度量图', 'data-comparison': '数据比较图',
+    'calculation-support': '计算辅助图', 'auxiliary': '辅助示意图'
+  };
+  function escText(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function a11yTitle(graphic) {
+    if (!graphic || typeof graphic !== 'object') return '题目示意图';
+    var role = graphic.role != null ? graphic.role : (graphic.params && graphic.params.role);
+    if (A11Y_ROLE_LABELS[role]) return A11Y_ROLE_LABELS[role];
+    return A11Y_TYPE_LABELS[graphic.type] || '题目示意图';
+  }
+  function injectA11yTitle(svg, graphic) {
+    if (typeof svg !== 'string' || svg.indexOf('<title') !== -1) return svg;
+    var m = svg.match(/^<svg\b[^>]*>/i);
+    if (!m) return svg;
+    return svg.slice(0, m[0].length) + '<title>' + escText(a11yTitle(graphic)) + '</title>' + svg.slice(m[0].length);
+  }
+
+  /**
    * 对外渲染入口：委托 renderFor，SUCCESS 时再做 svgWrap 包装。
    * @param {Object} graphic graphic 描述符
    * @param {Object} [options] renderOptions
@@ -279,12 +314,13 @@
     if (U && typeof U.svgWrap === 'function' && result.svg.indexOf('<svg') !== 0) {
       try {
         var wrapped = U.svgWrap(result.svg, { padding: 8 });
-        return { status: 'SUCCESS', svg: wrapped };
+        result = { status: 'SUCCESS', svg: wrapped };
       } catch (e) {
         return { status: 'FAILED', reason: 'svgWrap threw exception', error: e };
       }
     }
-    return result;
+    // P40-Q-15（R22）：成功产物注入 <title> 可访问名（读屏可用；屏幕阅读器播报图形角色）
+    return { status: 'SUCCESS', svg: injectA11yTitle(result.svg, graphic) };
   }
 
   var SVGRegistry = {
@@ -292,7 +328,10 @@
     seedFromGlobal: seedFromGlobal,
     resolve: resolve,
     render: render,
-    renderFor: renderFor
+    renderFor: renderFor,
+    // P40-Q-15：无障碍标签枚举对外暴露（唯一 SSOT；6g L2 据此校验 <title> 合法性）
+    A11Y_TYPE_LABELS: A11Y_TYPE_LABELS,
+    A11Y_ROLE_LABELS: A11Y_ROLE_LABELS
   };
 
   // 挂到既有全局命名空间（与 shared/svg-*.js 的挂载共存），提供正式 API

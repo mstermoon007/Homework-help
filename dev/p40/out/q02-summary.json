@@ -1,0 +1,255 @@
+{
+ "task": "P40-Q-02 竖式/分数/图文消费盘点",
+ "date": "2026-10-13",
+ "total": 1570,
+ "genErr": 0,
+ "static": {
+  "graphicRendererTypeRegistry_calculation": "见 graphic-renderer.js L61（grep 证据）",
+  "apiSurface": [
+   "add",
+   "sub",
+   "mul",
+   "div",
+   "dec",
+   "frac"
+  ],
+  "knownProducers": [
+   "shared/generator/generators/money.js:567 (type: calculation)"
+  ],
+  "svgTemplateTag": "question-style-strategy.js 将 calc/fill/classify 的 svgTemplate 标为 svg-calculation，但表现层 renderFor 仅消费 graphic 描述符——无描述符时 0 个 <svg> 输出（探针证据）"
+ },
+ "graphicCoverage": {
+  "withGraphic": 663,
+  "rate": 0.4223,
+  "byQt": {
+   "fill": {
+    "total": 375,
+    "withGraphic": 144,
+    "rate": 0.384
+   },
+   "choice": {
+    "total": 375,
+    "withGraphic": 144,
+    "rate": 0.384
+   },
+   "judge": {
+    "total": 126,
+    "withGraphic": 107,
+    "rate": 0.8492
+   },
+   "geometry": {
+    "total": 105,
+    "withGraphic": 102,
+    "rate": 0.9714
+   },
+   "apply": {
+    "total": 375,
+    "withGraphic": 145,
+    "rate": 0.3867
+   },
+   "calc": {
+    "total": 189,
+    "withGraphic": 21,
+    "rate": 0.1111
+   },
+   "classify": {
+    "total": 25,
+    "withGraphic": 0,
+    "rate": 0
+   }
+  }
+ },
+ "typeDist": {
+  "geometry": 552,
+  "currency": 9,
+  "diagram": 58,
+  "calculation": 14,
+  "chart": 30
+ },
+ "typeSubDist": {
+  "geometry/square": 54,
+  "geometry/parallelogram": 30,
+  "geometry/rectangle": 93,
+  "geometry/triangle": 54,
+  "geometry/segment": 29,
+  "currency/rmb": 9,
+  "diagram/segment": 31,
+  "diagram/brace": 10,
+  "geometry/cuboid": 22,
+  "diagram/pattern": 5,
+  "calculation/add": 5,
+  "calculation/sub": 2,
+  "geometry/position-grid": 92,
+  "geometry/line-segment": 15,
+  "geometry/translationDemo": 15,
+  "geometry/rotationDemo": 11,
+  "geometry/view-cards": 8,
+  "geometry/circle": 35,
+  "chart/bar": 21,
+  "geometry/cube": 30,
+  "geometry/angle": 24,
+  "calculation/dec": 3,
+  "geometry/symmetry-grid": 5,
+  "diagram/groups": 4,
+  "geometry/trapezoid": 10,
+  "calculation/frac": 1,
+  "chart/line": 9,
+  "calculation/mul": 3,
+  "geometry/cylinder": 15,
+  "geometry/cone": 10,
+  "diagram/ratio": 5,
+  "diagram/balance": 3
+ },
+ "roleDist": {
+  "quantity-correspondence": 412,
+  "auxiliary": 20,
+  "calculation-support": 48,
+  "number-position": 129,
+  "area-measure": 4,
+  "data-comparison": 30,
+  "angle-measure": 20
+ },
+ "vertical": {
+  "calcTotal": 189,
+  "shouldVertical": 75,
+  "hit": 14,
+  "miss": 61,
+  "byGrade": {
+   "g2": {
+    "total": 8,
+    "hit": 4
+   },
+   "g3": {
+    "total": 6,
+    "hit": 0
+   },
+   "g4": {
+    "total": 19,
+    "hit": 6
+   },
+   "g5": {
+    "total": 25,
+    "hit": 4
+   },
+   "g6": {
+    "total": 17,
+    "hit": 0
+   }
+  },
+  "missSample": [
+   {
+    "kp": "math-g2-down-u01-k003",
+    "grade": 2,
+    "prompt": "计算简单经过时间：小明7:30从家出发，7:45到达学校，经过了多少分钟？列式：45 − 30 = "
+   },
+   {
+    "kp": "math-g2-down-u04-k003",
+    "grade": 2,
+    "prompt": "计数器十位 7 颗珠、个位 5 颗珠（7 个十和 5 个一，70 + 5 = ？），写作多少？"
+   },
+   {
+    "kp": "math-g2-down-u04-k005",
+    "grade": 2,
+    "prompt": "比较大小：62 ○ 66（参考：66 − 62 = 4）"
+   },
+   {
+    "kp": "math-g2-down-u05-k004",
+    "grade": 2,
+    "prompt": "48 + 60 = ?"
+   },
+   {
+    "kp": "math-g3-down-u02-k004",
+    "grade": 3,
+    "prompt": "24 ÷ 6 − 3 = ?"
+   },
+   {
+    "kp": "math-g3-down-u06-k001",
+    "grade": 3,
+    "prompt": "年、月、日的基本知识：7月和8月都是大月，两个月一共有多少天？列式：31 + 31 = ？"
+   },
+   {
+    "kp": "math-g3-up-u02-k001",
+    "grade": 3,
+    "prompt": "15 − 9 + 13 = ?"
+   },
+   {
+    "kp": "math-g3-up-u02-k002",
+    "grade": 3,
+    "prompt": "16 + 3 − 2 = ?"
+   },
+   {
+    "kp": "math-g3-up-u02-k005",
+    "grade": 3,
+    "prompt": "17 + 13 = ?"
+   },
+   {
+    "kp": "math-g3-up-u04-k002",
+    "grade": 3,
+    "prompt": "10吨 = 10 × 1000000 = ____ 克"
+   },
+   {
+    "kp": "math-g4-down-u01-k001",
+    "grade": 4,
+    "prompt": "看图列式：大括号图左边有 17 个苹果，右边有 17 个苹果。列式计算一共有多少个：17 + 17 "
+   },
+   {
+    "kp": "math-g4-down-u01-k004",
+    "grade": 4,
+    "prompt": "23 − 3 = ?"
+   },
+   {
+    "kp": "math-g4-down-u04-k003",
+    "grade": 4,
+    "prompt": "根据小数的性质化简，列式：1.70 − 0 = ？"
+   },
+   {
+    "kp": "math-g4-down-u04-k004",
+    "grade": 4,
+    "prompt": "列式比一比：1.5 − 1.1 = ？（差大于 0，说明前者大）"
+   },
+   {
+    "kp": "math-g4-down-u04-k005",
+    "grade": 4,
+    "prompt": "列式计算（小数点向左移动一位）：70 ÷ 10 = ？"
+   },
+   {
+    "kp": "math-g4-down-u04-k006",
+    "grade": 4,
+    "prompt": "列式换算：2 × 10 = ？（分米）"
+   },
+   {
+    "kp": "math-g4-down-u04-k007",
+    "grade": 4,
+    "prompt": "列式计算（得数用四舍五入法保留一位小数）：2.71 + 3.61 = ？"
+   },
+   {
+    "kp": "math-g4-up-u01-k001",
+    "grade": 4,
+    "prompt": "10 个一百是多少？（10 × 100 = 1000）"
+   },
+   {
+    "kp": "math-g4-up-u01-k002",
+    "grade": 4,
+    "prompt": "58 中数字 5 在什么位上？（参考：5 个十和 8 个一，50 + 8 = 58）"
+   },
+   {
+    "kp": "math-g4-up-u01-k003",
+    "grade": 4,
+    "prompt": "10 个一千万是多少？（10 × 10000000 = 100000000）"
+   }
+  ]
+ },
+ "fraction": {
+  "rows": 127,
+  "withGraphic": 17,
+  "rate": 0.1339,
+  "byGraphicType": {
+   "NO-GRAPHIC": 110,
+   "calculation/frac": 1,
+   "geometry/segment": 8,
+   "diagram/segment": 6,
+   "diagram/balance": 2
+  },
+  "explanationTongfenYuefen": 10
+ }
+}

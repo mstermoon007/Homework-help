@@ -11,7 +11,8 @@
  *
  * 红线映射：
  *   - 不新增题型、不改写教育语义：finisher 只做形态归一（空位/选项/布尔/情境包装），
- *     答案数值与运算关系保持不变（judge 的 shown 值派生自原答案 ±1，真值随之机械确定）。
+ *   答案数值与运算关系保持不变（judge 的 shown 值派生自原答案 ±1 或竖式错误得数单源，
+ *   真值随之机械确定；竖式判断材料经 errorResultOf 与图内结果行对齐，P40-Q-06）。
  *   - fail-closed：finisher 不可转换 → drop，绝不静默放行或回退其他题型。
  *   - choice 单约定（P32-AS-16 收紧）：answer.value 必须等于正确选项**文本**（值约定）——
  *     渲染（radio value=选项文本）、判分（gradeUserAnswer 精确匹配）、上屏均消费文本；
@@ -25,6 +26,10 @@
   'use strict';
 
   var Rng = require('./rng.js');
+  // P40-Q-06：错误竖式得数单源。Generator→SVG 方向不在 P28-03 FORBIDDEN 清单
+  // （禁的是 SVG→Generator / Presentation→Generator）；strategy bundle 经依赖链
+  // 内联 svg-core/svg-calculation，与 presentation bundle 各持一份同源实现。
+  var SVGCalculation = require('../../svg/svg-calculation.js');
 
   var SCHEMA_VERSION = 'p25-07.1';
 
@@ -344,6 +349,27 @@
     if (an) {
       var isTrue = rng() < 0.5;
       var shown = isTrue ? an.num : an.num + 1;
+      // P40-Q-06：竖式判断材料——假命题 shown 与错误竖式同源（errorResultOf 单源，
+      // 图内结果行 = 题面 shown）；真命题撤遮蔽显真值。div 无 errorType 能力、
+      // 得数撞车（errV === 真值）/单源不可用等形态 fail-closed 撤图（回退 ±1 口径，
+      // 绝不产出题面与图内结果矛盾的判断题）。
+      var vg = d.graphic;
+      if (vg && vg.type === 'calculation' && vg.params) {
+        if (!isTrue && (vg.subtype === 'add' || vg.subtype === 'sub' || vg.subtype === 'mul')) {
+          var vErrorType = vg.subtype === 'sub' ? 'no-borrow' : 'no-carry';
+          var errV = SVGCalculation.errorResultOf(vg.subtype, [vg.params.a, vg.params.b], vErrorType);
+          if (errV != null && errV !== an.num) {
+            shown = errV;
+            vg.params.options = { errorType: vErrorType };
+          } else {
+            delete d.graphic;
+          }
+        } else if (isTrue && vg.subtype !== 'div') {
+          vg.params.options = {};
+        } else {
+          delete d.graphic;
+        }
+      }
       var shownStr = numStr(shown) + an.suffix;
       if (/=\s*[？?]\s*$/.test(p)) {
         p = p.replace(/=\s*[？?]\s*$/, '= ' + shownStr + '（对还是错？）');

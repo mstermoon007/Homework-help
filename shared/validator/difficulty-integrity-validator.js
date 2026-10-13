@@ -148,7 +148,37 @@ function validateBatchDifficultyIntegrity(questions, context) {
   return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { difficultyIntegrity: 'pass' } };
 }
 
+// P40 T-07：概念族内难度递进断言——同 familyId 内 stageOrder 靠后的 KP，seedDifficulty 不得低于前序。
+// 违规登记 needs-review（挂人工），不自动改数；difficultyDelta 现算不落盘。
+// 消费面：KBL capability（familyId + stageOrder + seedDifficulty）经只读透出后校验。
+function validateFamilyDifficultyMonotonic(rows) {
+  var byFam = {};
+  (rows || []).forEach(function (r) {
+    if (r && r.familyId != null && r.stageOrder != null && r.seedDifficulty != null) {
+      (byFam[r.familyId] = byFam[r.familyId] || []).push(r);
+    }
+  });
+  var violations = [];
+  var checked = 0;
+  Object.keys(byFam).forEach(function (f) {
+    var arr = byFam[f].slice().sort(function (a, b) { return a.stageOrder - b.stageOrder; });
+    checked += arr.length;
+    for (var i = 1; i < arr.length; i++) {
+      if (arr[i].seedDifficulty < arr[i - 1].seedDifficulty) {
+        violations.push({
+          familyId: f,
+          fromId: arr[i - 1].knowledgeId, fromStageOrder: arr[i - 1].stageOrder, fromDifficulty: arr[i - 1].seedDifficulty,
+          toId: arr[i].knowledgeId, toStageOrder: arr[i].stageOrder, toDifficulty: arr[i].seedDifficulty,
+          difficultyDelta: arr[i].seedDifficulty - arr[i - 1].seedDifficulty
+        });
+      }
+    }
+  });
+  return { valid: violations.length === 0, checked: checked, families: Object.keys(byFam).length, violations: violations, needsReview: violations.slice() };
+}
+
 module.exports = {
   validateDifficultyIntegrity: validateDifficultyIntegrity,
-  validateBatchDifficultyIntegrity: validateBatchDifficultyIntegrity
+  validateBatchDifficultyIntegrity: validateBatchDifficultyIntegrity,
+  validateFamilyDifficultyMonotonic: validateFamilyDifficultyMonotonic
 };

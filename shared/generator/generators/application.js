@@ -327,9 +327,9 @@ function buildRelationGraphic(template, nums, ans, qt, expr) {
   return null;
 }
 
-function formatTemplate(template, nums) {
+function formatTemplate(template, nums, tplText) {
   var tpl = PROBLEM_TEMPLATES[template];
-  var str = tpl.zh;
+  var str = tplText || tpl.zh;
   
   Object.keys(nums).forEach(function(key) {
     var placeholder = '{' + key + '}';
@@ -400,9 +400,25 @@ function makeApplicationQuestion(plan, context, i, meta) {
   if (!template) return null; // FINAL-31c：fail-closed，不产出运算错位题
   var nums = generateNumbers(rng, template, nr);
   var answer = computeAnswer(template, nums);
-  var prompt = formatTemplate(template, nums);
+  // P40-Q-13：情境叙事选取——plan.semanticParams.contextScenes.scenes（KP grade 命中 +
+  // confirmed 场景条目）× relation 锚（PROBLEM_TEMPLATES[k].relation 逐字匹配语料 key）。
+  // 数量关系与情境类型失配的关系（如行程 KP 无 shopping 叙事格）自然落空回退抽象模板；
+  // 语料缺失/grade 无命中时不消耗 rng，保持回退形态与既有 rng 面完全一致。
+  var narrative = null;
+  var cs = plan && plan.semanticParams && plan.semanticParams.contextScenes;
+  if (cs && Array.isArray(cs.scenes) && cs.scenes.length) {
+    var rel = PROBLEM_TEMPLATES[template].relation;
+    var pool = [];
+    cs.scenes.forEach(function (s) {
+      var n = s.narratives ? s.narratives[rel] : null;
+      if (n && n.apply && n.brief) pool.push(n);
+    });
+    if (pool.length) narrative = pool[Math.floor(rng() * pool.length)];
+  }
+  var prompt = formatTemplate(template, nums, narrative ? narrative.apply : null);
   // choice/judge 专用精简题面（与 apply 故事骨架互异）
-  var choiceZh = PROBLEM_TEMPLATES[template].choiceZh || PROBLEM_TEMPLATES[template].zh;
+  var choiceZh = narrative ? narrative.brief
+    : (PROBLEM_TEMPLATES[template].choiceZh || PROBLEM_TEMPLATES[template].zh);
   var choicePrompt = choiceZh;
   Object.keys(nums).forEach(function (key) {
     choicePrompt = choicePrompt.replace('{' + key + '}', String(nums[key]));

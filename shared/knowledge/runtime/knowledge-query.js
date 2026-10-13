@@ -107,6 +107,13 @@
     return null;
   }
 
+  // P40-Q-12：情境语料库只读查询（confirmed 条目全量透出；grade 过滤由消费方做）。
+  // 供 application/money 生成器经 semantic-parameters → KnowledgeContext 消费。
+  function contextLibrary() {
+    var c = load();
+    return c.contextLibrary || null;
+  }
+
   function stats() {
     var c = load();
     var byGrade = {}; var byBook = {};
@@ -139,6 +146,7 @@
     unit: unit,
     misconceptionsFor: misconceptionsFor,
     intentFor: intentFor,
+    contextLibrary: contextLibrary,
     stats: stats
   };
 

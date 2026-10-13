@@ -5,11 +5,17 @@
 // API：
 //   SVGCalculation.add([456, 378], opts)    加法竖式（自动进位点）
 //   SVGCalculation.sub(502, 217, opts)      减法竖式（借位点）
-//   SVGCalculation.mul(123, 45, opts)       乘法竖式（部分积错位 + 进位点）
+//   SVGCalculation.mul(123, 45, opts)       乘法竖式（部分积错位 + 进位点；字符串参数走小数乘遮蔽形态）
 //   SVGCalculation.div(47, 5, opts)         长除竖式（商/余数）
+//   SVGCalculation.dec('12.5','3.48','+',opts)  小数加减竖式（小数点对齐）
+//   SVGCalculation.frac(1, 2, 1, 3, '+', opts)  分数加减图示（结果留白框）
+//   SVGCalculation.errorResultOf(op, xs, errorType)  错误竖式得数单源（P40-Q-06，finishJudge 共用）
 //
-// opts：{ fontSize, cellW, rowH, markStyle:'dot'|'digit', errorType:'no-carry'|'no-borrow', color }
+// opts：{ fontSize, cellW, rowH, markStyle:'dot'|'digit', errorType:'no-carry'|'no-borrow',
+//         maskResult:boolean, color }
 // errorType 会按典型学生错误生成「错误结果竖式」（如加法不进位：456+378→724）。
+// maskResult（P40-Q-06 calc 遮蔽，不泄答案）：add/sub/dec 结果行画 '?'（保留进/借位点）；
+//   mul 画裸形态（不画部分积行——部分积之和=答案，间接泄题）；div 跳过过程行，商位 '?'。
 
 (function (global) {
   'use strict';
@@ -28,6 +34,64 @@
     return n;
   }
   function digitsOf(n) { return String(n).split('').map(Number); }
+
+  /**
+   * P40-Q-06：错误竖式得数单源（errorType 对应的「学生错误得数」）。
+   * add 'no-carry'：逐列和 %10、进位丢弃；sub 'no-borrow'：逐列 |差| %10、不借位；
+   * mul 'no-carry'：逐位积 %10（多位乘数按部分积错位求和、进位丢弃）。
+   * 渲染的错误结果行与 type-contract finishJudge 的 judge shown 值共用本函数，
+   * 保证题面 shown 与图内结果一致；非法输入返回 null（调用方 fail-closed）。
+   * @param {string} op 'add'|'sub'|'mul'
+   * @param {number[]} xs 操作数（add ≥2 个，sub/mul 恰 2 个）
+   * @param {string} errorType 'no-carry'|'no-borrow'
+   * @returns {number|null}
+   */
+  function errorResultOf(op, xs, errorType) {
+    try {
+      if (op === 'add') {
+        if (!Array.isArray(xs) || xs.length < 2 || errorType !== 'no-carry') return null;
+        var ns = xs.map(function (v) { return Number(v); });
+        for (var i0 = 0; i0 < ns.length; i0++) {
+          if (!isFinite(ns[i0]) || ns[i0] < 0 || Math.floor(ns[i0]) !== ns[i0]) return null;
+        }
+        var cols = Math.max.apply(null, ns.map(function (v) { return String(v).length; }));
+        var ds = [];
+        for (var k = 0; k < cols; k++) {
+          var s = 0;
+          ns.forEach(function (v) { var ch = String(v)[String(v).length - 1 - k]; if (ch != null) s += Number(ch); });
+          ds.unshift(s % 10);
+        }
+        return Number(ds.join(''));
+      }
+      if (op === 'sub') {
+        if (!Array.isArray(xs) || xs.length !== 2 || errorType !== 'no-borrow') return null;
+        var a = Number(xs[0]), b = Number(xs[1]);
+        if (!isFinite(a) || !isFinite(b) || a < 0 || b < 0 || a < b ||
+          Math.floor(a) !== a || Math.floor(b) !== b) return null;
+        var A = String(a), B = String(b), ds2 = [];
+        for (var k2 = 0; k2 < A.length; k2++) {
+          var bi = Number(B[B.length - 1 - k2] || 0);
+          ds2.unshift(Math.abs(Number(A[A.length - 1 - k2]) - bi) % 10);
+        }
+        while (ds2.length > 1 && ds2[0] === 0) ds2.shift();
+        return Number(ds2.join(''));
+      }
+      if (op === 'mul') {
+        if (!Array.isArray(xs) || xs.length !== 2 || errorType !== 'no-carry') return null;
+        var x = Number(xs[0]), y = Number(xs[1]);
+        if (!isFinite(x) || !isFinite(y) || x < 0 || y < 0 ||
+          Math.floor(x) !== x || Math.floor(y) !== y) return null;
+        var Bd = String(y), out = 0;
+        for (var i = Bd.length - 1; i >= 0; i--) {
+          var shift = Bd.length - 1 - i, Ad = String(x), pDs = [];
+          for (var k3 = Ad.length - 1; k3 >= 0; k3--) pDs.unshift((Number(Ad[k3]) * Number(Bd[i])) % 10);
+          out += Number(pDs.join('')) * Math.pow(10, shift);
+        }
+        return out;
+      }
+      return null;
+    } catch (e) { return null; }
+  }
 
   /** 竖式画布：网格布局，col 自左向右，row 自上向下 */
   function Canvas(o) {
@@ -91,7 +155,10 @@
     addends = addends.map(function (n) { return checkInt(n, '加数'); });
     var c = new Canvas(opts);
     var noCarry = opts.errorType === 'no-carry';
-    var maxLen = Math.max.apply(null, addends.map(function (n) { return String(n).length; }).concat([String(addends.reduce(function (a, b) { return a + b; }, 0)).length]));
+    var maxLen = Math.max.apply(null, addends.map(function (n) { return String(n).length; }));
+    if (!opts.maskResult) {
+      maxLen = Math.max(maxLen, String(addends.reduce(function (a, b) { return a + b; }, 0)).length);
+    }
     var endCol = maxLen + 1;
     // 加数行
     addends.forEach(function (n, i) {
@@ -99,9 +166,9 @@
     });
     c.put(addends.length - 1, endCol - maxLen - 1, '+', { bold: true });
     c.hline(addends.length, endCol - maxLen - 1, endCol);
-    // 逐列求和（含进位）
+    // 逐列求和（含进位）；错误结果行走 errorResultOf 单源
     var sumRow = addends.length;
-    var carry = 0, resDigits = [];
+    var carry = 0;
     var cols = maxLen;
     for (var k = 0; k < cols; k++) {
       var colIdx = endCol - k;
@@ -111,8 +178,6 @@
         var dch = ds[ds.length - 1 - k];
         if (dch != null) s += Number(dch);
       });
-      var outDigit = noCarry ? s % 10 : s % 10;
-      resDigits.unshift(outDigit % 10);
       var newCarry = noCarry ? 0 : Math.floor(s / 10);
       if (!noCarry && carryIn === 0 && newCarry > 0 && k < cols - 1) {
         c.dot(sumRow - addends.length, colIdx - 1, newCarry, "carry"); // 进位点(橙)标在下一列上方
@@ -121,7 +186,9 @@
       }
       carry = newCarry;
     }
-    var resStr = noCarry ? resDigits.join('') : String(addends.reduce(function (x, y) { return x + y; }, 0));
+    var resStr = noCarry ? String(errorResultOf('add', addends, 'no-carry'))
+      : String(addends.reduce(function (x, y) { return x + y; }, 0));
+    if (opts.maskResult) resStr = '?';
     c.rightPut(sumRow, endCol, resStr, { bold: true });
     return c.render();
   }
@@ -152,17 +219,28 @@
         borrow = 1;
       } else { borrow = 0; }
       var d = ai - bi;
-      ds.unshift(noBorrow ? Math.abs(A[A.length - 1 - k] - bi) % 10 : d);
+      ds.unshift(d);
     }
     while (ds.length > 1 && ds[0] === 0) ds.shift();
-    c.rightPut(diffRow, endCol, ds.join(''), { bold: true });
+    var resStr = noBorrow ? String(errorResultOf('sub', [a, b], 'no-borrow')) : ds.join('');
+    if (opts.maskResult) resStr = '?';
+    c.rightPut(diffRow, endCol, resStr, { bold: true });
     return c.render();
   }
 
   // ============ 乘法 ============
   function mul(a, b, opts) {
     opts = opts || {};
+    // P40-Q-06：小数乘竖式——字符串参数走 parseDec（仅 calc 遮蔽形态：末位对齐 + 小数点原位）
+    if (typeof a === 'string' || typeof b === 'string') {
+      var dA = parseDec(a), dB = parseDec(b);
+      if (!dA || !dB) throw new Error("mul 小数参数需要形如 '12.5' 的非负数");
+      if (!opts.maskResult) throw new Error('mul 小数竖式仅支持 maskResult 遮蔽形态（calc 练习）');
+      return maskedMul(dA.frac ? dA.int + '.' + dA.frac : dA.int,
+        dB.frac ? dB.int + '.' + dB.frac : dB.int, opts);
+    }
     checkInt(a, '因数'); checkInt(b, '因数');
+    if (opts.maskResult) return maskedMul(String(a), String(b), opts); // 部分积之和=答案，不画部分积行
     var c = new Canvas(opts);
     var noCarry = opts.errorType === 'no-carry';
     var B = digitsOf(b), A = a;
@@ -184,11 +262,11 @@
         carry = noCarry ? 0 : Math.floor(v / 10);
       }
       if (!noCarry && carry > 0) out.unshift(carry);
-      c.rightPut(++row, endCol, out.join(''), { bold: true });
+      var resStr = noCarry ? String(errorResultOf('mul', [a, b], 'no-carry')) : out.join('');
+      c.rightPut(++row, endCol, resStr, { bold: true });
       return c.render();
     }
     // 多位 × 多位：逐位部分积
-    var partials = [];
     for (var i = B.length - 1; i >= 0; i--) {
       row++;
       var shift = B.length - 1 - i;
@@ -202,12 +280,11 @@
       }
       if (!noCarry && carry2 > 0) pOut.unshift(carry2);
       c.rightPut(row, endCol - shift, pOut.join(''));
-      partials.push({ val: Number(pOut.join('')) * Math.pow(10, shift), endCol: endCol - shift });
       if (i > 0) continue;
       c.hline(row + 1, endCol - String(prod).length + 1, endCol);
     }
     if (B.length > 1) {
-      c.rightPut(++row, endCol, String(noCarry ? partials.reduce(function (s, p2) { return s + p2.val; }, 0) : prod), { bold: true });
+      c.rightPut(++row, endCol, String(noCarry ? errorResultOf('mul', [a, b], 'no-carry') : prod), { bold: true });
     }
     return c.render();
   }
@@ -224,6 +301,16 @@
     var dCols = Dd.length;
     var divEndCol = dCols + 2;          // 被除数最右列
     var divStartCol = 3;                // 被除数起始列
+    if (opts.maskResult) {
+      // P40-Q-06：calc 遮蔽长除——被除数/除数/角线 + 商位 '?'，跳过过程行与余数行
+      c.put(0, divEndCol, '?', { bold: true });
+      c.rightPut(1, divStartCol - 1, divisor, {});
+      var dvxM = c.x(divStartCol - 1) + c.cellW * 0.42;
+      c.parts.push(U.svgLine(dvxM, c.y(1) - c.rowH * 0.85, dvxM, c.y(1) + c.rowH * 0.35, { stroke: INK, strokeWidth: 2 }));
+      c.parts.push(U.svgLine(dvxM, c.y(1) - c.rowH * 0.85, c.x(divEndCol) + c.cellW * 0.38, c.y(1) - c.rowH * 0.85, { stroke: INK, strokeWidth: 2 }));
+      c.rightPut(1, divEndCol, dividend);
+      return c.render();
+    }
     // 商（顶部，与对应被除数位对齐）
     var qStart = divStartCol + (Dd.length - Q.length);
     for (var i = 0; i < Q.length; i++) c.put(0, qStart + i, Q[i], { bold: true });
@@ -270,6 +357,19 @@
     var m = /^(\d+)(?:\.(\d+))?$/.exec(String(s).trim());
     return m ? { int: m[1], frac: m[2] || '' } : null;
   }
+
+  /** P40-Q-06：calc 遮蔽乘法竖式（裸形态）——两因数 + × + 横线 + '?'，不画部分积/结果行 */
+  function maskedMul(aDisp, bDisp, opts) {
+    var c = new Canvas(opts);
+    var w = Math.max(String(aDisp).length, String(bDisp).length);
+    var endCol = w + 1;
+    c.rightPut(0, endCol, aDisp);
+    c.rightPut(1, endCol, bDisp);
+    c.put(1, endCol - w - 1, '×', { bold: true });
+    c.hline(2, endCol - w - 1, endCol);
+    c.put(3, endCol, '?', { bold: true });
+    return c.render();
+  }
   /**
    * 小数加减竖式：小数点独立占列、上下对齐，进/借位点颜色区分。
    * SVGCalculation.dec('12.5', '3.48', '+', opts)
@@ -293,7 +393,8 @@
     var rStr = fracMax > 0 ? rRaw.slice(0, -fracMax) + '.' + rRaw.slice(-fracMax) : rRaw;
     var R = parseDec(rStr);
 
-    var intMax = Math.max(A.int.length, B.int.length, R.int.length);
+    var intMax = opts.maskResult ? Math.max(A.int.length, B.int.length)
+      : Math.max(A.int.length, B.int.length, R.int.length);
     // 视觉列：[0..intMax-1]=整数区 | intMax=小数点 | [intMax+1..intMax+fracMax]=小数区
     var pointCol = fracMax > 0 ? intMax : -1;
     var endCol = intMax - 1 + (fracMax > 0 ? 1 + fracMax : 0);
@@ -314,7 +415,8 @@
     putNum(1, B);
     c.put(1, -1, isSub ? '−' : '+', { bold: true });
     c.hline(2, -1, endCol);
-    putNum(2, R);
+    if (opts.maskResult) c.put(2, endCol, '?', { bold: true });
+    else putNum(2, R);
 
     // 进/借位点：逐位检查（aD/bD 低位在前；点标在更高一位的列上方）
     var aD = [], bD = [];
@@ -390,7 +492,7 @@
     return U.svgWrap(inner, { padding: 14 });
   }
 
-  global.SVGCalculation = { add: add, sub: sub, mul: mul, div: div, dec: dec, frac: frac };
+  global.SVGCalculation = { add: add, sub: sub, mul: mul, div: div, dec: dec, frac: frac, errorResultOf: errorResultOf };
 
   // 任务7：挂载到科目化命名空间（全局旧名 SVGCalculation 保留兼容）
   global.SVGGenerators = global.SVGGenerators || {};

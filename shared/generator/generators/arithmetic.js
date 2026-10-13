@@ -157,21 +157,68 @@ function buildApplyStory(structure, op) {
 }
 
 // P30-GEN-06：算术 choice 干扰项——扰动最后一个操作数生成结果不同的算式。
-function buildDistractorExpressions(structure, correctAnswer) {
+// P40-Q-05：迷思桥——按 KP 错误谱（plan.semanticParams.miscons，T2 misconception-profiles
+// 轻量投影）选择扰动策略并携带溯源：概念混淆/符号错误 → 运算符共轭互换（+↔−、×↔÷）；
+// 口诀混淆 → 乘/除数错位（±1）；计算错误/步骤错误 → off-by-one。无匹配迷思或扰动不足时
+// 既有 deltas 邻近数兜底（source:'adjacent-fallback' 诚实降级，不编造迷思）。
+function conjugateOp(o) { return o === '+' ? '−' : (o === '−' ? '+' : (o === '*' ? '/' : (o === '/' ? '*' : null))); }
+
+function buildDistractorExpressions(structure, correctAnswer, miscons) {
   var baseOps = structure.operands.slice();
   var oprs = structure.operators;
   var last = baseOps.length - 1;
   var out = [];
+  var provenance = [];
+
+  function tryExpr(trialOps, trialOprs, errorType, source) {
+    var res = Arith.calculateAnswer(trialOps, trialOprs);
+    if (String(res) === String(correctAnswer)) return false;
+    var expr = Arith.formatExpression(trialOps, trialOprs);
+    if (out.indexOf(expr) !== -1) return false;
+    out.push(expr);
+    provenance.push({ expr: expr, errorType: errorType || null, source: source });
+    return true;
+  }
+
+  // 迷思策略（按 KP 错误谱 slots 顺序）
+  if (Array.isArray(miscons)) {
+    for (var m = 0; m < miscons.length && out.length < 3; m++) {
+      var et = miscons[m] && miscons[m].errorType;
+      if (!et) continue;
+      if (et === '概念混淆' || et === '符号错误') {
+        var conj = conjugateOp(oprs[oprs.length - 1]);
+        if (conj) {
+          var cOps = baseOps.slice();
+          var cOprs = oprs.slice();
+          cOprs[cOprs.length - 1] = conj;
+          tryExpr(cOps, cOprs, et, 'misconception');
+        }
+      } else if (et === '口诀混淆' && (oprs[oprs.length - 1] === '*' || oprs[oprs.length - 1] === '/')) {
+        [-1, 1].forEach(function (d) {
+          if (out.length >= 3) return;
+          var mOps = baseOps.slice();
+          var nv = mOps[last] + d;
+          if (nv < 1) return; // 口诀错位须保持正操作数
+          mOps[last] = nv;
+          tryExpr(mOps, oprs.slice(), et, 'misconception');
+        });
+      }
+    }
+  }
+
+  // 计算错误/步骤错误迷思 = off-by-one 邻近数（与既有雏形同构，升级为迷思溯源）
+  var calcSlot = Array.isArray(miscons) && miscons.some(function (s) {
+    return s && (s.errorType === '计算错误' || s.errorType === '步骤错误');
+  });
   var deltas = [1, 2, -1, -2];
   for (var i = 0; i < deltas.length && out.length < 3; i++) {
     var nv = baseOps[last] + deltas[i];
     if (nv < 0) continue;
     var trialOps = baseOps.slice();
     trialOps[last] = nv;
-    var res = Arith.calculateAnswer(trialOps, oprs);
-    if (String(res) === String(correctAnswer)) continue;
-    var expr = Arith.formatExpression(trialOps, oprs);
-    if (out.indexOf(expr) === -1) out.push(expr);
+    tryExpr(trialOps, oprs.slice(),
+      calcSlot ? (miscons.filter(function (s) { return s.errorType === '计算错误' || s.errorType === '步骤错误'; })[0] || {}).errorType : null,
+      calcSlot ? 'misconception' : 'adjacent-fallback');
   }
   // 若扰动不足 3 个，扰动倒数第二个操作数兜底
   var guard = 0;
@@ -181,13 +228,14 @@ function buildDistractorExpressions(structure, correctAnswer) {
     if (nv2 < 0) continue;
     var t2 = baseOps.slice();
     t2[last - 1] = nv2;
-    var r2 = Arith.calculateAnswer(t2, oprs);
-    if (String(r2) === String(correctAnswer)) continue;
-    var e2 = Arith.formatExpression(t2, oprs);
-    if (out.indexOf(e2) === -1) out.push(e2);
+    tryExpr(t2, oprs.slice(), null, 'adjacent-fallback');
   }
-  while (out.length < 3) out.push(baseOps.join(' + ') + ' + ' + (out.length + 1));
-  return out.slice(0, 3);
+  while (out.length < 3) {
+    var filler = baseOps.join(' + ') + ' + ' + (out.length + 1);
+    out.push(filler);
+    provenance.push({ expr: filler, errorType: null, source: 'adjacent-fallback' });
+  }
+  return { exprs: out.slice(0, 3), provenance: provenance.slice(0, 3) };
 }
 
 // P38 断链修复闸门：意图驱动——仅当该 (KP, 题型) 行 intent.graphicRole 非空
@@ -196,6 +244,9 @@ function intentWantsGraphic(plan) {
   return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
     plan.semanticParams.graphic.role != null);
 }
+
+// P40-Q-06：KP 年级解析与课标竖式判定单点在 arithmetic-core（Arith.gradeOfKp / Arith.verticalPlan），
+// arithmetic.js 与 decimal.js 共用，禁止本地第二实现。
 
 // P38 断链修复：混合运算计算辅助图（role 统一 calculation-support）。
 // calc/judge/apply 统一「首步表示法」：仅展示前两个操作数与首个运算符，结果以 '？'
@@ -312,18 +363,50 @@ function createArithmeticGenerator(spec) {
         var semKind = (op === 'div' && plan.semanticParams) ? plan.semanticParams.kind : null;
         var kind = constraints.kind ||
           ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || semKind;
-        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
-        if (!structure) {
-          structure = Arith.generateStructure(rng, {
-            operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
-            operationSet: opSet,
-            exactSteps: constraints.exactSteps,
-            numberRange: genRange,
-            maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
-            allowBracket: constraints.allowBracket,
-            allowMultDiv: constraints.allowMultDiv,
-            noNegative: true
-          });
+        // P40-Q-SEM（#1 复现题）：封闭数域结果域守卫——操作数在 numberRange 内不代表结果在
+        // （91+26=117>numMax=100 越界）。R9 方案 A 口径：仅纯加减法按封闭数域判结果域；
+        // 乘除/混合不适用（结果域不封闭）。越界即重采样（rng 顺序推进，确定性保持），
+        // 12 次仍越界 → 钳制最后一个操作数兜底（add：max−前缀和；sub：结果域下限天然满足 noNegative）。
+        var isPureAddSub = true;
+        var structGuard = 0;
+        var structure;
+        function structInRange(s) {
+          var a = s.answer != null ? s.answer : Arith.calculateAnswer(s.operands, s.operators);
+          if (genRange && typeof genRange.max === 'number' && a > genRange.max) return false;
+          if (genRange && typeof genRange.min === 'number' && a < genRange.min) return false;
+          return true;
+        }
+        do {
+          isPureAddSub = true;
+          var structure0 = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
+          if (!structure0) {
+            structure0 = Arith.generateStructure(rng, {
+              operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
+              operationSet: opSet,
+              exactSteps: constraints.exactSteps,
+              numberRange: genRange,
+              maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
+              allowBracket: constraints.allowBracket,
+              allowMultDiv: constraints.allowMultDiv,
+              noNegative: true
+            });
+          }
+          structure = structure0;
+          for (var oi = 0; oi < structure.operators.length; oi++) {
+            if (structure.operators[oi] !== '+' && structure.operators[oi] !== '−') { isPureAddSub = false; break; }
+          }
+          if (!isPureAddSub) break; // 乘除/混合不适用封闭数域
+          structGuard++;
+        } while (!structInRange(structure) && structGuard < 12);
+        if (isPureAddSub && !structInRange(structure) && structure.operators[structure.operators.length - 1] === '+') {
+          // 兜底钳制：add 末操作数 = max − 其余操作数和（≥1 才有效，否则保留原样交由 validator 判定）
+          var prefixSum = 0;
+          for (var pi = 0; pi < structure.operands.length - 1; pi++) prefixSum += structure.operands[pi];
+          var clamped = genRange.max - prefixSum;
+          if (clamped >= 1) {
+            structure.operands[structure.operands.length - 1] = clamped;
+            structure.answer = Arith.calculateAnswer(structure.operands, structure.operators);
+          }
         }
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var qt = plan.questionTypeId;
@@ -334,6 +417,7 @@ function createArithmeticGenerator(spec) {
         // P34-12：题型分型讲解（运算意义 + 完整演算），统一在各分支赋值
         var fullExpr = Arith.formatExpression(structure.operands, structure.operators);
         var explanationText;
+        var choiceDistractors = null; // P40-Q-05：choice 干扰项迷思溯源（{expr, errorType, source}[]）
 
         if (qt === 'fill') {
           // P30-GEN-06（P30-16）：fill = 逆推填空（空出一个操作数，已知得数求操作数），
@@ -365,16 +449,46 @@ function createArithmeticGenerator(spec) {
           // 数的算式。题干不含符号算式，核心骨架与 calc/fill/apply 互异。
           var correctExpr = Arith.formatExpression(structure.operands, structure.operators);
           prompt = '下面哪个算式等于 ' + answer + '？';
-          var distractorExprs = buildDistractorExpressions(structure, answer);
+          // P40-Q-05：迷思桥——KP 错误谱驱动扰动策略 + data.distractors 溯源字段
+          var miscons = (plan.semanticParams && Array.isArray(plan.semanticParams.miscons))
+            ? plan.semanticParams.miscons : [];
+          var distractorBuild = buildDistractorExpressions(structure, answer, miscons);
+          var distractorExprs = distractorBuild.exprs;
           options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
           outAnswer = correctExpr;
           if (wantsG) calcGraphic = buildCalcGraphic('choice', structure, answer);
           // 解析：指认正确算式并验算
           explanationText = '结果等于 ' + answer + ' 的算式是 ' + correctExpr +
             '（验算：' + correctExpr + ' = ' + answer + '）';
+          choiceDistractors = distractorBuild.provenance;
         } else {
           prompt = fullExpr + ' = ?';
-          if (wantsG) calcGraphic = buildCalcGraphic(qt, structure, answer);
+          // P40-Q-06：课标笔算竖式（两数单步 + 年级达标）仅接管无意图图授权的行
+          // （vPlan && !wantsG）；intent.graphicRole 授权了示意图的行走原 diagram 路径，
+          // 行为与 Q-06 前完全一致（否则非目标行被带竖式 → intent 门拒，6f FAIL）。
+          // descriptor 只声明结构（type/subtype/role/params），遮蔽形态（maskResult）
+          // 由 SVG 层防泄题呈现；小数轨传 trimDec 字符串（dec/小数 mul 适配器契约）。
+          var vPlan = null;
+          if (structure.operands.length === 2 && structure.operators.length === 1) {
+            vPlan = Arith.verticalPlan(Arith.gradeOfKp(pkp(plan)),
+              structure.operands[0], structure.operands[1], structure.operators[0]);
+          }
+          if (vPlan && !wantsG) {
+            if (vPlan.kind === 'dec') {
+              calcGraphic = vPlan.sub === 'mul'
+                ? { type: 'calculation', subtype: 'mul', role: 'calculation-support',
+                    params: { a: Arith.trimDec(structure.operands[0]), b: Arith.trimDec(structure.operands[1]),
+                      options: { maskResult: true } } }
+                : { type: 'calculation', subtype: 'dec', role: 'calculation-support',
+                    params: { a: Arith.trimDec(structure.operands[0]), b: Arith.trimDec(structure.operands[1]),
+                      op: structure.operators[0], options: { maskResult: true } } };
+            } else {
+              calcGraphic = { type: 'calculation', subtype: vPlan.sub, role: 'calculation-support',
+                params: { a: structure.operands[0], b: structure.operands[1], options: { maskResult: true } } };
+            }
+          } else if (wantsG) {
+            calcGraphic = buildCalcGraphic(qt, structure, answer);
+          }
           // 解析：运算意义 + 完整演算
           explanationText = OP_MEANING[op] + '：' + fullExpr + ' = ' + answer;
         }
@@ -403,7 +517,9 @@ function createArithmeticGenerator(spec) {
           hint: null,
           data: {
             operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
-            steps: structure.steps
+            steps: structure.steps,
+            // P40-Q-05：choice 干扰项迷思溯源（非 choice 题为 null）
+            distractors: choiceDistractors
           }
         };
         if (calcGraphic) pushedQ.data.graphic = calcGraphic;

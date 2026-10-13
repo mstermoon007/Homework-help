@@ -111,7 +111,50 @@ function validateBatchComposite(questions, context) {
   return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { composite: 'pass' } };
 }
 
+/**
+ * P40 T-10：跨族组合前置校验——composite 组合多个 KP 时，凡跨族（familyId 不同）的 KP 对，
+ * 必须存在 prerequisite 边可达（一方是另一方的（间接）前置）；否则组合被拒（零新数据：
+ * 复用既有 373 prerequisite 边 + T-06 跨族投影口径，经运行时公开口 relationsFor 只读消费）。
+ * opts: { relationsFor(id,dir)->{outgoing,incoming}, familyOf(id)->familyId }
+ * 无解析器时跳过（valid=true, skipped），保持生产既有行为不变。
+ */
+function validateCrossFamilyPrerequisite(kpIds, opts) {
+  opts = opts || {};
+  var relationsFor = opts.relationsFor, familyOf = opts.familyOf;
+  if (typeof relationsFor !== 'function' || typeof familyOf !== 'function') {
+    return { valid: true, checked: 0, missing: [], skipped: 'no-resolver' };
+  }
+  var ids = (kpIds || []).filter(function (x, i, a) { return typeof x === 'string' && a.indexOf(x) === i; });
+  function fam(id) { var f = familyOf(id); return f && f.familyId ? f.familyId : f; }
+  function reachable(a, b) {
+    var seen = {}, q = [a];
+    while (q.length) {
+      var cur = q.shift();
+      if (cur === b) return true;
+      if (seen[cur]) continue; seen[cur] = 1;
+      var out = relationsFor(cur, 'out') || {};
+      (out.outgoing || []).forEach(function (r) { if (!seen[r.toId]) q.push(r.toId); });
+    }
+    return false;
+  }
+  var missing = [], seenPair = {};
+  for (var i = 0; i < ids.length; i++) {
+    for (var j = 0; j < ids.length; j++) {
+      if (i === j) continue;
+      var a = ids[i], b = ids[j];
+      if (fam(a) === fam(b)) continue;
+      var key = [a, b].sort().join('|');
+      if (seenPair[key]) continue; seenPair[key] = 1;
+      if (!reachable(a, b) && !reachable(b, a)) {
+        missing.push({ a: a, b: b, aFamily: fam(a), bFamily: fam(b) });
+      }
+    }
+  }
+  return { valid: missing.length === 0, checked: ids.length, missing: missing };
+}
+
 module.exports = {
   validateComposite: validateComposite,
-  validateBatchComposite: validateBatchComposite
+  validateBatchComposite: validateBatchComposite,
+  validateCrossFamilyPrerequisite: validateCrossFamilyPrerequisite
 };

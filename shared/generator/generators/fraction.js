@@ -151,9 +151,16 @@ function exprOptionsFrac(rng, expr, correctVal) {
 }
 
 // P34-14：讲解素材全部取自本题已生成的算式/得数/结构变量，不引入题外信息。
-function calcItem(expr, ansF, hint, why) {
-  var explain = why || ((hint ? hint + '：' : '') + expr + ' = ' + fs(ansF) + '。');
-  return { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+// P40-Q-07：第 5 参 graphic 为可选课标竖式描述符（异分母 calc 专用），透传至 data.graphic。
+function calcItem(expr, ansF, hint, why, graphic) {
+  // P40-Q-09（R6 复现 #142）：why 法则句整替换曾致解析冒号后空截断（7 处 calc 行全丢演算）。
+  // 修复：法则句在前、逐步演算在后，闭环「法则 → 演算」；未传 why 保持 hint 旧形态。
+  var explain = why
+    ? why + expr + ' = ' + fs(ansF) + '。'
+    : ((hint ? hint + '：' : '') + expr + ' = ' + fs(ansF) + '。');
+  var it = { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+  if (graphic) it.graphic = graphic;
+  return it;
 }
 function choiceExprItem(rng, expr, ansF, stemPrefix, why) {
   var explain = why || ('逐个计算四个选项，只有「' + expr + '」的得数是 ' + fs(ansF) + '。');
@@ -227,18 +234,33 @@ function arithmeticTyped(sub, qt, rng, nr) {
   if (sub === 'addsub-diff') {
     var s2 = diffDenomAdd(rng, nr);
     var de = s2.expr, da = s2.ans;
+    // P40-Q-07：通分中间值单源（c1/c2/num），解析三题型共用，不引题外信息。
+    var c1 = s2.n1 * (s2.lcm / s2.d1), c2 = s2.n2 * (s2.lcm / s2.d2), cnum = c1 + c2;
+    var tongfen = '先通分：分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm +
+      '，' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '，' + s2.n2 + '/' + s2.d2 +
+      ' = ' + c2 + '/' + s2.lcm + '；再按同分母相加：' + c1 + '/' + s2.lcm + ' + ' + c2 + '/' + s2.lcm +
+      ' = ' + cnum + '/' + s2.lcm + (da.d !== s2.lcm ? '，约分得 ' + fs(da) : '');
+    // P40-Q-07：课标分数竖式（异分母先通分再笔算）——仅挂意图无图授权行（分数行
+    // intent.graphicRole 全 null，与 Q-06 定稿口径一致）；结果留白框（resultBox '?'）
+    // 防泄题，与 segment 遮蔽同口径；validator 按 isVerticalSupportGraphic（type=calculation
+    // 且 role=calculation-support）豁免两门；同分母为课标口算不挂（不机械扩修）。
+    var fracG = {
+      type: 'calculation', subtype: 'frac', role: 'calculation-support',
+      params: { a: s2.n1, b: s2.d1, c: s2.n2, d: s2.d2, op: '+', options: { resultBox: true } }
+    };
     if (qt === 'calc') return calcItem(de, da, '列式计算（先通分）',
-      '异分母分数相加，先通分化成同分母分数，再按同分母加法计算：');
+      '异分母分数相加，' + tongfen + '。', fracG);
     if (qt === 'fill') {
-      var c1 = s2.n1 * (s2.lcm / s2.d1);
       return { prompt: '先通分再填空：' + s2.n1 + '/' + s2.d1 + ' = ____/' + s2.lcm,
         answer: c1 + '/' + s2.lcm, options: null,
         explain: '异分母分数先通分，分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm
           + '，分子也要乘相同的数：' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '。' };
     }
-    if (qt === 'choice') return choiceExprItem(rng, de, da);
+    if (qt === 'choice') return choiceExprItem(rng, de, da, null,
+      '四个选项中只有「' + de + '」的得数是 ' + fs(da) + '。计算它要' + tongfen + '，所以选「' + de + '」。');
     return applyItem('修路队第一天修了这条路的 ' + s2.n1 + '/' + s2.d1 + '，第二天修了 ' + s2.n2 + '/' + s2.d2 +
-      '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da);
+      '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da,
+      '把两天修的部分合起来用加法：' + de + '，' + tongfen + '，两天一共修了这条路的 ' + fs(da) + '。');
   }
 
   if (sub === 'mix') {
@@ -462,6 +484,9 @@ function buildQuestion(plan, context, i) {
   var options = typed.options || null;
 
   var data = { mode: 'fraction', subType: sub, steps: 1 };
+  // P40-Q-07：课标竖式描述符经 data.graphic 携带（与 Q-06 arithmetic/decimal 同形态，
+  // validator isVerticalSupportGraphic 豁免口径按 sq.data.graphic 读取）。
+  if (typed.graphic) data.graphic = typed.graphic;
   if (qt === 'choice' && options) {
     data.options = options;
     data.correctIndex = options.map(String).indexOf(String(answer));

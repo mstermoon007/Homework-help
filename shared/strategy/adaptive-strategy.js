@@ -212,8 +212,31 @@ function resolve(opts) {
   };
 }
 
+/**
+ * P40 T-09：learner 巩固/拓展序列只读排序——按 (familyId, stageOrder) 稳定排序 KP 序列，
+ * 实现「防跳阶出题」的顺序感知。纯只读消费：不改数量/题型/难度/KP 选择（Z1-Z4 决策权仍归既有链）。
+ * opts: { getKp(id)->{familyId,stageOrder}, idOf(item)->id }
+ */
+function orderByStageOrder(items, opts) {
+  opts = opts || {};
+  var getKp = opts.getKp;
+  var list = (items || []).slice();
+  if (typeof getKp !== 'function') return list;
+  var idOf = opts.idOf || function (x) { return typeof x === 'string' ? x : (x && (x.kpId || x.knowledgePointId || x.id)); };
+  return list.map(function (x, i) { return { x: x, i: i }; }).sort(function (a, b) {
+    var ka = getKp(idOf(a.x)) || {}, kb = getKp(idOf(b.x)) || {};
+    var fa = ka.familyId || '', fb = kb.familyId || '';
+    if (fa !== fb) return fa < fb ? -1 : 1;
+    var sa = ka.stageOrder == null ? Infinity : ka.stageOrder;
+    var sb = kb.stageOrder == null ? Infinity : kb.stageOrder;
+    if (sa !== sb) return sa - sb;
+    return a.i - b.i;
+  }).map(function (p) { return p.x; });
+}
+
 module.exports = {
   resolve: resolve,
+  orderByStageOrder: orderByStageOrder,
   masteryBandAdjustment: masteryBandAdjustment,
   applyStreakProtection: applyStreakProtection,
   dampenByConfidence: dampenByConfidence,

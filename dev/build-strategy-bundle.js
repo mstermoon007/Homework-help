@@ -61,10 +61,19 @@ var SHIMS = {
 
 var REQUIRES = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
+// P40-Q-06：type-contract → svg-calculation/svg-core 首次经依赖链进入本 bundle。
+// 朴素行注释正则会截断 svg 源码 xmlns: 'http://…' 字符串内的 //（bundle 语法错误）；
+// 只删块注释又会让源码行注释里的 canonical ID 残留进 bundle（kbl-uniqueness 判为
+// 数据内嵌误报）。改为字符串感知剥离：字符串/模板串内的 // 保留，真注释（行+块）删除。
 function stripComments(code) {
-  return code
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\/\/.*$/gm, '');
+  return code.replace(
+    /("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\]|\\.)*`|\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g,
+    function (m) {
+      var c = m.charAt(0);
+      if (c === '"' || c === "'" || c === '`') return m;
+      return '';
+    }
+  );
 }
 
 function normalizeId(fromDir, rel) {

@@ -213,7 +213,11 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var bStr = formatRMB(bFen);
   var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
-  var answer = formatRMB(answerFen);
+  // P40-Q-09（R8 #19，用户裁决并入）：answerFen=0 时 formatRMB 落「0分」，与等值操作数
+  // （如 5角−5角）单位口径混用。零结果沿用操作数单位：aFen≥100→元、≥10→角、否则分。
+  var answer = answerFen === 0
+    ? '0' + (aFen >= 100 ? '元' : aFen >= 10 ? '角' : '分')
+    : formatRMB(answerFen);
   // P34-14：人民币加减法讲解（单位相同才能直接相加减）
   var calcWhy = (op === 'add' ? '把两部分钱合起来用加法' : '求剩余的钱用减法')
     + '，单位相同直接相加减：' + aStr + ' ' + opChar + ' ' + bStr + ' = ' + answer;
@@ -454,15 +458,32 @@ function makeWordProblemQuestion(plan, context, i, meta) {
     var op = Rng.pick(rng, ['buy', 'change', 'total']);
     var aStr = formatRMB(aFen);
     var bStr = formatRMB(bFen);
-    
+
+    // P40-Q-13：情境叙事选取——plan.semanticParams.contextScenes.moneyEntries（KP grade 命中 +
+    // confirmed 条目）× op 锚（buy/change/total）；{a}/{b} 槽填 formatRMB 金额字符串。
+    // 语料缺失/grade 无命中时不消耗 rng，回退既有三条硬编码叙事（行为不变）。
+    var prompt = null;
+    var cs = plan && plan.semanticParams && plan.semanticParams.contextScenes;
+    if (cs && Array.isArray(cs.moneyEntries) && cs.moneyEntries.length) {
+      var moneyPool = [];
+      cs.moneyEntries.forEach(function (e) {
+        var arr = e.narratives ? e.narratives[op] : null;
+        if (Array.isArray(arr)) arr.forEach(function (t) { moneyPool.push(t); });
+      });
+      if (moneyPool.length) {
+        prompt = moneyPool[Math.floor(rng() * moneyPool.length)]
+          .replace('{a}', aStr).replace('{b}', bStr);
+      }
+    }
+
     if (op === 'buy') {
-      var prompt = '小明买了一支笔，花了' + aStr + '，又买了一块橡皮，花了' + bStr + '，一共花了多少钱？';
+      prompt = prompt || '小明买了一支笔，花了' + aStr + '，又买了一块橡皮，花了' + bStr + '，一共花了多少钱？';
       var answer = formatRMB(aFen + bFen);
     } else if (op === 'change') {
-      var prompt = '小红有' + aStr + '，买文具花了' + bStr + '，还剩多少钱？';
+      prompt = prompt || '小红有' + aStr + '，买文具花了' + bStr + '，还剩多少钱？';
       var answer = formatRMB(aFen - bFen);
     } else {
-      var prompt = '一本书' + aStr + '，一本笔记本' + bStr + '，买这两样东西一共需要多少钱？';
+      prompt = prompt || '一本书' + aStr + '，一本笔记本' + bStr + '，买这两样东西一共需要多少钱？';
       var answer = formatRMB(aFen + bFen);
     }
     var wordWhy = (op === 'change'

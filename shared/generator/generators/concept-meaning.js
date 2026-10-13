@@ -41,6 +41,19 @@ function pkp(plan) {
   return null;
 }
 
+// P40-Q-11：KP definition 只读消费——plan.semanticParams.definition 经 SemanticParameters
+// resolve 投影（T3 semantic.concept = canonical definition 逐字镜像，name 兜底形态已置 null）。
+// 未附 semanticParams / definition 缺失 → null，生成器不编造定义，回退既有诚实解析形态。
+function defOf(plan) {
+  var sp = plan && plan.semanticParams;
+  return (sp && typeof sp.definition === 'string' && sp.definition) ? sp.definition : null;
+}
+
+/** definition 逐字引用拼接（原文照抄；末尾无句读时补句号，衔接后续本题应用句） */
+function citeDef(def) {
+  return def + (/[。！？]$/.test(def) ? '' : '。');
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':' + i;
   if (plan && plan.seed != null) return plan.seed + ':' + i;
@@ -87,7 +100,7 @@ function finish(q, prompt, answer, acceptable, explanation) {
 }
 
 /** 选择题收尾：options 洗牌 + correctIndex + 答案为正确选项文本（与 selection.js 契约一致） */
-function finishChoice(q, rng, correct, wrongs, explanation) {
+function finishChoice(q, rng, correct, wrongs, explanation, provenance) {
   var seen = {}, pool = [];
   [correct].concat(wrongs).forEach(function (o) {
     o = String(o);
@@ -108,6 +121,13 @@ function finishChoice(q, rng, correct, wrongs, explanation) {
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
   q.data.correctIndex = options.indexOf(String(correct));
+  // P40-Q-05：干扰项迷思溯源（可选；传入的 provenance 须与 wrongs 一一对应，
+  // 被去重/截断剔除的项同步剔除，保证溯源 expr ⊆ data.options）
+  if (Array.isArray(provenance)) {
+    q.data.distractors = provenance.filter(function (p) {
+      return p && options.indexOf(String(p.expr)) !== -1 && String(p.expr) !== String(correct);
+    });
+  }
   return finish(q, q.prompt, String(correct), [], explanation || null);
 }
 
@@ -172,10 +192,32 @@ function makeTimesChoice(plan, context, i) {
   var q = buildBase(plan, context, i, { subType: 'times', operation: 'mult', timesRelation: 'times-of', base: base, times: times });
   q.prompt = '下面哪个算式表示「' + base + ' 的 ' + times + ' 倍」？（  ）';
   var correctExpr = base + ' × ' + times;
-  return finishChoice(q, rng, correctExpr,
-    [base + ' + ' + times, base + ' − ' + times, times + ' − ' + base],
+  // P40-Q-05：迷思桥——按 KP 错误谱构造干扰（#28 修复）：
+  //   口诀混淆 → 倍数错位乘式 base×(times±1)；概念混淆/符号错误 → 倍除混淆 base÷times；
+  //   计算错误/步骤错误/无素材 → 既有乘加混淆雏形（adjacent-fallback 诚实降级）。
+  var miscons = (plan.semanticParams && Array.isArray(plan.semanticParams.miscons))
+    ? plan.semanticParams.miscons : [];
+  var wrongs = [], provenance = [];
+  function addW(expr, et, src) {
+    if (wrongs.indexOf(expr) !== -1 || expr === correctExpr || wrongs.length >= 3) return;
+    wrongs.push(expr);
+    provenance.push({ expr: expr, errorType: et || null, source: src });
+  }
+  for (var m = 0; m < miscons.length; m++) {
+    var et = miscons[m] && miscons[m].errorType;
+    if (et === '口诀混淆') {
+      if (times + 1 <= 9) addW(base + ' × ' + (times + 1), et, 'misconception');
+      if (times - 1 >= 2) addW(base + ' × ' + (times - 1), et, 'misconception');
+    } else if (et === '概念混淆' || et === '符号错误') {
+      if (base % times === 0) addW(base + ' ÷ ' + times, et, 'misconception');
+    }
+  }
+  addW(base + ' + ' + times, null, 'adjacent-fallback');
+  addW(base + ' − ' + times, null, 'adjacent-fallback');
+  addW(times + ' − ' + base, null, 'adjacent-fallback');
+  return finishChoice(q, rng, correctExpr, wrongs,
     '「' + base + ' 的 ' + times + ' 倍」就是 ' + times + ' 个 ' + base + '，用乘法表示为 '
-      + correctExpr + '，正确选项是「' + correctExpr + '」。');
+      + correctExpr + '，正确选项是「' + correctExpr + '」。', provenance);
 }
 
 /* ================================================================
@@ -297,9 +339,14 @@ function makeAngleChoice(plan, context, i) {
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
   var angleDef = '从一点引出两条射线所组成的图形';
+  // P40-Q-11：解析引用 KP definition 逐字原文（T2 已有「角的定义是…」手写复述非逐字，
+  // 换为 semanticParams.definition 逐字镜像；definition 缺失回退既有诚实形态）
+  var adef = defOf(plan);
   return finishChoice(q, rng, angleDef,
     ['两条线段组成的图形', '一条直线上的两个点', '由三条边围成的图形'],
-    '角的定义是从一点引出两条射线所组成的图形，这一点是顶点、两条射线是角的两条边，正确选项是「' + angleDef + '」。');
+    adef
+      ? '依据定义：' + citeDef(adef) + '这一点是顶点，两条射线是角的两条边，正确选项是「' + angleDef + '」。'
+      : '角的定义是从一点引出两条射线所组成的图形，这一点是顶点、两条射线是角的两条边，正确选项是「' + angleDef + '」。');
 }
 
 function makeAngleGeometry(plan, context, i) {
@@ -310,24 +357,33 @@ function makeAngleGeometry(plan, context, i) {
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
   return finish(q, '观察一个角：把它的两条边画得更长，这个角的大小 ____。（填“变大”“变小”或“不变”）',
-    '不变', ['不变'], '角的大小与两边张开的程度有关，与边的长短无关');
+    '不变', ['不变'],
+    // P40-Q-11：geometry 图形特征腿——「依据：〈图形特征〉。所以〈本题结论〉」
+    '依据：角的大小只与两边张开的程度有关，与边的长短无关。所以把两条边画得更长，角的大小不变');
 }
 
 function makeAngleJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  // P40-Q-11：judge 解析统一「判断依据：〈依据〉。〈结论〉」模板——定义判断项引用
+  // KP definition 逐字原文（旧手写「就是角」非逐字）；性质项以性质本身为依据，不引定义。
+  var adef = defOf(plan);
   var items = [
     {
       text: '角的两条边越长，这个角就越大。', value: false,
-      explanation: '角的大小只与两边张开的程度有关，与边的长短无关，边画得再长角也不会变大，说法错误。',
+      explanation: '判断依据：角的大小只与两边张开的程度有关，与边的长短无关。边画得再长角也不会变大，说法错误。',
       misconception: '误认为角的大小由边的长短决定：角的大小只取决于两边张开的程度。'
     },
     {
       text: '一个角有一个顶点和两条边。', value: true,
-      explanation: '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
     },
     {
       text: '从一点引出两条射线所组成的图形叫做角。', value: true,
-      explanation: '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
     }
   ];
   var s = Rng.pick(rng, items);
@@ -371,8 +427,12 @@ function makeAreaFill(plan, context, i) {
     type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
     params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
   };
+  // P40-Q-11：definition 逐字引用（旧手写「叫作面积」为编造尾巴，非 canonical 原文）
+  var adef = defOf(plan);
   return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'],
-    '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
+    adef
+      ? '依据定义：' + citeDef(adef) + '这个量就是面积，所以测量、比较表面大小要用面积单位，空格填面积'
+      : '物体表面或封闭图形的大小叫作面积，所以测量、比较表面大小要用面积单位，空格填面积');
 }
 
 function makeAreaApply(plan, context, i) {
@@ -398,8 +458,11 @@ function makeAreaChoice(plan, context, i) {
     type: 'geometry', subtype: 'rectangle', role: 'auxiliary',
     params: { width: 3, height: 2, unitPx: 26, labelSides: false, rightAngle: false }
   };
+  // P40-Q-11：definition 逐字引用前缀（定义→单位应用连接），缺失回退既有形态
+  var adef = defOf(plan);
   return finishChoice(q, rng, '平方厘米', ['厘米', '千克', '秒'],
-    '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
+    (adef ? '依据定义：' + citeDef(adef) : '')
+      + '面积单位用来计量面的大小，平方厘米是面积单位；厘米是长度单位、千克是质量单位、秒是时间单位，正确选项是「平方厘米」。');
 }
 
 function makeAreaGeometry(plan, context, i) {
@@ -421,24 +484,33 @@ function makeAreaGeometry(plan, context, i) {
     }
   };
   return finish(q, '用同样大的小方格去量两个图形：甲用了 ' + a + ' 个，乙用了 ' + b + ' 个。哪个图形的面积大？（填“甲”或“乙”）',
-    winner[0], [winner[0], '图形' + winner[0]], '小方格同样大时，占的格子越多面积越大：' + winner[0] + ' 用了 ' + winner[1] + ' 个');
+    winner[0], [winner[0], '图形' + winner[0]],
+    // P40-Q-11：geometry 图形特征腿——「依据：〈图形特征〉。所以〈本题结论〉」
+    '依据：小方格同样大时，占的格子越多面积越大。' + winner[0] + ' 用了 ' + winner[1] + ' 个，所以面积最大的是' + winner[0]);
 }
 
 function makeAreaJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  // P40-Q-11：judge 统一「判断依据」模板；定义判断项引用 canonical definition 逐字原文
+  //（旧手写「叫做它们的面积」为编造尾巴），性质项以性质本身为依据。
+  var adef = defOf(plan);
   var items = [
     {
       text: '黑板面的大小就是黑板面的面积。', value: true,
-      explanation: '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '黑板面的大小就是黑板面的面积，说法正确。'
+        : '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
     },
     {
       text: '1 平方米比 1 米大。', value: false,
-      explanation: '平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
+      explanation: '判断依据：平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
       misconception: '面积单位与长度单位混淆：不同类的计量单位之间不能比较大小。'
     },
     {
       text: '物体表面或封闭图形的大小叫做它们的面积。', value: true,
-      explanation: '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
+      explanation: adef
+        ? '判断依据：' + citeDef(adef) + '题中说法与定义一致，说法正确。'
+        : '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
     }
   ];
   var s = Rng.pick(rng, items);
@@ -681,6 +753,9 @@ function buildNumberConceptItem(rng, name, nr) {
     var n5 = riC(rng, 2, 5, nr);
     return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
+      // P40-Q-03（#8）：choice 不再回退空壳「下面哪个选项正确」——独立设问
+      // 「前面有 X 人」承载序数推理（前面人数 + 1 = 报数），与 stem/apply 骨架互异。
+      choice: '排队报数，小明前面有 ' + (n5 - 2) + ' 人，小明报几？',
       apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
@@ -714,6 +789,12 @@ function buildNumberConceptItem(rng, name, nr) {
     var num0 = tens * 10 + ones;
     return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
+      // P40-Q-03（#85/#88）：choice 不再回退空壳问句（独立设问，数字位值语境与 apply 计数器语境互异）；
+      // fill 不再走 extractSupport 错位分支（原「80 + 2 = ____」配答案「十位」）——
+      // 专用 fill 问数的组成求值，fillAnswer 走分型答案机制（与 buildNegativeItem 同型）。
+      choice: '有一个数是 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一），数字 ' + tens + ' 在哪一位上？',
+      fill: tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ____',
+      fillAnswer: String(num0),
       apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
@@ -824,6 +905,9 @@ function buildNegativeItem(rng, name, nr) {
   // 或以读法句充当列式题），fillAnswer/calcAnswer 与 makeByItem 的 applyAnswer 同型分型答案机制。
   return { stem: '读出下面的数：−5 与 +8（参考：0 − 5 = −5），−5 读作什么？',
     answer: '负五', options: ['负五', '正五', '五', '减五'],
+    // P40-Q-03（#143）：choice 独立设问（读法问句），不再回退空壳「下面哪个选项正确」；
+    // 骨架与 apply（存折情境全句）互异。
+    choice: '支出 5 元记作 −5，这个数读作什么？',
     calc: '列式计算：0 − 5 = ？', calcAnswer: '−5',
     fill: '根据算式把答案填在横线上：0 − 5 = ____', fillAnswer: '−5',
     apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
@@ -1059,13 +1143,42 @@ function makeByItem(plan, context, i, builder, subType) {
     q.answer.explanation = '正确选项是「' + item.answer + '」';
     return q;
   }
-  // P34-13：解析 = 陈述式题面（去参考括号/疑问尾）+ 明确答案；
-  // item.answer 为独立概念结论（如读法「负五」、因数对陈述）且与本题型答案不同则附上，
-  // 给出「演算结果 → 概念结论」的教学增量，不再把题面原文（含问号）当解析。
-  var stem0 = String(prompt).replace(/（参考[^）]*）/g, '').replace(/[?？]\s*$/, '');
+  // P34-13：解析不再把题面原文（含问号）当解析；item.answer 为独立概念结论
+  //（如读法「负五」、因数对陈述）且与本题型答案不同则附上，给出「演算结果 → 概念结论」的教学增量。
+  // P40-Q-09（R6/R13/R16 复现 #2/#5/#107/#110/#116/#137/#140/#146）：复述类
+  //「题面，答案是 X」升级为结构化解析——calc 逐步演算、fill 演算+归因、apply 四步
+  //「题意→列式→计算→答」。素材全部取自 builder 既有变量（题面/stem 内嵌参考式、
+  // item.answer 概念结论），不编造；无算式素材时诚实退化为「答案是 X」裸句（P34-14 不引题外信息）。
   var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer))
     ? '；' + item.answer : '';
-  var explanation = stem0 + '，答案是 ' + answer + conceptConclusion;
+  var srcExpr = /[+\-−×÷*＝=]/.test(String(prompt)) ? String(prompt) : String(item.stem || '');
+  var sup = extractSupport(srcExpr);
+  var expr = null, exprAns = null;
+  if (/[+\-−×÷*]/.test(sup) && /\d/.test(sup)) {
+    var supCore = sup.replace(/[?？]\s*$/, '');
+    expr = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    var eqTail = /[=＝]\s*([^=＝？?]+)$/.exec(supCore);
+    if (eqTail && /^[−-]?\d+$/.test(eqTail[1].replace(/[、\s]/g, ''))) exprAns = eqTail[1].trim();
+  }
+  var isNumAns = /^[-−]?\d+$/.test(String(answer).replace('−', '-'));
+  if (exprAns == null && isNumAns) exprAns = String(answer);
+  var explanation;
+  if (qt === 'calc') {
+    explanation = expr
+      ? expr + ' = ' + answer + conceptConclusion + '。'
+      : '答案是 ' + answer + conceptConclusion + '。';
+  } else if (qt === 'fill') {
+    explanation = expr
+      ? (expr + (exprAns != null ? ' = ' + exprAns : '') + '，所以答案是 ' + answer + conceptConclusion + '。')
+      : '答案是 ' + answer + conceptConclusion + '。';
+  } else {
+    var stem0 = String(prompt).replace(/（参考[^）]*）/g, '')
+      .replace(/[=＝]\s*[？?]?\s*$/, '').replace(/[?？]\s*$/, '');
+    var stemQ = /[?？]$/.test(String(prompt).trim()) ? '？' : '。';
+    explanation = '题意：' + stem0 + stemQ
+      + (expr ? ' 列式：' + expr + (exprAns != null ? '，计算：' + expr + ' = ' + exprAns : '') + '。' : '')
+      + '答：' + answer + conceptConclusion + '。';
+  }
   return finish(q, prompt, answer, [answer].concat(extraAcceptable), explanation);
 }
 
@@ -1138,7 +1251,17 @@ function createConceptMeaningGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
+      var applied = VariationApply.applyToAll(out, plan);
+      // P40-T-08：承上启下三段模板——有同族前序锚时，把前序 canonical 名/定义要点接到本题解析前。
+      var upstream = params && params.upstream;
+      if (upstream && upstream.name) {
+        applied.forEach(function (q) {
+          if (q && q.answer && typeof q.answer.explanation === 'string' && q.answer.explanation) {
+            q.answer.explanation = SemanticParameters.composeExplanation({ upstream: upstream, name: params.name, current: q.answer.explanation });
+          }
+        });
+      }
+      return SemanticEvidence.attachAll(applied, plan);
     }
   };
 }

@@ -607,6 +607,48 @@ function buildSpecialKind(rng, cfg) {
   return entry.needsRange ? entry.build(rng, cfg.numberRange) : entry.build(rng);
 }
 
+// ─── P40-Q-06：竖式接线课标判定单点 ─────────────────────────────────────────────
+/**
+ * 按课标笔算进阶判定单步两操作数算式是否应配竖式（『应配 20 行』口径的唯一 SSOT）：
+ *   整数加减 ≥G2 且最大操作数 ≥2 位；整数乘 ≥G3 且最大操作数 ≥2 位；
+ *   整数除 ≥G3 且被除数 ≥2 位；小数加减 ≥G4；小数乘 ≥G5；
+ *   小数除/分数不在本版（svg-calculation 无对应形态，已挂账登记）。
+ * 操作数按数值判型：非整数 → 小数轨（调用方保证小数轨操作数确为小数题素材）。
+ * @param {number} grade 年级 1..6
+ * @param {number} a 操作数 1
+ * @param {number} b 操作数 2
+ * @param {string} op 运算符（OP_ADD/OP_SUB/OP_MUL/OP_DIV）
+ * @returns {{kind:'int'|'dec', sub:'add'|'sub'|'mul'|'div'}|null} null = 不配竖式
+ */
+function verticalPlan(grade, a, b, op) {
+  var g = Number(grade);
+  if (!(g >= 1 && g <= 6)) return null;
+  if (typeof a !== 'number' || typeof b !== 'number' || !isFinite(a) || !isFinite(b)) return null;
+  if (a < 0 || b < 0) return null; // 负数不配竖式（课标竖式限于非负数域，neg-add-sub 等负数结构 fail-closed）
+  var isDec = !(a === Math.floor(a) && b === Math.floor(b));
+  var sub = op === OP_ADD ? 'add' : op === OP_SUB ? 'sub'
+    : op === OP_MUL ? 'mul' : op === OP_DIV ? 'div' : null;
+  if (!sub) return null;
+  // P40-Q-06：减法结果为负（a<b）超纲 fail-closed 不配竖式——课标小学段未学负数（R9
+  // 数值合理性缺口挂账在生成器采样侧），竖式作为计算支撑不为其背书，撤图走既有纯文字路径。
+  if (sub === 'sub' && a < b) return null;
+  if (isDec) {
+    if (sub === 'div') return null;
+    if (sub === 'add' || sub === 'sub') return g >= 4 ? { kind: 'dec', sub: sub } : null;
+    return g >= 5 ? { kind: 'dec', sub: 'mul' } : null;
+  }
+  var maxDigits = Math.max(String(Math.abs(a)).length, String(Math.abs(b)).length);
+  if (sub === 'add' || sub === 'sub') return (g >= 2 && maxDigits >= 2) ? { kind: 'int', sub: sub } : null;
+  if (sub === 'mul') return (g >= 3 && maxDigits >= 2) ? { kind: 'int', sub: 'mul' } : null;
+  return (g >= 3 && String(Math.abs(a)).length >= 2) ? { kind: 'int', sub: 'div' } : null;
+}
+
+/** P40-Q-06：KP ID 年级解析（'math-g2-up-u03-k001' → 2）；解析失败返回 0（fail-closed，不配竖式） */
+function gradeOfKp(kpId) {
+  var m = /-g(\d+)-/.exec(String(kpId || ''));
+  return m ? Number(m[1]) : 0;
+}
+
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   normalizeOperation: normalizeOperation,
@@ -635,5 +677,7 @@ module.exports = {
   buildDecMult: buildDecMult,
   trimDec: trimDec,
   buildSpecialKind: buildSpecialKind,
-  SPECIAL_KINDS: SPECIAL_KINDS
+  SPECIAL_KINDS: SPECIAL_KINDS,
+  verticalPlan: verticalPlan,
+  gradeOfKp: gradeOfKp
 };

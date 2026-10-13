@@ -784,18 +784,66 @@ var Validator = require("shared/validator/question-validator.js");
 var Schema = require("shared/schemas/semantic-question.schema.js");
 
 var WEIGHTS = {
-  correctness: 0.25,
-  knowledgeAlignment: 0.20,
-  difficultyAlignment: 0.15,
-  structuralValidity: 0.15,
-  renderability: 0.15,
-  uniqueness: 0.10
+  correctness: 0.225,
+  knowledgeAlignment: 0.18,
+  difficultyAlignment: 0.135,
+  structuralValidity: 0.135,
+  renderability: 0.135,
+  uniqueness: 0.09,
+  explanationQuality: 0.10
 };
 
 function coerceNumber(v) { var n = Number(v); return isNaN(n) ? null : n; }
 function coerceString(v) { return v == null ? '' : String(v); }
 
 function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+// P40-Q-10：解析质量维（explanationQuality）四判据等权（各 0.25）
+//   ① 非空（sq.answer.explanation，schema defaultAnswer 单源）
+//   ② 非复述（非「题面原文 + 纯答案尾巴」照抄模板、非题面截断）
+//   ③ 含分步标记（四步词/序号圈/第N步/因果-顺序连接/法则依据/演算等式）
+//   ④ 答案一致（解析含正确答案值，规范化子串匹配）
+var STEP_MARK_RE = /[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮]|第[一二三四五六七八九十百\d]+步|题意|列式|计算|所以|因此|因为|先|再|然后|法则|依据|根据|推理|步骤|原理|[=＝]/;
+
+// 规范化：去空白与标点，统一全角等号/负号，保留中文、字母数字与运算符（供 ②④ 匹配）
+function normalizeExplText(s) {
+  return coerceString(s)
+    .replace(/−/g, '-')
+    .replace(/＝/g, '=')
+    .replace(/[^\u4e00-\u9fa50-9a-zA-Z=+\-*/×÷().]/g, '');
+}
+
+function explanationAnswerString(sq) {
+  var v = sq && sq.answer ? sq.answer.value : null;
+  return v == null ? '' : normalizeExplText(v);
+}
+
+// ② 复述判定：题面照抄（纯复制/题面截断）或题面 + 「(所以/因此)?答案是X」纯答案陈述（旧复述模板）。
+//   题面以等号收尾且尾巴恰为答案 = 算式补全（Q-09 calc 演算形态），非复述。
+function isExplanationRestatement(normExpl, normPrompt, normAns) {
+  if (!normPrompt || !normExpl) return false;
+  if (normExpl.indexOf(normPrompt) === 0) {
+    var tail = normExpl.slice(normPrompt.length);
+    if (tail === '') return true; // 纯照抄
+    var m = /^(所以|因此)?(答案是|答案为|答[:：])/.exec(tail);
+    if (m) return tail.slice(m[0].length) === normAns; // 题面 + 纯答案陈述
+    return false; // 其余尾巴（含算式补全「= 8」）非复述
+  }
+  return normPrompt.indexOf(normExpl) === 0 && normExpl.length >= 4;
+}
+
+function scoreExplanationQuality(sq) {
+  var expl = sq && sq.answer ? coerceString(sq.answer.explanation).trim() : '';
+  if (!expl) return 0; // ① 非空
+  var passed = 1;
+  var normExpl = normalizeExplText(expl);
+  var normPrompt = normalizeExplText(sq && sq.prompt != null ? sq.prompt : '');
+  var normAns = explanationAnswerString(sq);
+  if (!isExplanationRestatement(normExpl, normPrompt, normAns)) passed++; // ②
+  if (STEP_MARK_RE.test(expl)) passed++; // ③
+  if (normAns !== '' && normExpl.indexOf(normAns) !== -1) passed++; // ④
+  return passed / 4;
+}
 
 
 function scoreQuestion(sq, validationResult, context) {
@@ -858,6 +906,9 @@ function scoreQuestion(sq, validationResult, context) {
     uniq = 1; // 默认唯一
   }
   breakdown.uniqueness = uniq;
+
+  // ⑦ Explanation Quality (解析质量) — P40-Q-10（四判据等权，见 scoreExplanationQuality）
+  breakdown.explanationQuality = scoreExplanationQuality(sq);
 
   // 加权总分
   var total = 0;
@@ -943,470 +994,6 @@ module.exports = {
   scoreBatch: scoreBatch,
   generatorProfile: generatorProfile,
   WEIGHTS: WEIGHTS
-};
-};
-__defs["shared/semantic/semantic-question.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Schema = require("shared/schemas/semantic-question.schema.js");
-var QTR = require("shared/knowledge/question-type-registry.js");
-var QID = require("shared/knowledge/question-id.js");
-
-var UUID_COUNTER = 0;
-
-function uuid() {
-  UUID_COUNTER++;
-  return 'sq_' + Date.now().toString(36) + '_' + UUID_COUNTER.toString(36);
-}
-
-function nowISO() {
-  return new Date().toISOString();
-}
-
-function deepClone(obj) {
-  if (obj == null) return obj;
-  if (Array.isArray(obj)) return obj.map(deepClone);
-  if (typeof obj === 'object') {
-    var out = {};
-    Object.keys(obj).forEach(function (k) { out[k] = deepClone(obj[k]); });
-    return out;
-  }
-  return obj;
-}
-
-function coerceNumber(v) {
-  if (v == null) return null;
-  var n = Number(v);
-  return isNaN(n) ? null : n;
-}
-
-function coerceInteger(v) {
-  var n = coerceNumber(v);
-  return n == null ? null : Math.floor(n);
-}
-
-function coerceString(v) {
-  if (v == null) return '';
-  return String(v);
-}
-
-function ensureArray(v) {
-  if (v == null) return [];
-  return Array.isArray(v) ? v : [v];
-}
-
-// Schema 8 类 + QTR 补集（geometry/recognize/oral）+ read-aloud 的并集
-var VALID_QUESTION_TYPES = null;
-function isValidQuestionType(t) {
-  if (!t) return false;
-  if (VALID_QUESTION_TYPES == null) {
-    var set = Schema.QUESTION_TYPES.slice();
-    (QTR.TYPES || []).forEach(function (tt) { if (set.indexOf(tt.id) === -1) set.push(tt.id); });
-    if (set.indexOf('read-aloud') === -1) set.push('read-aloud');
-    VALID_QUESTION_TYPES = set;
-  }
-  return VALID_QUESTION_TYPES.indexOf(t) !== -1;
-}
-
-
-function createSemanticQuestion(raw) {
-  raw = raw || {};
-
-  // 自动生成 ID（若未提供）
-  var questionId = raw.id || QID.generateQuestionId(raw.seed || QID.generateBaseSeed(), {
-    generatorId: raw.generator || raw.metadata && raw.metadata.generator,
-    index: raw.index,
-    knowledgePointId: raw.knowledgePoint || raw.knowledgePointId,
-    difficulty: raw.difficulty,
-    questionType: raw.questionType
-  });
-
-  // 自动生成 metadata（可追溯三要素）
-  var metadata = raw.metadata || {};
-  if (!metadata.generator && raw.generator) metadata.generator = raw.generator;
-  if (!metadata.generatorVersion && raw.generatorVersion) metadata.generatorVersion = raw.generatorVersion;
-  if (!metadata.seed && raw.seed) metadata.seed = raw.seed;
-  metadata = QID.createMetadata({
-    generatorId: metadata.generator,
-    generatorVersion: metadata.generatorVersion,
-    seed: metadata.seed,
-    planId: metadata.planId,
-    timestamp: metadata.timestamp,
-    retryCount: metadata.retryCount,
-    tags: metadata.tags
-  });
-
-  var sq = {
-    // ① Identity
-    id: questionId,
-    version: raw.version || Schema.VERSION,
-
-    // ② Knowledge Binding
-    knowledgePoint: coerceString(raw.knowledgePoint || raw.knowledgePointId),
-    knowledgePointId: coerceString(raw.knowledgePointId || raw.knowledgePoint),
-    skill: coerceString(raw.skill || ''),
-
-    // ③ Difficulty & Cognitive
-    // ③ Difficulty & Cognitive
-    difficulty: coerceInteger(raw.difficulty),
-    difficultyParams: deepClone(raw.difficultyParams) || {},
-    numberRange: deepClone(raw.numberRange) || { min: 1, max: 1 },
-    spiralLevel: coerceInteger(raw.spiralLevel) || 1,
-    context: coerceString(raw.context),
-    seed: raw.seed || null,
-    cognitiveLevel: coerceString(raw.cognitiveLevel || ''),
-
-    // ④ Content (纯文本)
-    content: deepClone(raw.content) || Schema.defaultContent(),
-
-    // ⑤ Question (核心题干)
-    question: deepClone(raw.question) || Schema.defaultQuestion(),
-
-    // ⑥ Answer
-    answer: deepClone(raw.answer) || Schema.defaultAnswer(),
-
-    // ⑦ Distractors
-    distractors: ensureArray(raw.distractors).map(function (d) {
-      return deepClone(d) || Schema.defaultDistractor();
-    }),
-
-    // ⑧ Graphic (描述性，非渲染)
-    // 有真实 graphic 描述才构造成对象；否则置 null（而非空壳 {type:null}）。
-    // 修复：此前用 Schema.defaultGraphic()（{type:null,...}）作兜底，该真值空对象会让
-    // graphic-validator 的「缺少 graphic.type」分支误触发，把无图形题误判为 ERR
-    //（raw.svg 已由下方 sq.svg 单独保留，不走 graphic 描述符，避免触发「禁止原始 SVG」）。
-    graphic: deepClone(raw.graphic) || null,
-
-    // ⑨ Constraints (结构约束：maxSteps, allowBracket, allowMultDiv 等)
-    constraints: deepClone(raw.constraints) || {},
-
-    // ⑩ Metadata (可追溯)
-    metadata: metadata
-  };
-
-  // 兼容字段（供 LegacyAdapter / 适配层使用，不参与语义校验）
-  if (raw.render != null) sq.render = raw.render;
-  if (raw.check != null) sq.check = raw.check;
-  if (raw.svg != null) sq.svg = raw.svg;
-  if (raw.options != null) sq.options = raw.options;
-
-  // P0-003：透传原始结构 data（choice 轨的 options/correctIndex 等渲染与校验依赖）与 hint
-  if (raw.data != null) sq.data = deepClone(raw.data);
-  if (raw.hint != null) sq.hint = raw.hint;
-
-  // P28-FORM-CONTRACT-01：透传形态声明字段 response.layout（生成器声明、渲染器消费）。
-  // 缺省 null → 渲染器回落 block 布局（可见退化，非静默）；layout 枚举由 Schema 校验。
-  if (raw.response != null) sq.response = deepClone(raw.response);
-
-  // 选择题兼容：sq.data.options 缺省时由 options 补全，并尽量反推 correctIndex
-  if (sq.data && !Array.isArray(sq.data.options) && Array.isArray(sq.options) && sq.options.length) {
-    sq.data.options = sq.options.slice();
-  }
-  if (sq.data && Array.isArray(sq.data.options) && sq.answer && sq.answer.value != null && sq.data.correctIndex == null) {
-    var ci = sq.data.options.indexOf(coerceString(sq.answer.value));
-    if (ci !== -1) sq.data.correctIndex = ci;
-  }
-
-  // 扁平化常用字段（便捷访问，不破坏标准结构）
-  sq.prompt = sq.content && sq.content.prompt ? sq.content.prompt : (sq.question && sq.question.prompt ? sq.question.prompt : '');
-  sq.questionType = raw.questionType || raw.type || null;
-  sq.answerMode = (sq.question && sq.question.answerMode) || raw.answerMode || 'input';
-
-  // M6-R06：统一题目指纹（KP + type + semantic + numbers + structure → 去重键）
-  sq.questionFingerprint = computeFingerprint(sq);
-
-  return sq;
-}
-
-// 惰性引入去重 / 指纹模块（避免与 validator 体系形成顶层循环依赖）
-function computeFingerprint(sq) {
-  try {
-    var Dup = require("shared/validator/duplicate-validator.js");
-    if (Dup && typeof Dup.buildQuestionFingerprint === 'function') return Dup.buildQuestionFingerprint(sq);
-  } catch (e) {  }
-  return null;
-}
-
-
-function normalizeSemanticQuestion(raw) {
-  if (!raw || typeof raw !== 'object') {
-    return createSemanticQuestion({});
-  }
-
-  // 已经是标准结构则直接返回（幂等）
-  if (raw.id && raw.version && raw.metadata && raw.metadata.generator) {
-    return raw;
-  }
-
-  // 字段映射表：Legacy 字段名 → 标准字段
-  var mapped = {
-    id: raw.id || raw.questionId,
-    version: raw.version || Schema.VERSION,
-    knowledgePoint: raw.knowledgePointId || raw.knowledgePoint || raw.kpId,
-    skill: raw.skill || raw.ability || '',
-    questionType: raw.questionType || raw.type,
-    difficulty: coerceInteger(raw.difficulty || raw.difficultyLevel),
-    numberRange: raw.numberRange,
-    cognitiveLevel: raw.cognitiveLevel || raw.cognitive || '',
-    content: raw.content || { prompt: coerceString(raw.prompt || raw.stem || raw.q || raw.question) },
-    question: raw.question || (function () {
-      var q = { prompt: coerceString(raw.prompt || raw.stem || raw.q || raw.question) };
-      if (raw.answerMode) q.answerMode = raw.answerMode;
-      return q;
-    })(),
-    answerMode: raw.answerMode,
-    // D003 修复：context 字段必须映射（生成器写 q.context = plan.contextType，
-    // 归一化时漏映射导致 createSemanticQuestion 收到 raw.context=undefined → coerceString('')）
-    context: raw.context,
-    // P28-FIX-C：spiralLevel 必须映射（生成器写 q.spiralLevel = plan.spiralLevel，
-    // 归一化时漏映射导致恒回落 1，maxLevel 钳制结果无法到达题目元数据/学习记录）。
-    // createSemanticQuestion 内 coerceInteger(raw.spiralLevel) || 1 兜底非法值。
-    spiralLevel: raw.spiralLevel,
-    // P0-003：判断题 answer=false / 数字 0 / 空串均为合法答案，不能按 truthy 丢弃。
-    // 仅当字段未提供（undefined/null）时才回退到 answerValue/correctAnswer。
-    answer: (function () {
-      var rawHasAnswer = (typeof raw !== 'undefined' && raw !== null) &&
-        Object.prototype.hasOwnProperty.call(raw, 'answer') && raw.answer != null;
-      if (rawHasAnswer) {
-        return typeof raw.answer === 'object' ? raw.answer : { value: raw.answer };
-      }
-      return { value: raw.answerValue != null ? raw.answerValue : (raw.correctAnswer != null ? raw.correctAnswer : undefined) };
-    })(),
-    distractors: ensureArray(raw.distractors || raw.options || raw.choices).map(function (d) {
-      if (typeof d === 'object') return d;
-      return { value: d };
-    }),
-    // P0-003：选择题保留平铺 options（渲染 html-renderer.js 读取 sq.options/distractors/data.options）
-    // 及 data.correctIndex（校验/反选使用），与 selection.js 生成的 choice 结构一致。
-    options: (function () {
-      var o = raw.options || raw.choices;
-      if (!Array.isArray(o)) return undefined;
-      return o.slice();
-    })(),
-    data: (function () {
-      var opts = raw.options || raw.choices;
-      if (!Array.isArray(opts) && !raw.data) return undefined;
-      var base = (raw.data && typeof raw.data === 'object') ? raw.data : {};
-      var out = {};
-      Object.keys(base).forEach(function (k) { out[k] = base[k]; });
-      if (Array.isArray(opts)) {
-        out.options = opts.slice();
-        if (out.correctIndex == null && typeof raw.answer !== 'object' && raw.answer != null) {
-          out.correctIndex = opts.indexOf(coerceString(raw.answer));
-        }
-      } else if (out.options == null && Array.isArray(out.distractors)) {
-        out.options = out.distractors;
-      }
-      return out;
-    })(),
-    // P0/GV 修复：优先保留真实 graphic 描述符（type/params 等），仅当无描述符但给了原始
-    // svg 时才包一层 custom/rawSvg；两者皆无为 null。旧逻辑 `raw.graphic||raw.svg ? {type:'custom',params:{rawSvg:raw.svg}} : null`
-    // 会把真实描述符（如 number-line）误洗成 custom/rawSvg 空壳，且 rawSvg=undefined 仍产生被
-    // graphic-validator 判 ERR 的非法描述。null 让 validator 走 skip（见 createSemanticQuestion ⑧）。
-    graphic: (raw.graphic && typeof raw.graphic === 'object')
-      ? deepClone(raw.graphic)
-      : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
-    constraints: deepClone(raw.constraints) || {},
-    response: deepClone(raw.response),  // P28-FORM-CONTRACT-01：形态声明透传（layout 枚举由 Schema 校验）
-    metadata: raw.metadata || {
-      generator: raw.generator || raw.pluginId || raw.source,
-      generatorVersion: raw.generatorVersion || raw.version,
-      seed: raw.seed || raw.randomSeed,
-      timestamp: raw.timestamp || nowISO()
-    }
-  };
-
-  // 补全 prompt
-  if (!mapped.content.prompt) {
-    mapped.content.prompt = coerceString(mapped.question.prompt || mapped.question.stem || mapped.question.q);
-  }
-
-  return createSemanticQuestion(mapped);
-}
-
-
-function validateSchema(sq) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  if (!sq || typeof sq !== 'object') {
-    errors.push({ code: Schema.ERROR_CODES.SCHEMA_INVALID, field: 'root', message: '题目对象为空或非对象', severity: Schema.SEVERITY.ERROR });
-    return { valid: false, errors: errors, warnings: warnings, info: info };
-  }
-
-  // 禁止在 SemanticQuestion 上携带执行/渲染字段（先于归一化检查，避免被丢弃）
-  if (typeof sq.render === 'function' || typeof sq.check === 'function') {
-    errors.push({ code: Schema.ERROR_CODES.SCHEMA_INVALID, field: 'root', message: 'SemanticQuestion 禁止携带 render/check 执行字段（禁止字段）', severity: Schema.SEVERITY.ERROR });
-  }
-
-  // 宽容归一化：兼容 flat/legacy 输入（如 { prompt, answer: '14' }），
-  // 与 createSemanticQuestion / normalizeSemanticQuestion 保持一致
-  sq = normalizeSemanticQuestion(sq);
-
-  // --- ① Identity ---
-  if (!sq.id) {
-    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'id', message: '缺少题目 ID', severity: Schema.SEVERITY.ERROR });
-  }
-  if (typeof sq.version !== 'number' && typeof sq.version !== 'string') {
-    warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'version', message: 'version 应为数字或字符串', severity: Schema.SEVERITY.WARNING });
-  }
-
-  // --- ② Knowledge Binding ---
-  if (!sq.knowledgePoint) {
-    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'knowledgePoint', message: '缺少 knowledgePoint 绑定', severity: Schema.SEVERITY.ERROR });
-  }
-
-  // --- ③ Difficulty ---
-  if (sq.difficulty != null) {
-    var diff = coerceInteger(sq.difficulty);
-    if (diff === null || Schema.DIFFICULTY_LEVELS.indexOf(diff) === -1) {
-      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'difficulty', message: 'difficulty 超出已知范围 (1-10)', severity: Schema.SEVERITY.WARNING });
-    }
-  }
-
-  // --- ③.5 QuestionType ---
-  if (!sq.questionType) {
-    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'questionType', message: '缺少 questionType', severity: Schema.SEVERITY.ERROR });
-  } else if (!isValidQuestionType(sq.questionType)) {
-    errors.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'questionType', message: '未知 questionType: ' + sq.questionType, severity: Schema.SEVERITY.ERROR });
-  }
-
-  // --- ③.6 NumberRange ---
-  if (sq.numberRange) {
-    if (typeof sq.numberRange !== 'object') {
-      errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'numberRange', message: 'numberRange 必须为对象 { min, max }', severity: Schema.SEVERITY.ERROR });
-    } else if (sq.numberRange.min != null && sq.numberRange.max != null &&
-               sq.numberRange.min > sq.numberRange.max) {
-      errors.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'numberRange', message: 'numberRange.min 不得大于 max', severity: Schema.SEVERITY.ERROR });
-    }
-  }
-
-  // --- ④ Content ---
-  if (sq.content && typeof sq.content !== 'object') {
-    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'content', message: 'content 必须为对象', severity: Schema.SEVERITY.ERROR });
-  }
-  if (sq.content && sq.content.prompt != null && typeof sq.content.prompt !== 'string') {
-    warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'content.prompt', message: 'prompt 应为字符串', severity: Schema.SEVERITY.WARNING });
-  }
-  var promptVal = (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || sq.prompt;
-  if (!promptVal) {
-    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'prompt', message: '缺少 prompt（题干）', severity: Schema.SEVERITY.ERROR });
-  }
-
-  // --- ⑤ Question ---
-  if (sq.question && typeof sq.question !== 'object') {
-    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'question', message: 'question 必须为对象', severity: Schema.SEVERITY.ERROR });
-  }
-  if (sq.question && sq.question.answerMode && !Schema.isValidAnswerMode(sq.question.answerMode)) {
-    warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'question.answerMode', message: '未知 answerMode: ' + sq.question.answerMode, severity: Schema.SEVERITY.WARNING });
-  }
-
-  // --- ⑤.5 Response（形态声明，P28-FORM-CONTRACT-01）---
-  // 可选字段：缺省 null → 渲染器回落 block；存在则校验类型与 layout 枚举（warning，不阻断）。
-  if (sq.response != null) {
-    if (typeof sq.response !== 'object') {
-      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'response', message: 'response 必须为对象', severity: Schema.SEVERITY.WARNING });
-    } else if (sq.response.layout != null && !Schema.isValidResponseLayout(sq.response.layout)) {
-      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'response.layout', message: '未知 response.layout: ' + sq.response.layout, severity: Schema.SEVERITY.WARNING });
-    }
-  }
-
-  // --- ⑥ Answer ---
-  var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
-  if (!sq.answer || typeof sq.answer !== 'object') {
-    // read-aloud 模式允许 answer 为 null
-    if (answerMode !== 'read-aloud') {
-      errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'answer', message: '缺少 answer 对象', severity: Schema.SEVERITY.ERROR });
-    }
-  } else {
-    // read-aloud 模式允许 answer.value 为 null
-    if (answerMode !== 'read-aloud' && sq.answer.value == null && (!sq.answer.acceptable || sq.answer.acceptable.length === 0)) {
-      errors.push({ code: Schema.ERROR_CODES.ANSWER_INVALID, field: 'answer.value', message: '答案值缺失且无可接受替代答案', severity: Schema.SEVERITY.ERROR });
-    }
-    if (sq.answer.precision != null && (typeof sq.answer.precision !== 'number' || sq.answer.precision < 0)) {
-      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'answer.precision', message: 'precision 应为非负数', severity: Schema.SEVERITY.WARNING });
-    }
-  }
-
-  // --- ⑦ Distractors ---
-  if (sq.distractors && !Array.isArray(sq.distractors)) {
-    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'distractors', message: 'distractors 必须为数组', severity: Schema.SEVERITY.ERROR });
-  }
-  if (Array.isArray(sq.distractors)) {
-    sq.distractors.forEach(function (d, i) {
-      if (!d || typeof d !== 'object') {
-        warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'distractors[' + i + ']', message: '干扰项应为对象', severity: Schema.SEVERITY.WARNING });
-        return;
-      }
-      if (d.errorType && !Schema.isValidDistractorErrorType(d.errorType)) {
-        warnings.push({ code: Schema.ERROR_CODES.DISTRACTOR_ERROR_TYPE_INVALID, field: 'distractors[' + i + '].errorType', message: '未知错误类型: ' + d.errorType, severity: Schema.SEVERITY.WARNING });
-      }
-    });
-  }
-
-  // --- ⑧ Graphic ---
-  if (sq.graphic && typeof sq.graphic !== 'object') {
-    errors.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'graphic', message: 'graphic 必须为对象', severity: Schema.SEVERITY.ERROR });
-  }
-  if (sq.graphic) {
-    if (sq.graphic.type && !Schema.isValidGraphicType(sq.graphic.type)) {
-      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'graphic.type', message: '未知 graphic type: ' + sq.graphic.type, severity: Schema.SEVERITY.WARNING });
-    }
-    if (sq.graphic.type && sq.graphic.subtype && !Schema.isValidGraphicSubtype(sq.graphic.type, sq.graphic.subtype)) {
-      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'graphic.subtype', message: 'type ' + sq.graphic.type + ' 下未知 subtype: ' + sq.graphic.subtype, severity: Schema.SEVERITY.WARNING });
-    }
-    // 禁止直接嵌入 SVG/HTML 字符串
-    if (sq.graphic.rawSvg || sq.graphic.svg || sq.graphic.html) {
-      errors.push({ code: Schema.ERROR_CODES.GRAPHIC_INVALID, field: 'graphic', message: 'graphic 不得包含原始 SVG/HTML 字符串（请使用描述性 params）', severity: Schema.SEVERITY.ERROR });
-    }
-  }
-
-  // --- ⑨ Metadata (可追溯) ---
-  if (!sq.metadata || typeof sq.metadata !== 'object') {
-    errors.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata', message: '缺少 metadata', severity: Schema.SEVERITY.ERROR });
-  } else {
-    if (!sq.metadata.generator) {
-      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.generator', message: '缺少 generator 来源标识', severity: Schema.SEVERITY.WARNING });
-    }
-    if (!sq.metadata.generatorVersion) {
-      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.generatorVersion', message: '缺少 generatorVersion', severity: Schema.SEVERITY.WARNING });
-    }
-    if (!sq.metadata.seed) {
-      warnings.push({ code: Schema.ERROR_CODES.REQUIRED_FIELD_MISSING, field: 'metadata.seed', message: '缺少 seed（不可复现）', severity: Schema.SEVERITY.WARNING });
-    }
-  }
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: warnings, info: info };
-}
-
-
-function isValidSemanticQuestion(sq) {
-  return validateSchema(sq).valid;
-}
-
-
-function normalizeQuestions(raws) {
-  if (!Array.isArray(raws)) return [];
-  return raws.map(normalizeSemanticQuestion);
-}
-
-
-function validateQuestions(sqs) {
-  if (!Array.isArray(sqs)) return [];
-  return sqs.map(validateSchema);
-}
-
-module.exports = {
-  createSemanticQuestion: createSemanticQuestion,
-  normalizeSemanticQuestion: normalizeSemanticQuestion,
-  validateSchema: validateSchema,
-  isValidSemanticQuestion: isValidSemanticQuestion,
-  normalizeQuestions: normalizeQuestions,
-  validateQuestions: validateQuestions,
-  Schema: Schema
 };
 };
 __defs["shared/presentation/render-format.js"] = function (module, exports, require) {
@@ -2468,112 +2055,6 @@ __defs["shared/state/metrics.js"] = function (module, exports, require) {
   }
 })(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
 };
-__defs["shared/validator/question-validator.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Schema = require("shared/schemas/semantic-question.schema.js");
-var ERROR_CODES = Schema.ERROR_CODES;
-var SEVERITY = Schema.SEVERITY;
-
-function createError(code, field, message, severity, detail) {
-  return { code: code, field: field, message: message, severity: severity || SEVERITY.ERROR, detail: detail };
-}
-
-
-function validateSchemaOnly(sq) {
-  return require("shared/semantic/semantic-question.js").validateSchema(sq);
-}
-
-
-function noopValidator(sq, context) {
-  return { valid: true, errors: [], warnings: [], info: [], score: 1, checks: {} };
-}
-
-
-function combineResults(results) {
-  var allErrors = [];
-  var allWarnings = [];
-  var allInfo = [];
-  var scores = [];
-  var checks = {};
-
-  results.forEach(function (r) {
-    if (r.errors) allErrors.push.apply(allErrors, r.errors);
-    if (r.warnings) allWarnings.push.apply(allWarnings, r.warnings);
-    if (r.info) allInfo.push.apply(allInfo, r.info);
-    if (typeof r.score === 'number') scores.push(r.score);
-    if (r.checks) Object.assign(checks, r.checks);
-  });
-
-  var valid = allErrors.length === 0;
-  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
-
-  return { valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks };
-}
-
-
-function validate(question, context) {
-  context = context || {};
-
-  // 1. Schema 校验
-  var schemaResult = validateSchemaOnly(question);
-  if (!schemaResult.valid) {
-    return combineResults([schemaResult]);
-  }
-
-  // 2. 后续各专项验证器将在 Pipeline 中串联
-  // 此处预留接口，返回 Schema 校验结果
-  return combineResults([schemaResult]);
-}
-
-
-function validateBatch(questions, context) {
-  if (!Array.isArray(questions)) return [];
-  return questions.map(function (q) { return validate(q, context); });
-}
-
-
-function isRetryableError(code) {
-  var retryable = [
-    ERROR_CODES.ANSWER_MISMATCH,
-    ERROR_CODES.DUPLICATE_QUESTION,
-    ERROR_CODES.DIFFICULTY_MISMATCH,
-    ERROR_CODES.GRAPHIC_INVALID,
-    ERROR_CODES.DISTRACTOR_DUPLICATE,
-    ERROR_CODES.DISTRACTOR_EQUALS_ANSWER,
-    ERROR_CODES.DISTRACTOR_OUT_OF_DOMAIN,
-    ERROR_CODES.STRUCTURE_INVALID,
-    ERROR_CODES.STEPS_EXCEED,
-    ERROR_CODES.OPERATIONS_VIOLATION
-  ];
-  return retryable.indexOf(code) !== -1;
-}
-
-
-function isFatalError(code) {
-  var fatal = [
-    ERROR_CODES.SCHEMA_INVALID,
-    ERROR_CODES.REQUIRED_FIELD_MISSING,
-    ERROR_CODES.KP_MISSING,
-    ERROR_CODES.KP_MISMATCH,
-    ERROR_CODES.GENERATOR_NOT_FOUND
-  ];
-  return fatal.indexOf(code) !== -1;
-}
-
-module.exports = {
-  validate: validate,
-  validateBatch: validateBatch,
-  validateSchemaOnly: validateSchemaOnly,
-  combineResults: combineResults,
-  createError: createError,
-  isRetryableError: isRetryableError,
-  isFatalError: isFatalError,
-  ERROR_CODES: ERROR_CODES,
-  SEVERITY: SEVERITY
-};
-};
 __defs["shared/validator/validation-pipeline.js"] = function (module, exports, require) {
 
 'use strict';
@@ -2805,630 +2286,6 @@ module.exports = {
   BATCH_VALIDATORS: BATCH_VALIDATORS
 };
 };
-__defs["shared/knowledge/question-id.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Rng = require("shared/generator/core/rng.js");
-
-var ID_PREFIX = 'q';
-var SEED_DELIMITER = '|';
-var SEED_PART_DELIMITER = ':';
-var SEED_COUNTER = 0;
-
-
-function generateQuestionId(seed, context) {
-  var rng = Rng.createSeededRandom(seed);
-  var parts = [ID_PREFIX];
-
-  // 基于 seed+context 的短哈希（确定性）
-  var ctxStr = '';
-  if (context) {
-    ctxStr = (context.generatorId || '') + SEED_DELIMITER +
-             (context.index != null ? context.index : '') + SEED_DELIMITER +
-             (context.knowledgePointId || '') + SEED_DELIMITER +
-             (context.difficulty != null ? context.difficulty : '') + SEED_DELIMITER +
-             (context.questionType || '');
-  }
-  var hash = Rng.hashSeed(String(seed) + ctxStr);
-  parts.push(hash.toString(36));
-
-  // 可选：时间戳前缀（便于排序/调试，不影响确定性）
-  // parts.unshift(Date.now().toString(36));
-
-  return parts.join('_');
-}
-
-
-function deriveSeed(baseSeed, generatorId, index) {
-  var cleanBase = String(baseSeed || 'auto').replace(/\|/g, '-');
-  var cleanGen = String(generatorId).replace(/\|/g, '-');
-  return [cleanBase, cleanGen, index].join(SEED_DELIMITER);
-}
-
-
-function generateSeedsForPlan(plan) {
-  var base = plan.seed || 'plan-' + Date.now();
-  var genId = plan.generatorId || 'unknown';
-  var count = plan.count || 1;
-  var seeds = [];
-  for (var i = 0; i < count; i++) {
-    seeds.push(deriveSeed(base, genId, i));
-  }
-  return seeds;
-}
-
-
-function parseSeed(seedStr) {
-  if (!seedStr) return { base: null, generatorId: null, index: null, raw: null };
-  var parts = seedStr.split(SEED_DELIMITER);
-  if (parts.length >= 3) {
-    return {
-      base: parts[0],
-      generatorId: parts[1],
-      index: parseInt(parts[2], 10),
-      raw: seedStr
-    };
-  }
-  return { base: seedStr, generatorId: null, index: null, raw: seedStr };
-}
-
-
-function generateBaseSeed(seed) {
-  if (seed != null) return String(seed);
-  // 兜底：时间+单调计数器（仅用于无种子场景，生产应始终显式传 seed；不使用 Math.random）
-  SEED_COUNTER = (SEED_COUNTER || 0) + 1;
-  return 'auto-' + Date.now().toString(36) + '-' + SEED_COUNTER.toString(36);
-}
-
-
-function normalizeVersion(v) {
-  if (typeof v === 'string' && /^\d+\.\d+\.\d+/.test(v)) return v;
-  var n = parseInt(v, 10);
-  if (!isNaN(n)) return n + '.0.0';
-  return '1.0.0';
-}
-
-
-function createMetadata(opts) {
-  opts = opts || {};
-  return {
-    generator: opts.generatorId || null,
-    generatorVersion: normalizeVersion(opts.generatorVersion),
-    seed: opts.seed || null,
-    planId: opts.planId || null,
-    timestamp: opts.timestamp || new Date().toISOString(),
-    retryCount: opts.retryCount || 0,
-    validationScore: null,
-    tags: opts.tags || []
-  };
-}
-
-module.exports = {
-  generateQuestionId: generateQuestionId,
-  deriveSeed: deriveSeed,
-  generateSeedsForPlan: generateSeedsForPlan,
-  parseSeed: parseSeed,
-  generateBaseSeed: generateBaseSeed,
-  normalizeVersion: normalizeVersion,
-  createMetadata: createMetadata,
-  Rng: Rng  // 导出底层 PRNG 供高级用法
-};
-};
-__defs["shared/validator/duplicate-validator.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function coerceString(v) { return v == null ? '' : String(v); }
-function sortObj(o) { return JSON.stringify(o, Object.keys(o).sort()); }
-
-// 全角数字 → 半角
-function toHalfWidth(str) {
-  return String(str == null ? '' : str).replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
-}
-
-// 提取操作数：优先 data.operands（语义层原始数字），缺省回退 prompt 解析
-function extractOperands(sq) {
-  var data = sq && sq.data;
-  if (Array.isArray(data && data.operands) && data.operands.length) {
-    return data.operands.map(function (n) { return parseInt(n, 10); }).filter(function (n) { return !isNaN(n); });
-  }
-  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
-  return (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).filter(function (n) { return !isNaN(n); });
-}
-
-// 提取运算符集合（排序归一，忽略顺序，同式异写同指纹）
-// 族标签（题组级混合标记，不代表该题实例的运算符）必须剔除，
-// 否则 data.operation='mixed' 时 10−6 与 10+6 被错误并为同一指纹。
-var FAMILY_OP_LABELS = { mixed: true, combined: true, combine: true, mix: true, composite: true };
-function extractOperators(sq) {
-  var ops = [];
-  var data = sq && sq.data;
-  var opSeeds = [];
-  if (data && data.operation) opSeeds.push(data.operation);
-  if (Array.isArray(data && data.operators)) opSeeds.push.apply(opSeeds, data.operators);
-  opSeeds.forEach(function (op) {
-    if (typeof op === 'string') {
-      var v = op.toLowerCase();
-      if (!FAMILY_OP_LABELS[v]) ops.push(v);
-    } else if (op && typeof op.symbol === 'string' && !FAMILY_OP_LABELS[String(op.symbol).toLowerCase()]) {
-      ops.push(op.symbol);
-    }
-  });
-  if (ops.length) return ops;
-
-  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
-  return (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
-    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
-    return o === '−' ? '-' : o;
-  });
-}
-
-// 结构特征：steps / mode / operators 集合 / 括号等
-function extractStructureKey(sq) {
-  var parts = [];
-  var data = sq && sq.data;
-  var dp = sq && sq.difficultyParams;
-  parts.push(coerceString(data && data.steps));
-  parts.push(coerceString(data && data.mode));
-  parts.push(coerceString(data && data.operation));
-  if (Array.isArray(data && data.operators)) parts.push(coerceString(data.operators.join(',')));
-  if (dp) {
-    if (dp.steps != null) parts.push('s' + dp.steps);
-    if (dp.allowBracket != null) parts.push('b' + (dp.allowBracket ? 1 : 0));
-  }
-  return parts.join('|');
-}
-
-
-// 题面内容指纹（归一化哈希）：用于无数值操作数的语义/应用题，
-// 使其不同题面（不同统计收集对象、不同应用题叙述）产生不同指纹，
-// 避免「同 KP 同题型」退化为同指纹导致去重误判为重复、容量塌缩为 1。
-function promptHash(sq) {
-  var p = coerceString(sq.prompt || (sq.content && sq.content.prompt) || '');
-  p = p.replace(/\s+/g, '').replace(/[，。、？！：；,.?!:;（）()'"'""'']/g, '');
-  var h = 5381;
-  for (var i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0;
-  return h.toString(36);
-}
-
-function buildQuestionFingerprint(sq) {
-  var parts = [];
-  parts.push('v2');
-  parts.push(coerceString(sq.knowledgePoint));
-  parts.push(coerceString(sq.questionType || sq.type));
-  var ops = extractOperators(sq).sort();
-  var operands = extractOperands(sq).sort(function (a, b) { return a - b; });
-  parts.push(ops.join(','));
-  parts.push(operands.join(','));
-  parts.push(extractStructureKey(sq));
-  parts.push(coerceString(sq.content && sq.content.context));
-  parts.push(coerceString(sq.content && sq.content.format));
-  // R6：语义型题型（应用/几何/判断/分类/开放/辨识）题面即为内容，原指纹忽略题面文字
-  // 会导致不同设问/不同统计对象被误判为重复、容量塌缩为 1。补齐题面内容指纹。
-  // 计算类题型（calc/fill 等）维持 operand 排序归一（同式异写=同指纹）语义，不附加题面哈希。
-  // fill/choice 无操作数时为语义题（认图/概念/统计/方位），无 operand 可区分，
-  // 须附加题面哈希；有操作数时维持 operand 归一语义不变。
-  var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
-  var qt = sq.questionType || sq.type;
-  var hasOperands = operands.length > 0;
-  if (SEMANTIC_TYPES[qt] || ((qt === 'fill' || qt === 'choice') && !hasOperands)) {
-    parts.push('ph:' + promptHash(sq));
-  }
-  return parts.join('|');
-}
-
-function buildCanonicalKey(sq) {
-  var parts = [];
-  parts.push(coerceString(sq.knowledgePoint));
-  parts.push(coerceString(sq.questionType || sq.type));
-  parts.push(coerceString(sq.question && sq.question.operation));
-
-  // 操作数（排序后）：全角→半角归一，parseInt 去前导零
-  var half = toHalfWidth(sq.prompt || (sq.content && sq.content.prompt) || '');
-  var nums = (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).sort(function (a, b) { return a - b; });
-  parts.push(nums.join(','));
-
-  // 结构特征（全角×÷−＋ 归一为半角，同式异写同指纹）
-  var ops = (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
-    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
-    return o === '−' ? '-' : o;
-  }).sort().join('');
-  parts.push(ops);
-
-  // format/context
-  parts.push(coerceString(sq.content && sq.content.context));
-  parts.push(coerceString(sq.content && sq.content.format));
-
-  return parts.join('|');
-}
-
-// 数学内容指纹：去掉 KP 维度，仅保留 题型|运算符|操作数(排序)|结构|context|format。
-// 用于「同一份练习跨知识点」去重——不同 KP 产出同一道算术（如 3+2=）视为重复，
-// 避免混合知识点练习中出现「同数学题换知识点」的视觉重复。
-function buildMathFingerprint(sq) {
-  var parts = buildQuestionFingerprint(sq).split('|');
-  parts.splice(1, 1); // 去掉 knowledgePoint 维度
-  return parts.join('|');
-}
-
-function validateDuplicate(sq, context) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  context = context || {};
-  var seenKeys = context.seenKeys || new Set();
-  var mathSeenKeys = context.mathSeenKeys || null; // 应为 Map<mathFingerprint, knowledgePoint>
-  // 权威去重键：语义指纹 v2（含 KP，用于跨代/跨练习去重，与 retry-loop 同一键空间）；
-  // mathSeenKeys：数学内容指纹（去 KP）→ 仅当「不同知识点」产出同一道数学时才判重，
-  // 避免混合知识点练习出现「同数学题换知识点」的视觉重复；同一知识点内部不去重（保留原 full-fp 行为）。
-  var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
-  if (!sq.questionFingerprint) sq.questionFingerprint = key;
-  var mathKey = buildMathFingerprint(sq);
-  var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
-  var diagKey = buildCanonicalKey(sq);
-
-  var isDup = false;
-  var dupMsg = '';
-  if (seenKeys.has(key)) {
-    isDup = true;
-    dupMsg = '重复题目(含知识点): ' + key;
-  } else if (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp) {
-    isDup = true;
-    dupMsg = '跨知识点同数学重复: ' + mathKey;
-  }
-
-  if (isDup) {
-    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', dupMsg, SEVERITY.ERROR, { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
-  } else {
-    seenKeys.add(key);
-    if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
-    info.push({ code: 'UNIQUE', field: 'questionFingerprint', message: '题目唯一: ' + key, severity: 'INFO', canonicalKey: diagKey });
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors: errors,
-    warnings: warnings,
-    info: info,
-    score: errors.length === 0 ? 1 : 0,
-    checks: { duplicate: errors.length === 0 ? 'pass' : 'fail' },
-    seenKeys: seenKeys // 返回更新后的集合供后续题目使用
-  };
-}
-
-function validateBatchDuplicate(questions, context) {
-  context = context || {};
-  var seenKeys = context.seenKeys || new Set();
-  var mathSeenKeys = context.mathSeenKeys || null; // 应为 Map<mathFingerprint, knowledgePoint>
-  var results = questions.map(function (sq) {
-    var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
-    if (!sq.questionFingerprint) sq.questionFingerprint = key;
-    var mathKey = buildMathFingerprint(sq);
-    var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
-    var diagKey = buildCanonicalKey(sq);
-    var errors = [];
-    var warnings = [];
-    var isDup = seenKeys.has(key) || (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp);
-    if (isDup) {
-      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
-    } else {
-      seenKeys.add(key);
-      if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
-    }
-    return { valid: errors.length === 0, errors: errors, warnings: warnings, info: [], score: errors.length === 0 ? 1 : 0, checks: { duplicate: errors.length === 0 ? 'pass' : 'fail' } };
-  });
-  return { results: results, seenKeys: seenKeys };
-}
-
-module.exports = {
-  validateDuplicate: validateDuplicate,
-  validateBatchDuplicate: validateBatchDuplicate,
-  buildCanonicalKey: buildCanonicalKey,
-  buildQuestionFingerprint: buildQuestionFingerprint,
-  buildMathFingerprint: buildMathFingerprint,
-  extractOperands: extractOperands,
-  extractOperators: extractOperators,
-  extractStructureKey: extractStructureKey
-};
-};
-__defs["shared/schemas/semantic-question.schema.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  // 题型枚举 SSOT：引用 question-type-registry.js 的 canonical 7 类（双环境兼容）
-  var QuestionTypeRegistry = (typeof require === 'function')
-    ? (function () { try { return require("shared/knowledge/question-type-registry.js"); } catch (e) { return null; } })()
-    : (global.QuestionTypeRegistry || null);
-
-  // ====== 题型枚举（与 KnowledgePoint / QuestionTypeRegistry 兼容）======
-  var QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
-    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
-    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
-
-  // ====== 难度档位 ======
-  var DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  // ====== 认知层级 ======
-  var COGNITIVE_LEVELS = ['了解', '认识', '理解', '掌握', '运用'];
-
-  // ====== 答案模式 ======
-  var ANSWER_MODES = ['input', 'choice', 'multi', 'none', 'read-aloud'];
-
-  // ====== 答案形态布局（P28-FORM-CONTRACT-01：生成器声明、渲染器消费，非题干字符串判定）======
-  // inline-after-equals：横向算式作答框内联到等号后（题干以「= ?」结尾）
-  // block：作答框独立成行（缺省/未声明时回落）
-  var RESPONSE_LAYOUTS = ['inline-after-equals', 'block'];
-
-  // ====== 图形类型 ======
-  // P39-04（用户指令）：删类型级死条目 number-line/grid——无渲染派发入口（GRAPHIC_RENDERERS
-  // 无此二类型）、全库零产出、P39-03 已删其 subtype 行，仅存类型登记。
-  var GRAPHIC_TYPES = [
-    'geometry',   // 几何图形
-    'chart',      // 统计图表
-    'diagram',    // 示意图
-    'currency',   // 人民币/货币
-    'custom'      // 自定义
-  ];
-
-  // ====== 图形子类型 ======
-  // P39-02：白名单与生产真值对齐——P34~P38 断链修复期间新增的 9 个 (type,subtype)
-  // 组合此前未登记，导致 SemanticQuestion 校验对每道带图题误发「未知 subtype」WARNING。
-  // 依据：三方对账（生成器产出 grep × SVG 模块注册表 × 本白名单），全部 9 项均有
-  // 真实渲染器（svg-geometry/svg-diagram）且为 1570 冻结矩阵在产子类型。
-  // P39-03（用户指令）：删 13 对无渲染器且零产出的死条目（geometry: polygon/line/point；
-  // diagram: flow/tree/venn/mindmap；number-line 与 grid 整行——两类型在渲染派发表中
-  // 无入口）。v4.0.0（135ca55）历史存量，白名单收紧为「登记=可渲染+在产」，
-  // 未来若产出这些子类型将正确触发 WARNING 而非静默放行。
-  var GRAPHIC_SUBTYPES = {
-    geometry: ['triangle', 'rectangle', 'circle', 'angle', 'position-grid',
-      'square', 'cube', 'cuboid', 'star', 'view-cards', 'segment'],
-    chart: ['bar', 'line', 'pie', 'scatter'],
-    diagram: ['brace', 'segment', 'balance', 'scale', 'pattern', 'groups', 'ratio'],
-    currency: ['rmb'],
-    custom: []
-  };
-
-  // ====== 干扰项错误类型分类 ======
-  var DISTRACTOR_ERROR_TYPES = [
-    '口诀混淆',
-    '计算错误',
-    '进位错误',
-    '退位错误',
-    '概念混淆',
-    '单位混淆',
-    '顺序错误',
-    '符号错误',
-    '估算偏差',
-    '逻辑跳跃'
-  ];
-
-  // ====== 验证错误码 ======
-  var ERROR_CODES = {
-    // Schema 类
-    SCHEMA_INVALID: 'SCHEMA_INVALID',
-    REQUIRED_FIELD_MISSING: 'REQUIRED_FIELD_MISSING',
-    FIELD_TYPE_MISMATCH: 'FIELD_TYPE_MISMATCH',
-    ENUM_VALUE_INVALID: 'ENUM_VALUE_INVALID',
-
-    // KnowledgePoint 类
-    KP_MISSING: 'KP_MISSING',
-    KP_MISMATCH: 'KP_MISMATCH',
-    KP_OPERATION_INVALID: 'KP_OPERATION_INVALID',
-    KP_FORMAT_INVALID: 'KP_FORMAT_INVALID',
-    KP_COGNITIVE_INVALID: 'KP_COGNITIVE_INVALID',
-    KP_CONTEXT_INVALID: 'KP_CONTEXT_INVALID',
-    KP_GRAPHIC_INVALID: 'KP_GRAPHIC_INVALID',
-
-    // Answer 类
-    ANSWER_INVALID: 'ANSWER_INVALID',
-    ANSWER_MISMATCH: 'ANSWER_MISMATCH',
-    ANSWER_TYPE_MISMATCH: 'ANSWER_TYPE_MISMATCH',
-    ANSWER_OUT_OF_DOMAIN: 'ANSWER_OUT_OF_DOMAIN',
-
-    // Distractor 类
-    DISTRACTOR_COUNT_INVALID: 'DISTRACTOR_COUNT_INVALID',
-    DISTRACTOR_DUPLICATE: 'DISTRACTOR_DUPLICATE',
-    DISTRACTOR_EQUALS_ANSWER: 'DISTRACTOR_EQUALS_ANSWER',
-    DISTRACTOR_TYPE_MISMATCH: 'DISTRACTOR_TYPE_MISMATCH',
-    DISTRACTOR_OUT_OF_DOMAIN: 'DISTRACTOR_OUT_OF_DOMAIN',
-    DISTRACTOR_ERROR_TYPE_INVALID: 'DISTRACTOR_ERROR_TYPE_INVALID',
-
-    // Structure 类
-    STRUCTURE_INVALID: 'STRUCTURE_INVALID',
-    STEPS_EXCEED: 'STEPS_EXCEED',
-    BRACKETS_VIOLATION: 'BRACKETS_VIOLATION',
-    OPERATIONS_VIOLATION: 'OPERATIONS_VIOLATION',
-    OPERAND_COUNT_INVALID: 'OPERAND_COUNT_INVALID',
-    OPERAND_RANGE_INVALID: 'OPERAND_RANGE_INVALID',
-
-    // Difficulty 类
-    DIFFICULTY_MISMATCH: 'DIFFICULTY_MISMATCH',
-    DIFFICULTY_OUT_OF_RANGE: 'DIFFICULTY_OUT_OF_RANGE',
-
-    // Duplicate 类
-    DUPLICATE_QUESTION: 'DUPLICATE_QUESTION',
-
-    // KP Coverage 类
-    KP_COVERAGE_INSUFFICIENT: 'KP_COVERAGE_INSUFFICIENT',
-    KP_COVERAGE_MISSING: 'KP_COVERAGE_MISSING',
-
-    // Composite Integrity 类
-    COMPOSITE_INVALID: 'COMPOSITE_INVALID',
-    COMPOSITE_STRUCTURE_MISMATCH: 'COMPOSITE_STRUCTURE_MISMATCH',
-    COMPOSITE_OPERATOR_MISMATCH: 'COMPOSITE_OPERATOR_MISMATCH',
-    COMPOSITE_STEPS_MISMATCH: 'COMPOSITE_STEPS_MISMATCH',
-    // P0-07 Step 33: Composite 无可用 Generator 时显式失败
-    COMPOSITE_UNSUPPORTED: 'COMPOSITE_UNSUPPORTED',
-
-    // Difficulty Integrity 类
-    DIFFICULTY_INTEGRITY_VIOLATION: 'DIFFICULTY_INTEGRITY_VIOLATION',
-    DIFFICULTY_CONSTRAINT_MISMATCH: 'DIFFICULTY_CONSTRAINT_MISMATCH',
-    DIFFICULTY_STRUCTURE_DRIFT: 'DIFFICULTY_STRUCTURE_DRIFT',
-
-    // Duplicate Integrity 类
-    DUPLICATE_INTEGRITY_VIOLATION: 'DUPLICATE_INTEGRITY_VIOLATION',
-    DUPLICATE_FINGERPRINT_MISMATCH: 'DUPLICATE_FINGERPRINT_MISMATCH',
-
-    // Graphic 类
-    GRAPHIC_INVALID: 'GRAPHIC_INVALID',
-    GRAPHIC_TYPE_UNREGISTERED: 'GRAPHIC_TYPE_UNREGISTERED',
-    GRAPHIC_PARAMS_INCOMPLETE: 'GRAPHIC_PARAMS_INCOMPLETE',
-    GRAPHIC_RENDERER_MISSING: 'GRAPHIC_RENDERER_MISSING',
-
-    // Render 类
-    RENDER_PREFLIGHT_FAILED: 'RENDER_PREFLIGHT_FAILED',
-    HTML_GENERATION_FAILED: 'HTML_GENERATION_FAILED',
-    SVG_GENERATION_FAILED: 'SVG_GENERATION_FAILED',
-    PRINT_GENERATION_FAILED: 'PRINT_GENERATION_FAILED',
-
-    // P0-05 KP 语义验证类
-    KP_SEMANTIC_IDENTITY: 'KP_SEMANTIC_IDENTITY',
-    KP_SEMANTIC_QUESTION_TYPE: 'KP_SEMANTIC_QUESTION_TYPE',
-    KP_SEMANTIC_OPERATION: 'KP_SEMANTIC_OPERATION',
-    KP_SEMANTIC_NUMERIC: 'KP_SEMANTIC_NUMERIC',
-    KP_SEMANTIC_STRUCTURE: 'KP_SEMANTIC_STRUCTURE',
-    KP_SEMANTIC_CONTENT: 'KP_SEMANTIC_CONTENT',
-    KP_SEMANTIC_COMPOSITE: 'KP_SEMANTIC_COMPOSITE',
-
-    // P25-04 Semantic Evidence（声明制证据验证）
-    KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE',
-
-    // P25-05 Intent×Evidence 一致性（跨家族矛盾）
-    KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT',
-
-    // P25-07 七题型教育契约（结构不变式违例）
-    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT',
-
-    // P30-15 Intent Alignment（生成结果与 intent 机器字段对齐）
-    KP_SEMANTIC_INTENT_ALIGNMENT: 'KP_SEMANTIC_INTENT_ALIGNMENT'
-  };
-
-  // ====== 严重级别 ======
-  var SEVERITY = {
-    ERROR: 'ERROR',     // 阻断：题目不可用
-    WARNING: 'WARNING', // 警告：题目可用但有隐患
-    INFO: 'INFO'        // 信息：仅记录
-  };
-
-  // ====== 默认值工厂 ======
-  function defaultMetadata() {
-    return {
-      generator: null,           // generator id (e.g., 'generator:arithmetic-addition' or 'legacy:math-oral')
-      generatorVersion: null,    // semantic version string (e.g., '1.0.0')
-      seed: null,                // 种子（可复现）
-      timestamp: null,           // ISO timestamp
-      retryCount: 0,             // 重试次数
-      validationScore: null,     // 质量评分
-      tags: []                   // 标签
-    };
-  }
-
-  function defaultGraphic() {
-    return {
-      type: null,
-      subtype: null,
-      params: {},
-      renderHints: {}
-    };
-  }
-
-  function defaultContent() {
-    return {
-      prompt: '',           // 题干文本（纯文本，无 HTML/SVG）
-      stem: null,           // 题干结构化表示（可选）
-      language: 'zh-CN',    // 语言
-      readingLevel: null    // 阅读难度等级
-    };
-  }
-
-  function defaultQuestion() {
-    return {
-      prompt: '',           // 题干（核心文本）
-      hint: null,           // 提示
-      answerMode: 'input',  // 答题模式
-      expectedFormat: null  // 期望答案格式（如 'number', 'text', 'choice-index'）
-    };
-  }
-
-  function defaultAnswer() {
-    return {
-      value: null,          // 正确答案值
-      acceptable: [],       // 可接受的替代答案
-      unit: null,           // 单位
-      precision: null,      // 精度要求（小数位数等）
-      explanation: null     // 解析
-    };
-  }
-
-  function defaultDistractor() {
-    return {
-      value: null,
-      errorType: null,      // DISTRACTOR_ERROR_TYPES 中的值
-      weight: 1             // 权重（用于自适应选择）
-    };
-  }
-
-  // ====== 公共 API ======
-  var API = {
-    VERSION: VERSION,
-    QUESTION_TYPES: QUESTION_TYPES,
-    DIFFICULTY_LEVELS: DIFFICULTY_LEVELS,
-    COGNITIVE_LEVELS: COGNITIVE_LEVELS,
-    ANSWER_MODES: ANSWER_MODES,
-    RESPONSE_LAYOUTS: RESPONSE_LAYOUTS,
-    GRAPHIC_TYPES: GRAPHIC_TYPES,
-    GRAPHIC_SUBTYPES: GRAPHIC_SUBTYPES,
-    DISTRACTOR_ERROR_TYPES: DISTRACTOR_ERROR_TYPES,
-    ERROR_CODES: ERROR_CODES,
-    SEVERITY: SEVERITY,
-    defaultMetadata: defaultMetadata,
-    defaultGraphic: defaultGraphic,
-    defaultContent: defaultContent,
-    defaultQuestion: defaultQuestion,
-    defaultAnswer: defaultAnswer,
-    defaultDistractor: defaultDistractor,
-
-    // 类型检查器
-    isValidQuestionType: function (t) {
-      if (QUESTION_TYPES.indexOf(t) !== -1) return true;
-      if (QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
-        var n = QuestionTypeRegistry.normalizeQuestionType(t);
-        // 拒绝启发式兜底（未知题型被误归并为 canonical），仅接受显式/精确别名
-        if (n && n.confidence !== 'heuristic' && n.id && QUESTION_TYPES.indexOf(n.id) !== -1) return true;
-      }
-      return false;
-    },
-    isValidDifficulty: function (d) { return DIFFICULTY_LEVELS.indexOf(d) !== -1; },
-    isValidCognitiveLevel: function (c) { return COGNITIVE_LEVELS.indexOf(c) !== -1; },
-    isValidAnswerMode: function (m) { return ANSWER_MODES.indexOf(m) !== -1; },
-    isValidResponseLayout: function (l) { return RESPONSE_LAYOUTS.indexOf(l) !== -1; },
-    isValidGraphicType: function (t) { return GRAPHIC_TYPES.indexOf(t) !== -1; },
-    isValidGraphicSubtype: function (type, subtype) {
-      var list = GRAPHIC_SUBTYPES[type];
-      return list && list.indexOf(subtype) !== -1;
-    },
-    isValidDistractorErrorType: function (e) { return DISTRACTOR_ERROR_TYPES.indexOf(e) !== -1; },
-    isValidSeverity: function (s) { return SEVERITY[s] != null; }
-  };
-
-  // 模块导出
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = API;
-  } else if (global) {
-    global.SemanticQuestionSchema = API;
-  }
-})(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
-};
 __defs["shared/validator/difficulty-validator.js"] = function (module, exports, require) {
 
 'use strict';
@@ -3601,116 +2458,6 @@ module.exports = {
   validateBatchKpCoverage: validateBatchKpCoverage
 };
 };
-__defs["shared/validator/composite-validator.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Validator = require("shared/validator/question-validator.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
-
-function validateComposite(sq, context) {
-  context = context || {};
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var params = sq.difficultyParams || sq.constraints || {};
-  var data = sq.data || {};
-  var plan = context.plan || {};
-
-  // 1) 步数一致性
-  var expectedSteps = coerceInteger(params.exactSteps || params.maxSteps || data.steps);
-  var actualSteps = coerceInteger(data.steps);
-  if (expectedSteps != null && actualSteps != null && expectedSteps !== actualSteps) {
-    errors.push(createError(ERROR_CODES.COMPOSITE_STEPS_MISMATCH, 'data.steps', '步数不匹配: 期望 ' + expectedSteps + ', 实际 ' + actualSteps, SEVERITY.ERROR, { expected: expectedSteps, actual: actualSteps }));
-  }
-
-  // 2) 运算符集合一致性
-  var expectedOps = params.operation || data.operators || [];
-  if (!Array.isArray(expectedOps) && typeof expectedOps === 'string') expectedOps = [expectedOps];
-  var actualOps = data.operators || [];
-  if (!Array.isArray(actualOps) && typeof actualOps === 'string') actualOps = [actualOps];
-  if (expectedOps.length && actualOps.length) {
-    var expectedSet = new Set(expectedOps.map(String).map(function (s) { return s.toLowerCase(); }));
-    var actualSet = new Set(actualOps.map(String).map(function (s) { return s.toLowerCase(); }));
-    var missing = Array.from(expectedSet).filter(function (o) { return !actualSet.has(o); });
-    var extra = Array.from(actualSet).filter(function (o) { return !expectedSet.has(o); });
-    if (missing.length) {
-      errors.push(createError(ERROR_CODES.COMPOSITE_OPERATOR_MISMATCH, 'data.operators', '缺少要求的运算符: ' + missing.join(','), SEVERITY.ERROR, { expected: Array.from(expectedSet), actual: Array.from(actualSet), missing: missing }));
-    }
-    if (extra.length) {
-      warnings.push({ code: 'COMPOSITE_EXTRA_OPERATOR', field: 'data.operators', message: '包含额外运算符: ' + extra.join(','), severity: 'WARNING', detail: { expected: Array.from(expectedSet), actual: Array.from(actualSet), extra: extra } });
-    }
-  }
-
-  // 3) 括号一致性
-  var expectedBracket = params.allowBracket === true || data.allowBracket === true;
-  var hasBracket = data.hasBracket === true || /[()（）]/.test(sq.prompt || '');
-  if (expectedBracket && !hasBracket) {
-    warnings.push({ code: 'COMPOSITE_BRACKET_MISSING', field: 'structure', message: '要求括号但题干未含括号', severity: 'WARNING', detail: { expectedBracket: expectedBracket, hasBracket: hasBracket } });
-  } else if (!expectedBracket && hasBracket) {
-    warnings.push({ code: 'COMPOSITE_BRACKET_UNEXPECTED', field: 'structure', message: '未要求括号但题干含括号', severity: 'WARNING', detail: { expectedBracket: expectedBracket, hasBracket: hasBracket } });
-  }
-
-  // 4) 逆运算/填空模式一致性
-  if (data.mode === 'inverse' || data.inverse === true) {
-    var inverseOps = actualOps.filter(function (o) { return ['inverse', 'reverse', 'unknown', '求被加数', '求减数', '求乘数', '求除数'].indexOf(String(o).toLowerCase()) !== -1; });
-    if (inverseOps.length === 0 && actualOps.length > 0) {
-      // 启发式：逆运算题目通常包含运算符但提问方式为求运算数
-      info.push({ code: 'COMPOSITE_INVERSE_MODE', field: 'data.mode', message: '检测到逆运算模式', severity: 'INFO', detail: { mode: data.mode, inverse: data.inverse } });
-    }
-  }
-
-  // 5) 结构族一致性
-  var expectedFamily = params.structure && params.structure.family;
-  if (expectedFamily) {
-    var actualFamily = data.structure && data.structure.family;
-    if (actualFamily && expectedFamily !== actualFamily) {
-      errors.push(createError(ERROR_CODES.COMPOSITE_STRUCTURE_MISMATCH, 'data.structure.family', '结构族不匹配: 期望 ' + expectedFamily + ', 实际 ' + actualFamily, SEVERITY.ERROR, { expected: expectedFamily, actual: actualFamily }));
-    }
-  }
-
-  var valid = errors.length === 0;
-  var hasWarning = warnings.length > 0;
-
-  return {
-    valid: valid,
-    errors: errors,
-    warnings: warnings,
-    info: info,
-    score: valid ? (hasWarning ? 0.8 : 1) : 0.5,
-    checks: { composite: valid ? (hasWarning ? 'warn' : 'pass') : 'fail' }
-  };
-}
-
-
-function validateBatchComposite(questions, context) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var compositeTypes = {};
-  questions.forEach(function (sq) {
-    var data = sq.data || {};
-    var type = data.mode || (data.structure && data.structure.family) || 'simple';
-    compositeTypes[type] = (compositeTypes[type] || 0) + 1;
-  });
-
-  info.push({ code: 'COMPOSITE_DISTRIBUTION', field: 'batch', message: '复合题类型分布: ' + JSON.stringify(compositeTypes), severity: 'INFO' });
-
-  return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { composite: 'pass' } };
-}
-
-module.exports = {
-  validateComposite: validateComposite,
-  validateBatchComposite: validateBatchComposite
-};
-};
 __defs["shared/validator/difficulty-integrity-validator.js"] = function (module, exports, require) {
 'use strict';
 
@@ -3854,9 +2601,39 @@ function validateBatchDifficultyIntegrity(questions, context) {
   return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { difficultyIntegrity: 'pass' } };
 }
 
+// P40 T-07：概念族内难度递进断言——同 familyId 内 stageOrder 靠后的 KP，seedDifficulty 不得低于前序。
+// 违规登记 needs-review（挂人工），不自动改数；difficultyDelta 现算不落盘。
+// 消费面：KBL capability（familyId + stageOrder + seedDifficulty）经只读透出后校验。
+function validateFamilyDifficultyMonotonic(rows) {
+  var byFam = {};
+  (rows || []).forEach(function (r) {
+    if (r && r.familyId != null && r.stageOrder != null && r.seedDifficulty != null) {
+      (byFam[r.familyId] = byFam[r.familyId] || []).push(r);
+    }
+  });
+  var violations = [];
+  var checked = 0;
+  Object.keys(byFam).forEach(function (f) {
+    var arr = byFam[f].slice().sort(function (a, b) { return a.stageOrder - b.stageOrder; });
+    checked += arr.length;
+    for (var i = 1; i < arr.length; i++) {
+      if (arr[i].seedDifficulty < arr[i - 1].seedDifficulty) {
+        violations.push({
+          familyId: f,
+          fromId: arr[i - 1].knowledgeId, fromStageOrder: arr[i - 1].stageOrder, fromDifficulty: arr[i - 1].seedDifficulty,
+          toId: arr[i].knowledgeId, toStageOrder: arr[i].stageOrder, toDifficulty: arr[i].seedDifficulty,
+          difficultyDelta: arr[i].seedDifficulty - arr[i - 1].seedDifficulty
+        });
+      }
+    }
+  });
+  return { valid: violations.length === 0, checked: checked, families: Object.keys(byFam).length, violations: violations, needsReview: violations.slice() };
+}
+
 module.exports = {
   validateDifficultyIntegrity: validateDifficultyIntegrity,
-  validateBatchDifficultyIntegrity: validateBatchDifficultyIntegrity
+  validateBatchDifficultyIntegrity: validateBatchDifficultyIntegrity,
+  validateFamilyDifficultyMonotonic: validateFamilyDifficultyMonotonic
 };
 };
 __defs["shared/validator/duplicate-integrity-validator.js"] = function (module, exports, require) {
@@ -4458,6 +3235,13 @@ var QT_EXPRESSION_MAP = {
   choice: 'option-selection', judge: 'binary-judgement', geometry: 'graphic-construction', classify: 'grouping'
 };
 
+// P40-Q-06（方案 A，用户批准）：课标笔算竖式判定——type=calculation 且 role=calculation-support
+// 的计算支撑图不属意图示意图，intent.graphicRole=null / allowedRepresentations 不含 graphic
+// 的行允许携带；防泄题由 SVG maskResult 与 6g 泄露门禁承担。
+function isVerticalSupportGraphic(g) {
+  return !!(g && g.type === 'calculation' && g.role === 'calculation-support');
+}
+
 function checkIntentAlignment(sq, plan) {
   var errors = [];
   var sp = plan && plan.semanticParams ? plan.semanticParams : null;
@@ -4485,9 +3269,10 @@ function checkIntentAlignment(sq, plan) {
 
   // 2. representation 对齐：allowedRepresentations 不含 'graphic' 时题目不应含 graphic（反向约束）
   //    含 'graphic' 是「允许」非「必须」——强制含图由 graphicRole=carrier 承担（见下）
+  //    P40-Q-06 豁免：课标笔算竖式（isVerticalSupportGraphic）为计算支撑图，不拦。
   var hasGraphic = !!(sq.data && sq.data.graphic);
   var allowedReps = intent.allowedRepresentations || [];
-  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic) {
+  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic && !isVerticalSupportGraphic(sq.data.graphic)) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'representation',
       'intent.allowedRepresentations 不含 graphic 但题目含图形',
       SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
@@ -4515,7 +3300,8 @@ function checkIntentAlignment(sq, plan) {
       'intent.graphicRole=' + graphicRole + ' 要求题目必须含图形，实际未含',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
   }
-  if (graphicRole === null && hasGraphic) {
+  if (graphicRole === null && hasGraphic && !isVerticalSupportGraphic(sq.data.graphic)) {
+    // P40-Q-06 豁免：课标笔算竖式为计算支撑图，不属意图示意图，不拦（见 isVerticalSupportGraphic）。
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=null 要求题目不含图形，实际含图形',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
@@ -4542,6 +3328,35 @@ function checkIntentAlignment(sq, plan) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'expressionMode',
       'intent.expressionModes ' + JSON.stringify(modes) + ' 不含题型 ' + qt + ' 期望模式 ' + expectedMode,
       SEVERITY.ERROR, { expressionModes: modes, questionType: qt, expectedMode: expectedMode }));
+  }
+
+  // 5. constructs 对齐（P40-Q-03 requiredConstructs 接通）：题目实际运算落在教学构念域内。
+  //    requiredConstructs（T2 qt-intent 机器约束，运算枚举全称）是本 KP×题型要求覆盖的运算构念；
+  //    宽松兼容规则（与 P28-SEM-GATE-01 mixed 口径同型）：
+  //      a. 归一后 op ∈ rc                    → pass
+  //      b. rc 含 mixed（宽构念域，四则任一均在语义域内）→ pass
+  //      c. op=mixed 且 rc 含 ≥2 种四则       → pass
+  //      其余 → FAIL（SEVERITY.ERROR，运算越界即教学构念失守）。
+  //    跳过：rc 空/缺失（T2 未派生构念约束）、题目无 data.operation。
+  var rcRaw = intent.requiredConstructs || [];
+  var sqOpC = sq.data && sq.data.operation;
+  if (rcRaw.length && sqOpC != null) {
+    var rcNorm = rcRaw.map(normalizeOp);
+    var sqOpsC = (Array.isArray(sqOpC) ? sqOpC : [sqOpC]).map(normalizeOp);
+    var constructMismatch = sqOpsC.some(function (op) {
+      if (rcNorm.indexOf(op) !== -1) return false;
+      if (rcNorm.indexOf('mixed') !== -1) return false;
+      if (op === 'mixed') {
+        var four = ['add', 'sub', 'mult', 'div'].filter(function (f) { return rcNorm.indexOf(f) !== -1; });
+        return four.length < 2;
+      }
+      return true;
+    });
+    if (constructMismatch) {
+      errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'constructs',
+        '题目运算 ' + JSON.stringify(sqOpC) + ' 不在 intent.requiredConstructs ' + JSON.stringify(rcRaw) + ' 构念域内',
+        SEVERITY.ERROR, { requiredConstructs: rcRaw, questionOperation: sqOpC }));
+    }
   }
 
   return {
@@ -5063,6 +3878,37 @@ __defs["shared/presentation/svg-registry.js"] = function (module, exports, requi
   }
 
   
+  var A11Y_TYPE_LABELS = {
+    geometry: '几何图形图', calculation: '竖式计算图', makeTen: '凑十法演示图', 'make-ten': '凑十法演示图',
+    diagram: '示意图', chart: '统计图表', currency: '人民币演示图', fraction: '分数示意图',
+    clock: '钟面图', area: '面积演示图', dataStats: '数据统计图', draw: '作图演示图',
+    competition: '竞赛示意图', segment: '线段图', 'view-cards': '视图观察卡',
+    custom: '题目示意图', illustration: '题目插图'
+  };
+  var A11Y_ROLE_LABELS = {
+    'quantity-correspondence': '数量对应图', 'number-position': '数与位置图',
+    'angle-measure': '角度度量图', 'fraction-part': '分数份数图',
+    'area-measure': '面积度量图', 'data-comparison': '数据比较图',
+    'calculation-support': '计算辅助图', 'auxiliary': '辅助示意图'
+  };
+  function escText(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function a11yTitle(graphic) {
+    if (!graphic || typeof graphic !== 'object') return '题目示意图';
+    var role = graphic.role != null ? graphic.role : (graphic.params && graphic.params.role);
+    if (A11Y_ROLE_LABELS[role]) return A11Y_ROLE_LABELS[role];
+    return A11Y_TYPE_LABELS[graphic.type] || '题目示意图';
+  }
+  function injectA11yTitle(svg, graphic) {
+    if (typeof svg !== 'string' || svg.indexOf('<title') !== -1) return svg;
+    var m = svg.match(/^<svg\b[^>]*>/i);
+    if (!m) return svg;
+    return svg.slice(0, m[0].length) + '<title>' + escText(a11yTitle(graphic)) + '</title>' + svg.slice(m[0].length);
+  }
+
+  
   function render(graphic, options) {
     var result = renderFor(graphic, options);
     if (result.status !== 'SUCCESS') return result;
@@ -5070,12 +3916,13 @@ __defs["shared/presentation/svg-registry.js"] = function (module, exports, requi
     if (U && typeof U.svgWrap === 'function' && result.svg.indexOf('<svg') !== 0) {
       try {
         var wrapped = U.svgWrap(result.svg, { padding: 8 });
-        return { status: 'SUCCESS', svg: wrapped };
+        result = { status: 'SUCCESS', svg: wrapped };
       } catch (e) {
         return { status: 'FAILED', reason: 'svgWrap threw exception', error: e };
       }
     }
-    return result;
+    // P40-Q-15（R22）：成功产物注入 <title> 可访问名（读屏可用；屏幕阅读器播报图形角色）
+    return { status: 'SUCCESS', svg: injectA11yTitle(result.svg, graphic) };
   }
 
   var SVGRegistry = {
@@ -5083,7 +3930,10 @@ __defs["shared/presentation/svg-registry.js"] = function (module, exports, requi
     seedFromGlobal: seedFromGlobal,
     resolve: resolve,
     render: render,
-    renderFor: renderFor
+    renderFor: renderFor,
+    // P40-Q-15：无障碍标签枚举对外暴露（唯一 SSOT；6g L2 据此校验 <title> 合法性）
+    A11Y_TYPE_LABELS: A11Y_TYPE_LABELS,
+    A11Y_ROLE_LABELS: A11Y_ROLE_LABELS
   };
 
   // 挂到既有全局命名空间（与 shared/svg-*.js 的挂载共存），提供正式 API
@@ -5094,349 +3944,6 @@ __defs["shared/presentation/svg-registry.js"] = function (module, exports, requi
   if (typeof module !== 'undefined' && module.exports) module.exports = SVGRegistry;
   return SVGRegistry;
 })(typeof window !== 'undefined' ? window : global);
-};
-__defs["shared/svg/svg-core.js"] = function (module, exports, require) {
-// shared/svg/svg-core.js — 通用 SVG 工具函数集（SVGUtil）
-//
-// 供各题型生成器以纯字符串方式构造几何图形，不依赖 DOM，浏览器 / Node 双环境可用。
-// 设计要点：
-//   - 所有元素函数返回 SVG 片段字符串（非完整 <svg>），由 svgWrap 统一包裹；
-//   - svgWrap 未显式给定 viewBox 时调用 computeViewBox 自动计算边界；
-//   - 属性值与文本内容自动 XML 转义；
-//   - 默认样式集中在 SVG_DEFAULTS（配色与插件卡片风格一致）。
-//
-// 验收：控制台执行 SVGUtil.svgWrap('<circle cx="50" cy="50" r="40"/>') 得到合法 SVG 字符串。
-
-(function (global) {
-  'use strict';
-
-  // ============ 默认样式常量 ============
-  var SVG_DEFAULTS = {
-    width: 220,            // svgWrap 兜底宽度
-    height: 160,           // svgWrap 兜底高度
-    padding: 10,           // computeViewBox 四周留白
-    fill: '#eef3fb',       // 形状填充色
-    stroke: '#27324a',     // 轮廓色
-    strokeWidth: 2,
-    fontSize: 14,
-    fontFamily: 'Menlo, Consolas, monospace',
-    textColor: '#27324a'
-  };
-
-  // ============ 内部工具 ============
-  function escAttr(v) {
-    return String(v == null ? '' : v)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  function escText(v) {
-    return String(v == null ? '' : v)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  
-  function merge(defaults, opts) {
-    var out = {};
-    Object.keys(defaults).forEach(function (k) { out[k] = defaults[k]; });
-    if (opts) Object.keys(opts).forEach(function (k) {
-      if (opts[k] != null) out[k] = opts[k];
-    });
-    return out;
-  }
-  
-  function attrsStr(attrs) {
-    var s = '';
-    Object.keys(attrs || {}).forEach(function (k) {
-      if (attrs[k] == null) return;
-      s += ' ' + k + '="' + escAttr(attrs[k]) + '"';
-    });
-    return s;
-  }
-
-  // ============ 基础元素创建 ============
-  
-  function svgElement(tag, attrs, children) {
-    var inner = Array.isArray(children) ? children.join('') : (children || '');
-    if (!inner) return '<' + tag + attrsStr(attrs) + '/>';
-    return '<' + tag + attrsStr(attrs) + '>' + inner + '</' + tag + '>';
-  }
-
-  function svgText(x, y, str, opts) {
-    var o = merge({ fontSize: SVG_DEFAULTS.fontSize, fontFamily: SVG_DEFAULTS.fontFamily,
-      fill: SVG_DEFAULTS.textColor, 'text-anchor': 'middle' }, opts);
-    var attrs = { x: x, y: y, 'font-size': o.fontSize, 'font-family': o.fontFamily,
-      fill: o.fill, 'text-anchor': o['text-anchor'], 'font-weight': o.fontWeight };
-    if (o.transform) attrs.transform = o.transform;
-    return svgElement('text', attrs, escText(str));
-  }
-
-  function svgLine(x1, y1, x2, y2, opts) {
-    var o = merge({ stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    return svgElement('line', { x1: x1, y1: y1, x2: x2, y2: y2,
-      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linecap': o.linecap || 'round', 'stroke-dasharray': o.dasharray });
-  }
-
-  
-  function normPoints(points) {
-    if (Array.isArray(points)) return points.map(function (p) { return p[0] + ',' + p[1]; }).join(' ');
-    return String(points);
-  }
-
-  function svgPolygon(points, opts) {
-    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    return svgElement('polygon', { points: normPoints(points), fill: o.fill,
-      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linejoin': o.linejoin || 'round', 'stroke-dasharray': o.dasharray });
-  }
-
-  function svgPolyline(points, opts) {
-    var o = merge({ fill: 'none', stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    return svgElement('polyline', { points: normPoints(points), fill: o.fill,
-      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
-  }
-
-  function svgCircle(cx, cy, r, opts) {
-    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    return svgElement('circle', { cx: cx, cy: cy, r: r, fill: o.fill,
-      stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-dasharray': o.dasharray });
-  }
-
-  function svgPath(d, opts) {
-    var o = merge({ fill: 'none', stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    var attrs = { d: d, fill: o.fill, stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-dasharray': o.dasharray };
-    if (o.transform) attrs.transform = o.transform;
-    return svgElement('path', attrs);
-  }
-
-  function svgRect(x, y, w, h, opts) {
-    var o = merge({ fill: SVG_DEFAULTS.fill, stroke: SVG_DEFAULTS.stroke, strokeWidth: SVG_DEFAULTS.strokeWidth }, opts);
-    return svgElement('rect', { x: x, y: y, width: w, height: h, rx: o.rx || 0,
-      fill: o.fill, stroke: o.stroke, 'stroke-width': o.strokeWidth, 'stroke-dasharray': o.dasharray });
-  }
-
-  // ============ viewBox 计算 ============
-  
-  // ============ 性能缓存（任务 3.3） ============
-  // computeViewBox / svgWrap 均为确定性纯函数，相同输入必得相同输出。一次性生成大量题目
-  // （如 50 道几何/竖式）时缓存可避免重复的字符串正则解析与拼接，降低主线程阻塞。
-  var __vbCache = (typeof Map !== 'undefined') ? new Map() : null;
-  var __wrapCache = (typeof Map !== 'undefined') ? new Map() : null;
-  var EMPTY_BOX = { minX: 0, minY: 0, width: SVG_DEFAULTS.width, height: SVG_DEFAULTS.height };
-  
-  function memoize(fn, resolver) {
-    var cache = (typeof Map !== 'undefined') ? new Map() : {};
-    return function () {
-      var key = resolver ? resolver.apply(this, arguments) : arguments[0];
-      var hit = (cache instanceof Map) ? cache.has(key) : Object.prototype.hasOwnProperty.call(cache, key);
-      if (hit) return (cache instanceof Map) ? cache.get(key) : cache[key];
-      var val = fn.apply(this, arguments);
-      if (cache instanceof Map) cache.set(key, val); else cache[key] = val;
-      return val;
-    };
-  }
-  
-  function clearCache() {
-    if (__vbCache) __vbCache.clear();
-    if (__wrapCache) __wrapCache.clear();
-  }
-
-  function computeViewBox(elements, options) {
-    var pad = options && options.padding != null ? options.padding : SVG_DEFAULTS.padding;
-    var src = Array.isArray(elements) ? elements.join('') : String(elements || '');
-    var cacheKey = src + '|' + pad;
-    if (__vbCache && __vbCache.has(cacheKey)) return __vbCache.get(cacheKey);
-    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    function grow(x1, y1, x2, y2) {
-      if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) return;
-      if (x1 < minX) minX = x1; if (y1 < minY) minY = y1;
-      if (x2 > maxX) maxX = x2; if (y2 > maxY) maxY = y2;
-    }
-    var tagRe = /<(circle|ellipse|rect|line|text|polygon|polyline|path)\b([^>]*)>/g;
-    var tm;
-    while ((tm = tagRe.exec(src))) {
-      var tag = tm[1], attrStr = tm[2];
-      var attrs = {};
-      var am, attrRe = /([\w:-]+)\s*=\s*"([^"]*)"|([\w:-]+)\s*=\s*'([^']*)'/g;
-      while ((am = attrRe.exec(attrStr))) {
-        if (am[1]) attrs[am[1]] = am[2]; else attrs[am[3]] = am[4];
-      }
-      var num = function (k, dv) { var v = parseFloat(attrs[k]); return isFinite(v) ? v : dv; };
-      var sw = num('stroke-width', 0) / 2;
-      if (tag === 'circle') {
-        var cr = num('r', 0);
-        grow(num('cx') - cr - sw, num('cy') - cr - sw, num('cx') + cr + sw, num('cy') + cr + sw);
-      } else if (tag === 'ellipse') {
-        grow(num('cx') - num('rx') - sw, num('cy') - num('ry') - sw,
-             num('cx') + num('rx') + sw, num('cy') + num('ry') + sw);
-      } else if (tag === 'rect') {
-        grow(num('x', 0) - sw, num('y', 0) - sw, num('x', 0) + num('width', 0) + sw, num('y', 0) + num('height', 0) + sw);
-      } else if (tag === 'line') {
-        grow(Math.min(num('x1'), num('x2')) - sw, Math.min(num('y1'), num('y2')) - sw,
-             Math.max(num('x1'), num('x2')) + sw, Math.max(num('y1'), num('y2')) + sw);
-      } else if (tag === 'polygon' || tag === 'polyline') {
-        var pts = String(attrs.points || '').trim().split(/[\s,]+/).map(Number);
-        for (var i = 0; i + 1 < pts.length; i += 2) grow(pts[i] - sw, pts[i + 1] - sw, pts[i] + sw, pts[i + 1] + sw);
-      } else if (tag === 'text') {
-        var fs = num('font-size', SVG_DEFAULTS.fontSize);
-        var content = '';
-        var closeIdx = src.indexOf('</text>', tm.index);
-        if (closeIdx > tm.index) {
-          var seg = src.slice(tm.index + tm[0].length, closeIdx).replace(/<[^>]*>/g, '');
-          content = seg.replace(/&[a-z]+;|&#\d+;/gi, 'x');
-        }
-        var estW = fs * 0.62 * Math.max(content.length, 1);
-        var anchor = attrs['text-anchor'] || 'start';
-        var tx = num('x', 0), ty = num('y', 0);
-        var x1 = anchor === 'middle' ? tx - estW / 2 : anchor === 'end' ? tx - estW : tx;
-        grow(x1 - sw, ty - fs, x1 + estW + sw, ty + fs * 0.35);
-      } else if (tag === 'path') {
-        var nums = String(attrs.d || '').match(/-?\d+(?:\.\d+)?/g);
-        if (nums) {
-          for (var j = 0; j + 1 < nums.length; j += 2) {
-            var px = parseFloat(nums[j]), py = parseFloat(nums[j + 1]);
-            grow(px - sw, py - sw, px + sw, py + sw);
-          }
-        }
-      }
-    }
-    if (!isFinite(minX)) return EMPTY_BOX;
-    minX -= pad; minY -= pad; maxX += pad; maxY += pad;
-    var vbResult = { minX: Math.floor(minX), minY: Math.floor(minY),
-      width: Math.ceil(maxX - minX), height: Math.ceil(maxY - minY) };
-    if (__vbCache) __vbCache.set(cacheKey, vbResult);
-    return vbResult;
-  }
-
-  // ============ 包裹为完整 SVG ============
-  
-  function hexLighten(hex, f) {
-    var m = /^#([0-9a-fA-F]{6})$/.exec(hex);
-    if (!m) return hex;
-    var n = parseInt(m[1], 16);
-    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-    function mix(c) { return Math.round(c + (255 - c) * f); }
-    return '#' + ((1 << 24) + (mix(r) << 16) + (mix(g) << 8) + mix(b)).toString(16).slice(1);
-  }
-  
-  var PRINT_AUX_STYLE = '<style>' +
-    '[stroke-dasharray]{opacity:.42}' +
-    '.svg-grid-line{opacity:.38}' +
-    '</style>';
-  function printTransform(innerSvg) {
-    var out = String(innerSvg || '').replace(/#[0-9a-fA-F]{6}\b/g, function (hex) {
-      return hexLighten(hex, 0.22);
-    });
-    return PRINT_AUX_STYLE + out;
-  }
-
-  
-  function svgWrap(innerSvg, options) {
-    var o = options || {};
-    var body = (innerSvg || '');
-    if (o.printMode) body = printTransform(body);
-    // 缓存：相同内容 + 相同选项必得相同输出（任务 3.3）
-    var wrapKey = body + '|' + JSON.stringify(o);
-    if (__wrapCache && __wrapCache.has(wrapKey)) return __wrapCache.get(wrapKey);
-    var vb = o.viewBox ||
-      (function () { var b = computeViewBox(body, { padding: o.padding }); return b.minX + ' ' + b.minY + ' ' + b.width + ' ' + b.height; })();
-    var parts = vb.split(/\s+/).map(Number);
-    var w = o.width != null ? o.width : (parts[2] || SVG_DEFAULTS.width);
-    var h = o.height != null ? o.height : (parts[3] || SVG_DEFAULTS.height);
-    var attrs = {
-      xmlns: 'http://www.w3.org/2000/svg',
-      viewBox: vb, width: w, height: h,
-      role: 'img', preserveAspectRatio: o.preserveAspectRatio || 'xMidYMid meet'
-    };
-    if (o.className) attrs.class = o.className;
-    if (o.printMode) attrs.class = attrs.class ? (attrs.class + ' svg-print') : 'svg-print';
-    var bg = o.background ? svgElement('rect', { x: parts[0], y: parts[1], width: parts[2], height: parts[3], fill: o.background }) : '';
-    var style = o.style ? ' style="' + escAttr(o.style) + '"' : '';
-    var out = '<svg' + attrsStr(attrs) + style + '>' + bg + body + '</svg>';
-    if (__wrapCache) __wrapCache.set(wrapKey, out);
-    return out;
-  }
-
-  // ============ 书写格背景（任务：SVG 生成器细化） ============
-  
-  function svgGrid(kind, o) {
-    o = o || {};
-    var x = o.x || 0, y = o.y || 0;
-    // 默认经 style 内联消费 tokens.css 书写格变量，
-    // 可经 lineColor/baselineColor/frameColor 覆盖（四线格颜色可配置）。
-    var isFourLine = kind === 'four-line';
-    var frame = o.frameColor || 'var(--grid-tianzige-frame)';
-    var aux = o.lineColor || (isFourLine ? 'var(--grid-fourline-line)' : 'var(--grid-tianzige-aux)');
-    var baseline = o.baselineColor || 'var(--grid-fourline-baseline)';
-    var parts = [];
-    function rect(xx, yy, s) {
-      parts.push(svgElement('rect', { x: xx, y: yy, width: s, height: s,
-        fill: '#ffffff', class: 'svg-grid-frame',
-        style: 'stroke:' + frame + ';stroke-width:2' }));
-    }
-    function gLine(x1, y1, x2, y2, color, sw, dash) {
-      var style = 'stroke:' + color + ';stroke-width:' + sw + (dash ? ';stroke-dasharray:' + dash : '');
-      parts.push(svgElement('line', { x1: x1, y1: y1, x2: x2, y2: y2,
-        'class': 'svg-grid-line', style: style }));
-    }
-    if (kind === 'tian' || kind === 'mi' || kind === 'cross') {
-      var s = o.size || 100;
-      rect(x, y, s);
-      var mx = x + s / 2, my = y + s / 2;
-      if (kind === 'cross') {           // 十字格：实线中线
-        gLine(x, my, x + s, my, aux, 1.4);
-        gLine(mx, y, mx, y + s, aux, 1.4);
-      } else {                          // 田字/米字：虚线中线
-        gLine(x, my, x + s, my, aux, 1.5, '6 4');
-        gLine(mx, y, mx, y + s, aux, 1.5, '6 4');
-      }
-      if (kind === 'mi') {              // 米字对角线
-        gLine(x, y, x + s, y + s, aux, 1.2, '5 5');
-        gLine(x + s, y, x, y + s, aux, 1.2, '5 5');
-      }
-    } else if (kind === 'four-line') {
-      var topY = o.topY != null ? o.topY : 0;
-      var gap = o.gap || 22;
-      var lines = o.lines || 4;         // 四线三格默认 4 条横线
-      for (var i = 0; i < lines; i++) {
-        var isBase = i === lines - 1;
-        gLine(x, topY + i * gap, x + (o.width || 120), topY + i * gap,
-          isBase ? baseline : aux, isBase ? 1.8 : 1.3);
-      }
-    } else {
-      throw new Error('svgGrid: 未知格线类型 ' + kind);
-    }
-    return parts.join('');
-  }
-
-  // ============ 导出 ============
-  var SVGUtil = {
-    SVG_DEFAULTS: SVG_DEFAULTS,
-    escAttr: escAttr,
-    escText: escText,
-    svgElement: svgElement,
-    svgText: svgText,
-    svgLine: svgLine,
-    svgPolygon: svgPolygon,
-    svgPolyline: svgPolyline,
-    svgCircle: svgCircle,
-    svgRect: svgRect,
-    svgPath: svgPath,
-    computeViewBox: computeViewBox,
-    svgWrap: svgWrap,
-    svgGrid: svgGrid,
-    hexLighten: hexLighten,
-    memo: memoize,
-    clearCache: clearCache
-  };
-
-  global.SVGUtil = SVGUtil;
-  global.SVG_DEFAULTS = SVG_DEFAULTS;
-
-  // 任务7：科目化命名空间。核心工具挂载为 SVGGenerators.core（同一引用，非拷贝）；
-  // 各科目生成器由对应文件挂载到 SVGGenerators.math / cn / en，全局旧名保留兼容。
-  global.SVGGenerators = global.SVGGenerators || {};
-  global.SVGGenerators.core = SVGUtil;
-
-  if (typeof module !== 'undefined') module.exports = SVGUtil;
-})(typeof window !== 'undefined' ? window : global);
-
 };
 __defs["shared/presentation/svg-sanitizer.js"] = function (module, exports, require) {
 

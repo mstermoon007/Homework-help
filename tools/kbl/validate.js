@@ -122,7 +122,8 @@ ok(permCount.forbid === 0 && permCount.degrade === 0 && permCount.missing === 0,
 // ---- V5: Dist Fingerprint（shared/knowledge manifest 重算） ----
 var distManifest = requireJson(path.join(DIST, 'manifest/manifest.json'));
 maniSchema.validate(distManifest).forEach(function (e) { errors.push(e); });
-var DATA_FILES = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json'];
+// P40-Q-13：清单与 tools/kbl/build.js DATA_RELS 保持一致（+ teaching/context-library.json）
+var DATA_FILES = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json', 'teaching/context-library.json'];
 if (distManifest && distManifest.integrity) {
   var actual = {};
   DATA_FILES.forEach(function (rel) {

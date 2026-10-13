@@ -587,6 +587,13 @@ var QT_EXPRESSION_MAP = {
   choice: 'option-selection', judge: 'binary-judgement', geometry: 'graphic-construction', classify: 'grouping'
 };
 
+// P40-Q-06（方案 A，用户批准）：课标笔算竖式判定——type=calculation 且 role=calculation-support
+// 的计算支撑图不属意图示意图，intent.graphicRole=null / allowedRepresentations 不含 graphic
+// 的行允许携带；防泄题由 SVG maskResult 与 6g 泄露门禁承担。
+function isVerticalSupportGraphic(g) {
+  return !!(g && g.type === 'calculation' && g.role === 'calculation-support');
+}
+
 function checkIntentAlignment(sq, plan) {
   var errors = [];
   var sp = plan && plan.semanticParams ? plan.semanticParams : null;
@@ -614,9 +621,10 @@ function checkIntentAlignment(sq, plan) {
 
   // 2. representation 对齐：allowedRepresentations 不含 'graphic' 时题目不应含 graphic（反向约束）
   //    含 'graphic' 是「允许」非「必须」——强制含图由 graphicRole=carrier 承担（见下）
+  //    P40-Q-06 豁免：课标笔算竖式（isVerticalSupportGraphic）为计算支撑图，不拦。
   var hasGraphic = !!(sq.data && sq.data.graphic);
   var allowedReps = intent.allowedRepresentations || [];
-  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic) {
+  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic && !isVerticalSupportGraphic(sq.data.graphic)) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'representation',
       'intent.allowedRepresentations 不含 graphic 但题目含图形',
       SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
@@ -644,7 +652,8 @@ function checkIntentAlignment(sq, plan) {
       'intent.graphicRole=' + graphicRole + ' 要求题目必须含图形，实际未含',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
   }
-  if (graphicRole === null && hasGraphic) {
+  if (graphicRole === null && hasGraphic && !isVerticalSupportGraphic(sq.data.graphic)) {
+    // P40-Q-06 豁免：课标笔算竖式为计算支撑图，不属意图示意图，不拦（见 isVerticalSupportGraphic）。
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=null 要求题目不含图形，实际含图形',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
@@ -671,6 +680,35 @@ function checkIntentAlignment(sq, plan) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'expressionMode',
       'intent.expressionModes ' + JSON.stringify(modes) + ' 不含题型 ' + qt + ' 期望模式 ' + expectedMode,
       SEVERITY.ERROR, { expressionModes: modes, questionType: qt, expectedMode: expectedMode }));
+  }
+
+  // 5. constructs 对齐（P40-Q-03 requiredConstructs 接通）：题目实际运算落在教学构念域内。
+  //    requiredConstructs（T2 qt-intent 机器约束，运算枚举全称）是本 KP×题型要求覆盖的运算构念；
+  //    宽松兼容规则（与 P28-SEM-GATE-01 mixed 口径同型）：
+  //      a. 归一后 op ∈ rc                    → pass
+  //      b. rc 含 mixed（宽构念域，四则任一均在语义域内）→ pass
+  //      c. op=mixed 且 rc 含 ≥2 种四则       → pass
+  //      其余 → FAIL（SEVERITY.ERROR，运算越界即教学构念失守）。
+  //    跳过：rc 空/缺失（T2 未派生构念约束）、题目无 data.operation。
+  var rcRaw = intent.requiredConstructs || [];
+  var sqOpC = sq.data && sq.data.operation;
+  if (rcRaw.length && sqOpC != null) {
+    var rcNorm = rcRaw.map(normalizeOp);
+    var sqOpsC = (Array.isArray(sqOpC) ? sqOpC : [sqOpC]).map(normalizeOp);
+    var constructMismatch = sqOpsC.some(function (op) {
+      if (rcNorm.indexOf(op) !== -1) return false;
+      if (rcNorm.indexOf('mixed') !== -1) return false;
+      if (op === 'mixed') {
+        var four = ['add', 'sub', 'mult', 'div'].filter(function (f) { return rcNorm.indexOf(f) !== -1; });
+        return four.length < 2;
+      }
+      return true;
+    });
+    if (constructMismatch) {
+      errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'constructs',
+        '题目运算 ' + JSON.stringify(sqOpC) + ' 不在 intent.requiredConstructs ' + JSON.stringify(rcRaw) + ' 构念域内',
+        SEVERITY.ERROR, { requiredConstructs: rcRaw, questionOperation: sqOpC }));
+    }
   }
 
   return {

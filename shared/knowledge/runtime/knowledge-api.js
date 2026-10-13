@@ -48,6 +48,7 @@
     relationsFor: function (id) { return Relation.relationsFor(id); },
     misconceptionsFor: Query.misconceptionsFor,
     intentFor: Query.intentFor,
+    contextLibrary: Query.contextLibrary,
     stats: Query.stats
   };
 

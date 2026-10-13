@@ -19,6 +19,8 @@ var fs = require('fs');
 var path = require('path');
 
 var ROOT = path.join(__dirname, '..', '..');
+// P40 战役二 T-05：概念族 SSOT 与派生逻辑同源于 derive-relations.js（同树单文件，不建第二知识系统）。
+var DR = require('./derive-relations.js');
 var RAW = path.join(ROOT, 'kbl', 'import', 'extract-raw.json');
 var COURSE_OUT = path.join(ROOT, 'kbl', 'canonical', 'course.json');
 var KNOW_OUT = path.join(ROOT, 'kbl', 'canonical', 'knowledge.json');
@@ -149,6 +151,8 @@ function derive() {
   var relations = [];
 
   // ---------- 4. capability / mappings（既有派生逻辑） ----------
+  DR.validateFamilyTable();
+  var stageOrders = DR.computeStageOrders(knowledge); // familyId + 族内 stageOrder（P40 T-05，375/375 回填）
   var capability = kps.map(function (k) {
     var s = (k.knowledgeName || '') + ' ' + (k.definition || '');
     var rng = ranges(s);
@@ -205,6 +209,8 @@ function derive() {
       numberRange: rng.max > 0 ? { descriptor: rng.descriptor, max: rng.max, numMax: rng.numMax } : null,
       operations: ops,
       families: fam,
+      familyId: (stageOrders[k.canonicalId] || {}).familyId || null,
+      stageOrder: (stageOrders[k.canonicalId] || {}).stageOrder || null,
       cognitiveLevel: cog,
       seedDifficulty: diff,
       maxSteps: steps,

@@ -420,6 +420,36 @@
   }
 
   /**
+   * P40-Q-08：轴对称补全格网——「补全轴对称图形」应用素材（方格网 + 对称轴 + 原侧关键点）。
+   * @param {Object} o { gridW, gridH, axisX, points:[[格x,格y],...], unitPx, axisLabel }
+   *  只画题设半图材料（原侧关键点实心圆点），不画对称侧——补全动作是题目所求，
+   *  画即泄题（P34 H6「只画题设材料」同款口径）；坐标以格为单位，axisX 为对称轴所在列。
+   */
+  function symmetryGrid(o) {
+    var cell = o.unitPx || 25;
+    var gw = o.gridW || 6, gh = o.gridH || 4;
+    var ax = o.axisX == null ? Math.floor(gw / 2) : o.axisX;
+    var w = gw * cell, h = gh * cell;
+    var inner = '';
+    for (var c = 0; c <= gw; c++) {
+      inner += U.svgLine(c * cell, 0, c * cell, h, { stroke: '#d8dee9', strokeWidth: 1 });
+    }
+    for (var r = 0; r <= gh; r++) {
+      inner += U.svgLine(0, r * cell, w, r * cell, { stroke: '#d8dee9', strokeWidth: 1 });
+    }
+    var axX = ax * cell;
+    inner += U.svgLine(axX, 0, axX, h, { stroke: '#e05252', strokeWidth: 2, dasharray: '6 4' });
+    if (o.axisLabel !== false) {
+      inner += U.svgText(axX, h + 16, '对称轴', { fontSize: 12, fill: '#e05252', 'text-anchor': 'middle' });
+    }
+    (o.points || []).forEach(function (p) {
+      if (!p || p[0] == null || p[1] == null) return;
+      inner += U.svgCircle(p[0] * cell, p[1] * cell, 4.5, { fill: '#3f6fd1', stroke: '#ffffff', strokeWidth: 1.5 });
+    });
+    return finish(inner, o);
+  }
+
+  /**
    * P38 断链修复：五角星——「角的概念」应用素材（贴纸/剪图情境）。
    * @param {Object} o { size(单位，外接半径), unitPx, fill }
    */
@@ -448,6 +478,7 @@
     tickMark: tickMark,
     positionGrid: positionGrid,
     viewCards: viewCards,
+    symmetryGrid: symmetryGrid,
     star: star,
     _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
@@ -461,6 +492,8 @@
   SVGGeometry['position-grid'] = positionGrid;
   // kebab 别名：描述符使用 'view-cards'（P35-CLOSE-01）
   SVGGeometry['view-cards'] = viewCards;
+  // kebab 别名：描述符使用 'symmetry-grid'（P40-Q-08）
+  SVGGeometry['symmetry-grid'] = symmetryGrid;
   if (SVGDiagram && typeof SVGDiagram.segment === 'function') {
     SVGGeometry.segment = SVGDiagram.segment;
   }

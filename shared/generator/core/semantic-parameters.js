@@ -127,6 +127,111 @@
     return _intentIndex[kpId + '|' + questionType] || null;
   }
 
+  // P40-Q-05：T2 misconception-profiles 只读投影（P30-31 misconceptionsFor 同构——
+  // 经 KnowledgeContext 单一入口；Node 直连兜底 loadTeaching。两源同出 kbl/teaching/misconception-profiles.json）。
+  // 轻量形态：仅透出干扰项桥可构造的 errorType/basis/feedback，不透出完整 slot（避免第二事实源膨胀）。
+  var _misconsIndex = null;
+  function getMiscons(kpId) {
+    try {
+      var KC = getGlobalKC();
+      if (KC && typeof KC.misconceptionsFor === 'function') {
+        var viaRuntime = KC.misconceptionsFor(kpId);
+        if (viaRuntime) return viaRuntime;
+      }
+    } catch (e) { /* runtime 不可达时走文件兜底 */ }
+    if (_misconsIndex === null) {
+      var doc = loadTeaching('misconception-profiles');
+      var index = {};
+      var kps = (doc && doc.kps) ? doc.kps : {};
+      for (var id in kps) {
+        if (Object.prototype.hasOwnProperty.call(kps, id)) index[id] = kps[id];
+      }
+      _misconsIndex = index;
+    }
+    return _misconsIndex[kpId] || null;
+  }
+
+  // P40-T-08：同族前序 KP（承上启下锚）——取现状 KP 前置入边中同 conceptFamily 且 stageOrder 最大者；
+  // name/definition 逐字来自 canonical（KC.get semantic.concept = canonical definition 镜像）；
+  // 无同族前序 → null（无前序不硬加）。definition 缺失或等于 name 时仅引用名称，不编造。
+  function getUpstream(kpId) {
+    try {
+      var KC = getGlobalKC();
+      if (!KC || typeof KC.get !== 'function' || typeof KC.relationsFor !== 'function') return null;
+      var cur = KC.get(kpId);
+      var curCf = cur && cur.semantic ? cur.semantic.conceptFamily : null;
+      if (!curCf || curCf.id == null || curCf.stageOrder == null) return null;
+      var inc = (KC.relationsFor(kpId, 'in') || {}).incoming || [];
+      var best = null;
+      for (var i = 0; i < inc.length; i++) {
+        var r = inc[i];
+        if (!r || r.relation !== 'prerequisite') continue;
+        var pk = KC.get(r.fromId);
+        var pf = pk && pk.semantic ? pk.semantic.conceptFamily : null;
+        if (!pf || pf.id !== curCf.id || pf.stageOrder == null || pf.stageOrder >= curCf.stageOrder) continue;
+        if (!best || pf.stageOrder > best.stageOrder) {
+          var def = pk.semantic && typeof pk.semantic.concept === 'string' ? pk.semantic.concept : null;
+          best = {
+            knowledgeId: r.fromId,
+            name: pk.name || null,
+            definition: (def && def !== (pk.name || '')) ? def : null,
+            familyId: pf.id,
+            stageOrder: pf.stageOrder
+          };
+        }
+      }
+      return best;
+    } catch (e) { return null; }
+  }
+
+  function projectMiscons(kpId) {
+    var raw = getMiscons(kpId);
+    if (!raw || !Array.isArray(raw.slots) || raw.slots.length === 0) return [];
+    return raw.slots.map(function (s) {
+      return { errorType: s.errorType || null, basis: s.basis || null, feedback: s.feedback || null };
+    });
+  }
+
+  // P40-Q-12：T2 情境语料库只读投影（P40-Q-05 miscons 同构——经 KnowledgeContext 单一入口
+  // contextLibrary；Node 直连兜底 loadTeaching。两源同出 kbl/teaching/context-library.json）。
+  // 仅透出 reviewStatus=confirmed 且 grade 命中的条目（needs-review 不具生成权威）；
+  // scenes 供 application.js 按 relation 锚选叙事，moneyEntries 供 money.js rmb apply 按 op 键选叙事。
+  var _ctxLib = null;
+  function getContextData(grade) {
+    if (_ctxLib === null) {
+      var doc = null;
+      try {
+        var KC = getGlobalKC();
+        if (KC && typeof KC.contextLibrary === 'function') doc = KC.contextLibrary();
+      } catch (e) { /* runtime 不可达时走文件兜底 */ }
+      if (!doc) doc = loadTeaching('context-library');
+      _ctxLib = (doc && Array.isArray(doc.scenes)) ? doc : null;
+    }
+    var empty = { scenes: [], moneyEntries: [] };
+    if (!_ctxLib) return empty;
+    // P40-Q-13：KP grade 形态为 'g5'（KnowledgeContext 口径），语料 grades 为数字数组——
+    // 先剥 g 前缀转数字，Number('g5')=NaN 会使全部过滤零命中（真实断链，定向测试覆盖）。
+    var gm = /^g(\d+)$/i.exec(String(grade));
+    var g = gm ? Number(gm[1]) : Number(grade);
+    var scenes = [];
+    _ctxLib.scenes.forEach(function (s) {
+      if (s && s.reviewStatus === 'confirmed' && Array.isArray(s.grades)
+        && s.grades.indexOf(g) !== -1 && s.narratives) {
+        scenes.push({ id: s.id, type: s.type, narratives: s.narratives });
+      }
+    });
+    var moneyEntries = [];
+    if (_ctxLib.moneyApp && Array.isArray(_ctxLib.moneyApp.entries)) {
+      _ctxLib.moneyApp.entries.forEach(function (e) {
+        if (e && e.reviewStatus === 'confirmed' && Array.isArray(e.grades)
+          && e.grades.indexOf(g) !== -1 && e.narratives) {
+          moneyEntries.push({ id: e.id, narratives: e.narratives });
+        }
+      });
+    }
+    return { scenes: scenes, moneyEntries: moneyEntries };
+  }
+
   /* ------------------------------------------------------------------ *
    * subTopic 机械派生规则
    *
@@ -340,6 +445,16 @@
         questionType: questionType || null,
         name: facts.name,
         concept: facts.concept || null,
+        // P40-Q-11：KP canonical definition 只读投影——runtime 镜像 semantic.concept 即
+        // kbl/canonical definition 的逐字发射（emit-canonical L71 def=k.definition）；
+        // definition 缺失时发射侧退化为 name，concept===name 形态不作为定义引用（置 null，
+        // 防名称冒充定义），生成器据 null 回退既有诚实解析形态（不编造）。
+        definition: (facts.concept && facts.concept !== facts.name) ? facts.concept : null,
+        // P40-T-08：同族前序锚（承上启下三段模板的引用源；无前序 → null，不硬加）
+        upstream: getUpstream(kpId),
+        // P40-Q-12：情境语料场景条目（KP grade 匹配 + reviewStatus=confirmed 过滤；
+        // { scenes: [...] 按 relation 锚, moneyEntries: [...] 按 op 锚 }，无命中/未装载为空数组）
+        contextScenes: getContextData(kp.grade),
         semanticFamily: primaryFamily,
         families: families,
         subTopic: derived.subTopic,
@@ -347,6 +462,8 @@
         operations: facts.operations.slice(),
         representations: facts.representations.slice(),
         kind: kind,
+        // P40-Q-05：KP 错误谱轻量投影（choice 干扰项迷思桥的读信号）
+        miscons: projectMiscons(kpId),
         intent: intent,
         expression: expression,
         graphic: graphic,
@@ -384,9 +501,22 @@
     return { resolve: resolve, attachToPlan: attachToPlan };
   }
 
+  // P40-T-08：解释承上启下三段模板——upstream「我们之前学过〈前序名〉（〈定义要点〉）」/
+  // bridge「把〈前序名〉和〈本课名〉结合起来看」/ current（生成器原有本题解析）。
+  // 引用文本逐字来自 canonical（upstream.name/definition 由 resolve 投影）；无前序不硬加。
+  function composeExplanation(parts) {
+    parts = parts || {};
+    var current = typeof parts.current === 'string' ? parts.current : '';
+    var up = parts.upstream, name = parts.name;
+    if (!up || !up.name || !name || up.name === name) return current;
+    var defCite = up.definition ? ('（' + up.definition + '）') : '';
+    return '我们之前学过〈' + up.name + '〉' + defCite + '。把〈' + up.name + '〉和〈' + name + '〉结合起来看：' + current;
+  }
+
   var singleton = createSemanticParameterResolver({});
 
   var api = {
+    composeExplanation: composeExplanation,
     SCHEMA_VERSION: SCHEMA_VERSION,
     SUBTOPIC_RULES: SUBTOPIC_RULES,
     createSemanticParameterResolver: createSemanticParameterResolver,

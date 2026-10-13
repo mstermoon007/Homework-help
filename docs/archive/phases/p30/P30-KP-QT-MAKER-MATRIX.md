@@ -13,18 +13,27 @@
 
 | 级别 | 行数 |
 |---|---|
-| target | 1236 |
-| format（债务） | 0 |
+| target | 1228 |
+| format（债务） | 8 |
 | target-frozen | 334 |
 
-KP 级分类：纯 target **305** / 混合 **0** / 纯 format **0** / 仅 frozen **70**。
+KP 级分类：纯 target **301** / 混合 **4** / 纯 format **0** / 仅 frozen **70**。
 
-format 债务行共 **0** 行 / **0** KP，按实际承载生成器：
+format 债务行共 **8** 行 / **4** KP，按实际承载生成器：
 
 | Generator | format 行数 |
 |---|---|
+| generator:reasoning | 8 |
 
 ## format 债务明细（逐格）
 
 | KP | QT | Generator | sample |
 |---|---|---|---|
+| math-g6-down-u05-k001 | apply | reasoning | 有4种颜色的球（红、黄、蓝、绿），至少要摸出多少个，才能保证有2个球颜色相同？ |
+| math-g6-down-u05-k001 | choice | reasoning | 有4种颜色的球（红、黄、蓝、绿），最少要摸出多少个，才能保证有2个球颜色相同？ 正确选项是哪一个 |
+| math-g6-down-u05-k002 | apply | reasoning | 有4种颜色的球（红、黄、蓝、绿），至少要摸出多少个，才能保证有2个球颜色相同？ |
+| math-g6-down-u05-k002 | choice | reasoning | 有4种颜色的球（红、黄、蓝、绿），最少要摸出多少个，才能保证有2个球颜色相同？ 正确选项是哪一个 |
+| math-g6-down-u05-k003 | apply | reasoning | 有4种颜色的球（红、黄、蓝、绿），至少要摸出多少个，才能保证有2个球颜色相同？ |
+| math-g6-down-u05-k003 | choice | reasoning | 有4种颜色的球（红、黄、蓝、绿），最少要摸出多少个，才能保证有2个球颜色相同？ 正确选项是哪一个 |
+| math-g6-down-u05-k004 | apply | reasoning | 有4种颜色的球（红、黄、蓝、绿），至少要摸出多少个，才能保证有2个球颜色相同？ |
+| math-g6-down-u05-k004 | choice | reasoning | 有4种颜色的球（红、黄、蓝、绿），最少要摸出多少个，才能保证有2个球颜色相同？ 正确选项是哪一个 |

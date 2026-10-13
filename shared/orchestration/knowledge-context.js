@@ -306,6 +306,27 @@
     return K.intentFor(knowledgeId, questionType) || null;
   }
 
+  /**
+   * P40-Q-12：情境语料库只读查询（T2 评审冻结产物；Generator application/money
+   * 经 semantic-parameters 消费，禁直读 kbl/teaching）。未装载 → null。
+   */
+  function contextLibrary() {
+    var K = getRuntime();
+    if (!K || typeof K.contextLibrary !== 'function') return null;
+    return K.contextLibrary() || null;
+  }
+
+  /**
+   * P40-T-08/T-10：前置关系只读查询（Strategy/Generator 经本通道消费，禁直连 App.KNOWLEDGE）。
+   * 透出 App.KNOWLEDGE.relationsFor(id, direction) 的 { outgoing, incoming }（含 evolution 字段）；
+   * 未装载 → 空集合（fail-closed，不猜测）。
+   */
+  function relationsFor(knowledgeId, direction) {
+    var K = getRuntime();
+    if (!K || typeof K.relationsFor !== 'function') return { outgoing: [], incoming: [] };
+    return K.relationsFor(knowledgeId, direction) || { outgoing: [], incoming: [] };
+  }
+
   function stats() {
     var K = getRuntime();
     if (!K || typeof K.stats !== 'function') return null;
@@ -342,7 +363,9 @@
     selectable: selectable,
     unit: unit,
     misconceptionsFor: misconceptionsFor,
+    relationsFor: relationsFor,
     intentFor: intentFor,
+    contextLibrary: contextLibrary,
     stats: stats
   };
 
