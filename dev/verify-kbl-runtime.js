@@ -8,8 +8,6 @@
  */
 'use strict';
 const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
 const ROOT = path.join(__dirname, '..');
 
 global.App = global.App || {};
@@ -42,15 +40,9 @@ assert('单元 98 / 关系 373 / 映射 1570', s.units === 98 && s.relations ===
 assert('permission 全 allow(canonical: 1570 allow)', s.permissions.allow === 1570 && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0);
 
 const manifest = require(path.join(ROOT, 'shared/knowledge/manifest/manifest.json'));
-// P30-31：与 tools/kbl/build.js DATA_RELS 保持一致（含 teaching/misconception-profiles.json）
-// P38-DATA-01：+ teaching/qt-intent-runtime.json（机器约束投影）
-// P40-Q-13：+ teaching/context-library.json（情境语料库，与 build.js DATA_RELS 对齐）
-const rels = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json', 'teaching/context-library.json'];
-const rootInput = rels.map(r => {
-  const b = fs.readFileSync(path.join(ROOT, 'shared/knowledge', r));
-  return r + ':' + crypto.createHash('sha256').update(b).digest('hex') + '\n';
-}).join('');
-const rootHash = crypto.createHash('sha256').update(rootInput).digest('hex');
+// P41-B1：rootHash 输入清单/算法以 tools/kbl/root-hash.js 为单一权威，禁止本地再维护副本。
+const RootHash = require(path.join(ROOT, 'tools', 'kbl', 'root-hash.js'));
+const rootHash = RootHash.computeRootHash(path.join(ROOT, 'shared', 'knowledge'));
 assert('rootHash 一致性: ' + rootHash.slice(0, 12), rootHash === manifest.integrity.rootHash);
 
 // ---- 2. Public API 白名单 ----

@@ -41,17 +41,31 @@ function hashInput(entries) {
   return sha(entries.join(''));
 }
 
+/** 从 baseDir 读取 DATA_RELS 全部文件，返回 { rel: sha256(text) } 映射（供逐文件比对） */
+function computeFileHashes(baseDir) {
+  var actual = {};
+  DATA_RELS.forEach(function (rel) {
+    actual[rel] = sha(fs.readFileSync(path.join(baseDir, rel), 'utf8'));
+  });
+  return actual;
+}
+
+/** 由 computeFileHashes 结果按 DATA_RELS 顺序拼装 entries */
+function entriesFrom(actual) {
+  return DATA_RELS.map(function (rel) { return rel + ':' + actual[rel] + '\n'; });
+}
+
 /** 从 baseDir 读取 DATA_RELS 全部文件并复算 rootHash */
 function computeRootHash(baseDir) {
-  var entries = DATA_RELS.map(function (rel) {
-    return rel + ':' + sha(fs.readFileSync(path.join(baseDir, rel), 'utf8')) + '\n';
-  });
-  return hashInput(entries);
+  var actual = computeFileHashes(baseDir);
+  return hashInput(entriesFrom(actual));
 }
 
 module.exports = {
   DATA_RELS: DATA_RELS,
   sha: sha,
   hashInput: hashInput,
+  computeFileHashes: computeFileHashes,
+  entriesFrom: entriesFrom,
   computeRootHash: computeRootHash
 };

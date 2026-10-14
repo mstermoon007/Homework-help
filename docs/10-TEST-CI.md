@@ -56,7 +56,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 2 | KBL | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | Lint | `dev/lint-check.js` | 静态质量 |
 | 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（328 文件） |
-| 5 | Unit | `npm test` | 全链测试（892/892） |
+| 5 | Unit | `npm test` | 全链测试（894/894） |
 | 6a | Generation | `dev/check-allow-generation.js` | 1570 真实生成 |
 | 6b | Generation | `dev/p28/check-generation-matrix-freeze.js` | 矩阵冻结 |
 | 6c | Generation | `dev/p28/check-generator-matrix.js` | Generator Registry |

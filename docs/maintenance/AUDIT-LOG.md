@@ -108,7 +108,7 @@
 - BLOCKED：1（Browser E2E：本机无 Chrome/Chromium）；服务器侧 HSTS（沿用 2026-10-13 记录，未在本战役复测）。
 - NOT TESTED：首屏性能实测（沿用上次）。
 
-明细（关键项）：`npm test` 892/892 PASS；`check-all` **32 PASS / 0 FAIL / 1 SKIP / 33 项**（#15 无 Chrome SKIP）；FINAL-91 只读快照 PASS；Bundle 16/17 PASS（`source==bundle`）；生成矩阵冻结 6a/6b PASS（1570 ALLOW）；KBL 血缘/质量门禁并入门禁链 PASS；难度 9a/9b PASS；文档一致性 20 PASS（26 文档）；LLM 19 PASS。
+明细（关键项）：`npm test` 894/894 PASS；`check-all` **32 PASS / 0 FAIL / 1 SKIP / 33 项**（#15 无 Chrome SKIP）；FINAL-91 只读快照 PASS；Bundle 16/17 PASS（`source==bundle`）；生成矩阵冻结 6a/6b PASS（1570 ALLOW）；KBL 血缘/质量门禁并入门禁链 PASS；难度 9a/9b PASS；文档一致性 20 PASS（26 文档）；LLM 19 PASS。
 
 ### 2. 必须修复（本战役）
 
@@ -117,14 +117,14 @@
 - 根因：与同类检查（`checkSemanticEvidence`/`checkTypeContract`/`checkIntentAlignment`）字段口径不一致的历史遗漏。
 - 修改文件：`shared/validator/kp-semantic-validator.js`、`shared/engine/presentation-engine.bundle.js`（重建）。
 - 修复内容：`var qt = sq.questionType || sq.questionTypeId || null;`，错误字段改 `questionType`，`generationCapabilities` 加 `|| []` 防御。
-- 验证结果：新增 8 回归用例；生成矩阵冻结 1570/1570 PASS；`npm test` 892/892。
+- 验证结果：新增 8 回归用例；生成矩阵冻结 1570/1570 PASS；`npm test` 894/894。
 
 **P41-A2｜含义：`attachMeta` 异常路径抛 `ReferenceError`（潜在生产崩溃）**
 - 问题：`if (!arr) return sq;` 中标识符 `sq` 未定义（形参为 `sqs`）。
 - 根因：变量名笔误。
 - 修改文件：`shared/generator/generator-selector.js`、`shared/engine/strategy-engine.bundle.js`（重建）。
 - 修复内容：`return sqs;`。
-- 验证结果：新增 4 边界回归用例；`npm test` 892/892。
+- 验证结果：新增 4 边界回归用例；`npm test` 894/894。
 
 **P41-B1｜含义：rootHash 无单一权威（两处各算，易漂移）**
 - 修改文件：新增 `tools/kbl/root-hash.js`；接入 `tools/kbl/build.js`、`dev/p30/check-kbl-lineage.js`、`dev/check-kbl-quality.js`、`dev/check-all.js`。
@@ -134,12 +134,20 @@
 **P41-B2｜含义：知识页 `--check` 非真实漂移检测（只报不判）**
 - 修改文件：`dev/build-knowledge-pages.js`（导出 `runCheck` 等 + `require.main` 守卫 + 退出码）。
 - 修复内容：真实只读漂移检测（缺页/无 kbgen/内容漂移/索引漂移/孤儿页），当前漂移 0。
-- 验证结果：新增 3 用例；`dev/p28/check-kbl-ai-boundary.js` 检查 B PASS。
+- 验证结果：新增 4 用例（含正文篡改负例）；`dev/p28/check-kbl-ai-boundary.js` 检查 B PASS。
 
 **P41-B3｜含义：随机分布卡方用例非确定（偶发 flaky）**
 - 修改文件：`tests/source/random-distribution.test.js`。
 - 修复内容：±10% 用例注入 `mulberry32(42)`；新增非阻塞真随机冒烟。
 - 验证结果：连续 3 次通过。
+
+**P41-F 签收前 5 点复验（补充发现并修复 2 处真实缺口）**
+- 反例有效性：A2 用例在旧实现下抛 `ReferenceError: sq is not defined`；A1 用例在旧实现（仅读 `questionTypeId`）下 3 条负例失败——均为真实反例。
+- 缺口①（rootHash 非单一权威）：`tools/kbl/validate.js`、`dev/verify-kbl-runtime.js` 仍各自硬编码 13 文件清单（内容当今相同但属漂移源）→ 迁移到 `tools/kbl/root-hash.js`（新增 `computeFileHashes/entriesFrom`）。修复后全仓仅 root-hash.js 定义清单；`validate`/`verify-kbl-runtime`/`lineage`/`quality` 复算一致 `3df605b9…`。
+- 缺口②（知识页正文漂移漏检）：`--check` 原仅比对页面内嵌 `kbgen:hash`（KBL 投影指纹），实测「正文篡改且指纹保留」漏检；已改为 KP 页全量内容比对（与索引页一致）。实测篡改正文 → `--check` exit 1「内容漂移」、AI 边界门禁 FAIL；只读性保持（knowledge/ 前后 hash 一致）。
+- 选项 C 零变更：两表命名互斥、取值未变；375 KP 与 rootHash 未变；公式仅含历史标识符修复。
+- 题型契约未扩范围：canonical 运行时实测恒为 7；`read-aloud` 仅 answerMode；新增真实 `PracticeSession` 运行链路用例。
+- Chrome E2E 分类：无 Chrome → exit 2 SKIP（不冒充 PASS）；`REQUIRE_BROWSER_E2E=1` 无 Chrome → exit 1 FAIL（实测）；发布前须在含 Chrome 环境补跑。
 
 ### 3. 架构与决策空间
 
@@ -159,14 +167,14 @@
 - 知识库：M0 + 血缘 + 数据质量 + 知识页漂移 0 + AI 边界 PASS。
 - 安全与隐私：12 Security PASS；答案防泄露 6g PASS。
 - 构建确定性：bundle 16/17 PASS；FINAL-91 只读快照 PASS。
-- 全量：`npm test` **892/892**（16 套件/93 文件）；`check-all` **32 PASS / 0 FAIL / 1 SKIP / 33 项**。
+- 全量：`npm test` **894/894**（16 套件/93 文件）；`check-all` **32 PASS / 0 FAIL / 1 SKIP / 33 项**。
 
 ### 6. 发布结论
 
 - 是否允许发布：**GO**（全部已确认缺陷闭合；门禁恢复可信；难度权威冲突经拍板冻结；零架构变更、零服务器部署）。
 - 发布版本 / Commit：5.2.0；基线 `5779805`，本战役修复提交哈希待用户确认后生成。
 - 回滚方式：`git revert` 本次提交。
-- 未解决问题：Browser E2E（BLOCKED，本机无 Chrome）；线上 HSTS（BLOCKED，待服务器授权）；题型谓词统一化（暂缓）；`docs/DESIGN-REPORT.md`（未跟踪受保护）残留旧计数 865/15/89（建议单独任务对齐）。
+- 未解决问题：Browser E2E（BLOCKED，本机无 Chrome；发布政策要求发布前须通过，须在含 Chrome 环境补验）；线上 HSTS（BLOCKED，待服务器授权）；题型谓词统一化（暂缓）。`docs/DESIGN-REPORT.md` 当前态计数已对齐（894/16/93、Syntax 328、门禁 33 项）。
 
 ### 备注（执行环境）
 

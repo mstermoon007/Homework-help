@@ -60,3 +60,25 @@ test('P41-B2 负例：页面内容被篡改 → 检出内容漂移', () => {
     assert.ok(drift.includes('内容漂移 ' + gc.knowledgeId + '.html'), '必须检出内容漂移：' + JSON.stringify(drift));
   } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
 });
+
+test('P41-B2 负例：正文被篡改但 kbgen 标记保留 → 仍必须检出（全量内容比对）', () => {
+  const gc = KC.selectable({ grade: 1 })[0];
+  const byGrade = { 1: [gc] };
+  const ids = { [gc.knowledgeId]: true };
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'p41b2-body-'));
+  const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'p41b2-seed-'));
+  try {
+    // 先以同一 byGrade 调用一次，令模块内 SAME_UNIT_MAP 与本次比对的投影一致。
+    BKP.runCheck(byGrade, ids, 1, empty);
+    const correct = BKP.buildPageHtml(gc, '1');
+    const tampered = correct.replace('</body>', '<p>注入漂移</p></body>'); // 保留 kbgen 标记
+    assert.notStrictEqual(tampered, correct);
+    fs.writeFileSync(path.join(tmp, gc.knowledgeId + '.html'), tampered, 'utf8');
+    const drift = BKP.runCheck(byGrade, ids, 1, tmp);
+    assert.ok(drift.includes('内容漂移 ' + gc.knowledgeId + '.html'),
+      '正文篡改（标记未变）也必须检出：' + JSON.stringify(drift));
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+    fs.rmSync(empty, { recursive: true, force: true });
+  }
+});

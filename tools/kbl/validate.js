@@ -15,7 +15,8 @@ var path = require('path');
 
 var ROOT = path.join(__dirname, '../../kbl');
 var DIST = path.join(__dirname, '../../shared/knowledge');
-var crypto = require('crypto');
+// P41-B1：rootHash 输入清单/算法以 tools/kbl/root-hash.js 为单一权威，禁止本地再维护副本。
+var RootHash = require('./root-hash.js');
 
 var kpSchema = require('../../shared/knowledge/schema/knowledge-schema.js');
 var maniSchema = require('../../shared/knowledge/schema/manifest-schema.js');
@@ -122,17 +123,13 @@ ok(permCount.forbid === 0 && permCount.degrade === 0 && permCount.missing === 0,
 // ---- V5: Dist Fingerprint（shared/knowledge manifest 重算） ----
 var distManifest = requireJson(path.join(DIST, 'manifest/manifest.json'));
 maniSchema.validate(distManifest).forEach(function (e) { errors.push(e); });
-// P40-Q-13：清单与 tools/kbl/build.js DATA_RELS 保持一致（+ teaching/context-library.json）
-var DATA_FILES = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json', 'teaching/qt-intent-runtime.json', 'teaching/context-library.json'];
+// P41-B1：输入清单来自 tools/kbl/root-hash.js（单一权威），不再本地硬编码。
 if (distManifest && distManifest.integrity) {
-  var actual = {};
-  DATA_FILES.forEach(function (rel) {
-    var text = fs.readFileSync(path.join(DIST, rel), 'utf8');
-    actual[rel] = crypto.createHash('sha256').update(text, 'utf8').digest('hex');
+  var actual = RootHash.computeFileHashes(DIST);
+  RootHash.DATA_RELS.forEach(function (rel) {
     ok(actual[rel] === distManifest.integrity.files[rel], 'dist 文件哈希不符: ' + rel);
   });
-  var rootInput = DATA_FILES.map(function (rel) { return rel + ':' + actual[rel] + '\n'; }).join('');
-  var rootHash = crypto.createHash('sha256').update(rootInput, 'utf8').digest('hex');
+  var rootHash = RootHash.hashInput(RootHash.entriesFrom(actual));
   ok(rootHash === distManifest.integrity.rootHash, 'rootHash 不符（重算 ' + rootHash.slice(0, 8) + '… ≠ manifest ' + (distManifest.integrity.rootHash || '').slice(0, 8) + '…）');
 } else {
   errors.push('dist manifest.integrity 缺失');

@@ -305,11 +305,11 @@ function runCheck(byGrade, selectableIds, total, outDir) {
   Object.keys(byGrade).forEach(function (g) {
     byGrade[g].forEach(function (kp) {
       var file = path.join(outDir, kp.knowledgeId + '.html');
-      var newHash = (buildPageHtml(kp, g).match(HASH_RE) || [])[1];
+      var expected = buildPageHtml(kp, g);
       if (!fs.existsSync(file)) { drift.push('缺失页面 ' + kp.knowledgeId + '.html'); return; }
-      var m = fs.readFileSync(file, 'utf8').match(HASH_RE);
-      if (!m) drift.push('无 kbgen 标记 ' + kp.knowledgeId + '.html');
-      else if (m[1] !== newHash) drift.push('内容漂移 ' + kp.knowledgeId + '.html');
+      var content = fs.readFileSync(file, 'utf8');
+      if (!HASH_RE.test(content)) drift.push('无 kbgen 标记 ' + kp.knowledgeId + '.html');
+      else if (content !== expected) drift.push('内容漂移 ' + kp.knowledgeId + '.html');
     });
   });
   var idxFile = path.join(outDir, 'knowledge-index.html');

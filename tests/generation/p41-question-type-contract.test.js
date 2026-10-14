@@ -83,3 +83,27 @@ test('D 未知题型：四层一致拒绝', () => {
   assert.strictEqual(factoryHasQuestionTypeError('nope'), true);
   assert.ok(Contract.validateSemanticQuestion(contractQuestion('nope')).errors.some((e) => e.includes('questionType')));
 });
+
+test('D 运行时链路：真实 PracticeSession 生成的题型恒 ∈ 7 类 canonical，read-aloud 不进入题型', async () => {
+  require(path.join(ROOT, 'dev', '_bundle-env.js'));
+  const PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
+  const KC = require(path.join(ROOT, 'shared', 'orchestration', 'knowledge-context.js'));
+  const kps = KC.selectable({ grade: 1 }).slice(0, 12);
+  let produced = 0;
+  for (const kp of kps) {
+    for (const qt of CANONICAL) {
+      const session = new PracticeSession({
+        subject: 'math', grade: 1, count: 1, difficulty: 3,
+        knowledgePointId: kp.knowledgeId, questionType: qt, seed: 'p41-d|' + kp.knowledgeId + '|' + qt
+      });
+      try { await session.start(); } catch (e) { continue; } // 该 KP 不支持该题型 → 跳过
+      (session.semanticQuestions || []).forEach((sq) => {
+        produced++;
+        assert.ok(CANONICAL.includes(sq.questionType), '运行时题型应属 canonical 7：' + sq.questionType);
+        assert.notStrictEqual(sq.questionType, 'read-aloud', 'read-aloud 不得作为题型出现');
+        assert.strictEqual(QTR.has(sq.questionType), true, '运行时题型应被 QTR 权威接受：' + sq.questionType);
+      });
+    }
+  }
+  assert.ok(produced >= 1, '运行时链路应至少产出一题（否则本护栏未生效）');
+});

@@ -50,7 +50,7 @@
 
 ### P41-B2 — 知识页 `--check` 真实漂移检测
 - `dev/build-knowledge-pages.js` 重构：导出 `main/runCheck/buildPageHtml/buildSameUnitMap/OUT_DIR`；`runCheck` 返回漂移数组（缺页 / 无 kbgen / 内容漂移 / 索引漂移 / 孤儿页）；`printCheck` 返回退出码；`main` 设 `process.exitCode`；`require.main` 守卫。
-- 当前仓库漂移 = 0。测试：`tests/source/build-knowledge-pages-check.test.js`（3 例）。
+- 当前仓库漂移 = 0。测试：`tests/source/build-knowledge-pages-check.test.js`（4 例，含正文篡改负例）。
 
 ### P41-B3 — 随机分布测试稳定化
 - `tests/source/random-distribution.test.js`：卡方 ±10% 用例改为注入 `mulberry32(42)` 确定性源（实测 13.46 / 101.68 / 1.98%）；新增非阻塞真随机冒烟（范围 + 命中全部桶 + 宽松卡方 < 60）。连续 3 次通过。
@@ -64,17 +64,30 @@
 - 决策记录：`docs/maintenance/P41-C-difficulty-anchor-decision.md`。
 
 ### P41-D — 跨层题型契约测试
-- `tests/generation/p41-question-type-contract.test.js`（5 例）锁定：7 类规范题型被 Schema/QTR/工厂/Contract 接受；别名被 Schema/QTR/Contract 接受但工厂拒绝（记录边界）；`read-aloud` 作为 questionType 被 Schema 拒绝、被工厂/Contract 接受，作为 answerMode 有效；未知题型被全网拒绝。
+- `tests/generation/p41-question-type-contract.test.js`（6 例）锁定：7 类规范题型被 Schema/QTR/工厂/Contract 接受；别名被 Schema/QTR/Contract 接受但工厂拒绝（记录边界）；`read-aloud` 作为 questionType 被 Schema 拒绝、被工厂/Contract 接受，作为 answerMode 有效；未知题型被全网拒绝；**新增真实运行时链路用例**（经 `PracticeSession` 实跑生成，断言产出题型恒 ∈ canonical 7）。
 
 ### P41-E — 知识关系离线研究
 - 报告：`docs/maintenance/P41-E-relations-research.md`。
 - 结论：373 边全部 `prerequisite` / `inferred:true` / `reviewStatus:'llm-finalized-dev'`；规则 R-REL-01 277、R-REL-02 58、R-REL-03 38；坏端点 0、环 0（DAG）；335 有后继 / 340 有前置 / 12 孤立；20 条跨年级（螺旋）边。建议不自动生成新边（ALLOW 共现 ≠ 前置）。
 
+## 2bis. 签收前 5 点重点核对（P41-F 复验，含新增加固）
+
+对 5 项签收判据逐条复验，发现并修复 2 处真实缺口：
+
+1. **缺陷反例有效**：A2 回归测试在旧实现（`return sq;`）下抛 `ReferenceError: sq is not defined`；A1 回归测试在旧实现（仅读 `questionTypeId`）下 3 条负例失败（校验静默 no-op）。均为真实反例，非「正常题仍通过」式空断言。
+2. **KBL 门禁真能发现错误**（新增加固）：
+   - rootHash 单一权威：发现 `tools/kbl/validate.js` 与 `dev/verify-kbl-runtime.js` 仍各硬编码一份 13 文件清单（当今相同但属漂移源）→ 已迁移到 `tools/kbl/root-hash.js`（新增 `computeFileHashes/entriesFrom`）。现全仓仅 root-hash.js 定义清单。
+   - 知识页 `--check`：原实现仅比对页面内嵌 `kbgen:hash` 指纹（KBL 投影指纹），**正文被篡改而指纹保留时不报警**（实测漏检）。已改为对 KP 页做全量内容比对（与索引页一致）；实测篡改正文 → `--check` exit 1「内容漂移」，AI 边界门禁随之 FAIL；`--check` 只读（knowledge/ 前后 hash 一致）。
+   - 随机分布确定化：仅对测试注入 `mulberry32(42)`，生产随机源未改、统计约束（卡方 ±10% + 真随机冒烟）保留。
+3. **选项 C 零行为变更**：两表显式命名且语义互斥；生产 `GRADE_DIFFICULTY_ANCHORS` 取值未变（1:[1,2]…6:[6,10]）；375 KP 数据与 rootHash `3df605b9…` 未变；公式仅含历史 `StrategyConfig` 标识符修复（前次审计 P1），非公式变更；解耦测试不再混用两表。
+4. **题型契约未扩范围**：canonical 恒为 7 类（`QTR.TYPES`/`Schema.QUESTION_TYPES` 运行时实测均 7，无 read-aloud）；`isValidQuestionType('read-aloud')===false`、`isValidAnswerMode('read-aloud')===true`。新增**真实运行时链路**测试：经 `PracticeSession` 实跑生成，断言产出题型恒 ∈ canonical 7 且绝不为 read-aloud。
+5. **Chrome E2E SKIP 分类准确**：`check-browser-e2e.js` 无 Chrome → exit 2 = SKIPPED（显式，不冒充 PASS）；发布环境 `REQUIRE_BROWSER_E2E=1` + 无 Chrome → exit 1 = FAIL（实测）。故本机 SKIP 是如实的环境限制，未描述为「已通过」；发布前须在有 Chrome 环境补跑该门禁。
+
 ## 3. 最终门禁证据
 
 | 门禁 | 结果 |
 |---|---|
-| `npm test` | **892 / 892 PASS / 0 FAIL**（16 套件 / 93 测试文件） |
+| `npm test` | **894 / 894 PASS / 0 FAIL**（16 套件 / 93 测试文件） |
 | `node dev/check-syntax.js` | 328 文件 / 0 错误 |
 | `node dev/lint-check.js` | PASS |
 | `npm run check-all` | **32 PASS / 0 FAIL / 1 SKIP / 33 项**（#15 Browser E2E 无 Chrome SKIP） |
@@ -91,7 +104,7 @@ KBL 规模：375 KP / 98 units / 373 relations / 1570 mappings。
 
 - **Browser E2E（#15）**：本机无 Chrome/Chromium → SKIP（记 BLOCKED）；设 `CHROME_BIN` 或将 chrome 置于 PATH 后可达 33 PASS。
 - **题型谓词统一化**：推迟（触及打包源 + bundle 重建决策），现状由 P41-D 契约测试冻结。
-- `docs/DESIGN-REPORT.md`（未跟踪）当前态计数已对齐（892/16/93、Syntax 328、门禁 33 项）；历史阶段快照（`docs/P31~P40`）按仓库纪律保留不改（见 `docs/P40/p40-final-closure.md` §立项时点快照不改）。
+- `docs/DESIGN-REPORT.md`（未跟踪）当前态计数已对齐（894/16/93、Syntax 328、门禁 33 项）；历史阶段快照（`docs/P31~P40`）按仓库纪律保留不改（见 `docs/P40/p40-final-closure.md` §立项时点快照不改）。
 - 服务器部署/nginx/SSH 不可用，未尝试。
 
 ## 5. 文件清单
@@ -110,10 +123,10 @@ KBL 规模：375 KP / 98 units / 373 relations / 1570 mappings。
 - `shared/validator/kp-semantic-validator.js`、`shared/generator/generator-selector.js`
 - `shared/strategy/difficulty-strategy.js`、`dev/difficulty-anchor-table.js`
 - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（随源重建）
-- `tools/kbl/build.js`
-- `dev/p30/check-kbl-lineage.js`、`dev/check-kbl-quality.js`、`dev/check-all.js`、`dev/build-knowledge-pages.js`
+- `tools/kbl/build.js`、`tools/kbl/validate.js`（rootHash 迁移至单一权威）
+- `dev/p30/check-kbl-lineage.js`、`dev/check-kbl-quality.js`、`dev/check-all.js`、`dev/build-knowledge-pages.js`、`dev/verify-kbl-runtime.js`（rootHash 迁移至单一权威）
 - `tests/validator/kp-semantic-validator.test.js`、`tests/source/random-distribution.test.js`、`tests/orchestration/difficulty-anchor.test.js`
-- `docs/00-BASELINE.md`、`docs/10-TEST-CI.md`（计数对齐 892/93/16/328、门禁 33 项）
+- `docs/00-BASELINE.md`、`docs/10-TEST-CI.md`（计数对齐 894/93/16/328、门禁 33 项）
 
 **受保护未覆盖（既有修改/未跟踪）**
 - `shared/generator/registry-facade.js`、`dev/p28/check-doc-consistency.js`、`docs/09-WEB-AI.md`（既有修改）
