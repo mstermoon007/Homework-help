@@ -19,8 +19,8 @@ const LEGACY_TOKENS = [
   { token: '1293', desc: '旧 Relations 计数（当前 373）' },
   { token: '639', desc: '旧 Mappings 计数（当前 1570）' },
   { token: '26 generators', desc: '旧 Generator 计数（当前 23）' },
-  { token: '239 tests', desc: '旧测试数（当前 865）' },
-  { token: '218 syntax', desc: '旧语法检查文件数（当前 323）' },
+  { token: '239 tests', desc: '旧测试数（当前 894）' },
+  { token: '218 syntax', desc: '旧语法检查文件数（当前 328）' },
 ];
 
 // 词边界正则：仅当 token 不被字母/数字包围时才算违规。
