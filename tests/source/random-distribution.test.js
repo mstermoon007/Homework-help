@@ -37,13 +37,17 @@ function mulberry32(seed) {
   };
 }
 
-test.describe('randInt 分布（真实 crypto 随机源）', () => {
-  test('randInt(1,10) 卡方均匀性检验（100k 样本，df=9, α=0.01）', () => {
+test.describe('randInt 分布（注入确定性 rng：统计口径可复现）', () => {
+  // P41-B3：原实现直接对真实 crypto 源做 α=0.01 卡方，理论误报率约 1–2%/次，
+  // 属 CI 偶发红灯。改为注入固定种子 rng（映射逻辑与生产完全相同），
+  // 统计结论确定可复现；真实 crypto 路径由下方「非阻塞 smoke」覆盖稳健性质。
+  test('randInt(1,10) 卡方均匀性检验（100k 样本，df=9, α=0.01，seed=42）', () => {
     const N = 100000;
     const k = 10;
     const observed = new Array(k).fill(0);
+    const r = mulberry32(42);
     for (let i = 0; i < N; i++) {
-      const v = randInt(1, 10);
+      const v = randInt(1, 10, r);
       assert.ok(v >= 1 && v <= 10, '应落在 [1,10]');
       observed[v - 1]++;
     }
@@ -52,11 +56,12 @@ test.describe('randInt 分布（真实 crypto 随机源）', () => {
     assert.ok(chi2 < CHI2_CRIT_01[9], '卡方应低于临界值 21.666（α=0.01），实际: ' + chi2.toFixed(3));
   });
 
-  test('每值频率落在期望值 ±10% 范围内（100k 样本）', () => {
+  test('每值频率落在期望值 ±10% 范围内（100k 样本，seed=42）', () => {
     const N = 100000;
     const k = 10;
     const observed = new Array(k).fill(0);
-    for (let i = 0; i < N; i++) observed[randInt(1, 10) - 1]++;
+    const r = mulberry32(42);
+    for (let i = 0; i < N; i++) observed[randInt(1, 10, r) - 1]++;
     const exp = N / k;
     for (let i = 0; i < k; i++) {
       assert.ok(observed[i] >= exp * 0.9 && observed[i] <= exp * 1.1,
@@ -64,14 +69,33 @@ test.describe('randInt 分布（真实 crypto 随机源）', () => {
     }
   });
 
-  test('大区间 randInt(0,99) 卡方均匀性（50k 样本，df=99, α=0.01）', () => {
+  test('大区间 randInt(0,99) 卡方均匀性（50k 样本，df=99, α=0.01，seed=42）', () => {
     const N = 50000;
     const k = 100;
     const observed = new Array(k).fill(0);
-    for (let i = 0; i < N; i++) observed[randInt(0, 99)]++;
+    const r = mulberry32(42);
+    for (let i = 0; i < N; i++) observed[randInt(0, 99, r)]++;
     const expected = new Array(k).fill(N / k);
     const chi2 = chiSquare(observed, expected);
     assert.ok(chi2 < CHI2_CRIT_01[99], '卡方应低于临界值 134.642（α=0.01），实际: ' + chi2.toFixed(3));
+  });
+});
+
+test.describe('randInt 真实 crypto 随机源（非阻塞 smoke：只验稳健性质）', () => {
+  // 真实 crypto 均匀性只做「灾难性偏置」粗判（chi²<60，约 12σ 裕度；均匀源几乎不可能触发），
+  // 避免把 1% 级理论误报带入 CI；精细均匀性由上面的确定性统计测试保证。
+  test('crypto 路径：范围合法 + 十桶全部命中 + 卡方粗界', () => {
+    const N = 100000;
+    const k = 10;
+    const observed = new Array(k).fill(0);
+    for (let i = 0; i < N; i++) {
+      const v = randInt(1, 10);
+      assert.ok(v >= 1 && v <= 10, '应落在 [1,10]');
+      observed[v - 1]++;
+    }
+    for (let i = 0; i < k; i++) assert.ok(observed[i] > 0, '值 ' + (i + 1) + ' 应至少出现一次');
+    const chi2 = chiSquare(observed, new Array(k).fill(N / k));
+    assert.ok(chi2 < 60, '卡方粗界（检出灾难性偏置），实际: ' + chi2.toFixed(3));
   });
 });
 

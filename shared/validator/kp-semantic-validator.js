@@ -106,11 +106,15 @@ function checkQuestionType(sq, kpConstraints) {
   if (!kpConstraints) return errors;
   
   var allowed = kpConstraints.presentationQuestionTypes || [];
-  var supported = kpConstraints.generationCapabilities.map(function(c){ return c.id; }) || [];
+  var supported = (kpConstraints.generationCapabilities || []).map(function(c){ return c.id; });
   var allAllowed = Array.from(new Set(allowed.concat(supported)));
   
-  if (allAllowed.length && sq.questionTypeId && allAllowed.indexOf(sq.questionTypeId) === -1) {
-    errors.push(createError(ERROR_CODES.KP_SEMANTIC_QUESTION_TYPE, 'questionTypeId', '题型 ' + sq.questionTypeId + ' 不在 KP 允许范围内: ' + allAllowed.join(','), SEVERITY.ERROR, { allowed: allAllowed, actual: sq.questionTypeId }));
+  // P41-A1：题型字段与其余检查（checkSemanticEvidence/checkTypeContract/checkIntentAlignment）同口径。
+  // SemanticQuestion 工厂写入 sq.questionType（见 semantic-question.js createSemanticQuestion），
+  // sq.questionTypeId 为兼容别名。此前仅读 sq.questionTypeId → 该检查对生产题目恒为 no-op。
+  var qt = sq.questionType || sq.questionTypeId || null;
+  if (allAllowed.length && qt && allAllowed.indexOf(qt) === -1) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_QUESTION_TYPE, 'questionType', '题型 ' + qt + ' 不在 KP 允许范围内: ' + allAllowed.join(','), SEVERITY.ERROR, { allowed: allAllowed, actual: qt }));
   }
   return errors;
 }

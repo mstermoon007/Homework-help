@@ -205,7 +205,9 @@ function markSemanticTarget(sqs, plan) {
 function attachMeta(sqs, generatorId, generatorVersion) {
   if (!sqs) return sqs;
   var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
-  if (!arr) return sq;
+  // P41-A2：方法参数为 sqs（不存在局部 sq）——原 `return sq;` 在「非数组且无 .questions」
+  // 输入下抛 ReferenceError。改回契约返回值 sqs（与 markSemanticTarget/TypeContract.enforce 一致）。
+  if (!arr) return sqs;
   arr.forEach(function (sq) {
     if (!sq) return;
     sq.metadata = sq.metadata || {};

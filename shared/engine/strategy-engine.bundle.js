@@ -1505,6 +1505,11 @@ var ComplexityStrategy = require("shared/strategy/complexity-strategy.js");
 
 
 
+
+
+
+
+
 var GRADE_DIFFICULTY_ANCHORS = {
   1: [1, 2],
   2: [2, 4],
@@ -1605,7 +1610,7 @@ function modeAdjustment(mode, grade, hasUserDifficulty, base) {
   if (MODE_PROFILE[mode] !== 'anchor-top') return 0;
   if (hasUserDifficulty) return 0;
   if (grade == null) return 0;
-  var anchor = StrategyConfig.difficultyAnchorOf(grade);
+  var anchor = difficultyAnchorOf(grade);
   if (!anchor) return 0;
   return Math.max(0, anchor[1] - base);
 }
@@ -1643,7 +1648,7 @@ function resolveComposedDifficulty(options) {
   var composedDifficulty = applyEffective(base + mAdj + qAdj + cAdj, 0);
 
   if (MODE_PROFILE[mode] === 'anchor-top' && options.grade != null) {
-    var anchor = StrategyConfig.difficultyAnchorOf(options.grade);
+    var anchor = difficultyAnchorOf(options.grade);
     if (anchor) composedDifficulty = Math.min(composedDifficulty, anchor[1]);
   }
 
@@ -4879,7 +4884,9 @@ function markSemanticTarget(sqs, plan) {
 function attachMeta(sqs, generatorId, generatorVersion) {
   if (!sqs) return sqs;
   var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
-  if (!arr) return sq;
+  
+  
+  if (!arr) return sqs;
   arr.forEach(function (sq) {
     if (!sq) return;
     sq.metadata = sq.metadata || {};

@@ -23,6 +23,8 @@ var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
 var ROOT = path.join(__dirname, '..');
+// P41-B1：rootHash 输入清单与算法从单一权威模块读取（曾因本文件硬编码 10 文件旧清单导致 Q9 误判）
+var RootHash = require(path.join(ROOT, 'tools', 'kbl', 'root-hash.js'));
 
 var Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
 var REG_TYPES = (Registry.TYPES || []).map(function (t) { return t.id; });
@@ -130,13 +132,10 @@ var runtimeOk = (function () {
 })();
 item('Q8 运行时 stats 一致(98/375/0/1570)', runtimeOk, 'runtime 未通过');
 
-// ---- Q9 释放包 rootHash 复算审计（复刻 build.js 算法：10 数据文件序 path:hash\n → sha256） ----
+// ---- Q9 释放包 rootHash 复算审计（与 build.js 共用 root-hash.js 权威算法） ----
 var hashOk = (function () {
   try {
-    var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json'];
-    var sha = function (s) { return crypto.createHash('sha256').update(s, 'utf8').digest('hex'); };
-    var rootInput = DATA_RELS.map(function (rel) { return rel + ':' + sha(fs.readFileSync(path.join(ROOT, 'shared', 'knowledge', rel), 'utf8')) + '\n'; }).join('');
-    var recomputed = sha(rootInput);
+    var recomputed = RootHash.computeRootHash(path.join(ROOT, 'shared', 'knowledge'));
     var distRoot = distManifest.integrity && distManifest.integrity.rootHash;
     return recomputed === manifest.rootHash && (!!distRoot && recomputed === distRoot);
   } catch (e) { return false; }

@@ -7,6 +7,12 @@
  *   G1 2-5 / G2 3-6 / G3 4-9 / G4 5-9 / G5 6-10 / G6 7-10
  * 语义：该年级 KP 的基础难度应落在锚点区间 [min,max]；区间随年级螺旋上升（非递减）。
  *
+ * P41-C 决策（选项 C·双表并存 + 显式命名）：
+ *   本表 = 「派生数据校验包络」，用于校验 KBL canonical seedDifficulty 是否落在合理区间
+ *   （与派生数据 100% 一致）。它【不是】生产难度策略锚点；
+ *   生产封顶锚点见 shared/strategy/difficulty-strategy.js 的 GRADE_DIFFICULTY_ANCHORS。
+ *   二者语义不同，不得互相替代或合并为单一权威。
+ *
  * 映射公式（1-5 相对难度 → 年级锚点区间绝对难度，线性展开、四舍五入）：
  *   abs = gMin + round((d - 1) * (gMax - gMin) / 4)
  * 性质：确定性可复算；保持相对排序（d 越大绝对难度越大）；结果恒 ∈ [gMin, gMax]。

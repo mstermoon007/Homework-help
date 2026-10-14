@@ -134,6 +134,8 @@ run('1.  Version      (SW 版本一致)', 'node scripts/sync-sw-version.js');
 // ── 2. KBL ──
 run('2.  KBL          (M0 聚合门禁)', 'node dev/verify-m0.js');
 run('    KBL         (AI 边界 + 页面漂移)', 'node dev/p28/check-kbl-ai-boundary.js');
+run('    KBL         (血缘门禁 lineage)', 'node dev/p30/check-kbl-lineage.js');
+run('    KBL         (数据质量质量门禁)', 'node dev/check-kbl-quality.js');
 
 // ── 3. Lint ──
 run('3.  Lint         (静态质量)', 'node dev/lint-check.js');

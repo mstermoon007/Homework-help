@@ -15,11 +15,11 @@ npm test   # node --test tests/**/*.test.js
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（42 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（44 文件） |
 | `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
-| `tests/source/` | 随机源 / 权重分配 / 随机分布（4 文件） |
+| `tests/source/` | 随机源 / 权重分配 / 随机分布 / KBL rootHash / 知识页漂移（6 文件） |
 | `tests/validator/` | 答案验证器（含安全）（4 文件） |
 | `tests/core/` | core 基础（1 文件） |
 | `tests/semantic/` | 语义治理（KBL 文档对齐、概念族地基）（3 文件） |
@@ -44,17 +44,19 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 9 步路径：首页 index.html → 快速练习 mode=quick → 教师模式 mode=teacher → 知识点入口（知识页 CTA 深链）→ 7 类题型（calc/fill/choice/judge/geometry/classify/apply）→ 生成 → 重新生成 → 刷新 → 打印。
 退出码约定：`0`=PASS / `1`=FAIL / `2`=SKIPPED。`check-all` 的 `run()` 据此将 exit 2 标记为 SKIPPED，不计入 FAIL。
 
-### 检查域清单（31 项 = 17 项核心 + 附加门禁 + FINAL-91）
+### 检查域清单（33 项 = 17 项核心 + KBL 血缘/质量 2 项 + 附加门禁 + FINAL-91）
 
-> 与 `dev/check-all.js` 逐一对应。合计口径：本地 30 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome SKIP）；CI 31 PASS / 0 FAIL / 0 SKIP。
+> 与 `dev/check-all.js` 逐一对应。合计口径：本地 32 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome SKIP）；CI 33 PASS / 0 FAIL / 0 SKIP。
 
 | # | 域 | 命令 | 作用 |
 |---|---|---|---|
 | 1 | Version | `scripts/sync-sw-version.js` | SW 版本一致 |
 | 2 | KBL | `dev/verify-m0.js` + `dev/p28/check-kbl-ai-boundary.js` | KBL M0 校验 + AI 边界 |
+| 2 | KBL | `dev/p30/check-kbl-lineage.js` | KBL 血缘门禁（Excel→canonical→runtime，含 rootHash 可复算） |
+| 2 | KBL | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | Lint | `dev/lint-check.js` | 静态质量 |
-| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（323 文件） |
-| 5 | Unit | `npm test` | 全链测试（864/864） |
+| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（328 文件） |
+| 5 | Unit | `npm test` | 全链测试（892/892） |
 | 6a | Generation | `dev/check-allow-generation.js` | 1570 真实生成 |
 | 6b | Generation | `dev/p28/check-generation-matrix-freeze.js` | 矩阵冻结 |
 | 6c | Generation | `dev/p28/check-generator-matrix.js` | Generator Registry |
@@ -132,7 +134,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 npm run check-all
 ```
 
-包含全部 31 项检查域（见 §2 清单）。CI 与本地使用同一入口。
+包含全部 33 项检查域（见 §2 清单）。CI 与本地使用同一入口。
 
 ### 何时跑 Full Gate
 

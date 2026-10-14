@@ -269,6 +269,74 @@ function indexJson(byGrade, total, generatedAt) {
   return JSON.stringify(doc, null, 2);
 }
 
+var SAME_UNIT_MAP = {};
+
+// P26-09：按 grade+unitName 派生同单元 KP 映射（不读 KBL.relations）
+function buildSameUnitMap(byGrade) {
+  var map = {};
+  Object.keys(byGrade).forEach(function (g) {
+    byGrade[g].forEach(function (kp) {
+      var key = g + '|' + (kp.unitName || '');
+      (map[key] = map[key] || []).push(kp.knowledgeId);
+    });
+  });
+  return map;
+}
+
+// 单一页面推导：build 与 check 共用，杜绝两套派生逻辑漂移
+function buildPageHtml(kp, g) {
+  var rel = runtime().relationsFor(kp.knowledgeId) || { outgoing: [], incoming: [] };
+  var prereq = (rel.outgoing || []).filter(function (r) { return r.type === 'prerequisite'; }).map(function (r) { return r.to || r.toId || r.knowledgeId; }).filter(Boolean);
+  var successor = (rel.incoming || []).filter(function (r) { return r.type === 'prerequisite'; }).map(function (r) { return r.from || r.fromId || r.knowledgeId; }).filter(Boolean);
+  // P26-09：同单元其他 KP（排除自身，最多 8 个）
+  var sameKey = g + '|' + (kp.unitName || '');
+  var sameUnitKps = (SAME_UNIT_MAP[sameKey] || []).filter(function (id) { return id !== kp.knowledgeId; }).slice(0, SAME_UNIT_LINK_CAP);
+  return pageHtml(kp, { prereq: prereq, successor: successor }, sameUnitKps);
+}
+
+// P41-B2：--check 真漂移检测（只读，不写盘）。
+// 缺陷：原实现仅打印计数并恒以退出码 0 结束，AI 边界门禁（check B）形同虚设。
+// 期望：缺失页 / 内容漂移 / 索引漂移 / 应剪除的孤儿页 任一存在即返回非空 drift（上层 exit 1）。
+// 返回 drift 列表（空数组=一致），便于门禁与单测复用；不产生副作用。
+function runCheck(byGrade, selectableIds, total, outDir) {
+  outDir = outDir || OUT_DIR;
+  SAME_UNIT_MAP = buildSameUnitMap(byGrade);
+  var drift = [];
+  Object.keys(byGrade).forEach(function (g) {
+    byGrade[g].forEach(function (kp) {
+      var file = path.join(outDir, kp.knowledgeId + '.html');
+      var newHash = (buildPageHtml(kp, g).match(HASH_RE) || [])[1];
+      if (!fs.existsSync(file)) { drift.push('缺失页面 ' + kp.knowledgeId + '.html'); return; }
+      var m = fs.readFileSync(file, 'utf8').match(HASH_RE);
+      if (!m) drift.push('无 kbgen 标记 ' + kp.knowledgeId + '.html');
+      else if (m[1] !== newHash) drift.push('内容漂移 ' + kp.knowledgeId + '.html');
+    });
+  });
+  var idxFile = path.join(outDir, 'knowledge-index.html');
+  if (!fs.existsSync(idxFile) || fs.readFileSync(idxFile, 'utf8') !== indexHtml(byGrade, total)) drift.push('索引漂移 knowledge-index.html');
+  var jsonFile = path.join(outDir, 'knowledge-index.json');
+  if (!fs.existsSync(jsonFile) || fs.readFileSync(jsonFile, 'utf8') !== indexJson(byGrade, total, kblGeneratedAt())) drift.push('索引漂移 knowledge-index.json');
+  if (fs.existsSync(outDir)) fs.readdirSync(outDir).forEach(function (name) {
+    if (!/\.html$/.test(name) || name === 'knowledge-index.html') return;
+    if (selectableIds[name.replace(/\.html$/, '')]) return;
+    if (HASH_RE.test(fs.readFileSync(path.join(outDir, name), 'utf8'))) drift.push('孤儿页面（应剪除） ' + name);
+  });
+  return drift;
+}
+
+function printCheck(byGrade, selectableIds, total) {
+  var drift = runCheck(byGrade, selectableIds, total, OUT_DIR);
+  console.log('知识页检查：selectable KP=' + total + '，漂移 ' + drift.length + ' 项');
+  if (drift.length) {
+    drift.slice(0, 20).forEach(function (d) { console.error('  ✗ ' + d); });
+    if (drift.length > 20) console.error('  … 其余 ' + (drift.length - 20) + ' 项省略');
+    console.error('FAIL — 知识页与 Runtime 数据不一致，请运行：node dev/build-knowledge-pages.js');
+    return 1;
+  }
+  console.log('PASS — 知识页与 Runtime 数据一致（read-only，未写盘）');
+  return 0;
+}
+
 function main() {
   var checkOnly = process.argv.indexOf('--check') !== -1;
   var byGrade = {};
@@ -281,50 +349,38 @@ function main() {
     list.forEach(function (kp) { selectableIds[kp.knowledgeId] = true; });
   });
 
-  // P26-09：按 grade+unitName 派生同单元 KP 映射（不读 KBL.relations）
-  var sameUnitMap = {};
-  Object.keys(byGrade).forEach(function (g) {
-    byGrade[g].forEach(function (kp) {
-      var key = g + '|' + (kp.unitName || '');
-      (sameUnitMap[key] = sameUnitMap[key] || []).push(kp.knowledgeId);
-    });
-  });
+  SAME_UNIT_MAP = buildSameUnitMap(byGrade);
+
+  if (checkOnly) { process.exitCode = printCheck(byGrade, selectableIds, total); return; }
 
   var written = 0, pruned = 0;
-  if (!checkOnly) {
-    Object.keys(byGrade).forEach(function (g) {
-      byGrade[g].forEach(function (kp) {
-        var rel = runtime().relationsFor(kp.knowledgeId) || { outgoing: [], incoming: [] };
-        var prereq = (rel.outgoing || []).filter(function (r) { return r.type === 'prerequisite'; }).map(function (r) { return r.to || r.toId || r.knowledgeId; }).filter(Boolean);
-        var successor = (rel.incoming || []).filter(function (r) { return r.type === 'prerequisite'; }).map(function (r) { return r.from || r.fromId || r.knowledgeId; }).filter(Boolean);
-        // P26-09：同单元其他 KP（排除自身，最多 8 个）
-        var sameKey = g + '|' + (kp.unitName || '');
-        var sameUnitKps = (sameUnitMap[sameKey] || []).filter(function (id) { return id !== kp.knowledgeId; }).slice(0, SAME_UNIT_LINK_CAP);
-        var html = pageHtml(kp, { prereq: prereq, successor: successor }, sameUnitKps);
-        var file = path.join(OUT_DIR, kp.knowledgeId + '.html');
-        var existing = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
-        var m = existing.match(HASH_RE);
-        var newHash = (html.match(HASH_RE) || [])[1];
-        if (!m || m[1] !== newHash) { fs.writeFileSync(file, html, 'utf8'); written++; }
-      });
+  Object.keys(byGrade).forEach(function (g) {
+    byGrade[g].forEach(function (kp) {
+      var html = buildPageHtml(kp, g);
+      var file = path.join(OUT_DIR, kp.knowledgeId + '.html');
+      var existing = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+      var m = existing.match(HASH_RE);
+      var newHash = (html.match(HASH_RE) || [])[1];
+      if (!m || m[1] !== newHash) { fs.writeFileSync(file, html, 'utf8'); written++; }
     });
-    fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.html'), indexHtml(byGrade, total), 'utf8');
-    fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.json'), indexJson(byGrade, total, kblGeneratedAt()), 'utf8');
+  });
+  fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.html'), indexHtml(byGrade, total), 'utf8');
+  fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.json'), indexJson(byGrade, total, kblGeneratedAt()), 'utf8');
 
-    // 剪除：带 kbgen 标记但不在本次产物集合的旧页（legacy ID 页 / 模块页）
-    fs.readdirSync(OUT_DIR).forEach(function (name) {
-      if (!/\.html$/.test(name)) return;
-      var full = path.join(OUT_DIR, name);
-      var base = name.replace(/\.html$/, '');
-      if (base === 'knowledge-index') return;
-      if (selectableIds[base]) return;
-      var content = fs.readFileSync(full, 'utf8');
-      if (HASH_RE.test(content)) { fs.unlinkSync(full); pruned++; }
-    });
-  }
+  // 剪除：带 kbgen 标记但不在本次产物集合的旧页（legacy ID 页 / 模块页）
+  fs.readdirSync(OUT_DIR).forEach(function (name) {
+    if (!/\.html$/.test(name)) return;
+    var full = path.join(OUT_DIR, name);
+    var base = name.replace(/\.html$/, '');
+    if (base === 'knowledge-index') return;
+    if (selectableIds[base]) return;
+    var content = fs.readFileSync(full, 'utf8');
+    if (HASH_RE.test(content)) { fs.unlinkSync(full); pruned++; }
+  });
 
   console.log('知识页构建：selectable KP=' + total + '，写入/更新 ' + written + '，剪除旧页 ' + pruned);
-  if (checkOnly) console.log('（--check 模式：仅统计，不写盘）');
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { main: main, runCheck: runCheck, buildPageHtml: buildPageHtml, buildSameUnitMap: buildSameUnitMap, OUT_DIR: OUT_DIR };

@@ -92,21 +92,21 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 测试文件 | **89** | `tests/**/*.test.js` |
-| 测试用例 | **864** | `npm test` |
-| PASS | **864** | 同上 |
+| 测试文件 | **93** | `tests/**/*.test.js` |
+| 测试用例 | **892** | `npm test` |
+| PASS | **892** | 同上 |
 | FAIL | **0** | 同上 |
-| 测试套件数 | 15 | 同上 |
+| 测试套件数 | 16 | 同上 |
 
 ### 测试目录分布
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（42 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（44 文件） |
 | `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
-| `tests/source/` | 随机源 / 权重分配 / 随机分布（4 文件） |
+| `tests/source/` | 随机源 / 权重分配 / 随机分布 / KBL rootHash / 知识页漂移（6 文件） |
 | `tests/validator/` | 答案验证器（含安全）（4 文件） |
 | `tests/core/` | core 基础（1 文件） |
 | `tests/semantic/` | 语义治理（KBL 文档对齐、概念族地基 T-02~T-07）（3 文件） |
@@ -132,7 +132,7 @@
 | AI Agent 可读取 | 375/375 页 200 + 服务端正文含名称+释义（无需 JS） | 同上 |
 | identity 正确 | 375/375 canonical == sitemap URL / ID 一致 / `<h1>` == KBL 名称 | 同上 |
 | → practice 可达 | 每个 KP 页含 `practice.html?kps={id}` 链接 | 同上 |
-| 六目录隔离 | `history/` `debug/` `archive/` `admin/` `test/` `staging/` 全部 `noindex, nofollow` | `dev/p28/check-seo-ai-history-isolation.js` |
+| 六目录隔离 | `archive/` `migration/` `audit-results/` `.trae/` `test/` `dev/` 全部 `noindex, nofollow` | `dev/p28/check-seo-ai-history-isolation.js` |
 
 ---
 
@@ -155,7 +155,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 8–9s（864 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 8–9s（892 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1570 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -186,15 +186,17 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 ## 门禁链
 
 唯一入口 `npm run check-all`（`dev/check-all.js`；`bash scripts/run-all-checks.sh` 委托同源，与 CI 等价）。
-**合计 31 项：本地 30 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome 时 SKIP）；CI 设 `CHROME_BIN` 为 31 PASS / 0 FAIL / 0 SKIP。**
+**合计 33 项：本地 32 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome 时 SKIP）；CI 设 `CHROME_BIN` 为 33 PASS / 0 FAIL / 0 SKIP。**
 
 | # | 命令 | 作用 |
 |---|---|---|
 | 1 | `scripts/sync-sw-version.js` | SW 版本一致性 |
 | 2 | `dev/verify-m0.js` + `dev/p28/check-kbl-ai-boundary.js` | M0 聚合门禁（8 步）+ KBL AI 边界 |
+| 2 | `dev/p30/check-kbl-lineage.js` | KBL 血缘门禁（Excel→canonical→runtime，含 rootHash 可复算） |
+| 2 | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | `dev/lint-check.js` | 静态质量 lint |
-| 4 | `dev/check-syntax.js` | 全项目 JS 语法（323 文件） |
-| 5 | `npm test` | 全链测试（864/864） |
+| 4 | `dev/check-syntax.js` | 全项目 JS 语法（328 文件） |
+| 5 | `npm test` | 全链测试（892/892） |
 | 6a | `dev/check-allow-generation.js` | 1570 ALLOW 真实生成 |
 | 6b | `dev/p28/check-generation-matrix-freeze.js` | 生成矩阵冻结 |
 | 6c | `dev/p28/check-generator-matrix.js` | Generator Registry |

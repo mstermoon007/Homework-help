@@ -81,3 +81,33 @@ test('映射公式 mapToAbs 单调（d=1..5 不递减，且落在锚点区间内
     }
   }
 });
+
+test('competition 合成难度受【生产策略锚点】上沿约束（P41-C：与派生校验表 Q6 解耦）', () => {
+  const DS = require(path.join(ROOT, 'shared', 'strategy', 'difficulty-strategy.js'));
+  // 生产封顶锚点（R5）——独立于本文件顶部用于 KBL 校验的派生包络表 ANCHOR（Q6）
+  const prodAnchor = DS.difficultyAnchorOf(1);
+  assert.ok(Array.isArray(prodAnchor), '生产策略应有 G1 锚点');
+  const r = DS.resolveComposedDifficulty({
+    base: 3, mode: 'competition', grade: 1, hasUserDifficulty: false, knowledgePoint: { grade: 1 }
+  });
+  assert.equal(r.composition.source, 'composed');
+  assert.equal(typeof r.composedDifficulty, 'number');
+  assert.ok(r.composedDifficulty >= 1 && r.composedDifficulty <= 10);
+  assert.ok(r.composedDifficulty <= prodAnchor[1], 'competition 合成难度不越过【生产】锚点上沿');
+});
+
+test('P41-C：生产封顶锚点与派生校验包络为两套不同权威（不得互校）', () => {
+  const DS = require(path.join(ROOT, 'shared', 'strategy', 'difficulty-strategy.js'));
+  // 至少一个年级两表区间不同，证明「双表并存」是有意的语义区分而非重复定义
+  let differs = false;
+  for (let g = 1; g <= 6; g++) {
+    const prod = DS.difficultyAnchorOf(g);
+    if (prod[0] !== ANCHOR[g][0] || prod[1] !== ANCHOR[g][1]) differs = true;
+  }
+  assert.ok(differs, '两表应存在差异（生产封顶策略 vs 派生数据包络）');
+  // 两表各自上沿随年级非递减（各自的内部不变量）
+  for (let g = 2; g <= 6; g++) {
+    assert.ok(DS.difficultyAnchorOf(g)[1] >= DS.difficultyAnchorOf(g - 1)[1], '生产锚点上沿应非递减');
+    assert.ok(ANCHOR[g][1] >= ANCHOR[g - 1][1], '派生包络上沿应非递减');
+  }
+});

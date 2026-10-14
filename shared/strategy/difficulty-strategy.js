@@ -23,10 +23,15 @@ var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 var ComplexityStrategy = require('./complexity-strategy.js');
 
-// ---- R5：年级难度锚点表（原 strategy-config.js，FINAL-16 内联；难度归属模块）----
+// ---- 生产难度合成封顶锚点（原 strategy-config.js，FINAL-16 内联；难度归属模块）----
 // 依据《技术文档--基础.md》§5 年级难度锚点（R5）：
 //   G1 1-2 / G2 2-4 / G3 3-5 / G4 4-7 / G5 5-8 / G6 6-10
-// 语义：该年级 KP 的基础难度应落在锚点区间 [min,max]；区间随年级螺旋上升。
+// 语义：anchor-top 模式（如 competition）合成难度按 min(composed, 本表上沿) 封顶。
+//
+// P41-C 决策（选项 C·双表并存 + 显式命名）：
+//   本表 = 「生产难度合成封顶策略锚点」，只用于策略封顶，不代表 KBL 派生数据的取值范围；
+//   与 dev/difficulty-anchor-table.js 的「派生数据校验包络（Q6）」为不同语义，
+//   二者不得互相替代、互校或合并为单一权威。难度公式属冻结范围，改动须先获授权。
 var GRADE_DIFFICULTY_ANCHORS = {
   1: [1, 2],
   2: [2, 4],
@@ -150,7 +155,7 @@ function modeAdjustment(mode, grade, hasUserDifficulty, base) {
   if (MODE_PROFILE[mode] !== 'anchor-top') return 0;
   if (hasUserDifficulty) return 0;
   if (grade == null) return 0;
-  var anchor = StrategyConfig.difficultyAnchorOf(grade);
+  var anchor = difficultyAnchorOf(grade);
   if (!anchor) return 0;
   return Math.max(0, anchor[1] - base);
 }
@@ -195,7 +200,7 @@ function resolveComposedDifficulty(options) {
   var composedDifficulty = applyEffective(base + mAdj + qAdj + cAdj, 0);
 
   if (MODE_PROFILE[mode] === 'anchor-top' && options.grade != null) {
-    var anchor = StrategyConfig.difficultyAnchorOf(options.grade);
+    var anchor = difficultyAnchorOf(options.grade);
     if (anchor) composedDifficulty = Math.min(composedDifficulty, anchor[1]);
   }
 

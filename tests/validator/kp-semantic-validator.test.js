@@ -81,6 +81,65 @@ test('P28-SEM-GATE-01 跳过：无 plan / 无 semanticParams.operations / 题目
   assert.strictEqual(KpSem.checkOperationSemanticGate({}, { semanticParams: { operations: ['+'] } }).length, 0, '题目无 data 跳过');
 });
 
+// ============ P41-A1：checkQuestionType 题型字段口径 ============
+// 缺陷：原实现仅读 sq.questionTypeId（工厂从不写该字段）→ 校验恒为 no-op。
+// 期望：以 canonical sq.questionType 为准，兼容 sq.questionTypeId 别名。
+const KP_CONSTRAINTS = {
+  presentationQuestionTypes: ['calc', 'fill'],
+  generationCapabilities: [{ id: 'calc' }],
+  operation: null, numericRange: null, structure: {},
+  factualContent: null, graphicType: null, spiral: {}
+};
+
+test('P41-A1 合法题型（sq.questionType ∈ KP 允许）→ 无错误', () => {
+  assert.strictEqual(KpSem.checkQuestionType({ questionType: 'calc' }, KP_CONSTRAINTS).length, 0);
+  assert.strictEqual(KpSem.checkQuestionType({ questionType: 'fill' }, KP_CONSTRAINTS).length, 0);
+});
+
+test('P41-A1 非法题型（sq.questionType ∉ KP 允许）→ 触发 KP_SEMANTIC_QUESTION_TYPE', () => {
+  const errs = KpSem.checkQuestionType({ questionType: 'judge' }, KP_CONSTRAINTS);
+  assert.strictEqual(errs.length, 1, 'judge 不在 [calc,fill] 内应报错');
+  assert.strictEqual(errs[0].code, 'KP_SEMANTIC_QUESTION_TYPE');
+  assert.strictEqual(errs[0].field, 'questionType');
+});
+
+test('P41-A1 兼容别名 sq.questionTypeId 仍被识别', () => {
+  assert.strictEqual(KpSem.checkQuestionType({ questionTypeId: 'fill' }, KP_CONSTRAINTS).length, 0, '别名 fill 合法');
+  const errs = KpSem.checkQuestionType({ questionTypeId: 'geometry' }, KP_CONSTRAINTS);
+  assert.strictEqual(errs.length, 1, '别名 geometry 非法应报错');
+});
+
+test('P41-A1 canonical 字段优先于别名（questionType 存在时以 questionType 为准）', () => {
+  // questionType 合法、questionTypeId 非法 → 以 canonical 字段判定，不误杀
+  assert.strictEqual(KpSem.checkQuestionType({ questionType: 'calc', questionTypeId: 'judge' }, KP_CONSTRAINTS).length, 0);
+});
+
+test('P41-A1 缺失题型 → 跳过（不抛错、不误判），由 schema 层负责必填', () => {
+  assert.deepStrictEqual(KpSem.checkQuestionType({}, KP_CONSTRAINTS), []);
+  assert.deepStrictEqual(KpSem.checkQuestionType({ questionType: null }, KP_CONSTRAINTS), []);
+});
+
+test('P41-A1 kpConstraints 缺失或无允许集 → 跳过（不越权判定）', () => {
+  assert.deepStrictEqual(KpSem.checkQuestionType({ questionType: 'judge' }, null), []);
+  assert.deepStrictEqual(KpSem.checkQuestionType({ questionType: 'judge' }, { presentationQuestionTypes: [], generationCapabilities: [] }), []);
+});
+
+test('P41-A1 聚合：validateKpSemantics 通过注入 kpConstraints 使非法题型进入 valid=false', () => {
+  const sq = { knowledgePointIds: ['kp-x'], questionType: 'judge', data: {} };
+  const plan = { knowledgePointIds: ['kp-x'], questionTypeId: 'judge' };
+  const r = KpSem.validateKpSemantics(sq, { plan: plan, kpId: 'kp-x', kpConstraints: KP_CONSTRAINTS });
+  assert.strictEqual(r.valid, false, '非法题型不再是静默放行');
+  assert.strictEqual(r.checks.questionType, 'fail');
+});
+
+test('P41-A1 聚合：错误 KP 关联（knowledgePointIds 与 plan 不一致）→ KP_SEMANTIC_IDENTITY', () => {
+  const sq = { knowledgePointIds: ['kp-a'], questionType: 'calc', data: {} };
+  const plan = { knowledgePointIds: ['kp-b'], questionTypeId: 'calc' };
+  const r = KpSem.validateKpSemantics(sq, { plan: plan, kpId: 'kp-b', kpConstraints: KP_CONSTRAINTS });
+  assert.strictEqual(r.valid, false);
+  assert.ok(r.errors.some(function (e) { return e.code === 'KP_SEMANTIC_IDENTITY'; }), '应含 KP 身份不一致错误');
+});
+
 // ============ P28-SEM-GATE-01：集成（validateKpSemantics warn-only 不阻断） ============
 test('P28-SEM-GATE-01 集成：运算不一致 → warning 但 valid 保持 true（warn-only）', () => {
   // 最小 sq + plan：kpConstraints=null 使 checkQuestionType/Numeric/Structure/Content 跳过；

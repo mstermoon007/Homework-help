@@ -28,7 +28,7 @@
       try {
         BaseRecords = require('./generator-registry.js');
       } catch (e) {
-        BaseRecords = (typeof require === 'function') ? null : null;
+        BaseRecords = null;
       }
     }
     return BaseRecords || { all: function () { return []; }, get: function () { return null; } };

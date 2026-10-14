@@ -25,14 +25,14 @@ SEO / AI / Crawler / LLM（只读消费）
 
 | 目录 | 内容 |
 |---|---|
-| `history/` | 历史静态页（旧版本、迭代快照） |
-| `debug/` | 调试诊断页 |
 | `archive/` | 归档资料 |
-| `admin/` | 后台/管理页 |
+| `migration/` | 迁移资料 |
+| `audit-results/` | 审计结果 |
+| `.trae/` | AI 辅助工具记忆 |
 | `test/` | 测试页 |
-| `staging/` | 预发布内容 |
+| `dev/` | 开发工具/脚本 |
 
-`robots.txt`：`Disallow: /history/ /debug/ /archive/ /admin/ /test/ /staging/`
+`robots.txt`：`Disallow: /archive/ /migration/ /audit-results/ /.trae/ /test/ /dev/`
 
 ### 三项要求
 

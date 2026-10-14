@@ -32,6 +32,8 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+// P41-B1：rootHash 输入清单与算法从单一权威模块读取（曾因本文件硬编码 10 文件旧清单导致 L6a 误判）
+const RootHash = require(path.join(__dirname, '..', '..', 'tools', 'kbl', 'root-hash.js'));
 
 function runLineageChecks(ROOT) {
   ROOT = ROOT || path.resolve(__dirname, '..', '..');
@@ -110,16 +112,7 @@ function runLineageChecks(ROOT) {
   // L6 manifest rootHash
   const kblManifest = readJson('kbl/manifest/manifest.json');
   const sharedManifest = readJson('shared/knowledge/manifest/manifest.json');
-  const DATA_RELS = ['data/math/curriculum.json',
-    'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json',
-    'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json',
-    'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json',
-    'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json'];
-  const recomputed = DATA_RELS.map(function (rel) {
-    return rel + ':' + crypto.createHash('sha256')
-      .update(fs.readFileSync(path.join(ROOT, 'shared', 'knowledge', rel))).digest('hex') + '\n';
-  }).join('');
-  const rootHashCalc = crypto.createHash('sha256').update(recomputed).digest('hex');
+  const rootHashCalc = RootHash.computeRootHash(path.join(ROOT, 'shared', 'knowledge'));
   check('L6a', 'shared manifest rootHash 可重算', rootHashCalc === (sharedManifest.integrity || {}).rootHash,
     rootHashCalc.slice(0, 12) + ' vs ' + ((sharedManifest.integrity || {}).rootHash || '').slice(0, 12));
   check('L6b', 'kbl manifest rootHash == shared manifest rootHash',
