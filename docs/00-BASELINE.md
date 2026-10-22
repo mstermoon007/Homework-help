@@ -92,9 +92,9 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 测试文件 | **93** | `tests/**/*.test.js` |
-| 测试用例 | **894** | `npm test` |
-| PASS | **894** | 同上 |
+| 测试文件 | **101** | `tests/**/*.test.js` |
+| 测试用例 | **936** | `npm test` |
+| PASS | **936** | 同上 |
 | FAIL | **0** | 同上 |
 | 测试套件数 | 16 | 同上 |
 
@@ -102,7 +102,7 @@
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（44 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染、P41/P42 真值回归（52 文件） |
 | `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
@@ -155,7 +155,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 8–9s（894 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 18s（936 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1570 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -186,7 +186,7 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 ## 门禁链
 
 唯一入口 `npm run check-all`（`dev/check-all.js`；`bash scripts/run-all-checks.sh` 委托同源，与 CI 等价）。
-**合计 33 项：本地 32 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome 时 SKIP）；CI 设 `CHROME_BIN` 为 33 PASS / 0 FAIL / 0 SKIP。**
+**合计 34 项：本地 33 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome 时 SKIP）；CI 设 `CHROME_BIN` 为 34 PASS / 0 FAIL / 0 SKIP。**
 
 | # | 命令 | 作用 |
 |---|---|---|
@@ -195,8 +195,8 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 | 2 | `dev/p30/check-kbl-lineage.js` | KBL 血缘门禁（Excel→canonical→runtime，含 rootHash 可复算） |
 | 2 | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | `dev/lint-check.js` | 静态质量 lint |
-| 4 | `dev/check-syntax.js` | 全项目 JS 语法（328 文件） |
-| 5 | `npm test` | 全链测试（894/894） |
+| 4 | `dev/check-syntax.js` | 全项目 JS 语法（342 文件） |
+| 5 | `npm test` | 全链测试（936/936） |
 | 6a | `dev/check-allow-generation.js` | 1570 ALLOW 真实生成 |
 | 6b | `dev/p28/check-generation-matrix-freeze.js` | 生成矩阵冻结 |
 | 6c | `dev/p28/check-generator-matrix.js` | Generator Registry |
@@ -222,6 +222,7 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 | 20 | `dev/p28/check-doc-consistency.js` | 历史数字扫描 |
 | 21 | `dev/p28/check-dead-code.js` | 死代码矩阵 |
 | 22 | `dev/p28/check-legacy-matrix.js` | Legacy 治理矩阵 |
+| 23 | `dev/p42/check-instance-gates.js` | 实例级质量（难度完整性 + 解析质量底线，P42-4） |
 | FINAL-91 | check-all 内建运行前后 hash 快照 | 只读门禁：CI 不得修改源码/测试/冻结文件（快照排除 `.DS_Store` 点文件） |
 
 ### M0 聚合门禁明细（`npm run verify`）

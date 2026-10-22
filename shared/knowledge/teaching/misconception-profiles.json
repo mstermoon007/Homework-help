@@ -15,18 +15,18 @@
   "counts": {
     "kps": 375,
     "kpsWithSlots": 313,
-    "slots": 969,
+    "slots": 971,
     "byErrorType": {
-      "概念混淆": 152,
+      "概念混淆": 153,
       "审题错误": 313,
-      "格式错误": 152,
+      "格式错误": 153,
       "步骤错误": 210,
       "计算错误": 82,
       "符号错误": 10,
       "单位错误": 39,
       "口诀混淆": 11
     },
-    "droppedByAxisEvidence": 661
+    "droppedByAxisEvidence": 659
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -7724,7 +7724,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -7743,7 +7743,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
         },
@@ -7792,7 +7792,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -7830,7 +7830,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -7849,7 +7849,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
         },
@@ -7898,7 +7898,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -7991,7 +7991,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -8010,7 +8010,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
         },
@@ -8059,7 +8059,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -10989,7 +10989,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -11000,7 +11000,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -13029,7 +13029,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -13078,7 +13078,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -13116,7 +13116,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -13165,7 +13165,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -13203,7 +13203,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -13252,7 +13252,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 1
+            "evidenceRows": 2
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -13333,6 +13333,23 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
+          "errorType": "概念混淆",
+          "basis": "semantic.family=decimal",
+          "triggerPattern": {
+            "questionTypes": [
+              "choice",
+              "judge",
+              "classify"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 2
+          },
+          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
+        },
+        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -13365,6 +13382,21 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        },
+        {
+          "errorType": "格式错误",
+          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
+          "triggerPattern": {
+            "questionTypes": [
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "基础",
+            "axis": "representation",
+            "evidenceRows": 2
+          },
+          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },

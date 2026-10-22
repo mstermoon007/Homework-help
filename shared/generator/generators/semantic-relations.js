@@ -722,6 +722,72 @@ function makePropGeometry(plan, context, i) {
       + '，树高 = ' + c.h1 + ' × ' + c.s2 + ' ÷ ' + c.s1 + ' = ' + h2 + ' 米');
 }
 
+/* ------------------------------------------------------------------
+ * P42-033：正/反比例名称信号分派 maker（跨 KP 错挂家族根因修复）
+ *
+ * proportion-application subTopic 覆盖 3 个 KP：k004 正比例 / k005 反比例 /
+ * k008 解决问题。既有 maker 表不区分名称——k005（反比例）的 calc/fill/choice
+ * 走正比例归一/行程/苹果模板，k004（正比例）的 apply 走排队反比例模板，语义错挂。
+ * 按 params.name 信号收窄（canonical 唯一：含「正比例」仅 k004、含「反比例」仅
+ * k005；k008「解决问题」不含两词零变化）。三题型异素材防跨题型 sim；
+ * 意图 graphicRole=null（正/反比例 fill/choice/apply/calc 实证），不挂图。
+ * ------------------------------------------------------------------ */
+
+/** 反比例 calc/fill/choice（总量一定：总量 = 每份数 × 份数） */
+function makeInversePropTyped(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  // calc→货运 / fill→装订 / choice→行船（[总量, 每份A, 份A, 每份B]，每份B 整除总量）
+  var cargo = [[24, 8, 3, 6], [30, 10, 3, 15], [24, 12, 2, 8]];
+  var bind = [[240, 40, 6, 30], [180, 30, 6, 36], [240, 60, 4, 48]];
+  var ship = [[360, 60, 6, 90], [240, 40, 6, 80], [360, 90, 4, 120]];
+  var c = Rng.pick(rng, qt === 'calc' ? cargo : (qt === 'fill' ? bind : ship));
+  var timesB = c[0] / c[3];
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'inverse',
+    total: c[0], perA: c[1], timesA: c[2], perB: c[3]
+  });
+  if (qt === 'calc') {
+    return finish(q, '列式计算：一批货物共 ' + c[0] + ' 吨，用载重 ' + c[1] + ' 吨的卡车运，正好 '
+      + c[2] + ' 次运完。如果改用载重 ' + c[3] + ' 吨的卡车运，要运多少次？列式：' + c[0] + ' ÷ ' + c[3]
+      + ' = ？（次）', timesB, [String(timesB)],
+      '货物总量一定，每辆载重与运的次数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB + '（次）');
+  }
+  if (qt === 'fill') {
+    return finish(q, '装订一批练习本，每本 ' + c[1] + ' 页，正好装订 ' + c[2]
+      + ' 本。如果每本 ' + c[3] + ' 页，可以装订（  ）本。', timesB, [String(timesB)],
+      '纸的总页数一定，每本页数与装订本数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB + '（本）');
+  }
+  // choice：行船过河（总人数一定）。P42-033：choice 分支此前漏设 q.prompt（buildBase
+  // 空串 → 校验拒绝 → 该行 0 产出），镜像 makePropChoice 在 finishChoice 前补题面。
+  q.prompt = '学校组织 ' + c[0] + ' 人去春游，原来每条船坐 ' + c[1] + ' 人，正好租了 '
+    + c[2] + ' 条船。如果改租每条坐 ' + c[3] + ' 人的船，需要多少条船？（  ）';
+  // P42-033 收口：船题答案单位用「条」与题面「多少条船」一致（初次收口误沿用
+  // 货运模板的「次」，属本批引入的单位混挂，非既有冻结行为）。
+  var wrongs = [timesB + 1, timesB + 2, Math.max(1, timesB - 1)];
+  return finishChoice(q, rng, timesB + ' 条',
+    [wrongs[0] + ' 条', wrongs[1] + ' 条', wrongs[2] + ' 条'],
+    '总人数一定，每船载客量与所需船数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB
+      + '（条），正确选项是「' + timesB + ' 条」。');
+}
+
+/** 正比例 apply（单价一定：彩带归一；替换既有排队反比例模板的错挂） */
+function makeDirectPropApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
+  var unit = Rng.pick(rng, [3, 4, 5, 6]);
+  var a = riC(rng, 2, 5, nr);
+  var b = riC(rng, 6, 9, nr);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    unitPrice: unit, lengthA: a, lengthB: b
+  });
+  return finish(q, '买 ' + a + ' 米彩带要 ' + (a * unit) + ' 元，买 ' + b + ' 米同样的彩带要多少元？',
+    b * unit, [String(b * unit)],
+    '彩带单价一定，总价与数量成正比例：先归一求单价 ' + (a * unit) + ' ÷ ' + a + ' = ' + unit
+      + ' 元，再算 ' + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
+}
+
 /* ================================================================
  * ⑤ scale-map（g6）：比例尺 = 图上距离∶实际距离（1∶n 求实际/图上距离）
  * ================================================================ */
@@ -989,6 +1055,17 @@ function createSemanticRelationsGenerator(spec) {
       var params = paramsOf(plan);
       var row = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
       var maker = row && row[plan.questionTypeId];
+      // P42-033：正/反比例名称信号分派（跨 KP 错挂家族根因修复，信号唯一性见
+      // makeInversePropTyped/makeDirectPropApply 注释）。
+      if (params && params.subTopic === 'proportion-application') {
+        var pName = params.name || '';
+        var qt0 = plan.questionTypeId;
+        if (pName.indexOf('反比例') !== -1 && (qt0 === 'calc' || qt0 === 'fill' || qt0 === 'choice')) {
+          maker = makeInversePropTyped;
+        } else if (pName.indexOf('正比例') !== -1 && qt0 === 'apply') {
+          maker = makeDirectPropApply;
+        }
+      }
       // fail-closed：语义参数缺失或该 subTopic×题型无 maker → 不产出，禁止猜测兜底
       if (!maker) return [];
       var out = [];

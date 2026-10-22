@@ -1,0 +1,15 @@
+{
+  "dataset": "kbl/teaching/golden-questions.json",
+  "total": 1114,
+  "stats": {
+    "total": 1114,
+    "PASS": 559,
+    "FAIL": 0,
+    "UNVERIFIED": 555
+  },
+  "checkedClauses": {
+    "prompt": 186,
+    "explanation": 537
+  },
+  "fails": []
+}

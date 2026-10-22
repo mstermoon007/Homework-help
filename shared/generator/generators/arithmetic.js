@@ -289,6 +289,101 @@ function buildCalcGraphic(qt, structure, answer) {
   return firstStep();
 }
 
+// P42-033：g6-up-u02-k003「分数、小数混合运算及运算律」专属 maker。此前该 KP 的
+// calc/fill/choice/apply/judge 行落入通用四则结构（整数连算，跨 KP 错挂家族根因）。
+// 名称信号「小数混合运算」为 canonical 连续子串唯一命中（g4-down-u06-k003「小数加减
+// 混合运算」不含该连续子串且不在 mixed 绑定内；g4-down-u03-k004「综合运用运算律」
+// 不含连续子串），零外溢。数族恒定整数精确：a×100=x（0.25×4=1、0.5×2=1、0.2×5=1、
+// 0.4×5=2），ax/ay/ans 全整数，judge finisher 加扰动安全。
+// 返回值镜像通用 pushedQ（difficultyParams/response/distractors 契约同源）。
+function makeFractionDecimalMixedQuestion(plan, context, i, seedFn, normOp) {
+  var constraints = plan.constraints || {};
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var MIXED_DEC_A = [0.25, 0.5, 0.2, 0.4];
+  var MIXED_DEC_PAIR = { '0.25': 4, '0.5': 2, '0.2': 5, '0.4': 5 };
+  var a = MIXED_DEC_A[i % 4];
+  var x = MIXED_DEC_PAIR[String(a)];
+  var k = Rng.pick(rng, [2, 3]);
+  var y = x * k;
+  var ah = Math.round(a * 100);
+  var axI = ah * x / 100;
+  var ayI = ah * y / 100;
+  var ansI = axI + ayI;
+  var qt = plan.questionTypeId;
+  var fullExpr = a + ' × (' + x + ' + ' + y + ')';
+  // 解析明写「运算律」「小数混合运算」token（跨题型语义回指）
+  var distWhy = '运用乘法分配律（运算律）：' + fullExpr + ' = ' + a + ' × ' + x + ' + ' + a + ' × ' + y
+    + ' = ' + axI + ' + ' + ayI + ' = ' + ansI + '。小数混合运算先观察数的特点，用运算律凑整更简便。';
+  var prompt, outAnswer, explanationText = distWhy;
+  var options = null;
+  var choiceDistractors = null;
+
+  if (qt === 'fill') {
+    // fill = 分配律过程填空（空系数），与 calc 直接求值承担不同 Assessment Target
+    prompt = '在 ____ 里填数（用运算律简便计算）：' + fullExpr + ' = ' + a + ' × ' + x + ' + ____ × ' + y + ' = ' + ansI;
+    outAnswer = a;
+    explanationText = distWhy + ' 空格里填 ' + a + '。';
+  } else if (qt === 'choice') {
+    // choice = 得数选式；干扰项为分配律常见错式（互异且≠答案，已逐组验算）
+    prompt = '下面哪个算式等于 ' + ansI + '？';
+    var correctExpr = fullExpr;
+    var cands = [a + ' × (' + (x + y + 1) + ')', a + ' + ' + x + ' + ' + y, (a + 1) + ' × (' + x + ' + ' + y + ')'];
+    options = Rng.shuffle(rng, [correctExpr].concat(cands));
+    outAnswer = correctExpr;
+    explanationText = distWhy + ' 正确选项是「' + correctExpr + '」。';
+    choiceDistractors = cands.map(function (e) { return { expr: e, errorType: null, source: 'adjacent-fallback' }; });
+  } else if (qt === 'apply') {
+    prompt = '每瓶矿泉水重 ' + a + ' 千克，甲箱装了 ' + x + ' 瓶，乙箱装了 ' + y + ' 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）';
+    outAnswer = ansI;
+    explanationText = distWhy + ' 两箱共重 ' + ansI + ' 千克。';
+  } else {
+    // calc / judge：judge 产 calc 形状交 finisher 转换（镜像 generic 路径）。
+    // P42-033：judge 经 finishJudge 转换后解析被机械解析覆盖（V5.1.0 冻结行为），
+    // 概念 token 通道改走题面前缀「用运算律简便计算」（转换保留前缀，进 P2 检索域）。
+    prompt = '用运算律简便计算：' + fullExpr + ' = ?';
+    outAnswer = ansI;
+  }
+
+  var q = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 20 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: seedFn(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(outAnswer), acceptable: [], explanation: explanationText },
+    answerMode: 'input',
+    response: { layout: 'inline-after-equals' },
+    hint: null,
+    data: { operation: normOp, steps: 2, distractors: choiceDistractors }
+  };
+  if (options) q.data.options = options;
+  // P42-033 修复补丁：镜像通用路径 P38 意图闸门（L503 intentWantsGraphic）——k003 全部
+  // 题型 intent.graphicRole=auxiliary/carrier 强制配图（kp-semantic-validator
+  // checkIntentAlignment fail-closed），此前本 maker 零 graphic → 4 行全部校验拒绝（0 产出）。
+  // 复用 buildCalcGraphic 同族 calculation-support 词汇：fill/choice 天平（结果已印题面，
+  // 空位值/正确算式不入图）、apply/calc/judge 首步分组图（每份 a × 份数 x，总量以？标记）。
+  if (intentWantsGraphic(plan)) {
+    if (qt === 'fill' || qt === 'choice') {
+      q.data.graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support',
+        params: { left: ansI, rightLabel: '？' } };
+    } else {
+      q.data.graphic = { type: 'diagram', subtype: 'groups', role: 'calculation-support',
+        params: { boxes: x, boxText: a, topText: '？' } };
+    }
+  }
+  return q;
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -355,6 +450,16 @@ function createArithmeticGenerator(spec) {
         if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId === 'geometry') {
           questions.push(makeFractionMultiplyGeometryQuestion(plan, context, i, seedFor));
           continue;
+        }
+        // P42-033：「分数、小数混合运算及运算律」其余题型走分配律专属 maker
+        // （此前落入通用四则结构，跨 KP 错挂家族根因；名称信号唯一性见 maker 注释）。
+        if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId !== 'geometry') {
+          var mixName = (plan.semanticParams && plan.semanticParams.name) || '';
+          if (mixName.indexOf('小数混合运算') !== -1) {
+            var normOpMix = Arith.normalizeOperation(context.operation || planOperationStr(plan) || op);
+            questions.push(makeFractionDecimalMixedQuestion(plan, context, i, seedFor, normOpMix));
+            continue;
+          }
         }
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);

@@ -40,7 +40,7 @@
     "genError": 0,
     "noSample": 0,
     "singleSample": 333,
-    "unknownNotObserved": 1031,
+    "unknownNotObserved": 1027,
     "byQt": {
       "fill": 313,
       "choice": 313,
@@ -51,11 +51,11 @@
       "classify": 25
     },
     "axisCoverage": {
-      "unknown": 292,
-      "numericVaries": 948,
-      "contextPresent": 1277,
-      "representationPresent": 656,
-      "structureMultiStep": 22
+      "unknown": 296,
+      "numericVaries": 945,
+      "contextPresent": 1278,
+      "representationPresent": 664,
+      "structureMultiStep": 21
     }
   },
   "rows": [
@@ -663,9 +663,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "21 减少 15 后是多少？",
-          "7 增加 1 后是多少？",
-          "18 增加 6 后是多少？"
+          "笔袋 21 元，橡皮比它便宜 15 元，橡皮多少元？",
+          "笔袋 7 元，书包比它贵 1 元，书包多少元？",
+          "笔袋 18 元，书包比它贵 6 元，书包多少元？"
         ]
       },
       "flags": [
@@ -708,9 +708,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 4，其中 1。\n问题：剩下多少？",
-          "已知条件：一共 22，其中 21。\n问题：剩下多少？",
-          "已知条件：25 和 25。\n问题：一共多少？"
+          "班级计划植 4 棵树，上午植了 1 棵。下午还要植多少棵？",
+          "班级计划植 22 棵树，上午植了 21 棵。下午还要植多少棵？",
+          "同学们植树，一班植了 25 棵，二班植了 25 棵。两个班一共植了多少棵？"
         ]
       },
       "flags": []
@@ -1503,8 +1503,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 16,
+          "answerMax": 69
         },
         "context": {
           "present": true,
@@ -1524,9 +1524,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "发牌时数到 43，它前一个是 42（43 − 1 = 42），后一个数是多少？",
-          "发牌时数到 22，它前一个是 21（22 − 1 = 21），后一个数是多少？",
-          "发牌时数到 15，它前一个是 14（15 − 1 = 14），后一个数是多少？"
+          "发牌时数到 43，它前一个是 42，后一个数是多少？（43 + 1 = ？）",
+          "发牌时数到 22，它前一个是 21，后一个数是多少？（22 + 1 = ？）",
+          "发牌时数到 15，它前一个是 14，后一个数是多少？（15 + 1 = ？）"
         ]
       },
       "flags": [
@@ -1818,9 +1818,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "6 与 13 相加，和是多少？",
-          "3 与 11 相加，和是多少？",
-          "17 与 5 相加，和是多少？"
+          "一班植 6 棵、二班植 13 棵，一共植多少棵？",
+          "买一支铅笔 3 元和一块橡皮 11 元，一共花多少钱？",
+          "一班植 17 棵、二班植 5 棵，一共植多少棵？"
         ]
       },
       "flags": [
@@ -1861,9 +1861,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：4 和 18。\n问题：一共多少？",
-          "已知条件：A 有 23，B 比 A 少 6。\n问题：B 有多少？",
-          "已知条件：一共 3，其中 1。\n问题：剩下多少？"
+          "同学们植树，一班植了 4 棵，二班植了 18 棵。两个班一共植了多少棵？",
+          "一个笔袋 23 元，一块橡皮比笔袋便宜 6 元。一块橡皮多少元？",
+          "班级计划植 3 棵树，上午植了 1 棵。下午还要植多少棵？"
         ]
       },
       "flags": [
@@ -1991,9 +1991,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 6 里去掉 2，还剩多少？",
-          "9 减少 1 后是多少？",
-          "16 减少 7 后是多少？"
+          "计划植 6 棵，已植 2 棵，还要植多少棵？",
+          "笔袋 9 元，橡皮比它便宜 1 元，橡皮多少元？",
+          "笔袋 16 元，橡皮比它便宜 7 元，橡皮多少元？"
         ]
       },
       "flags": [
@@ -2034,9 +2034,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 8，B 比 A 多 12。\n问题：B 有多少？",
-          "已知条件：A 有 12，B 比 A 多 8。\n问题：B 有多少？",
-          "已知条件：4 和 15。\n问题：一共多少？"
+          "一个笔袋 8 元，一个书包比笔袋贵 12 元。一个书包多少元？",
+          "一个笔袋 12 元，一个书包比笔袋贵 8 元。一个书包多少元？",
+          "同学们植树，一班植了 4 棵，二班植了 15 棵。两个班一共植了多少棵？"
         ]
       },
       "flags": [
@@ -2612,9 +2612,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -2642,12 +2640,14 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "9 与 26 相加，和是多少？",
-          "从 22 里去掉 5，还剩多少？",
-          "从 3 里去掉 1，还剩多少？"
+          "买一支铅笔 9 元和一块橡皮 26 元，一共花多少钱？",
+          "计划植 22 棵，已植 5 棵，还要植多少棵？",
+          "计划植 3 棵，已植 1 棵，还要植多少棵？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u06-k003",
@@ -2685,9 +2685,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 11，其中 8。\n问题：剩下多少？",
-          "已知条件：A 有 28，B 比 A 少 27。\n问题：B 有多少？",
-          "已知条件：28 和 2。\n问题：一共多少？"
+          "小红带了 11 元去买文具，买笔记本用去 8 元。还剩多少元？",
+          "一个笔袋 28 元，一块橡皮比笔袋便宜 27 元。一块橡皮多少元？",
+          "同学们植树，一班植了 28 棵，二班植了 2 棵。两个班一共植了多少棵？"
         ]
       },
       "flags": []
@@ -2879,7 +2879,7 @@
         },
         "samplePrompts": [
           "一本书2角，一本笔记本1分，买这两样东西一共需要多少钱？",
-          "小明买了一支笔，花了5角，又买了一块橡皮，花了2分，一共花了多少钱？",
+          "小红买了一个卷笔刀，花了5角，又买了一盒铅笔，花了2分，一共花了多少钱？",
           "一本书5角，一本笔记本5分，买这两样东西一共需要多少钱？"
         ]
       },
@@ -3269,8 +3269,8 @@
         },
         "samplePrompts": [
           "一本书2角，一本笔记本2角，买这两样东西一共需要多少钱？",
-          "小明买了一支笔，花了1角，又买了一块橡皮，花了5分，一共花了多少钱？",
-          "一本书5角，一本笔记本2角，买这两样东西一共需要多少钱？"
+          "小红买了一个卷笔刀，花了1角，又买了一盒铅笔，花了5分，一共花了多少钱？",
+          "一个书包5角，一个文具盒2角，买这两样东西一共需要多少钱？"
         ]
       },
       "flags": [
@@ -3483,9 +3483,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "3 减少 1 后是多少？",
-          "24 增加 1 后是多少？",
-          "7 增加 16 后是多少？"
+          "笔袋 3 元，橡皮比它便宜 1 元，橡皮多少元？",
+          "笔袋 24 元，书包比它贵 1 元，书包多少元？",
+          "笔袋 7 元，书包比它贵 16 元，书包多少元？"
         ]
       },
       "flags": []
@@ -3582,9 +3582,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：19 和 19。\n问题：一共多少？",
-          "已知条件：2 和 11。\n问题：一共多少？",
-          "已知条件：一共 12，其中 9。\n问题：剩下多少？"
+          "同学们植树，一班植了 19 棵，二班植了 19 棵。两个班一共植了多少棵？",
+          "同学们植树，一班植了 2 棵，二班植了 11 棵。两个班一共植了多少棵？",
+          "小红带了 12 元去买文具，买笔记本用去 9 元。还剩多少元？"
         ]
       },
       "flags": []
@@ -5392,9 +5392,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "3 与 19 相加，和是多少？",
-          "9 与 1 相加，和是多少？",
-          "19 增加 1 后是多少？"
+          "一班植 3 棵、二班植 19 棵，一共植多少棵？",
+          "一班植 9 棵、二班植 1 棵，一共植多少棵？",
+          "笔袋 19 元，书包比它贵 1 元，书包多少元？"
         ]
       },
       "flags": [
@@ -5435,9 +5435,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：3 和 8。\n问题：一共多少？",
-          "已知条件：A 有 12，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：A 有 19，B 比 A 多 1。\n问题：B 有多少？"
+          "小明在文具店买了一支铅笔，花了 3 元，又买了一块橡皮，花了 8 元。一共花了多少钱？",
+          "一个笔袋 12 元，一个书包比笔袋贵 1 元。一个书包多少元？",
+          "一个笔袋 19 元，一个书包比笔袋贵 1 元。一个书包多少元？"
         ]
       },
       "flags": [
@@ -5524,9 +5524,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "12 增加 2 后是多少？",
-          "5 增加 8 后是多少？",
-          "12 与 5 相加，和是多少？"
+          "笔袋 12 元，书包比它贵 2 元，书包多少元？",
+          "笔袋 5 元，书包比它贵 8 元，书包多少元？",
+          "买一支铅笔 12 元和一块橡皮 5 元，一共花多少钱？"
         ]
       },
       "flags": []
@@ -5567,9 +5567,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：5 和 5。\n问题：一共多少？",
-          "已知条件：A 有 17，B 比 A 少 14。\n问题：B 有多少？",
-          "已知条件：A 有 20，B 比 A 少 14。\n问题：B 有多少？"
+          "小明在文具店买了一支铅笔，花了 5 元，又买了一块橡皮，花了 5 元。一共花了多少钱？",
+          "一个笔袋 17 元，一块橡皮比笔袋便宜 14 元。一块橡皮多少元？",
+          "一个笔袋 20 元，一块橡皮比笔袋便宜 14 元。一块橡皮多少元？"
         ]
       },
       "flags": []
@@ -8192,9 +8192,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "16 增加 45 后是多少？",
-          "从 69 里去掉 2，还剩多少？",
-          "从 98 里去掉 38，还剩多少？"
+          "故事书 16 本，科技书比它多 45 本，科技书多少本？",
+          "计划植 69 棵，已植 2 棵，还要植多少棵？",
+          "计划植 98 棵，已植 38 棵，还要植多少棵？"
         ]
       },
       "flags": [
@@ -8235,9 +8235,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 92，B 比 A 多 2。\n问题：B 有多少？",
-          "已知条件：一共 22，其中 7。\n问题：剩下多少？",
-          "已知条件：A 有 32，B 比 A 少 24。\n问题：B 有多少？"
+          "一个笔袋 92 元，一个书包比笔袋贵 2 元。一个书包多少元？",
+          "班级计划植 22 棵树，上午植了 7 棵。下午还要植多少棵？",
+          "一个笔袋 32 元，一块橡皮比笔袋便宜 24 元。一块橡皮多少元？"
         ]
       },
       "flags": [
@@ -8294,7 +8294,9 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.correctIndex"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -8322,14 +8324,12 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "6 与 15 相加，和是多少？",
-          "从 11 里去掉 9，还剩多少？",
-          "4 与 2 相加，和是多少？"
+          "一班植 6 棵、二班植 15 棵，一共植多少棵？",
+          "带 11 元，用去 9 元，还剩多少元？",
+          "一班植 4 棵、二班植 2 棵，一共植多少棵？"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g2-down-u06-k001",
@@ -8365,9 +8365,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 3，其中 1。\n问题：剩下多少？",
-          "已知条件：A 有 7，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：一共 9，其中 5。\n问题：剩下多少？"
+          "班级计划植 3 棵树，上午植了 1 棵。下午还要植多少棵？",
+          "一个笔袋 7 元，一个书包比笔袋贵 1 元。一个书包多少元？",
+          "班级计划植 9 棵树，上午植了 5 棵。下午还要植多少棵？"
         ]
       },
       "flags": [
@@ -8454,7 +8454,7 @@
         },
         "samplePrompts": [
           "166 的 2 分之一是多少？",
-          "从 85 里去掉 17，还剩多少？",
+          "计划植 85 棵，已植 17 棵，还要植多少棵？",
           "20 个按每组 2 个分，能分几组？"
         ]
       },
@@ -8555,7 +8555,9 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.correctIndex"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -8583,14 +8585,12 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "21 增加 2 后是多少？",
-          "13 增加 3 后是多少？",
-          "16 增加 6 后是多少？"
+          "故事书 21 本，科技书比它多 2 本，科技书多少本？",
+          "故事书 13 本，科技书比它多 3 本，科技书多少本？",
+          "故事书 16 本，科技书比它多 6 本，科技书多少本？"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g2-down-u06-k003",
@@ -8629,9 +8629,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 28，其中 14。\n问题：剩下多少？",
-          "已知条件：A 有 19，B 比 A 少 4。\n问题：B 有多少？",
-          "已知条件：A 有 15，B 比 A 少 12。\n问题：B 有多少？"
+          "小红带了 28 元去买文具，买笔记本用去 14 元。还剩多少元？",
+          "班级图书角有 19 本连环画，童话书比连环画少 4 本。童话书有多少本？",
+          "班级图书角有 15 本连环画，童话书比连环画少 12 本。童话书有多少本？"
         ]
       },
       "flags": []
@@ -8715,9 +8715,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "4 增加 15 后是多少？",
-          "12 增加 4 后是多少？",
-          "22 与 22 相加，和是多少？"
+          "故事书 4 本，科技书比它多 15 本，科技书多少本？",
+          "故事书 12 本，科技书比它多 4 本，科技书多少本？",
+          "第一组收集 22 节、第二组收集 22 节，一共多少节？"
         ]
       },
       "flags": []
@@ -8756,9 +8756,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：13 和 3。\n问题：一共多少？",
-          "已知条件：A 有 25，B 比 A 多 2。\n问题：B 有多少？",
-          "已知条件：A 有 5，B 比 A 少 3。\n问题：B 有多少？"
+          "同学们植树，一班植了 13 棵，二班植了 3 棵。两个班一共植了多少棵？",
+          "三（1）班图书角有 25 本故事书，科技书比故事书多 2 本。科技书有多少本？",
+          "班级图书角有 5 本连环画，童话书比连环画少 3 本。童话书有多少本？"
         ]
       },
       "flags": [
@@ -8888,7 +8888,7 @@
         "samplePrompts": [
           "已知条件：一共 12，每组 6。\n问题：能分几组？",
           "已知条件：A 有 106，B 是 A 的 2 分之 1。\n问题：B 有多少？",
-          "已知条件：一共 15，其中 1。\n问题：剩下多少？"
+          "小红带了 15 元去买文具，买笔记本用去 1 元。还剩多少元？"
         ]
       },
       "flags": [
@@ -8976,9 +8976,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 20 里去掉 6，还剩多少？",
-          "14 与 27 相加，和是多少？",
-          "25 减少 9 后是多少？"
+          "计划植 20 棵，已植 6 棵，还要植多少棵？",
+          "买一支铅笔 14 元和一块橡皮 27 元，一共花多少钱？",
+          "笔袋 25 元，橡皮比它便宜 9 元，橡皮多少元？"
         ]
       },
       "flags": []
@@ -9017,9 +9017,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 21，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：一共 12，其中 1。\n问题：剩下多少？",
-          "已知条件：A 有 22，B 比 A 多 3。\n问题：B 有多少？"
+          "三（1）班图书角有 21 本故事书，科技书比故事书多 1 本。科技书有多少本？",
+          "班级计划植 12 棵树，上午植了 1 棵。下午还要植多少棵？",
+          "一个笔袋 22 元，一个书包比笔袋贵 3 元。一个书包多少元？"
         ]
       },
       "flags": [
@@ -12149,8 +12149,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0.00001,
-          "answerMax": 0.00001
+          "answerMin": 0.01,
+          "answerMax": 0.01
         },
         "context": {
           "present": true,
@@ -12207,7 +12207,7 @@
           "generator:money-measurement": 1
         },
         "samplePrompts": [
-          "单位换算填空：1厘米 = ____ 千米"
+          "单位换算填空：1厘米 = ____ 米"
         ]
       },
       "flags": [
@@ -12226,8 +12226,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0.013,
-          "answerMax": 0.013
+          "answerMin": 1300,
+          "answerMax": 1300
         },
         "context": {
           "present": true,
@@ -12284,7 +12284,7 @@
           "generator:money-measurement": 1
         },
         "samplePrompts": [
-          "13米 换算成 千米 是多少？"
+          "13米 换算成 厘米 是多少？"
         ]
       },
       "flags": [
@@ -12363,8 +12363,8 @@
           "generator:money-measurement": 4
         },
         "samplePrompts": [
-          "判断对错：16厘米 = ____ 毫米。有人说结果是 161，对还是错？",
-          "判断对错：4毫米 = ____ 米。有人说结果是 0.004，对还是错？",
+          "判断对错：16厘米 = ____ 米。有人说结果是 1.16，对还是错？",
+          "判断对错：4厘米 = ____ 米。有人说结果是 0.04，对还是错？",
           "判断对错：15厘米 = ____ 米。有人说结果是 1.15，对还是错？"
         ]
       },
@@ -14600,8 +14600,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": 4,
-          "answerMax": 56
+          "answerMin": 2,
+          "answerMax": 42
         },
         "context": {
           "present": true,
@@ -14623,9 +14623,9 @@
           "generator:reasoning": 6
         },
         "samplePrompts": [
-          "运用乘法口诀计算：8 × 7 = ?",
-          "用乘法口诀求商：32 ÷ 8 = ?",
-          "运用乘法口诀计算：9 × 2 = ?"
+          "用乘法口诀求商：56 ÷ 8 = ?",
+          "运用乘法口诀计算：8 × 4 = ?",
+          "用乘法口诀求商：18 ÷ 9 = ?"
         ]
       },
       "flags": [
@@ -14709,9 +14709,9 @@
           "generator:reasoning": 6
         },
         "samplePrompts": [
-          "下面哪个算式等于 48？",
-          "下面哪个算式等于 2？",
-          "下面哪个算式等于 56？"
+          "下面哪个算式等于 3？",
+          "下面哪个算式等于 36？",
+          "下面哪个算式等于 7？"
         ]
       },
       "flags": [
@@ -14728,9 +14728,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 5,
-          "answerMax": 64
+          "distinctAnswers": 5,
+          "answerMin": 6,
+          "answerMax": 56
         },
         "context": {
           "present": true,
@@ -14752,9 +14752,9 @@
           "generator:reasoning": 6
         },
         "samplePrompts": [
-          "每盒月饼有 8 个，买了 8 盒，一共有多少个月饼？",
-          "把 63 个笔记本平均分给 7 个小组，每个小组分得多少个？",
-          "有 40 个彩笔，每 8 个装一袋，可以装多少袋？"
+          "把 64 个月饼平均分给 8 个小组，每个小组分得多少个？",
+          "有 63 个笔记本，每 7 个装一袋，可以装多少袋？",
+          "每盒彩笔有 5 个，买了 8 盒，一共有多少个彩笔？"
         ]
       },
       "flags": [
@@ -14961,9 +14961,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "10 减少 3 后是多少？",
-          "从 19 里去掉 4，还剩多少？",
-          "13 减少 12 后是多少？"
+          "连环画 10 本，童话书比它少 3 本，童话书多少本？",
+          "计划植 19 棵，已植 4 棵，还要植多少棵？",
+          "笔袋 13 元，橡皮比它便宜 12 元，橡皮多少元？"
         ]
       },
       "flags": []
@@ -15063,9 +15063,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 24，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：A 有 17，B 比 A 多 3。\n问题：B 有多少？",
-          "已知条件：A 有 9，B 比 A 多 1。\n问题：B 有多少？"
+          "三（1）班图书角有 24 本故事书，科技书比故事书多 1 本。科技书有多少本？",
+          "三（1）班图书角有 17 本故事书，科技书比故事书多 3 本。科技书有多少本？",
+          "三（1）班图书角有 9 本故事书，科技书比故事书多 1 本。科技书有多少本？"
         ]
       },
       "flags": []
@@ -15530,7 +15530,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -15608,7 +15608,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -15684,7 +15684,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -15724,13 +15724,16 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.dx",
+            "data.steps"
+          ]
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 2,
+          "answerMin": 1,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -15739,26 +15742,23 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "2"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -15766,7 +15766,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -15780,19 +15780,16 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 2,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 2
         },
         "samplePrompts": [
-          "观察下图，书在小狗的什么方向？",
-          "观察下图，房子在球的什么方向？",
-          "观察下图，书包在球的什么方向？"
+          "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。",
+          "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g3-down-u01-k002",
@@ -15804,9 +15801,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 4,
+          "answerMin": 2,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -15815,26 +15812,29 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "-2",
+              "-3",
+              "1"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "-2",
+              "-3",
+              "1",
+              "2",
+              "3"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -15842,7 +15842,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -15861,9 +15861,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "小鸟在花朵的右边。请说一说花朵在小鸟的什么方向？",
-          "树在球的上面。请说一说球在树的什么方向？",
-          "书在椅子的上面。请说一说椅子在书的什么方向？"
+          "棋盘游戏：一枚棋子先向左平移 3 格，再向上平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 3 格，再向上平移 3 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 1 格，再向上平移 3 格。棋子一共平移了多少格？"
         ]
       },
       "flags": [
@@ -15912,7 +15912,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -15987,7 +15987,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -16065,7 +16065,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -16110,8 +16110,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 3,
+          "answerMax": 9
         },
         "context": {
           "present": true,
@@ -16120,26 +16120,31 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.cx",
+            "data.graphic.params.cy",
+            "data.graphic.params.deg",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.cx": [
+              "0"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.cy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
+            "data.graphic.params.deg": [
+              "-180",
+              "-270",
+              "-90",
+              "180",
+              "270",
+              "90"
             ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -16147,7 +16152,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"rotationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -16166,9 +16171,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "观察下图，球在小猫的什么方向？",
-          "观察下图，树在小狗的什么方向？",
-          "观察下图，书在树的什么方向？"
+          "看图：钟面上一根指针从数字 12 开始，绕中心顺时针旋转 180 度。指针指向数字 ____。",
+          "看图：钟面上一根指针从数字 12 开始，绕中心顺时针旋转 90 度。指针指向数字 ____。",
+          "看图：钟面上一根指针从数字 12 开始，绕中心逆时针旋转 180 度。指针指向数字 ____。"
         ]
       },
       "flags": [
@@ -16186,8 +16191,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 3,
+          "answerMax": 9
         },
         "context": {
           "present": true,
@@ -16196,26 +16201,31 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.cx",
+            "data.graphic.params.cy",
+            "data.graphic.params.deg",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.cx": [
+              "0"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.cy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
+            "data.graphic.params.deg": [
+              "-180",
+              "-270",
+              "-90",
+              "180",
+              "270",
+              "90"
             ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -16223,7 +16233,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"rotationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -16242,9 +16252,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "苹果在小鸟的上面。请说一说小鸟在苹果的什么方向？",
-          "苹果在花朵的右边。请说一说花朵在苹果的什么方向？",
-          "球在小鸟的右边。请说一说小鸟在球的什么方向？"
+          "钟面上，分针从数字 12 开始，绕中心逆时针旋转 180 度。分针指向数字 ____。",
+          "钟面上，分针从数字 12 开始，绕中心顺时针旋转 180 度。分针指向数字 ____。",
+          "钟面上，分针从数字 12 开始，绕中心顺时针旋转 270 度。分针指向数字 ____。"
         ]
       },
       "flags": [
@@ -22547,9 +22557,7 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -22577,12 +22585,14 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "每份 9 个，6 份一共多少个？",
-          "每份 5 个，4 份一共多少个？",
-          "6 个平均分给 3 人，每人几个？"
+          "饮料每瓶 9 元，买 6 瓶，一共多少元？",
+          "饮料每瓶 5 元，买 4 瓶，一共多少元？",
+          "6 棵树苗平均种到 3 块地，每块地种几棵？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g3-down-u08-k002",
@@ -22618,9 +22628,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：每份有 3 个，共有 2 份。\n问题：一共有多少个？",
-          "已知条件：一共 18 个，平均分给 2 人。\n问题：每人分得多少个？",
-          "已知条件：一共 28 个，平均分给 4 人。\n问题：每人分得多少个？"
+          "果园里栽了 2 行苹果树，每行 3 棵。果园一共栽了多少棵苹果树？",
+          "手工小组做了 18 朵纸花，平均布置 2 个展板。每个展板用多少朵？",
+          "苗圃把 28 棵树苗平均种到 4 块地里。每块地种多少棵？"
         ]
       },
       "flags": [
@@ -23168,9 +23178,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "17 减少 2 后是多少？",
-          "12 与 4 相加，和是多少？",
-          "10 减少 5 后是多少？"
+          "连环画 17 本，童话书比它少 2 本，童话书多少本？",
+          "买牛奶花 12 元、大米花 4 元，一共花多少元？",
+          "食用油 10 元一桶，盐比它便宜 5 元，盐多少元？"
         ]
       },
       "flags": []
@@ -23209,9 +23219,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 5，B 比 A 多 9。\n问题：B 有多少？",
-          "已知条件：10 和 20。\n问题：一共多少？",
-          "已知条件：一共 9，其中 5。\n问题：剩下多少？"
+          "果园里有 5 棵杏树，栽的柿子树比杏树多 9 棵。柿子树有多少棵？",
+          "小华家到学校有 10 米，学校到少年宫有 20 米。小华从家经过学校到少年宫，一共要走多少米？",
+          "小林家离图书馆 9 米，他已经走了 5 米。还剩多少米？"
         ]
       },
       "flags": [
@@ -25200,9 +25210,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "13 与 32 相加，和是多少？",
-          "28 减少 18 后是多少？",
-          "2 与 19 相加，和是多少？"
+          "第一组收集 13 节、第二组收集 32 节，一共多少节？",
+          "食用油 28 元一桶，盐比它便宜 18 元，盐多少元？",
+          "第一组收集 2 节、第二组收集 19 节，一共多少节？"
         ]
       },
       "flags": [
@@ -25245,9 +25255,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 22，B 比 A 少 15。\n问题：B 有多少？",
-          "已知条件：A 有 6，B 比 A 多 6。\n问题：B 有多少？",
-          "已知条件：A 有 22，B 比 A 少 17。\n问题：B 有多少？"
+          "班级图书角有 22 本连环画，童话书比连环画少 15 本。童话书有多少本？",
+          "果园里有 6 棵杏树，栽的柿子树比杏树多 6 棵。柿子树有多少棵？",
+          "一桶食用油 22 元，一袋盐比食用油便宜 17 元。一袋盐多少元？"
         ]
       },
       "flags": []
@@ -27072,9 +27082,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 16 里去掉 1，还剩多少？",
-          "6 增加 13 后是多少？",
-          "19 增加 1 后是多少？"
+          "拿 16 元，买水果用去 1 元，还剩多少元？",
+          "杏树 6 棵，柿子树比它多 13 棵，柿子树多少棵？",
+          "故事书 19 本，科技书比它多 1 本，科技书多少本？"
         ]
       },
       "flags": [
@@ -27115,9 +27125,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 14，B 比 A 多 4。\n问题：B 有多少？",
-          "已知条件：A 有 20，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：一共 11，其中 6。\n问题：剩下多少？"
+          "果园里有 14 棵杏树，栽的柿子树比杏树多 4 棵。柿子树有多少棵？",
+          "一袋大米 20 元，一桶食用油比大米贵 1 元。一桶食用油多少元？",
+          "王阿姨拿 11 元去超市，买水果用去 6 元。还剩多少元？"
         ]
       },
       "flags": [
@@ -31241,9 +31251,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 12 里去掉 11，还剩多少？",
-          "从 14 里去掉 1，还剩多少？",
-          "24 减少 18 后是多少？"
+          "全程 12 米，已走 11 米，还剩多少米？",
+          "拿 14 元，买水果用去 1 元，还剩多少元？",
+          "食用油 24 元一桶，盐比它便宜 18 元，盐多少元？"
         ]
       },
       "flags": []
@@ -31346,9 +31356,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：10 和 4。\n问题：一共多少？",
-          "已知条件：A 有 11，B 比 A 少 1。\n问题：B 有多少？",
-          "已知条件：A 有 7，B 比 A 多 18。\n问题：B 有多少？"
+          "小华家到学校有 10 米，学校到少年宫有 4 米。小华从家经过学校到少年宫，一共要走多少米？",
+          "小明每分钟走 11 米，小刚每分钟比小明慢走 1 米。小刚每分钟走多少米？",
+          "果园里有 7 棵杏树，栽的柿子树比杏树多 18 棵。柿子树有多少棵？"
         ]
       },
       "flags": []
@@ -31927,6 +31937,7 @@
       "variation": {
         "unknown": {
           "positions": [
+            "data.correctIndex",
             "data.steps"
           ]
         },
@@ -31956,9 +31967,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 16 里去掉 6，还剩多少？",
-          "17 减少 9 后是多少？",
-          "从 14 里去掉 6，还剩多少？"
+          "全程 16 米，已走 6 米，还剩多少米？",
+          "小明每分钟走 17 米，小刚比他每分钟慢 9 米，小刚每分钟走多少米？",
+          "拿 14 元，买水果用去 6 元，还剩多少元？"
         ]
       },
       "flags": []
@@ -31997,9 +32008,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 5，B 比 A 少 3。\n问题：B 有多少？",
-          "已知条件：一共 13，其中 9。\n问题：剩下多少？",
-          "已知条件：一共 16，其中 3。\n问题：剩下多少？"
+          "一桶食用油 5 元，一袋盐比食用油便宜 3 元。一袋盐多少元？",
+          "车间计划生产 13 个零件，已经生产了 9 个。还差多少个？",
+          "王阿姨拿 16 元去超市，买水果用去 3 元。还剩多少元？"
         ]
       },
       "flags": [
@@ -36859,8 +36870,42 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.params.op",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.4\"",
+              "\"1.5\"",
+              "\"2.5\"",
+              "\"2.7\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.2\"",
+              "\"1.4\"",
+              "\"1.9\"",
+              "\"2.4\""
+            ],
+            "data.graphic.params.op": [
+              "\"+\"",
+              "\"−\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"dec\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -37066,8 +37111,43 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.params.op",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.1\"",
+              "\"1.6\"",
+              "\"2.3\"",
+              "\"2.5\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.1\"",
+              "\"1.2\"",
+              "\"1.8\"",
+              "\"2\"",
+              "\"2.2\""
+            ],
+            "data.graphic.params.op": [
+              "\"+\"",
+              "\"−\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"dec\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -37445,8 +37525,43 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.params.op",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.5\"",
+              "\"1.8\"",
+              "\"2.5\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.1\"",
+              "\"1.2\"",
+              "\"1.7\"",
+              "\"1.8\"",
+              "\"2.1\"",
+              "\"2.2\""
+            ],
+            "data.graphic.params.op": [
+              "\"+\"",
+              "\"−\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"dec\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -38324,7 +38439,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38403,7 +38518,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38479,7 +38594,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38519,13 +38634,15 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.dx"
+          ]
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 2,
+          "answerMin": 2,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -38534,26 +38651,23 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-3",
+              "2"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -38561,7 +38675,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -38575,19 +38689,16 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 2,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 2
         },
         "samplePrompts": [
-          "观察下图，花朵在球的什么方向？",
-          "观察下图，椅子在房子的什么方向？",
-          "观察下图，球在花朵的什么方向？"
+          "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。",
+          "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g4-down-u07-k003",
@@ -38600,8 +38711,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 2,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -38610,26 +38721,30 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "-2",
+              "1",
+              "2",
+              "3"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "-2",
+              "-3",
+              "1",
+              "2",
+              "3"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -38637,7 +38752,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -38656,9 +38771,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "苹果在小猫的右边。请说一说小猫在苹果的什么方向？",
-          "小狗在树的上面。请说一说树在小狗的什么方向？",
-          "书包在苹果的左边。请说一说苹果在书包的什么方向？"
+          "棋盘游戏：一枚棋子先向右平移 3 格，再向下平移 3 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向右平移 2 格，再向下平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 2 格，再向上平移 2 格。棋子一共平移了多少格？"
         ]
       },
       "flags": [
@@ -38710,7 +38825,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38790,7 +38905,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38866,7 +38981,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -38906,13 +39021,15 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.dx"
+          ]
         },
         "numeric": {
-          "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": 2,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -38921,26 +39038,23 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-2",
+              "2"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -38948,7 +39062,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -38962,19 +39076,16 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 2,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 2
         },
         "samplePrompts": [
-          "观察下图，书在树的什么方向？",
-          "观察下图，书在花朵的什么方向？",
-          "观察下图，桌子在花朵的什么方向？"
+          "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。",
+          "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g4-down-u07-k004",
@@ -38986,9 +39097,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 2,
+          "answerMin": 4,
+          "answerMax": 5
         },
         "context": {
           "present": true,
@@ -38997,26 +39108,28 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "-2",
+              "-3",
+              "2"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "-1",
+              "-2",
+              "-3",
+              "2"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -39024,7 +39137,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -39043,9 +39156,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "书在树的上面。请说一说树在书的什么方向？",
-          "书在苹果的下面。请说一说苹果在书的什么方向？",
-          "苹果在小狗的下面。请说一说小狗在苹果的什么方向？"
+          "棋盘游戏：一枚棋子先向左平移 2 格，再向上平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 3 格，再向上平移 1 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向右平移 2 格，再向下平移 2 格。棋子一共平移了多少格？"
         ]
       },
       "flags": [
@@ -39095,7 +39208,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -39175,7 +39288,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -39250,7 +39363,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -39290,13 +39403,16 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.dx",
+            "data.steps"
+          ]
         },
         "numeric": {
-          "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -39305,26 +39421,23 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "1"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -39332,7 +39445,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -39346,19 +39459,16 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 2,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 2
         },
         "samplePrompts": [
-          "观察下图，房子在树的什么方向？",
-          "观察下图，花朵在书包的什么方向？",
-          "观察下图，书在房子的什么方向？"
+          "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。",
+          "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g4-down-u07-k005",
@@ -39371,8 +39481,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 2,
+          "answerMax": 5
         },
         "context": {
           "present": true,
@@ -39381,26 +39491,29 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "-2",
+              "1",
+              "2",
+              "3"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "-1",
+              "-2",
+              "1",
+              "2"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -39408,7 +39521,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -39427,9 +39540,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "苹果在书的上面。请说一说书在苹果的什么方向？",
-          "椅子在花朵的下面。请说一说花朵在椅子的什么方向？",
-          "房子在树的左边。请说一说树在房子的什么方向？"
+          "棋盘游戏：一枚棋子先向左平移 2 格，再向上平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向右平移 3 格，再向下平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 2 格，再向上平移 1 格。棋子一共平移了多少格？"
         ]
       },
       "flags": [
@@ -40704,9 +40817,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "25 减少 10 后是多少？",
-          "20 减少 11 后是多少？",
-          "从 8 里去掉 5，还剩多少？"
+          "食用油 25 元一桶，盐比它便宜 10 元，盐多少元？",
+          "连环画 20 本，童话书比它少 11 本，童话书多少本？",
+          "全程 8 米，已走 5 米，还剩多少米？"
         ]
       },
       "flags": [
@@ -40747,9 +40860,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 7，其中 5。\n问题：剩下多少？",
-          "已知条件：A 有 28，B 比 A 多 1。\n问题：B 有多少？",
-          "已知条件：一共 7，其中 1。\n问题：剩下多少？"
+          "车间计划生产 7 个零件，已经生产了 5 个。还差多少个？",
+          "三（1）班图书角有 28 本故事书，科技书比故事书多 1 本。科技书有多少本？",
+          "车间计划生产 7 个零件，已经生产了 1 个。还差多少个？"
         ]
       },
       "flags": [
@@ -40961,9 +41074,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "13 增加 5 后是多少？",
-          "从 25 里去掉 21，还剩多少？",
-          "10 减少 4 后是多少？"
+          "故事书 13 本，科技书比它多 5 本，科技书多少本？",
+          "计划生产 25 个，已完成 21 个，还差多少个？",
+          "小明每分钟走 10 米，小刚比他每分钟慢 4 米，小刚每分钟走多少米？"
         ]
       },
       "flags": []
@@ -41069,9 +41182,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 28，B 比 A 少 1。\n问题：B 有多少？",
-          "已知条件：一共 5，其中 3。\n问题：剩下多少？",
-          "已知条件：一共 12，其中 6。\n问题：剩下多少？"
+          "小明每分钟走 28 米，小刚每分钟比小明慢走 1 米。小刚每分钟走多少米？",
+          "王阿姨拿 5 元去超市，买水果用去 3 元。还剩多少元？",
+          "车间计划生产 12 个零件，已经生产了 6 个。还差多少个？"
         ]
       },
       "flags": []
@@ -43248,8 +43361,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 180,
-          "answerMax": 180
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -43304,7 +43417,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "一个直角是 90°，两个直角拼起来是____度"
+          "正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边"
         ]
       },
       "flags": [
@@ -43323,8 +43436,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 180,
-          "answerMax": 180
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -43389,7 +43502,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "一个直角是 90°，两个直角拼起来是____度（选出正确答案）"
+          "正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边（选出正确答案）"
         ]
       },
       "flags": [
@@ -43501,7 +43614,9 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.size"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -43603,14 +43718,12 @@
           "generator:shape-recognition": 5
         },
         "samplePrompts": [
-          "观察下图（平行四边形），想一想——一个直角是 90°，两个直角拼起来是____度",
-          "观察下图（正方形），想一想——正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边",
-          "观察下图（圆），想一想——长方形的两组对边分别平行，每组对边有____条"
+          "观察下图（平行四边形），想一想——正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边",
+          "观察下图（正方形），想一想——长方形的两组对边分别平行，每组对边有____条",
+          "观察下图（圆），想一想——一个直角是 90°，两个直角拼起来是____度"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g4-up-u05-k001",
@@ -47289,9 +47402,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "15 与 14 相加，和是多少？",
-          "15 减少 8 后是多少？",
-          "10 增加 16 后是多少？"
+          "上旬生产 15 件、中旬生产 14 件，一共多少件？",
+          "连环画 15 本，童话书比它少 8 本，童话书多少本？",
+          "杏树 10 棵，柿子树比它多 16 棵，柿子树多少棵？"
         ]
       },
       "flags": []
@@ -47390,9 +47503,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 14，其中 10。\n问题：剩下多少？",
-          "已知条件：26 和 7。\n问题：一共多少？",
-          "已知条件：A 有 3，B 比 A 多 1。\n问题：B 有多少？"
+          "小林家离图书馆 14 米，他已经走了 10 米。还剩多少米？",
+          "果园里有梨树 26 棵，桃树 7 棵。梨树和桃树一共有多少棵？",
+          "三（1）班图书角有 3 本故事书，科技书比故事书多 1 本。科技书有多少本？"
         ]
       },
       "flags": []
@@ -51380,98 +51493,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.total",
-            "data.numbers.a"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 9,
-          "answerMax": 9
-        },
-        "context": {
-          "present": false,
-          "ratio": 0
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.otherLabel": [
-              "\"8\""
-            ],
-            "data.graphic.params.part": [
-              "1"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"1\""
-            ],
-            "data.graphic.params.total": [
-              "9"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"？\""
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"quantity-correspondence\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:application-word": 1
-        },
-        "samplePrompts": [
-          "____ − 8 = 1"
-        ]
-      },
-      "flags": [
-        "single-sample"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g5-down-u03-k006",
-      "questionType": "choice",
-      "grade": 5,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.graphic.params.total"
-          ]
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 28,
-          "answerMax": 28
+          "answerMin": 216,
+          "answerMax": 216
         },
         "context": {
           "present": true,
@@ -51480,49 +51508,49 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
+            "data.graphic.params.height",
+            "data.graphic.params.labelSides",
+            "data.graphic.params.length",
             "data.graphic.params.unit",
+            "data.graphic.params.unitPx",
+            "data.graphic.params.width",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.otherLabel": [
-              "\"10\""
+            "data.graphic.params.height": [
+              "8"
             ],
-            "data.graphic.params.part": [
-              "18"
+            "data.graphic.params.labelSides": [
+              "true"
             ],
-            "data.graphic.params.partLabel": [
-              "\"18\""
-            ],
-            "data.graphic.params.total": [
-              "28"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"？\""
+            "data.graphic.params.length": [
+              "12"
             ],
             "data.graphic.params.unit": [
-              "\"\""
+              "\"cm\""
+            ],
+            "data.graphic.params.unitPx": [
+              "22"
+            ],
+            "data.graphic.params.width": [
+              "6"
             ],
             "data.graphic.role": [
               "\"quantity-correspondence\""
             ],
             "data.graphic.subtype": [
-              "\"segment\""
+              "\"cuboid\""
             ],
             "data.graphic.type": [
-              "\"diagram\""
+              "\"geometry\""
             ]
           }
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2"
           ]
         }
       },
@@ -51532,11 +51560,93 @@
           "generator:application-word": 1
         },
         "samplePrompts": [
-          "18 增加 10 后是多少？"
+          "做一个实验：长方体玻璃缸从里面量长 12 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块后水面上升到 8 厘米（水未溢出）。石块的体积是 ____ 立方"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u03-k006",
+      "questionType": "choice",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": 288,
+          "answerMax": 288
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": true,
+          "paths": [
+            "data.graphic.params.height",
+            "data.graphic.params.labelSides",
+            "data.graphic.params.length",
+            "data.graphic.params.unit",
+            "data.graphic.params.unitPx",
+            "data.graphic.params.width",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.height": [
+              "8"
+            ],
+            "data.graphic.params.labelSides": [
+              "true"
+            ],
+            "data.graphic.params.length": [
+              "12"
+            ],
+            "data.graphic.params.unit": [
+              "\"cm\""
+            ],
+            "data.graphic.params.unitPx": [
+              "22"
+            ],
+            "data.graphic.params.width": [
+              "8"
+            ],
+            "data.graphic.role": [
+              "\"quantity-correspondence\""
+            ],
+            "data.graphic.subtype": [
+              "\"cuboid\""
+            ],
+            "data.graphic.type": [
+              "\"geometry\""
+            ]
+          }
+        },
+        "structure": {
+          "steps": [
+            "data.steps=2"
+          ]
+        }
+      },
+      "evidence": {
+        "samples": 1,
+        "generators": {
+          "generator:application-word": 1
+        },
+        "samplePrompts": [
+          "数学实验课上，长方体玻璃缸的内部长 12 厘米、宽 8 厘米，原有 5 厘米深的水。一块不规则石块完全浸入后，水面升到 8 厘米。石块的体积是多少？"
+        ]
+      },
+      "flags": [
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -51545,7 +51655,9 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.labelSides"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -51560,54 +51672,51 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.part",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
+            "data.graphic.params.height",
+            "data.graphic.params.labelSides",
+            "data.graphic.params.length",
             "data.graphic.params.unit",
+            "data.graphic.params.unitPx",
+            "data.graphic.params.width",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.left": [
-              "13",
-              "14",
-              "22",
-              "3",
+            "data.graphic.params.height": [
+              "7",
               "8"
             ],
-            "data.graphic.params.part": [
-              "2"
+            "data.graphic.params.labelSides": [
+              "true"
             ],
-            "data.graphic.params.right": [
-              "11",
-              "13",
-              "21",
-              "26",
-              "3"
-            ],
-            "data.graphic.params.total": [
-              "8"
+            "data.graphic.params.length": [
+              "10"
             ],
             "data.graphic.params.unit": [
-              "\"\""
+              "\"cm\""
+            ],
+            "data.graphic.params.unitPx": [
+              "22"
+            ],
+            "data.graphic.params.width": [
+              "6",
+              "8"
             ],
             "data.graphic.role": [
               "\"quantity-correspondence\""
             ],
             "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
+              "\"cuboid\""
             ],
             "data.graphic.type": [
-              "\"diagram\""
+              "\"geometry\""
             ]
           }
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2"
           ]
         }
       },
@@ -51617,14 +51726,12 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "14 与 26 相加，和是多少？ 答案是 40 —— 对还是错？",
-          "3 与 11 相加，和是多少？ 答案是 14 —— 对还是错？",
-          "从 8 里去掉 2，还剩多少？ 答案是 8 —— 对还是错？"
+          "实验测量：长方体玻璃缸从里面量长 10 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块完全浸没后水面上升到 8 厘米（水未溢出）。计算得石块体积是 18",
+          "实验测量：长方体玻璃缸从里面量长 10 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块完全浸没后水面上升到 7 厘米（水未溢出）。计算得石块体积是 13",
+          "实验测量：长方体玻璃缸从里面量长 10 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块完全浸没后水面上升到 7 厘米（水未溢出）。计算得石块体积是 14"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g5-down-u03-k006",
@@ -51717,18 +51824,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.total",
-            "data.numbers.diff"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 9,
-          "answerMax": 25
+          "distinctAnswers": 12,
+          "answerMin": 144,
+          "answerMax": 240
         },
         "context": {
           "present": true,
@@ -51737,73 +51839,52 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
+            "data.graphic.params.height",
+            "data.graphic.params.labelSides",
+            "data.graphic.params.length",
             "data.graphic.params.unit",
+            "data.graphic.params.unitPx",
+            "data.graphic.params.width",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.left": [
-              "4"
+            "data.graphic.params.height": [
+              "7",
+              "8"
             ],
-            "data.graphic.params.otherLabel": [
-              "\"1\"",
-              "\"11\"",
-              "\"14\"",
-              "\"9\""
+            "data.graphic.params.labelSides": [
+              "true"
             ],
-            "data.graphic.params.part": [
+            "data.graphic.params.length": [
               "10",
-              "24",
-              "3",
-              "5",
-              "9"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"24\"",
-              "\"5\"",
-              "\"？\""
-            ],
-            "data.graphic.params.right": [
-              "14"
-            ],
-            "data.graphic.params.total": [
-              "16",
-              "18",
-              "22",
-              "24",
-              "25"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"18\"",
-              "\"24\"",
-              "\"？\""
+              "12"
             ],
             "data.graphic.params.unit": [
-              "\"\""
+              "\"cm\""
+            ],
+            "data.graphic.params.unitPx": [
+              "22"
+            ],
+            "data.graphic.params.width": [
+              "6",
+              "8"
             ],
             "data.graphic.role": [
               "\"quantity-correspondence\""
             ],
             "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
+              "\"cuboid\""
             ],
             "data.graphic.type": [
-              "\"diagram\""
+              "\"geometry\""
             ]
           }
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2"
           ]
         }
       },
@@ -51813,12 +51894,14 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 22，其中 3。\n问题：剩下多少？",
-          "已知条件：A 有 5，B 比 A 多 11。\n问题：B 有多少？",
-          "已知条件：4 和 14。\n问题：一共多少？"
+          "小科做了一个排水法实验：长方体玻璃缸从里面量长 10 厘米、宽 6 厘米，缸里水深 5 厘米。他把一块不规则的石块完全浸没入水中（水没有溢出），水面上升到 8 ",
+          "小科做了一个排水法实验：长方体玻璃缸从里面量长 12 厘米、宽 6 厘米，缸里水深 5 厘米。他把一块不规则的石块完全浸没入水中（水没有溢出），水面上升到 8 ",
+          "小科做了一个排水法实验：长方体玻璃缸从里面量长 12 厘米、宽 8 厘米，缸里水深 5 厘米。他把一块不规则的石块完全浸没入水中（水没有溢出），水面上升到 7 "
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g5-down-u04-k001",
@@ -52362,7 +52445,7 @@
         },
         "samplePrompts": [
           "约成最简分数（分子分母同除以 4，列式：4 ÷ 4 = 1）：4/8 = ？",
-          "约成最简分数（分子分母同除以 2，列式：8 ÷ 2 = 2）：8/12 = ？",
+          "约成最简分数（分子分母同除以 2，列式：8 ÷ 2 = 4）：8/12 = ？",
           "约成最简分数（分子分母同除以 5，列式：10 ÷ 5 = 2）：10/15 = ？"
         ]
       },
@@ -52553,8 +52636,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 4,
-          "answerMin": 2,
-          "answerMax": 5
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -52576,9 +52659,9 @@
           "generator:fraction-number": 6
         },
         "samplePrompts": [
-          "分数的基本性质，在 ____ 里填数：1/7 = ____/28",
-          "分数的基本性质，在 ____ 里填数：1/4 = ____/20",
-          "分数的基本性质，在 ____ 里填数：1/5 = ____/10"
+          "把 4/28 约成最简分数，结果是 ____。",
+          "把 5/20 约成最简分数，结果是 ____。",
+          "把 2/10 约成最简分数，结果是 ____。"
         ]
       },
       "flags": [
@@ -56459,8 +56542,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 10,
-          "answerMax": 10
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -56472,7 +56555,7 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=3"
           ]
         }
       },
@@ -56482,7 +56565,7 @@
           "generator:reasoning": 1
         },
         "samplePrompts": [
-          "数列 2, 4, 6, 8 中，____ 是下一项"
+          "一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙2张饼最少需要____分钟。"
         ]
       },
       "flags": [
@@ -56501,8 +56584,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 10,
-          "answerMax": 10
+          "answerMin": 8,
+          "answerMax": 8
         },
         "context": {
           "present": true,
@@ -56514,7 +56597,7 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=3"
           ]
         }
       },
@@ -56524,7 +56607,7 @@
           "generator:reasoning": 1
         },
         "samplePrompts": [
-          "数列 2, 4, 6, 8 的下一项是多少？正确选项是哪一个？"
+          "用一口锅烙4张饼，每张饼两面都要烙，每面需要 2 分钟。正确选项是哪一个？"
         ]
       },
       "flags": [
@@ -56542,9 +56625,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 8,
-          "answerMax": 16
+          "distinctAnswers": 3,
+          "answerMin": 6,
+          "answerMax": 15
         },
         "context": {
           "present": true,
@@ -56556,7 +56639,8 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2",
+            "data.steps=3"
           ]
         }
       },
@@ -56566,9 +56650,9 @@
           "generator:reasoning": 4
         },
         "samplePrompts": [
-          "最优策略的规律：观察数列规律，写出下一个数：2, 4, 6, 8, ?",
-          "最优策略的规律：观察数列规律，写出下一个数：1, 3, 5, 7, ?",
-          "最优策略的规律：观察数列规律，写出下一个数：1, 2, 4, 8, ?"
+          "用一口锅烙3张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？",
+          "煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？",
+          "看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？"
         ]
       },
       "flags": [
@@ -58100,9 +58184,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "从 16 里去掉 3，还剩多少？",
-          "11 与 10 相加，和是多少？",
-          "每份 6 个，2 份一共多少个？"
+          "带 16 元，买衣服用去 3 元，还剩多少元？",
+          "甲队修 11 米，乙队修 10 米，公路全长多少米？",
+          "每套图书 6 元，买 2 套，一共多少元？"
         ]
       },
       "flags": []
@@ -58209,9 +58293,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：每份有 3 个，共有 4 份。\n问题：一共有多少个？",
-          "已知条件：A 有 8，B 比 A 少 1。\n问题：B 有多少？",
-          "已知条件：每份有 9 个，共有 4 份。\n问题：一共有多少个？"
+          "调查小组访问社区居民，每人每天访问 3 户，4 人一天共访问多少户？",
+          "货车每小时行 8 千米，客车每小时比货车多行 1 千米。客车每小时行多少千米？",
+          "包装车间每组每小时包装 9 盒礼品，4 组同时工作 1 小时。一共包装多少盒？"
         ]
       },
       "flags": []
@@ -59516,8 +59600,38 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.3\"",
+              "\"1.5\"",
+              "\"1.7\"",
+              "\"1.8\"",
+              "\"2.2\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.2\"",
+              "\"1.3\"",
+              "\"2\"",
+              "\"3\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"mul\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -59721,8 +59835,40 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.2\"",
+              "\"1.3\"",
+              "\"1.9\"",
+              "\"2.7\"",
+              "\"3.1\"",
+              "\"3.2\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.3\"",
+              "\"1.4\"",
+              "\"1.8\"",
+              "\"3\"",
+              "\"9\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"mul\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -59925,8 +60071,39 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.6\"",
+              "\"2.4\"",
+              "\"2.7\"",
+              "\"2.9\"",
+              "\"3.2\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.2\"",
+              "\"1.4\"",
+              "\"2.5\"",
+              "\"7\"",
+              "\"8\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"mul\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -60140,8 +60317,39 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.2\"",
+              "\"1.7\"",
+              "\"2.5\"",
+              "\"2.6\"",
+              "\"2.9\""
+            ],
+            "data.graphic.params.b": [
+              "\"2.1\"",
+              "\"3\"",
+              "\"5\"",
+              "\"6\"",
+              "\"7\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"mul\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -60269,8 +60477,39 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.a",
+            "data.graphic.params.b",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.a": [
+              "\"1.3\"",
+              "\"2.5\"",
+              "\"2.9\"",
+              "\"3.1\""
+            ],
+            "data.graphic.params.b": [
+              "\"1.3\"",
+              "\"1.8\"",
+              "\"1.9\"",
+              "\"2\"",
+              "\"2.6\"",
+              "\"9\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
+            ],
+            "data.graphic.subtype": [
+              "\"mul\""
+            ],
+            "data.graphic.type": [
+              "\"calculation\""
+            ]
+          }
         },
         "structure": {
           "steps": [
@@ -61102,9 +61341,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "16 与 8 相加，和是多少？",
-          "17 增加 2 后是多少？",
-          "15 减少 6 后是多少？"
+          "买灯具 16 元、窗帘 8 元，一共多少元？",
+          "客车每小时行 17 千米，货车比它每小时多行 2 千米，货车速度是多少？",
+          "空调 15 元，电风扇比它便宜 6 元，电风扇多少元？"
         ]
       },
       "flags": [
@@ -61145,9 +61384,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 13，其中 9。\n问题：剩下多少？",
-          "已知条件：一共 24，其中 2。\n问题：剩下多少？",
-          "已知条件：A 有 30，B 比 A 少 4。\n问题：B 有多少？"
+          "车间计划生产 13 个零件，已经生产了 9 个。还差多少个？",
+          "车间计划生产 24 个零件，已经生产了 2 个。还差多少个？",
+          "一台空调 30 元，一台电风扇比空调便宜 4 元。一台电风扇多少元？"
         ]
       },
       "flags": [
@@ -61199,7 +61438,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61281,7 +61520,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61353,7 +61592,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "30"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61393,13 +61632,16 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.dx",
+            "data.steps"
+          ]
         },
         "numeric": {
-          "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -61408,26 +61650,23 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "1"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -61435,7 +61674,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -61449,19 +61688,16 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 2,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 2
         },
         "samplePrompts": [
-          "观察下图，房子在球的什么方向？",
-          "观察下图，椅子在小猫的什么方向？",
-          "观察下图，房子在桌子的什么方向？"
+          "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。",
+          "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g5-up-u04-k001",
@@ -61473,9 +61709,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 3,
+          "answerMin": 3,
+          "answerMax": 5
         },
         "context": {
           "present": true,
@@ -61484,26 +61720,28 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.dx",
+            "data.graphic.params.dy",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.dx": [
+              "-1",
+              "-3",
+              "2"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.dy": [
+              "-1",
+              "-2",
+              "1",
+              "2",
+              "3"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
-            ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -61511,7 +61749,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"translationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -61530,9 +61768,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "房子在椅子的右边。请说一说椅子在房子的什么方向？",
-          "椅子在树的下面。请说一说树在椅子的什么方向？",
-          "球在花朵的右边。请说一说花朵在球的什么方向？"
+          "棋盘游戏：一枚棋子先向右平移 2 格，再向下平移 2 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 3 格，再向下平移 1 格。棋子一共平移了多少格？",
+          "棋盘游戏：一枚棋子先向左平移 1 格，再向下平移 3 格。棋子一共平移了多少格？"
         ]
       },
       "flags": [
@@ -61581,7 +61819,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61656,7 +61894,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61734,7 +61972,7 @@
             ],
             "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
-              "34"
+              "35"
             ],
             "data.graphic.role": [
               "\"number-position\""
@@ -61778,9 +62016,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 2,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 3,
+          "answerMin": 3,
+          "answerMax": 9
         },
         "context": {
           "present": true,
@@ -61789,26 +62027,31 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.cx",
+            "data.graphic.params.cy",
+            "data.graphic.params.deg",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.cx": [
+              "0"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.cy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
+            "data.graphic.params.deg": [
+              "-180",
+              "-270",
+              "-90",
+              "180",
+              "270",
+              "90"
             ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -61816,7 +62059,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"rotationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -61835,9 +62078,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "观察下图，书包在小狗的什么方向？",
-          "观察下图，小鸟在小猫的什么方向？",
-          "观察下图，树在桌子的什么方向？"
+          "看图：钟面上一根指针从数字 12 开始，绕中心顺时针旋转 270 度。指针指向数字 ____。",
+          "看图：钟面上一根指针从数字 12 开始，绕中心逆时针旋转 90 度。指针指向数字 ____。",
+          "看图：钟面上一根指针从数字 12 开始，绕中心逆时针旋转 270 度。指针指向数字 ____。"
         ]
       },
       "flags": [
@@ -61854,9 +62097,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 3,
+          "answerMin": 3,
+          "answerMax": 9
         },
         "context": {
           "present": true,
@@ -61865,26 +62108,31 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.gridColor",
-            "data.graphic.params.gridSize",
-            "data.graphic.params.objects",
-            "data.graphic.params.showGrid",
+            "data.graphic.params.cx",
+            "data.graphic.params.cy",
+            "data.graphic.params.deg",
+            "data.graphic.params.points",
             "data.graphic.params.unitPx",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.gridColor": [
-              "\"#e0e0e0\""
+            "data.graphic.params.cx": [
+              "0"
             ],
-            "data.graphic.params.gridSize": [
-              "5"
+            "data.graphic.params.cy": [
+              "0"
             ],
-            "data.graphic.params.objects": [],
-            "data.graphic.params.showGrid": [
-              "true"
+            "data.graphic.params.deg": [
+              "-180",
+              "-270",
+              "-90",
+              "180",
+              "270",
+              "90"
             ],
+            "data.graphic.params.points": [],
             "data.graphic.params.unitPx": [
               "35"
             ],
@@ -61892,7 +62140,7 @@
               "\"number-position\""
             ],
             "data.graphic.subtype": [
-              "\"position-grid\""
+              "\"rotationDemo\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -61911,9 +62159,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "苹果在房子的右边。请说一说房子在苹果的什么方向？",
-          "苹果在房子的左边。请说一说房子在苹果的什么方向？",
-          "花朵在桌子的上面。请说一说桌子在花朵的什么方向？"
+          "钟面上，分针从数字 12 开始，绕中心逆时针旋转 180 度。分针指向数字 ____。",
+          "钟面上，分针从数字 12 开始，绕中心顺时针旋转 180 度。分针指向数字 ____。",
+          "钟面上，分针从数字 12 开始，绕中心逆时针旋转 270 度。分针指向数字 ____。"
         ]
       },
       "flags": [
@@ -67596,7 +67844,7 @@
         },
         "samplePrompts": [
           "54 个平均分给 6 人，每人几个？",
-          "每份 2 个，2 份一共多少个？",
+          "每人每天访问 2 户，2 人一天共访问多少户？",
           "12 个平均分给 3 人，每人几个？"
         ]
       },
@@ -68453,9 +68701,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "4 与 20 相加，和是多少？",
-          "28 与 14 相加，和是多少？",
-          "26 增加 5 后是多少？"
+          "买灯具 4 元、窗帘 20 元，一共多少元？",
+          "上旬生产 28 件、中旬生产 14 件，一共多少件？",
+          "客车每小时行 26 千米，货车比它每小时多行 5 千米，货车速度是多少？"
         ]
       },
       "flags": [
@@ -68496,9 +68744,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：A 有 19，B 比 A 少 13。\n问题：B 有多少？",
-          "已知条件：24 和 22。\n问题：一共多少？",
-          "已知条件：一共 30，其中 28。\n问题：剩下多少？"
+          "一台空调 19 元，一台电风扇比空调便宜 13 元。一台电风扇多少元？",
+          "服装厂上旬生产服装 24 件，中旬生产 22 件。两旬一共生产多少件？",
+          "李阿姨带了 30 元逛商场，买衣服用去 28 元。还剩多少元？"
         ]
       },
       "flags": [
@@ -72412,8 +72660,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 3,
-          "answerMin": 10,
-          "answerMax": 15
+          "answerMin": 24,
+          "answerMax": 48
         },
         "context": {
           "present": true,
@@ -72433,9 +72681,9 @@
           "generator:semantic-relations": 4
         },
         "samplePrompts": [
-          "同学们排队做操，每行站 25 人，正好站 12 行。如果每行站 20 人，可以站多少行？",
-          "同学们排队做操，每行站 15 人，正好站 16 行。如果每行站 20 人，可以站多少行？",
-          "同学们排队做操，每行站 20 人，正好站 12 行。如果每行站 24 人，可以站多少行？"
+          "买 2 米彩带要 12 元，买 8 米同样的彩带要多少元？",
+          "买 4 米彩带要 16 元，买 6 米同样的彩带要多少元？",
+          "买 2 米彩带要 12 元，买 6 米同样的彩带要多少元？"
         ]
       },
       "flags": [
@@ -72452,9 +72700,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 8,
-          "answerMax": 24
+          "distinctAnswers": 3,
+          "answerMin": 2,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -72469,14 +72717,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:semantic-relations": 6
+          "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "列式计算：买 2 支同样的钢笔要用 6 元，买 8 支这样的钢笔要用多少元？列式：6 ÷ 2 × 8 = ？（元）",
-          "列式计算：买 5 支同样的钢笔要用 10 元，买 6 支这样的钢笔要用多少元？列式：10 ÷ 5 × 6 = ？（元）",
-          "列式计算：买 3 支同样的钢笔要用 12 元，买 4 支这样的钢笔要用多少元？列式：12 ÷ 3 × 4 = ？（元）"
+          "列式计算：一批货物共 24 吨，用载重 12 吨的卡车运，正好 2 次运完。如果改用载重 8 吨的卡车运，要运多少次？列式：24 ÷ 8 = ？（次）",
+          "列式计算：一批货物共 30 吨，用载重 10 吨的卡车运，正好 3 次运完。如果改用载重 15 吨的卡车运，要运多少次？列式：30 ÷ 15 = ？（次）",
+          "列式计算：一批货物共 24 吨，用载重 8 吨的卡车运，正好 3 次运完。如果改用载重 6 吨的卡车运，要运多少次？列式：24 ÷ 6 = ？（次）"
         ]
       },
       "flags": [
@@ -72493,9 +72741,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 200,
-          "answerMax": 630
+          "distinctAnswers": 2,
+          "answerMin": 5,
+          "answerMax": 8
         },
         "context": {
           "present": true,
@@ -72510,14 +72758,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:semantic-relations": 6
+          "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "一辆汽车 2 小时行驶了 140 千米。照这样的速度，7 小时能行驶（  ）千米。",
-          "一辆汽车 3 小时行驶了 210 千米。照这样的速度，9 小时能行驶（  ）千米。",
-          "一辆汽车 3 小时行驶了 210 千米。照这样的速度，7 小时能行驶（  ）千米。"
+          "装订一批练习本，每本 40 页，正好装订 6 本。如果每本 30 页，可以装订（  ）本。",
+          "装订一批练习本，每本 30 页，正好装订 6 本。如果每本 36 页，可以装订（  ）本。",
+          "装订一批练习本，每本 60 页，正好装订 4 本。如果每本 48 页，可以装订（  ）本。"
         ]
       },
       "flags": [
@@ -72534,7 +72782,7 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 5,
+          "distinctAnswers": 2,
           "answerMin": null,
           "answerMax": null
         },
@@ -72551,14 +72799,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:semantic-relations": 6
+          "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "买 2 千克苹果付了 6 元，买 6 千克同样的苹果要付多少元？（  ）",
-          "买 5 千克苹果付了 30 元，买 8 千克同样的苹果要付多少元？（  ）",
-          "买 3 千克苹果付了 15 元，买 6 千克同样的苹果要付多少元？（  ）"
+          "学校组织 360 人去春游，原来每条船坐 60 人，正好租了 6 条船。如果改租每条坐 90 人的船，需要多少条船？（  ）",
+          "学校组织 360 人去春游，原来每条船坐 90 人，正好租了 4 条船。如果改租每条坐 120 人的船，需要多少条船？（  ）",
+          "学校组织 240 人去春游，原来每条船坐 40 人，正好租了 6 条船。如果改租每条坐 80 人的船，需要多少条船？（  ）"
         ]
       },
       "flags": [
@@ -74158,9 +74406,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "16 增加 13 后是多少？",
-          "31 增加 1 后是多少？",
-          "27 增加 3 后是多少？"
+          "科技书借出 16 册，文艺书比它多 13 册，文艺书多少册？",
+          "客车每小时行 31 千米，货车比它每小时多行 1 千米，货车速度是多少？",
+          "科技书借出 27 册，文艺书比它多 3 册，文艺书多少册？"
         ]
       },
       "flags": []
@@ -74254,9 +74502,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 24，其中 3。\n问题：剩下多少？",
-          "已知条件：A 有 25，B 比 A 多 5。\n问题：B 有多少？",
-          "已知条件：一共 32，其中 19。\n问题：剩下多少？"
+          "车间计划生产 24 个零件，已经生产了 3 个。还差多少个？",
+          "图书馆上月借出科技书 25 册，借出的文艺书比科技书多 5 册。文艺书借出多少册？",
+          "李阿姨带了 32 元逛商场，买衣服用去 19 元。还剩多少元？"
         ]
       },
       "flags": []
@@ -76215,15 +76463,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.total"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 27,
-          "answerMax": 27
+          "answerMin": 0.25,
+          "answerMax": 0.25
         },
         "context": {
           "present": true,
@@ -76232,40 +76478,24 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
+            "data.graphic.params.left",
+            "data.graphic.params.rightLabel",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.otherLabel": [
-              "\"20\""
+            "data.graphic.params.left": [
+              "3"
             ],
-            "data.graphic.params.part": [
-              "7"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"7\""
-            ],
-            "data.graphic.params.total": [
-              "27"
-            ],
-            "data.graphic.params.totalLabel": [
+            "data.graphic.params.rightLabel": [
               "\"？\""
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
             ],
             "data.graphic.role": [
               "\"calculation-support\""
             ],
             "data.graphic.subtype": [
-              "\"segment\""
+              "\"balance\""
             ],
             "data.graphic.type": [
               "\"diagram\""
@@ -76274,7 +76504,7 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2"
           ]
         }
       },
@@ -76284,11 +76514,12 @@
           "generator:arithmetic-mixed-calculation": 1
         },
         "samplePrompts": [
-          "填空：____ − 20 = 7"
+          "在 ____ 里填数（用运算律简便计算）：0.25 × (4 + 8) = 0.25 × 4 + ____ × 8 = 3"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -76320,7 +76551,7 @@
           ],
           "values": {
             "data.graphic.params.left": [
-              "24"
+              "3"
             ],
             "data.graphic.params.rightLabel": [
               "\"？\""
@@ -76338,7 +76569,7 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1"
+            "data.steps=2"
           ]
         }
       },
@@ -76348,7 +76579,7 @@
           "generator:arithmetic-mixed-calculation": 1
         },
         "samplePrompts": [
-          "下面哪个算式等于 24？"
+          "下面哪个算式等于 3？"
         ]
       },
       "flags": [
@@ -76377,40 +76608,33 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.part",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
+            "data.graphic.params.boxText",
+            "data.graphic.params.boxes",
+            "data.graphic.params.topText",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.left": [
-              "6"
+            "data.graphic.params.boxText": [
+              "0.2",
+              "0.25",
+              "0.4",
+              "0.5"
             ],
-            "data.graphic.params.part": [
-              "1",
-              "27"
+            "data.graphic.params.boxes": [
+              "2",
+              "4",
+              "5"
             ],
-            "data.graphic.params.right": [
-              "9"
-            ],
-            "data.graphic.params.total": [
-              "11",
-              "30",
-              "32"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
+            "data.graphic.params.topText": [
+              "\"？\""
             ],
             "data.graphic.role": [
               "\"calculation-support\""
             ],
             "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
+              "\"groups\""
             ],
             "data.graphic.type": [
               "\"diagram\""
@@ -76419,7 +76643,6 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1",
             "data.steps=2"
           ]
         }
@@ -76430,9 +76653,9 @@
           "generator:arithmetic-mixed-calculation": 4
         },
         "samplePrompts": [
-          "30 − 27 = 4（对还是错？）",
-          "6 + 9 = 15（对还是错？）",
-          "32 − 27 + 9 = 15（对还是错？）"
+          "用运算律简便计算：0.25 × (4 + 12) = 5（对还是错？）",
+          "用运算律简便计算：0.5 × (2 + 4) = 3（对还是错？）",
+          "用运算律简便计算：0.2 × (5 + 15) = 5（对还是错？）"
         ]
       },
       "flags": [
@@ -76523,13 +76746,15 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.boxes"
+          ]
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 4,
-          "answerMax": 28
+          "distinctAnswers": 3,
+          "answerMin": 3,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -76538,45 +76763,33 @@
         "representation": {
           "present": true,
           "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.part",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
+            "data.graphic.params.boxText",
+            "data.graphic.params.boxes",
+            "data.graphic.params.topText",
             "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
           "values": {
-            "data.graphic.params.left": [
-              "4"
+            "data.graphic.params.boxText": [
+              "0.2",
+              "0.25",
+              "0.4",
+              "0.5"
             ],
-            "data.graphic.params.part": [
-              "11",
-              "16",
+            "data.graphic.params.boxes": [
               "2",
-              "5",
-              "7"
+              "4",
+              "5"
             ],
-            "data.graphic.params.right": [
-              "19"
-            ],
-            "data.graphic.params.total": [
-              "11",
-              "16",
-              "29",
-              "30",
-              "4"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
+            "data.graphic.params.topText": [
+              "\"？\""
             ],
             "data.graphic.role": [
               "\"calculation-support\""
             ],
             "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
+              "\"groups\""
             ],
             "data.graphic.type": [
               "\"diagram\""
@@ -76585,7 +76798,6 @@
         },
         "structure": {
           "steps": [
-            "data.steps=1",
             "data.steps=2"
           ]
         }
@@ -76596,14 +76808,12 @@
           "generator:arithmetic-mixed-calculation": 6
         },
         "samplePrompts": [
-          "把 4，加 19，加 5，结果是多少？",
-          "把 30，减 5，结果是多少？",
-          "把 4，减 2，加 24，结果是多少？"
+          "每瓶矿泉水重 0.25 千克，甲箱装了 4 瓶，乙箱装了 8 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）",
+          "每瓶矿泉水重 0.5 千克，甲箱装了 2 瓶，乙箱装了 4 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）",
+          "每瓶矿泉水重 0.2 千克，甲箱装了 5 瓶，乙箱装了 10 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k004",
@@ -80944,9 +81154,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "18 与 28 相加，和是多少？",
-          "从 31 里去掉 21，还剩多少？",
-          "从 9 里去掉 5，还剩多少？"
+          "上旬生产 18 件、中旬生产 28 件，一共多少件？",
+          "计划生产 31 个，已完成 21 个，还差多少个？",
+          "计划生产 9 个，已完成 5 个，还差多少个？"
         ]
       },
       "flags": []
@@ -81048,9 +81258,9 @@
           "generator:application-word": 6
         },
         "samplePrompts": [
-          "已知条件：一共 29，其中 9。\n问题：剩下多少？",
-          "已知条件：A 有 10，B 比 A 少 9。\n问题：B 有多少？",
-          "已知条件：A 有 19，B 比 A 多 8。\n问题：B 有多少？"
+          "李阿姨带了 29 元逛商场，买衣服用去 9 元。还剩多少元？",
+          "货车每小时行 10 千米，客车每小时比货车多行 9 千米。客车每小时行多少千米？",
+          "客车每小时行 19 千米，货车每小时比客车多行 8 千米。货车每小时行多少千米？"
         ]
       },
       "flags": []

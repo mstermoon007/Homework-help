@@ -32,6 +32,8 @@ var KCV = require(path.join(ROOT, 'shared', 'capability', 'knowledge-capability-
 var QTR = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
 var PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
 var KpSemantic = require(path.join(ROOT, 'shared', 'validator', 'kp-semantic-validator.js'));
+// P42-027 残余（2026-10-19）：写入前独立数学真值重算器（P42-1C SSOT，dev/ 审计层，非生产链）
+var TV = require(path.join(__dirname, '..', 'p42', 'truth-verifier.js'));
 
 var semanticFamilies = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl/teaching/semantic-families.json'), 'utf8'));
 var kpMatrix = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl/teaching/kp-matrix.json'), 'utf8'));
@@ -92,6 +94,25 @@ function allowedQts(kpId) {
   return out;
 }
 
+// P42-027 残余（2026-10-19）：写入前真值门——与记录提取链同构的 stem/answer 归一化，
+// 门审对象 = 即将写入的 structure.stem/structure.answer 内容。
+// FAIL → 拒收（与 SEMANTIC_PASS 同口径：不伪造收录）；UNVERIFIED/PASS → 放行
+// （UNVERIFIED = 验证器诚实缺位不判错，与 P42-1D 全量审计口径一致）；
+// 门自身异常按 UNVERIFIED 放行并记录 failures——审计工具故障不阻塞派生，统计可见。
+var truthRejected = 0;
+function truthGate(sq) {
+  var stem = sq.stem || sq.question || (sq.data && sq.data.prompt) || sq.prompt || null;
+  var ans = sq.answer != null ? sq.answer : (sq.data && sq.data.answer) || null;
+  var av = (ans && typeof ans === 'object') ? ans.value : ans;
+  var expl = (ans && typeof ans === 'object') ? ans.explanation : null;
+  try {
+    var r = TV.auditQuestion({ questionType: sq.questionType, prompt: stem, answer: { value: av, explanation: expl } });
+    return { accepted: r.status !== 'FAIL', status: r.status, checked: r.checked, failures: r.failures };
+  } catch (e) {
+    return { accepted: true, status: 'UNVERIFIED', checked: 0, failures: ['GATE-ERROR: ' + String((e && e.message) || e).slice(0, 120)] };
+  }
+}
+
 var goldenQuestions = [];
 var familyStats = [];
 
@@ -108,6 +129,8 @@ async function collectOne(kp, qt, famId) {
   var sq = sqs[0];
   var evResult = KpSemantic.checkSemanticEvidence(sq, kp.id);
   if (evResult.state !== 'pass') return null; // 不伪造 PASS
+  var tg = truthGate(sq);
+  if (!tg.accepted) { truthRejected++; return null; } // 真值 FAIL 拒收（P42-027 写入前门）
   var intentRow = intentByKpQt[kp.id + '|' + qt] || null;
   var intentObj = intentRow && intentRow.intent || null;
   return {
@@ -202,8 +225,11 @@ async function runFillMissing() {
   };
   fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
   console.log('覆盖补漏完成：新增 ' + added.length + '，总题 ' + merged.length + '，覆盖族 ' + Object.keys(byFamily).length + '/15');
+  console.log('  真值门拒收（FAIL）：' + truthRejected + ' 题（P42-027 写入前门）');
 }
 
+// 仅直接执行时跑主流程；require 只取 truthGate（P42-5 测试接点，生成/写盘行为零变化）
+if (require.main === module) {
 (async function run() {
   if (FILL_MISSING) { await runFillMissing(); return; }
   var families = (semanticFamilies.families || []).slice(0, MAX_FAMILIES);
@@ -245,6 +271,8 @@ async function runFillMissing() {
           // - warn/skip/fail：拒绝并换下一 KP×QT 重试（不伪造 PASS）
           var evResult = KpSemantic.checkSemanticEvidence(sq, kp.id);
           if (evResult.state !== 'pass') continue;
+          var tg = truthGate(sq);
+          if (!tg.accepted) { truthRejected++; continue; } // 真值 FAIL 拒收（P42-027 写入前门）
 
           var intentRow = intentByKpQt[kp.id + '|' + qt] || null;
           var intentObj = intentRow && intentRow.intent || null;
@@ -323,4 +351,7 @@ async function runFillMissing() {
   });
   console.log('  产出：' + path.relative(ROOT, outPath));
   console.log('  全部 humanReview=llm-finalized（LLM 开发期定案；机器生成 + SEMANTIC_PASS 验证为质量保险）');
+  console.log('  真值门拒收（FAIL）：' + truthRejected + ' 题（P42-027 写入前门）');
 })();
+}
+module.exports = { truthGate: truthGate };

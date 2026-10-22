@@ -70,7 +70,7 @@ function gradeOf(kp) {
 // 首跑观察模式收集 freezeSeed 口径实际命中后，逐条对照裁决家族登记；
 // 未登记命中 → FAIL（新泄露或口径漂移，须人工裁决后更新本表）。
 var WHITELIST = [
-  // [kp, qt, token, layer, bucket, reason] — 174 条：AS-18 观察运行（freeze 口径 1570 行）逐行人工裁决
+  // [kp, qt, token, layer, bucket, reason] — 175 条：AS-18 观察运行（freeze 口径 1570 行）逐行人工裁决；P42-033 +1（g6-up-u02-k003 fill 首产登记）
   ['math-g1-down-u03-k001', 'apply', '6', 'L1', 'P-KNOWN', '已知角 90°/1 瓶次品/试验统计等题面给定数量，非所求答案'],
   ['math-g1-down-u03-k006', 'apply', '<', 'L1', 'C-OPTIONSET', 'AS-16C #10/#11：选项集语义（比较符号/判断词），答案为集合语义非数值复述'],
   ['math-g1-down-u04-k003', 'calc', '34', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
@@ -206,6 +206,7 @@ var WHITELIST = [
   ['math-g6-down-u04-k004', 'calc', '18', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g6-down-u04-k005', 'calc', '20', 'L1', 'B-OPERAND', '数值 token 为算式操作数/题面已知成分，非答案复述（AS-16C 既定口径）'],
   ['math-g6-up-u01-k001', 'fill', '3', 'L1', 'C-POSITION', 'AS-16C #9：数对位置描述即位置定义'],
+  ['math-g6-up-u02-k003', 'fill', '0.25', 'L1', 'B-OPERAND', 'P42-033 修复后该行首次产出（此前意图闸门拒绝 0 产出）：分配律填空空位求公因数，0.25 为题面已给展开左半的算式操作数（教材标准形态），非答案复述'],
   ['math-g6-up-u03-k004', 'fill', '2/9', 'L1', 'C-FRACTION-PART', 'AS-16C #1：分数部分定义/基本性质中已知分数与所填数值同源'],
   ['math-g6-up-u03-k005', 'fill', '2/4', 'L1', 'C-FRACTION-PART', 'AS-16C #1：分数部分定义/基本性质中已知分数与所填数值同源'],
   ['math-g6-up-u04-k001', 'geometry', '圆', 'L1', 'C-CONCEPT', 'AS-16C #8：概念认识题，概念名入题面为题面材料'],

@@ -44,9 +44,9 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 9 步路径：首页 index.html → 快速练习 mode=quick → 教师模式 mode=teacher → 知识点入口（知识页 CTA 深链）→ 7 类题型（calc/fill/choice/judge/geometry/classify/apply）→ 生成 → 重新生成 → 刷新 → 打印。
 退出码约定：`0`=PASS / `1`=FAIL / `2`=SKIPPED。`check-all` 的 `run()` 据此将 exit 2 标记为 SKIPPED，不计入 FAIL。
 
-### 检查域清单（33 项 = 17 项核心 + KBL 血缘/质量 2 项 + 附加门禁 + FINAL-91）
+### 检查域清单（34 项 = 17 项核心 + KBL 血缘/质量 2 项 + 实例级质量 1 项（P42-4） + 附加门禁 + FINAL-91）
 
-> 与 `dev/check-all.js` 逐一对应。合计口径：本地 32 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome SKIP）；CI 33 PASS / 0 FAIL / 0 SKIP。
+> 与 `dev/check-all.js` 逐一对应。合计口径：本地 33 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome SKIP）；CI 34 PASS / 0 FAIL / 0 SKIP。
 
 | # | 域 | 命令 | 作用 |
 |---|---|---|---|
@@ -55,8 +55,8 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 2 | KBL | `dev/p30/check-kbl-lineage.js` | KBL 血缘门禁（Excel→canonical→runtime，含 rootHash 可复算） |
 | 2 | KBL | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | Lint | `dev/lint-check.js` | 静态质量 |
-| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（328 文件） |
-| 5 | Unit | `npm test` | 全链测试（894/894） |
+| 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（342 文件） |
+| 5 | Unit | `npm test` | 全链测试（936/936） |
 | 6a | Generation | `dev/check-allow-generation.js` | 1570 真实生成 |
 | 6b | Generation | `dev/p28/check-generation-matrix-freeze.js` | 矩阵冻结 |
 | 6c | Generation | `dev/p28/check-generator-matrix.js` | Generator Registry |
@@ -82,6 +82,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 20 | Doc | `dev/p28/check-doc-consistency.js` | 历史数字扫描 |
 | 21 | Dead Code | `dev/p28/check-dead-code.js` | 死代码矩阵 |
 | 22 | Legacy | `dev/p28/check-legacy-matrix.js` | Legacy 治理矩阵 |
+| 23 | Instance | `dev/p42/check-instance-gates.js` | 实例级难度完整性（P42-028）+ 解析质量分级底线（P42-029：硬 0.5 / watch 0.6），1570 面重放 |
 | FINAL-91 | Readonly | `dev/check-all.js` 内建 | 运行前后 hash 快照，CI 不得修改源码/测试/冻结文件 |
 
 ## 3. 专项门禁脚本（`dev/p28/`）
@@ -134,7 +135,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 npm run check-all
 ```
 
-包含全部 33 项检查域（见 §2 清单）。CI 与本地使用同一入口。
+包含全部 34 项检查域（见 §2 清单）。CI 与本地使用同一入口。
 
 ### 何时跑 Full Gate
 

@@ -26,8 +26,12 @@
     : (GenerationEngine || (typeof require !== 'undefined' ? require('../generation/api.js') : null));
   // P31-FIX-03：四个 HEAD 既存零引用依赖声明物理删除（ResultCollector/LearnerStorage/
   // PracticeResult/PresentationRenderer，P31-10 登记项，全文件无消费经三方印证）
-  var PluginUtil = (typeof global.PluginUtil !== 'undefined') ? global.PluginUtil
-    : (typeof require !== 'undefined' ? require('../core/common.js') : null);
+  // P42-9：computeResult 唯一来源 = shared/core/check.js。浏览器经 common.js 注入
+  // global.PluginUtil.computeResult；Node 下 common.js 不再聚合 check，直接 require 模块导出
+  // （本文件对 common.js 的 require 随 PluginUtil 零消费一并物理删除）。
+  var Check = (typeof require !== 'undefined' && typeof module !== 'undefined' && module.exports)
+    ? require('../core/check.js')
+    : global.PluginUtil;
   // P28-21：唯一 Legacy Adapter = shared/presentation/render-format.js（semantic-question-bridge
   // 与 _sqToLegacyQuestion 已删除）。浏览器经 PresentationEngine.RenderFormat 取用，Node 直接 require。
   var RenderFormat = (typeof global.PresentationEngine !== 'undefined' && global.PresentationEngine.RenderFormat)
@@ -180,8 +184,8 @@
     var answers = this._collectAnswers();
     this.answers = answers;
 
-    // 统一经 PluginUtil.computeResult 批改
-    var result = PluginUtil.computeResult(this.exerciseSet.questions, answers);
+    // 统一经 Check.computeResult（shared/core/check.js）批改
+    var result = Check.computeResult(this.exerciseSet.questions, answers);
 
     if (!result || typeof result.score !== 'number' || !Array.isArray(result.results)) {
       return Promise.reject(new Error('批改结果不兼容'));
@@ -216,7 +220,7 @@
     // 页面层实现，这里只提供答案数据
     if (!this.checkResult) {
       var answers = this._collectAnswers();
-      var result = PluginUtil.computeResult(this.exerciseSet.questions, answers);
+      var result = Check.computeResult(this.exerciseSet.questions, answers);
       this.checkResult = result;
     }
     return this.checkResult;

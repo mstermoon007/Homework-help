@@ -7390,6 +7390,101 @@ function buildCalcGraphic(qt, structure, answer) {
   return firstStep();
 }
 
+
+
+
+
+
+
+
+function makeFractionDecimalMixedQuestion(plan, context, i, seedFn, normOp) {
+  var constraints = plan.constraints || {};
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var MIXED_DEC_A = [0.25, 0.5, 0.2, 0.4];
+  var MIXED_DEC_PAIR = { '0.25': 4, '0.5': 2, '0.2': 5, '0.4': 5 };
+  var a = MIXED_DEC_A[i % 4];
+  var x = MIXED_DEC_PAIR[String(a)];
+  var k = Rng.pick(rng, [2, 3]);
+  var y = x * k;
+  var ah = Math.round(a * 100);
+  var axI = ah * x / 100;
+  var ayI = ah * y / 100;
+  var ansI = axI + ayI;
+  var qt = plan.questionTypeId;
+  var fullExpr = a + ' × (' + x + ' + ' + y + ')';
+  
+  var distWhy = '运用乘法分配律（运算律）：' + fullExpr + ' = ' + a + ' × ' + x + ' + ' + a + ' × ' + y
+    + ' = ' + axI + ' + ' + ayI + ' = ' + ansI + '。小数混合运算先观察数的特点，用运算律凑整更简便。';
+  var prompt, outAnswer, explanationText = distWhy;
+  var options = null;
+  var choiceDistractors = null;
+
+  if (qt === 'fill') {
+    
+    prompt = '在 ____ 里填数（用运算律简便计算）：' + fullExpr + ' = ' + a + ' × ' + x + ' + ____ × ' + y + ' = ' + ansI;
+    outAnswer = a;
+    explanationText = distWhy + ' 空格里填 ' + a + '。';
+  } else if (qt === 'choice') {
+    
+    prompt = '下面哪个算式等于 ' + ansI + '？';
+    var correctExpr = fullExpr;
+    var cands = [a + ' × (' + (x + y + 1) + ')', a + ' + ' + x + ' + ' + y, (a + 1) + ' × (' + x + ' + ' + y + ')'];
+    options = Rng.shuffle(rng, [correctExpr].concat(cands));
+    outAnswer = correctExpr;
+    explanationText = distWhy + ' 正确选项是「' + correctExpr + '」。';
+    choiceDistractors = cands.map(function (e) { return { expr: e, errorType: null, source: 'adjacent-fallback' }; });
+  } else if (qt === 'apply') {
+    prompt = '每瓶矿泉水重 ' + a + ' 千克，甲箱装了 ' + x + ' 瓶，乙箱装了 ' + y + ' 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）';
+    outAnswer = ansI;
+    explanationText = distWhy + ' 两箱共重 ' + ansI + ' 千克。';
+  } else {
+    
+    
+    
+    prompt = '用运算律简便计算：' + fullExpr + ' = ?';
+    outAnswer = ansI;
+  }
+
+  var q = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 20 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: seedFn(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(outAnswer), acceptable: [], explanation: explanationText },
+    answerMode: 'input',
+    response: { layout: 'inline-after-equals' },
+    hint: null,
+    data: { operation: normOp, steps: 2, distractors: choiceDistractors }
+  };
+  if (options) q.data.options = options;
+  
+  
+  
+  
+  
+  if (intentWantsGraphic(plan)) {
+    if (qt === 'fill' || qt === 'choice') {
+      q.data.graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support',
+        params: { left: ansI, rightLabel: '？' } };
+    } else {
+      q.data.graphic = { type: 'diagram', subtype: 'groups', role: 'calculation-support',
+        params: { boxes: x, boxText: a, topText: '？' } };
+    }
+  }
+  return q;
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -7456,6 +7551,16 @@ function createArithmeticGenerator(spec) {
         if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId === 'geometry') {
           questions.push(makeFractionMultiplyGeometryQuestion(plan, context, i, seedFor));
           continue;
+        }
+        
+        
+        if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId !== 'geometry') {
+          var mixName = (plan.semanticParams && plan.semanticParams.name) || '';
+          if (mixName.indexOf('小数混合运算') !== -1) {
+            var normOpMix = Arith.normalizeOperation(context.operation || planOperationStr(plan) || op);
+            questions.push(makeFractionDecimalMixedQuestion(plan, context, i, seedFor, normOpMix));
+            continue;
+          }
         }
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
@@ -9314,7 +9419,10 @@ var SHAPE_THEME = {
     [['同一平面内两条直线不是平行就是垂直', '还可能只是一般相交（不成直角）。'],
      ['平行线会相交于很远的一点', '同一平面内平行线永不相交。'],
      ['互相垂直的两条直线不相交', '垂直是相交成直角的特殊情况，它们相交。']],
-    [['一个直角是 90°，两个直角拼起来是____度', '180', 180], ['正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边', '4', 4], ['长方形的两组对边分别平行，每组对边有____条', '2', 2]],
+    
+    
+    
+    [['正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边', '4', 4], ['长方形的两组对边分别平行，每组对边有____条', '2', 2], ['一个直角是 90°，两个直角拼起来是____度', '180', 180]],
     [['先在练习本上画一组平行线，再说说为什么它们永不相交？', '同一平面内，沿直线方向延长也不相交'],
      ['先用三角尺画出已知直线的一条垂线，再量一量夹角？', '夹角是 90°'],
      ['在教室里找两组互相平行和两组互相垂直的边，先说一说，再指出来？', '如书本对边平行、邻边垂直']]),
@@ -9668,7 +9776,7 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     } else {
       var w = wrongs[i % wrongs.length];
       shown = w.t;
-      explanation = '「' + shown + '」——' + w.m;
+      explanation = '「' + shown + '」——' + w.m + '，说法错误。'; 
       data.misconception = w.m;
     }
     data.shownStatement = shown;
@@ -10094,21 +10202,24 @@ function intentWantsGraphic(plan) {
 function translationGraphic(dx, dy) {
   return {
     type: 'geometry', subtype: 'translationDemo', role: 'number-position',
-    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 30 }
+    
+    
+    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 35 }
   };
 }
 function rotationGraphic(angle, dir) {
   return {
     type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
     params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0,
-      deg: dir === '顺时针' ? -angle : angle, unitPx: 34 }
+      deg: dir === '顺时针' ? -angle : angle, unitPx: 35 }
   };
 }
-function clockHandGraphic() {
+function clockHandGraphic(deg) {
+  
   
   return {
     type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
-    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: -90, unitPx: 34 }
+    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: deg === undefined ? -90 : deg, unitPx: 35 }
   };
 }
 function observeCubeGraphic() {
@@ -10202,11 +10313,41 @@ function makeTranslationQuestion(plan, context, i) {
     };
   }
   
+  
+  
+  
+  
+  if (qt === 'geometry') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'geometry', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '看图：方格纸上的图形向' + hDir + '平移后到了新位置。图形平移了 ____ 格。',
+      answer: { value: String(Math.abs(dx)), acceptable: [],
+        explanation: '平移不改变图形的形状和大小，对应点移动的距离相同：从图上数得图形向'
+          + hDir + '平移了 ' + Math.abs(dx) + ' 格。' }, answerMode: 'input',
+      data: { mode: 'geometry', steps: 1, shapeName: '平移', graphic: intentWantsGraphic(plan) ? translationGraphic(dx, 0) : null }
+    };
+  }
+  if (qt === 'apply') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '棋盘游戏：一枚棋子先向' + hDir + '平移 ' + Math.abs(dx) + ' 格，再向' + vDir
+        + '平移 ' + Math.abs(dy) + ' 格。棋子一共平移了多少格？',
+      answer: { value: String(answer), acceptable: [],
+        explanation: '分两步平移，总格数是两次格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
+          + '＝' + answer + ' 格。' }, answerMode: 'input',
+      data: { mode: 'apply', steps: 1, shapeName: '平移', graphic: transGraphic }
+    };
+  }
+  
   var transIsTrue = shown === answer;
   var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown), graphic: transGraphic };
   var transExplanation = transIsTrue
     ? '图形平移了 ' + answer + ' 格，题中答案正确。'
-    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
+    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格，说法错误。'; 
   if (!transIsTrue) {
     transData.misconception = '平移格数数错：' + (shown > answer ? '多数' : '少数') +
       '了 1 格，正确应为 ' + answer + ' 格。';
@@ -10248,6 +10389,26 @@ function makeRotationQuestion(plan, context, i) {
         explanation: '钟面上指针从 12 走到 3 转过一个直角，直角是 90 度，与顺时针还是逆时针无关。' },
       answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic() : null }
+    };
+  }
+  
+  
+  
+  if (qt === 'geometry' || qt === 'apply') {
+    var rotDeg = dir === '顺时针' ? -angle : angle;
+    var rotPos = (dir === '顺时针' ? ['12', '3', '6', '9'] : ['12', '9', '6', '3'])[(angle / 90) % 4];
+    var rotPrompt = qt === 'geometry'
+      ? '看图：钟面上一根指针从数字 12 开始，绕中心' + dir + '旋转 ' + angle + ' 度。指针指向数字 ____。'
+      : '钟面上，分针从数字 12 开始，绕中心' + dir + '旋转 ' + angle + ' 度。分针指向数字 ____。';
+    return {
+      knowledgePointId: pkp(plan), questionType: qt, difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: rotPrompt,
+      answer: { value: rotPos, acceptable: [],
+        explanation: '钟面被 12 个数字平均分成 12 大格，每大格 30 度。指针绕中心' + dir + '旋转 '
+          + angle + ' 度，转过 ' + (angle / 30) + ' 大格，从 12 指向数字 ' + rotPos + '。' },
+      answerMode: 'input',
+      data: { mode: qt, steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic(rotDeg) : null }
     };
   }
   
@@ -10391,9 +10552,10 @@ function createPositionGenerator(spec) {
         var q;
         var qt = plan.questionTypeId;
 
-        if ((spatialType === 'translation' || spatialType === 'rotation' ||
-             spatialType === 'observe' || spatialType === 'coordinate') &&
+        if ((spatialType === 'observe' || spatialType === 'coordinate') &&
             (qt === 'geometry' || qt === 'apply')) {
+          
+          
           
           q = null;
         } else if (spatialType === 'translation') {
@@ -10444,6 +10606,7 @@ function createPositionGenerator(spec) {
             q.data.graphic = graphic;
           }
         }
+        
         
         
         if (!q) {
@@ -10615,7 +10778,22 @@ function getMoneyMeta(kp, name, concept) {
   }
   var lt = (kp && kp.source && kp.source.legacyType) || (kp && kp.legacy && kp.legacy.legacyType);
   var cat = kp && kp.legacy && kp.legacy.category;
-  return { legacyType: lt, category: cat, kind: kind };
+  
+  
+  
+  
+  
+  var kpUnits = null;
+  var kindUnits = (kind !== 'rmb' && MEASUREMENT_KINDS[kind]) ? MEASUREMENT_KINDS[kind].units : null;
+  if (kindUnits && name) {
+    var claimed = String(name);
+    var picked = [];
+    kindUnits.slice().sort(function (a, b) { return b.length - a.length; }).forEach(function (u) {
+      if (claimed.indexOf(u) !== -1) { picked.push(u); claimed = claimed.split(u).join('□'); }
+    });
+    if (picked.length >= 2) kpUnits = picked;
+  }
+  return { legacyType: lt, category: cat, kind: kind, kpUnits: kpUnits };
 }
 
 function randDenom(rng, maxYuan) {
@@ -10764,6 +10942,12 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var units = table.filter(function(u){
     return MEASUREMENT_KINDS[kind] && MEASUREMENT_KINDS[kind].units && MEASUREMENT_KINDS[kind].units.indexOf(u.unit) !== -1;
   });
+  
+  
+  if (meta.kpUnits) {
+    var kpUnits = units.filter(function (u) { return meta.kpUnits.indexOf(u.unit) !== -1; });
+    if (kpUnits.length >= 2) units = kpUnits;
+  }
   
   if (units.length < 2) {
     return makeRMBConversionQuestion(plan, context, i, meta);
@@ -11586,6 +11770,101 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
   };
 }
 
+
+
+
+
+function makeIrregularVolumeTyped(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var length = Rng.pick(rng, [10, 12]);
+  var width = Rng.pick(rng, [6, 8]);
+  var waterBefore = 5;
+  var rise = Rng.pick(rng, [2, 3]);
+  var waterAfter = waterBefore + rise;
+  var volume = length * width * rise;
+  var graphic = intentWantsGraphic(plan) ? {
+    type: 'geometry',
+    subtype: 'cuboid',
+    role: 'quantity-correspondence',
+    params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
+  } : null;
+  var dims = '长 ' + length + ' 厘米、宽 ' + width + ' 厘米';
+  var why = '石块体积 = 玻璃缸底面积 × 水面上升高度 = ' + length + ' × ' + width
+    + ' × ' + rise + ' = ' + volume + '（立方厘米）';
+  var base = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    answerMode: 'input',
+    data: {
+      mode: qt,
+      steps: 2,
+      kind: 'displacement-volume',
+      tankLength: length,
+      tankWidth: width,
+      waterBefore: waterBefore,
+      waterAfter: waterAfter,
+      rise: rise,
+      operation: 'mult',
+      graphic: graphic
+    }
+  };
+  if (qt === 'fill') {
+    base.prompt = '做一个实验：长方体玻璃缸从里面量' + dims + '，水深 5 厘米。放入一块不规则石块后水面上升到 '
+      + waterAfter + ' 厘米（水未溢出）。石块的体积是 ____ 立方厘米。';
+    base.answer = { value: String(volume), acceptable: [], explanation: why + '。' };
+    return base;
+  }
+  if (qt === 'apply') {
+    base.prompt = '小科做了一个排水法实验：长方体玻璃缸从里面量' + dims + '，缸里水深 5 厘米。他把一块不规则'
+      + '的石块完全浸没入水中（水没有溢出），水面上升到 ' + waterAfter + ' 厘米。这块石块的体积是多少立方厘米？';
+    base.answer = { value: String(volume), acceptable: [volume + '立方厘米'], explanation: why + '。' };
+    return base;
+  }
+  if (qt === 'choice') {
+    
+    var distractors = [];
+    var guard = 0;
+    while (distractors.length < 3 && guard < 50) {
+      guard++;
+      var offset = randInt(rng, -30, 30);
+      if (offset === 0) offset = 1;
+      var dist = volume + offset;
+      if (dist > 0 && distractors.indexOf(dist) === -1 && dist !== volume) distractors.push(dist);
+    }
+    var options = Rng.shuffle(rng, [volume].concat(distractors).slice(0, 4)).map(function (n) { return String(n); });
+    base.prompt = '数学实验课上，长方体玻璃缸的内部' + dims + '，原有 5 厘米深的水。一块不规则石块完全浸入后，'
+      + '水面升到 ' + waterAfter + ' 厘米。石块的体积是多少？';
+    base.answer = { value: String(volume), acceptable: [], explanation: why + '，正确选项是「' + volume + '」。' };
+    base.answerMode = 'choice';
+    base.data.options = options;
+    base.data.correctIndex = options.indexOf(String(volume));
+    return base;
+  }
+  if (qt === 'judge') {
+    var isTrue = rng() < 0.5;
+    var judgeDelta = randInt(rng, -30, 30);
+    if (judgeDelta === 0) judgeDelta = 10;
+    var shown = isTrue ? volume : volume + judgeDelta;
+    base.prompt = '实验测量：长方体玻璃缸从里面量' + dims + '，水深 5 厘米。放入一块不规则石块完全浸没后'
+      + '水面上升到 ' + waterAfter + ' 厘米（水未溢出）。计算得石块体积是 ' + shown + ' 立方厘米 —— 对还是错？';
+    base.answer = { value: isTrue, acceptable: [], explanation: isTrue
+      ? '底面积 × 水面上升高度 = ' + length + ' × ' + width + ' × ' + rise + ' = ' + volume + '，计算正确，说法对。'
+      : '正确答案是 ' + volume + '，不是 ' + shown + '，说法错误。' };
+    base.answerMode = 'judge';
+    base.data.shownAnswer = shown;
+    if (!isTrue) {
+      base.data.misconception = '排水法理解错误：石块体积 = 底面积 × 水面上升高度 = ' + volume + '，题中给成了 ' + shown + '。';
+    }
+    return base;
+  }
+  return null;
+}
+
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var nr = nrOf(plan);
@@ -11794,6 +12073,15 @@ function createApplicationGenerator(spec) {
         
         if (plan.questionTypeId === 'geometry') {
           questions.push(makeDisplacementVolumeQuestion(plan, context, i));
+          continue;
+        }
+        
+        
+        var volName = (plan.semanticParams && plan.semanticParams.name) || '';
+        if (volName.indexOf('不规则') !== -1 && volName.indexOf('体积') !== -1) {
+          var qv = makeIrregularVolumeTyped(plan, context, i);
+          if (!qv) continue; 
+          questions.push(qv);
           continue;
         }
         q = makeApplicationQuestion(plan, context, i, meta);
@@ -12317,7 +12605,9 @@ function makeTable789Question(plan, context, i) {
 
   if (qt === 'calc') {
     
-    if (i % 2 === 0) {
+    
+    
+    if (i % 2 === 1) {
       prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ?';
       answer = String(p); operation = 'mult';
       tWhy = '想乘法口诀「' + b + ' ' + a + '」得 ' + p + '，所以 ' + a + ' × ' + b + ' = ' + p;
@@ -12336,7 +12626,8 @@ function makeTable789Question(plan, context, i) {
       tWhy = '除数 = 被除数 ÷ 商：' + p + ' ÷ ' + b + ' = ' + a; }
   } else if (qt === 'choice') {
     
-    var isMult = i % 2 === 0;
+    
+    var isMult = i % 2 === 1;
     var target = isMult ? p : b;
     var correctExpr = isMult ? (a + ' × ' + b) : (p + ' ÷ ' + a);
     tWhy = (isMult ? '想乘法口诀「' + b + ' ' + a + '」得 ' + p
@@ -12362,11 +12653,14 @@ function makeTable789Question(plan, context, i) {
   } else { 
     var goods = ['月饼', '笔记本', '彩笔', '气球'];
     var g = goods[i % goods.length];
-    if (i % 3 === 0) {
+    
+    
+    var form = (i + 1) % 3;
+    if (form === 0) {
       prompt = '每盒' + g + '有 ' + b + ' 个，买了 ' + a + ' 盒，一共有多少个' + g + '？';
       answer = String(p); operation = 'mult';
       tWhy = '每盒个数 × 盒数 = 总数：' + b + ' × ' + a + ' = ' + p;
-    } else if (i % 3 === 1) {
+    } else if (form === 1) {
       prompt = '把 ' + p + ' 个' + g + '平均分给 ' + a + ' 个小组，每个小组分得多少个？';
       answer = String(b); operation = 'div';
       tWhy = '总数 ÷ 组数 = 每组分得数：' + p + ' ÷ ' + a + ' = ' + b;
@@ -12456,7 +12750,10 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('找次品') !== -1 || name.indexOf('天平') !== -1) type = 'find-defect';
   else if (name.indexOf('握手') !== -1) type = 'handshake';
   
-  else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
+  
+  
+  else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1
+    || name.indexOf('最优') !== -1 || name.indexOf('策略') !== -1) type = 'optimization';
   else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
@@ -12590,23 +12887,26 @@ function makeReasoningQuestion(plan, context, i, kp) {
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
   } else if (type === 'optimization') {
+    
+    
+    var stratNamed = name.indexOf('最优') !== -1 || name.indexOf('策略') !== -1;
     if (v % 3 === 0) {
       var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
       fillP = '一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙' + pans + '张饼最少需要____分钟。';
       answer = pans * 2; steps = 3;
-      nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
+      nativeWhy = (stratNamed ? '最优方案：' : '') + '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
         + ' × 2 = ' + pans * 2 + ' 个面，每锅 2 分钟烙两个面，共 ' + answer + ' 分钟';
     } else if (v % 3 === 1) {
       prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
       fillP = '煮一个鸡蛋需要8分钟，洗锅的2分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 8; steps = 2;
-      nativeWhy = '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
+      nativeWhy = (stratNamed ? '最优安排：' : '') + '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
     } else {
       prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
       fillP = '看一集动画需要15分钟，写作业的10分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 15; steps = 2;
-      nativeWhy = '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
+      nativeWhy = (stratNamed ? '最优安排：' : '') + '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
     }
   } else if (type === 'seq') {
     var SEQ = [
@@ -15593,8 +15893,10 @@ function makeAngleFill(plan, context, i) {
     type: 'geometry', subtype: 'angle', role: 'auxiliary',
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
+  
+  
   return finish(q, '一个角有 1 个顶点和 ____ 条边。', '2', ['2', '两'],
-    '角由一个顶点和两条边（射线）组成');
+    '角由一个顶点和两条边（射线）组成，横线里填 2。');
 }
 
 function makeAngleApply(plan, context, i) {
@@ -16072,7 +16374,15 @@ function buildNumberConceptItem(rng, name, nr) {
     var cur = riC(rng, 11, 88, nr);
     return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
       answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
-      apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '（' + cur + ' − 1 = ' + (cur - 1) + '），后一个数是多少？' };
+      
+      
+      
+      
+      
+      
+      conclusion: false,
+      applyAnswer: String(cur + 1),
+      apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '，后一个数是多少？（' + cur + ' + 1 = ？）' };
   }
   if (name.indexOf('比较') !== -1) {
     var a0 = riC(rng, 12, 98, nr), b0 = a0 + riC(rng, 1, 9, nr) * (rng() < 0.5 ? 1 : -1);
@@ -16420,23 +16730,55 @@ function makeByItem(plan, context, i, builder, subType) {
   
   
   
-  var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer))
+  
+  
+  
+  var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer) && item.conclusion !== false)
     ? '；' + item.answer : '';
   var srcExpr = /[+\-−×÷*＝=]/.test(String(prompt)) ? String(prompt) : String(item.stem || '');
   var sup = extractSupport(srcExpr);
   var expr = null, exprAns = null;
   if (/[+\-−×÷*]/.test(sup) && /\d/.test(sup)) {
-    var supCore = sup.replace(/[?？]\s*$/, '');
-    expr = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    var supCore = sup.replace(/[?？。！!]\s*$/, '');
+    var exprCand = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    
+    
+    
+    
+    
+    
+    
+    
     var eqTail = /[=＝]\s*([^=＝？?]+)$/.exec(supCore);
-    if (eqTail && /^[−-]?\d+$/.test(eqTail[1].replace(/[、\s]/g, ''))) exprAns = eqTail[1].trim();
+    var exprAnsFromTail = null;
+    if (eqTail) {
+      
+      
+      
+      var tail = eqTail[1].replace(/[、\s]/g, '');
+      var mPure = /^[−-]?\d+$/.exec(tail);
+      var mRem = /^(\d+)……(\d+)(?![0-9…])/.exec(tail);
+      var mLead = /^[−-]?\d+/.exec(tail);
+      if (mPure) exprAnsFromTail = tail;
+      else if (mRem) exprAnsFromTail = mRem[1] + '……' + mRem[2];
+      else if (mLead && !/^[−-]?\d+[+−\-×÷…]/.test(tail)) exprAnsFromTail = mLead[0];
+    }
+    var exprFormOk = /^[0-9−-]/.test(exprCand) && !/[，。；、？！…：,;]/.test(exprCand);
+    if (!/_{2,}/.test(exprCand) && (exprFormOk || exprAnsFromTail != null)) {
+      expr = exprCand;
+      exprAns = exprAnsFromTail;
+    }
   }
   var isNumAns = /^[-−]?\d+$/.test(String(answer).replace('−', '-'));
   if (exprAns == null && isNumAns) exprAns = String(answer);
   var explanation;
   if (qt === 'calc') {
+    
+    
     explanation = expr
-      ? expr + ' = ' + answer + conceptConclusion + '。'
+      ? (exprAns != null && String(exprAns).replace('−', '-') !== String(answer).replace('−', '-')
+          ? expr + ' = ' + exprAns + '，所以答案是 ' + answer + conceptConclusion + '。'
+          : expr + ' = ' + answer + conceptConclusion + '。')
       : '答案是 ' + answer + conceptConclusion + '。';
   } else if (qt === 'fill') {
     explanation = expr
@@ -17233,6 +17575,63 @@ function makePropGeometry(plan, context, i) {
 
 
 
+
+function makeInversePropTyped(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  
+  var cargo = [[24, 8, 3, 6], [30, 10, 3, 15], [24, 12, 2, 8]];
+  var bind = [[240, 40, 6, 30], [180, 30, 6, 36], [240, 60, 4, 48]];
+  var ship = [[360, 60, 6, 90], [240, 40, 6, 80], [360, 90, 4, 120]];
+  var c = Rng.pick(rng, qt === 'calc' ? cargo : (qt === 'fill' ? bind : ship));
+  var timesB = c[0] / c[3];
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'inverse',
+    total: c[0], perA: c[1], timesA: c[2], perB: c[3]
+  });
+  if (qt === 'calc') {
+    return finish(q, '列式计算：一批货物共 ' + c[0] + ' 吨，用载重 ' + c[1] + ' 吨的卡车运，正好 '
+      + c[2] + ' 次运完。如果改用载重 ' + c[3] + ' 吨的卡车运，要运多少次？列式：' + c[0] + ' ÷ ' + c[3]
+      + ' = ？（次）', timesB, [String(timesB)],
+      '货物总量一定，每辆载重与运的次数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB + '（次）');
+  }
+  if (qt === 'fill') {
+    return finish(q, '装订一批练习本，每本 ' + c[1] + ' 页，正好装订 ' + c[2]
+      + ' 本。如果每本 ' + c[3] + ' 页，可以装订（  ）本。', timesB, [String(timesB)],
+      '纸的总页数一定，每本页数与装订本数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB + '（本）');
+  }
+  
+  
+  q.prompt = '学校组织 ' + c[0] + ' 人去春游，原来每条船坐 ' + c[1] + ' 人，正好租了 '
+    + c[2] + ' 条船。如果改租每条坐 ' + c[3] + ' 人的船，需要多少条船？（  ）';
+  
+  
+  var wrongs = [timesB + 1, timesB + 2, Math.max(1, timesB - 1)];
+  return finishChoice(q, rng, timesB + ' 条',
+    [wrongs[0] + ' 条', wrongs[1] + ' 条', wrongs[2] + ' 条'],
+    '总人数一定，每船载客量与所需船数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB
+      + '（条），正确选项是「' + timesB + ' 条」。');
+}
+
+
+function makeDirectPropApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var nr = nrOf(plan);
+  var unit = Rng.pick(rng, [3, 4, 5, 6]);
+  var a = riC(rng, 2, 5, nr);
+  var b = riC(rng, 6, 9, nr);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    unitPrice: unit, lengthA: a, lengthB: b
+  });
+  return finish(q, '买 ' + a + ' 米彩带要 ' + (a * unit) + ' 元，买 ' + b + ' 米同样的彩带要多少元？',
+    b * unit, [String(b * unit)],
+    '彩带单价一定，总价与数量成正比例：先归一求单价 ' + (a * unit) + ' ÷ ' + a + ' = ' + unit
+      + ' 元，再算 ' + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
+}
+
+
+
 var MAP_SCALES = [
   { label: '1:5000', factor: 5000 },
   { label: '1:10000', factor: 10000 },
@@ -17492,6 +17891,17 @@ function createSemanticRelationsGenerator(spec) {
       var params = paramsOf(plan);
       var row = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
       var maker = row && row[plan.questionTypeId];
+      
+      
+      if (params && params.subTopic === 'proportion-application') {
+        var pName = params.name || '';
+        var qt0 = plan.questionTypeId;
+        if (pName.indexOf('反比例') !== -1 && (qt0 === 'calc' || qt0 === 'fill' || qt0 === 'choice')) {
+          maker = makeInversePropTyped;
+        } else if (pName.indexOf('正比例') !== -1 && qt0 === 'apply') {
+          maker = makeDirectPropApply;
+        }
+      }
       
       if (!maker) return [];
       var out = [];
@@ -18315,7 +18725,8 @@ function arithmeticTyped(sub, qt, rng, nr) {
 }
 
 
-function conceptTyped(sub, qt, rng, nr) {
+
+function conceptTyped(sub, qt, rng, nr, name) {
   if (sub === 'meaning') {
     var d0 = riC(rng, 4, 9, nr), n0 = riC(rng, 2, d0 - 2, nr);
     if (qt === 'calc') {
@@ -18342,12 +18753,27 @@ function conceptTyped(sub, qt, rng, nr) {
     if (qt === 'calc') {
       var g2 = riC(rng, 2, 5, nr), ca = riC(rng, 1, 4, nr), cb = ca + riC(rng, 1, 3, nr);
       var cn = g2 * ca, cd = g2 * cb, cr = simp(cn, cd);
-      return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + cr.n + '）：' +
+      
+      
+      
+      return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + ca + '）：' +
         cn + '/' + cd + ' = ？', answer: fs(cr), options: null,
         explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fs(cr) + '。' };
     }
     if (qt === 'fill') {
       var bd = riC(rng, 3, 8, nr), bk = riC(rng, 2, 5, nr);
+      
+      
+      
+      
+      if (name && (name.indexOf('约分') !== -1 || name.indexOf('通分') !== -1)) {
+        
+        
+        return { prompt: '把 ' + bk + '/' + (bd * bk) + ' 约成最简分数，结果是 ____。',
+          answer: '1/' + bd, options: null,
+          explain: '约分：' + bk + '/' + (bd * bk) + ' = 1/' + bd
+            + '，分子分母同时除以公因数 ' + bk + '。' };
+      }
       return { prompt: '分数的基本性质，在 ____ 里填数：1/' + bd + ' = ____/' + (bd * bk),
         answer: String(bk), options: null,
         explain: '分数的基本性质：分子分母同时乘 ' + bk + '，1/' + bd + ' = ' + bk + '/' + (bd * bk)
@@ -18484,7 +18910,7 @@ function buildQuestion(plan, context, i) {
   var nr = nrOf(plan);
 
   var ARITH_SUBS = { word: 1, addsub: 1, 'addsub-diff': 1, mix: 1, div: 1 };
-  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr);
+  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr, name);
 
   var prompt = typed.prompt;
   var answer = typed.answer;

@@ -1,7 +1,9 @@
 /**
  * shared/core/check.js — 批改聚合（P32 答案系统收口）
  *
- * computeResult / pickOpt（选项点击）。
+ * computeResult（逐题委托 AnswerValidator.gradeUserAnswer）。
+ * （pickOpt / __pickOpt 已按 P42-10 物理删除：.opt 类随 P28-UI-PRINTSTYLE-CLEANUP-01 删除后
+ *   零产出方、prod/test/bundle 三方零调用，死代码矩阵 [15] 候选转正清理。）
  * 判分唯一权威 = AnswerValidator.gradeUserAnswer（shared/validator/answer-validator.js）：
  *   - 浏览器：经 global.PresentationEngine.AnswerValidator（presentation-engine.bundle 暴露）
  *   - Node：require 兜底（同目录相对路径）
@@ -65,30 +67,13 @@
     };
   }
 
-  /** 选项点击处理（choice 题型，写入隐藏 input）。选中态由 components.css 的 .opt.chosen 呈现 */
-  function pickOpt(el) {
-    var card = el.parentNode && el.parentNode.parentNode;
-    if (!card) return;
-    var opts = card.querySelectorAll('.opt');
-    for (var i = 0; i < opts.length; i++) {
-      opts[i].classList.remove('chosen');
-      opts[i].setAttribute('aria-checked', 'false');
-    }
-    el.classList.add('chosen');
-    el.setAttribute('aria-checked', 'true');
-    var inp = card.querySelector('input[data-index]');
-    if (inp) inp.value = el.getAttribute('data-val') || el.textContent;
-  }
-
   // ============ 增量挂载 ============
   global.PluginUtil = global.PluginUtil || {};
   global.PluginUtil.computeResult = computeResult;
-  global.PluginUtil.pickOpt = pickOpt;
-  global.__pickOpt = pickOpt;               // 卡片 onclick="window.__pickOpt(this)" 兼容
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-      computeResult: computeResult, pickOpt: pickOpt
+      computeResult: computeResult
     };
   }
 

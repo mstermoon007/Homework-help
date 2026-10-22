@@ -55134,11 +55134,6 @@
         },
         {
           "kind": "field",
-          "path": "data.steps",
-          "value": 1
-        },
-        {
-          "kind": "field",
           "path": "data.questionType",
           "value": "apply"
         }
@@ -59820,12 +59815,7 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "position-grid"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.gridSize",
-          "value": 5
+          "value": "translationDemo"
         },
         {
           "kind": "field",
@@ -59834,18 +59824,8 @@
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.showGrid",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.gridColor",
-          "value": "#e0e0e0"
-        },
-        {
-          "kind": "field",
           "path": "data.shapeName",
-          "value": "空间"
+          "value": "平移"
         }
       ],
       "forbidden": [
@@ -60021,12 +60001,7 @@
         {
           "kind": "field",
           "path": "data.graphic.subtype",
-          "value": "position-grid"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.gridSize",
-          "value": 5
+          "value": "translationDemo"
         },
         {
           "kind": "field",
@@ -60035,18 +60010,8 @@
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.showGrid",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.gridColor",
-          "value": "#e0e0e0"
-        },
-        {
-          "kind": "field",
           "path": "data.shapeName",
-          "value": "空间"
+          "value": "平移"
         }
       ],
       "forbidden": [
@@ -69165,7 +69130,7 @@
         {
           "kind": "field",
           "path": "data.proportion",
-          "value": "inverse"
+          "value": "direct"
         }
       ],
       "forbidden": [
@@ -69465,7 +69430,7 @@
         {
           "kind": "field",
           "path": "data.proportion",
-          "value": "direct"
+          "value": "inverse"
         }
       ],
       "forbidden": [
@@ -69537,7 +69502,7 @@
         {
           "kind": "field",
           "path": "data.proportion",
-          "value": "direct"
+          "value": "inverse"
         }
       ],
       "forbidden": [
@@ -69609,7 +69574,7 @@
         {
           "kind": "field",
           "path": "data.proportion",
-          "value": "direct"
+          "value": "inverse"
         }
       ],
       "forbidden": [

@@ -36,7 +36,7 @@
 | 缓存/版本 | SW `CACHE = 'hw-help-' + APP_VERSION`；HTML 资源注入 `?v=<版本>` | 版本四方一致：`VERSION` = `package.json.version` = `shared/catalog/version.js` = `sw.js CACHE` |
 | 托管 | nginx 静态 + HTTPS + HTTP→HTTPS 301 | 部署为白名单打包 + 原子切换（非整目录上传） |
 | 可发现性 | `sitemap.xml` / `robots.txt` / `llms.txt` / canonical / `kbgen:hash` 漂移指纹 | SEO + AI/LLM 只读消费 |
-| CI/门禁 | `bash scripts/run-all-checks.sh` ≡ `npm run check-all` | 33 项，本地与 CI 完全一致 |
+| CI/门禁 | `bash scripts/run-all-checks.sh` ≡ `npm run check-all` | 34 项，本地与 CI 完全一致 |
 
 ---
 
@@ -192,8 +192,8 @@ practice.html (UI/事件/状态)
 
 ## 13. 构建、测试与发布
 
-- **测试**：`npm test` = `node --test "tests/**/*.test.js"`，当前 **894 用例 / 16 套件 / 93 文件**；目录分布 generation/orchestration/presentation/adaptive/source/validator/core/semantic。
-- **门禁链**：`npm run check-all`（`dev/check-all.js`）**33 项**：SW 版本 · M0 聚合+KBL 边界 · KBL 血缘 · KBL 数据质量 · Lint · Syntax(328 文件) · Unit · 生成（1570/矩阵冻结/Registry/四轴/分工矩阵/失败分类/答案防泄露） · 教育语义 · 金题集 · 难度权威/溯源 · 渲染/Legacy · SVG · 安全 · Sitemap(382) · 爬虫 · 浏览器 E2E(9 步) · Bundle 确定性 · 覆盖率 · LLM 可读 · 文档数字 · 死代码 · Legacy 矩阵 · FINAL-91 只读快照。CI 设 `REQUIRE_BROWSER_E2E=1` + `CHROME_BIN`。
+- **测试**：`npm test` = `node --test "tests/**/*.test.js"`，当前 **936 用例 / 16 套件 / 101 文件**；目录分布 generation/orchestration/presentation/adaptive/source/validator/core/semantic。
+- **门禁链**：`npm run check-all`（`dev/check-all.js`）**34 项**：SW 版本 · M0 聚合+KBL 边界 · KBL 血缘 · KBL 数据质量 · Lint · Syntax(342 文件) · Unit · 生成（1570/矩阵冻结/Registry/四轴/分工矩阵/失败分类/答案防泄露） · 教育语义 · 金题集 · 难度权威/溯源 · 渲染/Legacy · SVG · 安全 · Sitemap(382) · 爬虫 · 浏览器 E2E(9 步) · Bundle 确定性 · 覆盖率 · LLM 可读 · 文档数字 · 死代码 · Legacy 矩阵 · 实例级质量(难度完整性/解析质量底线，P42-4) · FINAL-91 只读快照。CI 设 `REQUIRE_BROWSER_E2E=1` + `CHROME_BIN`。
 - **构建**：`npm run kbl:rebuild`（extract→derive→knowledge pages）；`npm run build:strategy` / `build:presentation`（bundle）；`generate:sitemap`。
 - **发布**：白名单打包 + 原子切换 + 线上三层验证（公网 curl / hash 一致 / 真实 Chrome）；回滚 = 恢复上一稳定 tar 或 `git revert`。**代码/测试/开发工具/审计文档不部署**。
 
@@ -228,7 +228,7 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 |---|---|
 | 版本 | 5.2.0（`VERSION`=`package.json`=`version.js`=`sw.js CACHE` 四方一致） |
 | 基线 commit | `5779805`（本次审计修复未提交） |
-| 门禁 | `check-all` 32 PASS / 0 FAIL / 1 SKIP（33 项；#15 无 Chrome SKIP；CI 设 `CHROME_BIN` 为 33/33 含真实 Chrome E2E 9/9），`npm test` 894/894 |
+| 门禁 | `check-all` 33 PASS / 0 FAIL / 1 SKIP（34 项；#15 无 Chrome SKIP；CI 设 `CHROME_BIN` 为 34/34 含真实 Chrome E2E 9/9），`npm test` 936/936 |
 | KBL | 375 / 98 / 373 / 1570 |
 | 线上 | VERSION 5.2.0；`index/select/practice.html` 与本地**字节一致**；dev/tests/kbl 不可达；`/stats` 404 |
 

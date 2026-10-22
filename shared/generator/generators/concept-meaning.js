@@ -305,8 +305,10 @@ function makeAngleFill(plan, context, i) {
     type: 'geometry', subtype: 'angle', role: 'auxiliary',
     params: { angle: 50, rayLength: 2, unitPx: 26, labelAngle: false }
   };
+  // P42-4（P42-029 登记样本）：解析须含答案值（scoreExplanationQuality 判据④），
+  // 否则解析质量分 0.5 低于 0.6 目标——补「横线里填 2」承载答案。
   return finish(q, '一个角有 1 个顶点和 ____ 条边。', '2', ['2', '两'],
-    '角由一个顶点和两条边（射线）组成');
+    '角由一个顶点和两条边（射线）组成，横线里填 2。');
 }
 
 function makeAngleApply(plan, context, i) {
@@ -801,7 +803,15 @@ function buildNumberConceptItem(rng, name, nr) {
     var cur = riC(rng, 11, 88, nr);
     return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
       answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
-      apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '（' + cur + ' − 1 = ' + (cur - 1) + '），后一个数是多少？' };
+      // P42-2A（P42-019）：apply 只问「后一个数」却复用 stem 双值答案（题答不一致），
+      // 且解析列式取题面内嵌的后向参考式「cur − 1」，与所问的前向结论矛盾。
+      // 按 P32-AS-11 分型答案机制收敛为单一结论 cur+1；情境句按 P32-AS-16 口径
+      // 删完整证明、内嵌前向 scaffold，使解析列式随题问切到前向算式。
+      // item.answer 是 stem 双值变体而非独立概念结论，以 conclusion:false 关闭
+      // makeByItem 的「；」附注。
+      conclusion: false,
+      applyAnswer: String(cur + 1),
+      apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '，后一个数是多少？（' + cur + ' + 1 = ？）' };
   }
   if (name.indexOf('比较') !== -1) {
     var a0 = riC(rng, 12, 98, nr), b0 = a0 + riC(rng, 1, 9, nr) * (rng() < 0.5 ? 1 : -1);
@@ -1149,23 +1159,55 @@ function makeByItem(plan, context, i, builder, subType) {
   //「题面，答案是 X」升级为结构化解析——calc 逐步演算、fill 演算+归因、apply 四步
   //「题意→列式→计算→答」。素材全部取自 builder 既有变量（题面/stem 内嵌参考式、
   // item.answer 概念结论），不编造；无算式素材时诚实退化为「答案是 X」裸句（P34-14 不引题外信息）。
-  var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer))
+  // P42-2A（P42-019）：item.answer 为 stem 双值变体（与分型答案同题不同规格）时
+  // 不作附注——该机制面向独立概念结论（读法「负五」、分类词「质数」），builder 可
+  // 以 conclusion:false 显式关闭。
+  var conceptConclusion = (item.answer != null && String(item.answer) !== String(answer) && item.conclusion !== false)
     ? '；' + item.answer : '';
   var srcExpr = /[+\-−×÷*＝=]/.test(String(prompt)) ? String(prompt) : String(item.stem || '');
   var sup = extractSupport(srcExpr);
   var expr = null, exprAns = null;
   if (/[+\-−×÷*]/.test(sup) && /\d/.test(sup)) {
-    var supCore = sup.replace(/[?？]\s*$/, '');
-    expr = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    var supCore = sup.replace(/[?？。！!]\s*$/, '');
+    var exprCand = supCore.replace(/[=＝]\s*[^=＝]*$/, '').trim();
+    // P42-1B：含空位「____」的支撑串是整句题干而非算式——任何等式拼接都会产出
+    // 「____ 不是 2 的倍数 = 21」假等式，整体退化为「答案是 X」。
+    // P42-4（P42-031）：句子型支撑串守卫（1B 空位守卫的姊妹形态）——教学指令句
+    //（如「仿照 7 ÷ 2 的做法，把每个选项除以 2，看余数是不是 0」仅内嵌示例算式）
+    // 无「=」右值可提取时 exprAns 回退最终答案，整句拼接成「…看余数是不是 0 = 28」
+    // 假等式。故 exprCand 须为纯算式形态（首字符数字/负号、无句读标点）才允许
+    // 等式拼接/答案回退；例外：支撑串自带数字「=」右值（源数据等式恒真，如
+    // 「参考：80 × 2 = 160」）不在此限。否则诚实退化为「答案是 X」（P34-14）。
     var eqTail = /[=＝]\s*([^=＝？?]+)$/.exec(supCore);
-    if (eqTail && /^[−-]?\d+$/.test(eqTail[1].replace(/[、\s]/g, ''))) exprAns = eqTail[1].trim();
+    var exprAnsFromTail = null;
+    if (eqTail) {
+      // P42-1B：exprAns 取算式自带右值，不吞进最终答案——接受整数、「整数……余数」
+      //（带余除法记法）、前导整数+教学尾注（「30，30 有多个因数」「5 没有余数」）；
+      // 前导整数后紧跟运算符（「33 − 5」未完链式）不提取，交下方回退保持整体等式。
+      var tail = eqTail[1].replace(/[、\s]/g, '');
+      var mPure = /^[−-]?\d+$/.exec(tail);
+      var mRem = /^(\d+)……(\d+)(?![0-9…])/.exec(tail);
+      var mLead = /^[−-]?\d+/.exec(tail);
+      if (mPure) exprAnsFromTail = tail;
+      else if (mRem) exprAnsFromTail = mRem[1] + '……' + mRem[2];
+      else if (mLead && !/^[−-]?\d+[+−\-×÷…]/.test(tail)) exprAnsFromTail = mLead[0];
+    }
+    var exprFormOk = /^[0-9−-]/.test(exprCand) && !/[，。；、？！…：,;]/.test(exprCand);
+    if (!/_{2,}/.test(exprCand) && (exprFormOk || exprAnsFromTail != null)) {
+      expr = exprCand;
+      exprAns = exprAnsFromTail;
+    }
   }
   var isNumAns = /^[-−]?\d+$/.test(String(answer).replace('−', '-'));
   if (exprAns == null && isNumAns) exprAns = String(answer);
   var explanation;
   if (qt === 'calc') {
+    // P42-1B：算式自带正确右值（exprAns）与最终答案不同时，解析写
+    // 「expr = exprAns，所以答案是 answer」，不再把最终答案填作中间步骤右值。
     explanation = expr
-      ? expr + ' = ' + answer + conceptConclusion + '。'
+      ? (exprAns != null && String(exprAns).replace('−', '-') !== String(answer).replace('−', '-')
+          ? expr + ' = ' + exprAns + '，所以答案是 ' + answer + conceptConclusion + '。'
+          : expr + ' = ' + answer + conceptConclusion + '。')
       : '答案是 ' + answer + conceptConclusion + '。';
   } else if (qt === 'fill') {
     explanation = expr

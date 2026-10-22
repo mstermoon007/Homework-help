@@ -144,3 +144,46 @@ test('P40-Q-10 L3 真实生成面：加权契约 + explanationQuality 分布', (
   assert.ok(sumEq / scored.length >= 0.75,
     'concept-meaning 解析均值应 ≥0.75，实得 ' + (sumEq / scored.length).toFixed(3));
 });
+
+/* ------------------------------------------------------------------ *
+ * P42-6 判据④′：judge 布尔答案专用（解析结论词与答案一致；否定词优先）
+ * ------------------------------------------------------------------ */
+
+test('P42-6 L2 判据④′ judge 布尔正例：结论词与答案一致 → 0.75（③不可达上限）', () => {
+  // true + 肯定结论词（实证形态「说法正确」）→ ④′命中
+  const t = mkSq({ prompt: '判断对错——「立体图形都有长、宽、高」。这个说法对吗？',
+    answer: { value: true, explanation: '「立体图形都有长、宽、高」——符合立体图形的知识，说法正确。' } });
+  assert.equal(Scorer.scoreQuestion(t, null, {}).breakdown.explanationQuality, 0.75);
+  // false + 否定结论词（实证形态「说法错误」）→ ④′命中
+  const f = mkSq({ prompt: '平行四边形的特征是：「有10条边」—— 对还是错？',
+    answer: { value: false, explanation: '「有10条边」不是平行四边形的特征，说法错误。' } });
+  assert.equal(Scorer.scoreQuestion(f, null, {}).breakdown.explanationQuality, 0.75);
+});
+
+test('P42-6 L2 判据④′负例与回归保护：结论相反/无结论词不加分；非布尔仍走原④', () => {
+  // 结论相反（value=true 但解析「错误」）→ ④′不命中 → 0.5
+  const bad = mkSq({ answer: { value: true, explanation: '这个说法错误。' } });
+  assert.equal(Scorer.scoreQuestion(bad, null, {}).breakdown.explanationQuality, 0.5);
+  // 无结论词 → ④′不命中（诚实缺位不判对）→ 0.5
+  const none = mkSq({ answer: { value: false, explanation: '平行四边形是四边形的一种。' } });
+  assert.equal(Scorer.scoreQuestion(none, null, {}).breakdown.explanationQuality, 0.5);
+  // 否定词优先：「不对」含「对」子串，先否定后肯定 → value=false 命中 → 0.75
+  const neg = mkSq({ answer: { value: false, explanation: '这个说法不对。' } });
+  assert.equal(Scorer.scoreQuestion(neg, null, {}).breakdown.explanationQuality, 0.75);
+  // 非布尔答案仍走原④「解析含答案值子串」→ 1（回归保护，非 judge 行零变化）
+  const num = mkSq({ answer: { value: '8', explanation: '3 + 5 = 8，所以答案是 8。' } });
+  assert.equal(Scorer.scoreQuestion(num, null, {}).breakdown.explanationQuality, 1);
+});
+
+/* ------------------------------------------------------------------ *
+ * P42-8 符号答案归一：normalizeExplText 补 < > ☆（watch A 类 9 行根因）
+ * ------------------------------------------------------------------ */
+
+test('P42-8 L2 符号答案：normAns 不再空串，解析含符号 → ④命中', () => {
+  // fill 答案 '<'：解析含 '<' → ④命中（原字符集删 < → normAns 空串 → ④跳过 → 0.5）
+  const lt = mkSq({ answer: { value: '<', explanation: '先比较两数大小，答案是 <。' } });
+  assert.equal(Scorer.scoreQuestion(lt, null, {}).breakdown.explanationQuality, 1);
+  // geometry 答案 '☆'：解析含 '☆' → ④命中；解析无③步骤词 → 0.75
+  const star = mkSq({ answer: { value: '☆', explanation: '每 4 个一组，18 ÷ 4 余 2 → 「☆」' } });
+  assert.equal(Scorer.scoreQuestion(star, null, {}).breakdown.explanationQuality, 0.75);
+});

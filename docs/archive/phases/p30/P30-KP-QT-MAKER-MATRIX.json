@@ -1329,7 +1329,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "发牌时数到#它前一个是#后一个数是多少",
-      "sample": "发牌时数到 13，它前一个是 12（13 − 1 = 12），后一个数是多少？"
+      "sample": "发牌时数到 13，它前一个是 12，后一个数是多少？（13 + 1 = ？）"
     },
     {
       "kp": "math-g1-down-u03-k005",
@@ -3428,8 +3428,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "单位换算填空#厘米千米",
-      "sample": "单位换算填空：18厘米 = ____ 千米"
+      "core": "单位换算填空#厘米米",
+      "sample": "单位换算填空：18厘米 = ____ 米"
     },
     {
       "kp": "math-g2-up-u05-k001",
@@ -3470,8 +3470,8 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "#厘米换算成毫米是多少",
-      "sample": "8厘米 换算成 毫米 是多少？"
+      "core": "#厘米换算成米是多少",
+      "sample": "8厘米 换算成 米 是多少？"
     },
     {
       "kp": "math-g2-up-u05-k002",
@@ -3834,8 +3834,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "运用乘法口诀计算#×#",
-      "sample": "运用乘法口诀计算：7 × 2 = ?"
+      "core": "用乘法口诀求商#÷#",
+      "sample": "用乘法口诀求商：14 ÷ 7 = ?"
     },
     {
       "kp": "math-g2-up-u07-k001",
@@ -3862,8 +3862,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "每盒月饼有#个买了#盒一共有多少个月饼",
-      "sample": "每盒月饼有 3 个，买了 7 盒，一共有多少个月饼？"
+      "core": "把#个月饼平均分给#个小组每个小组分得多少个",
+      "sample": "把 21 个月饼平均分给 7 个小组，每个小组分得多少个？"
     },
     {
       "kp": "math-g2-up-u07-k001",
@@ -3877,7 +3877,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式等于#",
-      "sample": "下面哪个算式等于 18？"
+      "sample": "下面哪个算式等于 2？"
     },
     {
       "kp": "math-g2-up-u07-k002",
@@ -7831,15 +7831,15 @@
       "kp": "math-g3-down-u01-k002",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图苹果在树的什么方向",
-      "sample": "观察下图，苹果在树的什么方向？"
+      "hasBlank": true,
+      "core": "看图方格纸上的图形向左平移后到了新位置图形平移了格",
+      "sample": "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。"
     },
     {
       "kp": "math-g3-down-u01-k002",
@@ -7859,15 +7859,15 @@
       "kp": "math-g3-down-u01-k002",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "球在小狗的上面请说一说小狗在球的什么方向",
-      "sample": "球在小狗的上面。请说一说小狗在球的什么方向？"
+      "core": "棋盘游戏一枚棋子先向左平移#格再向上平移#格棋子一共平移了多少格",
+      "sample": "棋盘游戏：一枚棋子先向左平移 1 格，再向上平移 2 格。棋子一共平移了多少格？"
     },
     {
       "kp": "math-g3-down-u01-k002",
@@ -7901,15 +7901,15 @@
       "kp": "math-g3-down-u01-k003",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|旋转",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图小狗在小鸟的什么方向",
-      "sample": "观察下图，小狗在小鸟的什么方向？"
+      "hasBlank": true,
+      "core": "看图钟面上一根指针从数字#开始绕中心逆时针旋转#度指针指向数字",
+      "sample": "看图：钟面上一根指针从数字 12 开始，绕中心逆时针旋转 180 度。指针指向数字 ____。"
     },
     {
       "kp": "math-g3-down-u01-k003",
@@ -7929,15 +7929,15 @@
       "kp": "math-g3-down-u01-k003",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|旋转",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "树在树的上面请说一说树在树的什么方向",
-      "sample": "树在树的上面。请说一说树在树的什么方向？"
+      "hasBlank": true,
+      "core": "钟面上分针从数字#开始绕中心顺时针旋转#度分针指向数字",
+      "sample": "钟面上，分针从数字 12 开始，绕中心顺时针旋转 270 度。分针指向数字 ____。"
     },
     {
       "kp": "math-g3-down-u01-k003",
@@ -10764,8 +10764,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "观察下图想一想——一个直角是#°两个直角拼起来是度",
-      "sample": "观察下图（圆），想一想——一个直角是 90°，两个直角拼起来是____度"
+      "core": "观察下图想一想——正方形相邻两边互相垂直一个正方形有组互相垂直的邻边",
+      "sample": "观察下图（圆），想一想——正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边"
     },
     {
       "kp": "math-g4-up-u05-k001",
@@ -10778,8 +10778,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "一个直角是#°两个直角拼起来是度",
-      "sample": "一个直角是 90°，两个直角拼起来是____度"
+      "core": "正方形相邻两边互相垂直一个正方形有组互相垂直的邻边",
+      "sample": "正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边"
     },
     {
       "kp": "math-g4-up-u05-k001",
@@ -10820,8 +10820,8 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": true,
-      "core": "一个直角是#°两个直角拼起来是度",
-      "sample": "一个直角是 90°，两个直角拼起来是____度（选出正确答案）"
+      "core": "正方形相邻两边互相垂直一个正方形有组互相垂直的邻边",
+      "sample": "正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边（选出正确答案）"
     },
     {
       "kp": "math-g4-up-u05-k002",
@@ -13361,15 +13361,15 @@
       "kp": "math-g4-down-u07-k003",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图树在树的什么方向",
-      "sample": "观察下图，树在树的什么方向？"
+      "hasBlank": true,
+      "core": "看图方格纸上的图形向右平移后到了新位置图形平移了格",
+      "sample": "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
     },
     {
       "kp": "math-g4-down-u07-k003",
@@ -13389,15 +13389,15 @@
       "kp": "math-g4-down-u07-k003",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "椅子在小鸟的左边请说一说小鸟在椅子的什么方向",
-      "sample": "椅子在小鸟的左边。请说一说小鸟在椅子的什么方向？"
+      "core": "棋盘游戏一枚棋子先向右平移#格再向上平移#格棋子一共平移了多少格",
+      "sample": "棋盘游戏：一枚棋子先向右平移 3 格，再向上平移 1 格。棋子一共平移了多少格？"
     },
     {
       "kp": "math-g4-down-u07-k003",
@@ -13431,15 +13431,15 @@
       "kp": "math-g4-down-u07-k004",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图球在球的什么方向",
-      "sample": "观察下图，球在球的什么方向？"
+      "hasBlank": true,
+      "core": "看图方格纸上的图形向左平移后到了新位置图形平移了格",
+      "sample": "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。"
     },
     {
       "kp": "math-g4-down-u07-k004",
@@ -13459,15 +13459,15 @@
       "kp": "math-g4-down-u07-k004",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "树在书包的下面请说一说书包在树的什么方向",
-      "sample": "树在书包的下面。请说一说书包在树的什么方向？"
+      "core": "棋盘游戏一枚棋子先向右平移#格再向上平移#格棋子一共平移了多少格",
+      "sample": "棋盘游戏：一枚棋子先向右平移 1 格，再向上平移 3 格。棋子一共平移了多少格？"
     },
     {
       "kp": "math-g4-down-u07-k004",
@@ -13501,15 +13501,15 @@
       "kp": "math-g4-down-u07-k005",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图小狗在房子的什么方向",
-      "sample": "观察下图，小狗在房子的什么方向？"
+      "hasBlank": true,
+      "core": "看图方格纸上的图形向左平移后到了新位置图形平移了格",
+      "sample": "看图：方格纸上的图形向左平移后到了新位置。图形平移了 ____ 格。"
     },
     {
       "kp": "math-g4-down-u07-k005",
@@ -13529,15 +13529,15 @@
       "kp": "math-g4-down-u07-k005",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "房子在小猫的上面请说一说小猫在房子的什么方向",
-      "sample": "房子在小猫的上面。请说一说小猫在房子的什么方向？"
+      "core": "棋盘游戏一枚棋子先向右平移#格再向上平移#格棋子一共平移了多少格",
+      "sample": "棋盘游戏：一枚棋子先向右平移 3 格，再向上平移 1 格。棋子一共平移了多少格？"
     },
     {
       "kp": "math-g4-down-u07-k005",
@@ -14845,15 +14845,15 @@
       "kp": "math-g5-up-u04-k001",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图书包在书包的什么方向",
-      "sample": "观察下图，书包在书包的什么方向？"
+      "hasBlank": true,
+      "core": "看图方格纸上的图形向右平移后到了新位置图形平移了格",
+      "sample": "看图：方格纸上的图形向右平移后到了新位置。图形平移了 ____ 格。"
     },
     {
       "kp": "math-g5-up-u04-k001",
@@ -14873,15 +14873,15 @@
       "kp": "math-g5-up-u04-k001",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|平移",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "椅子在书的右边请说一说书在椅子的什么方向",
-      "sample": "椅子在书的右边。请说一说书在椅子的什么方向？"
+      "core": "棋盘游戏一枚棋子先向左平移#格再向下平移#格棋子一共平移了多少格",
+      "sample": "棋盘游戏：一枚棋子先向左平移 1 格，再向下平移 3 格。棋子一共平移了多少格？"
     },
     {
       "kp": "math-g5-up-u04-k001",
@@ -14915,15 +14915,15 @@
       "kp": "math-g5-up-u04-k002",
       "qt": "geometry",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|旋转",
       "intentStatus": "ai-verified",
       "focus": "geometry",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "观察下图桌子在书包的什么方向",
-      "sample": "观察下图，桌子在书包的什么方向？"
+      "hasBlank": true,
+      "core": "看图钟面上一根指针从数字#开始绕中心顺时针旋转#度指针指向数字",
+      "sample": "看图：钟面上一根指针从数字 12 开始，绕中心顺时针旋转 270 度。指针指向数字 ____。"
     },
     {
       "kp": "math-g5-up-u04-k002",
@@ -14943,15 +14943,15 @@
       "kp": "math-g5-up-u04-k002",
       "qt": "apply",
       "generator": "generator:position-direction",
-      "makerKey": "generator:position-direction|空间",
+      "makerKey": "generator:position-direction|旋转",
       "intentStatus": "ai-verified",
       "focus": "application",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": false,
-      "core": "树在树的上面请说一说树在树的什么方向",
-      "sample": "树在树的上面。请说一说树在树的什么方向？"
+      "hasBlank": true,
+      "core": "钟面上分针从数字#开始绕中心顺时针旋转#度分针指向数字",
+      "sample": "钟面上，分针从数字 12 开始，绕中心顺时针旋转 270 度。分针指向数字 ____。"
     },
     {
       "kp": "math-g5-up-u04-k002",
@@ -17106,8 +17106,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "×##",
-      "sample": "____ × 4 = 8"
+      "core": "做一个实验长方体玻璃缸从里面量长#厘米宽#厘米水深#厘米放入一块不规则石块后水面上升到#厘米石块的体积是立方厘米",
+      "sample": "做一个实验：长方体玻璃缸从里面量长 12 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块"
     },
     {
       "kp": "math-g5-down-u03-k006",
@@ -17120,8 +17120,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "一台空调#元一台电风扇比空调便宜#元一台电风扇多少元",
-      "sample": "一台空调 10 元，一台电风扇比空调便宜 1 元。一台电风扇多少元？"
+      "core": "小科做了一个排水法实验长方体玻璃缸从里面量长#厘米宽#厘米缸里水深#厘米他把一块不规则的石块完全浸没入水中水面上升到#厘米这块石块的体积是多少立方厘米",
+      "sample": "小科做了一个排水法实验：长方体玻璃缸从里面量长 12 厘米、宽 6 厘米，缸里水深 5 厘米。他"
     },
     {
       "kp": "math-g5-down-u03-k006",
@@ -17134,8 +17134,8 @@
       "hasOptions": false,
       "isJudge": true,
       "hasBlank": false,
-      "core": "上旬生产#件中旬生产#件一共多少件案是#——对还是错",
-      "sample": "上旬生产 9 件、中旬生产 8 件，一共多少件？ 答案是 17 —— 对还是错？"
+      "core": "实验测量长方体玻璃缸从里面量长#厘米宽#厘米水深#厘米放入一块不规则石块完全浸没后水面上升到#厘米计算得石块体积是#立方厘米——对还是错",
+      "sample": "实验测量：长方体玻璃缸从里面量长 10 厘米、宽 6 厘米，水深 5 厘米。放入一块不规则石块完"
     },
     {
       "kp": "math-g5-down-u03-k006",
@@ -17148,8 +17148,8 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "电风扇#元空调比它贵#元空调多少元",
-      "sample": "电风扇 18 元，空调比它贵 2 元，空调多少元？"
+      "core": "数学实验课上长方体玻璃缸的内部长#厘米宽#厘米原有#厘米深的水一块不规则石块完全浸入后水面升到#厘米石块的体积是多少",
+      "sample": "数学实验课上，长方体玻璃缸的内部长 10 厘米、宽 8 厘米，原有 5 厘米深的水。一块不规则石"
     },
     {
       "kp": "math-g5-down-u04-k001",
@@ -17387,7 +17387,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "约成最简分数#/#",
-      "sample": "约成最简分数（分子分母同除以 2，列式：8 ÷ 2 = 2）：8/12 = ？"
+      "sample": "约成最简分数（分子分母同除以 2，列式：8 ÷ 2 = 4）：8/12 = ？"
     },
     {
       "kp": "math-g5-down-u04-k005",
@@ -17400,8 +17400,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "分数的基本性质在里填数#/#/#",
-      "sample": "分数的基本性质，在 ____ 里填数：1/8 = ____/32"
+      "core": "把#/#约成最简分数结果是",
+      "sample": "把 4/32 约成最简分数，结果是 ____。"
     },
     {
       "kp": "math-g5-down-u04-k005",
@@ -17443,7 +17443,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "约成最简分数#/#",
-      "sample": "约成最简分数（分子分母同除以 5，列式：10 ÷ 5 = 1）：10/20 = ？"
+      "sample": "约成最简分数（分子分母同除以 5，列式：10 ÷ 5 = 2）：10/20 = ？"
     },
     {
       "kp": "math-g5-down-u04-k006",
@@ -18310,8 +18310,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "最优策略的规律观察数列规律写出下一个数####",
-      "sample": "最优策略的规律：观察数列规律，写出下一个数：2, 4, 6, 8, ?"
+      "core": "用一口锅烙#张饼每张饼两面都要烙每面需要#分钟至少需要多少分钟",
+      "sample": "用一口锅烙5张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？"
     },
     {
       "kp": "math-g5-down-u08-k002",
@@ -18324,8 +18324,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "数列####中是下一项",
-      "sample": "数列 2, 4, 6, 8 中，____ 是下一项"
+      "core": "一张饼两面都要烙每面需要#分钟一口锅每次最多同时烙两面烙#张饼最少需要分钟",
+      "sample": "一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙3张饼最少需要____分钟。"
     },
     {
       "kp": "math-g5-down-u08-k002",
@@ -18338,8 +18338,8 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "数列####的下一项是多少正确选项是哪一个",
-      "sample": "数列 2, 4, 6, 8 的下一项是多少？正确选项是哪一个？"
+      "core": "用一口锅烙#张饼每张饼两面都要烙每面需要#分钟正确选项是哪一个",
+      "sample": "用一口锅烙2张饼，每张饼两面都要烙，每面需要 2 分钟。正确选项是哪一个？"
     },
     {
       "kp": "math-g5-down-u08-k003",
@@ -19094,8 +19094,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "填空+##",
-      "sample": "填空：____ + 12 = 14"
+      "core": "在里填数#×(#+##×#+×##",
+      "sample": "在 ____ 里填数（用运算律简便计算）：0.25 × (4 + 8) = 0.25 × 4 +"
     },
     {
       "kp": "math-g6-up-u02-k003",
@@ -19108,8 +19108,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "把#加#结果是多少",
-      "sample": "把 12，加 4，结果是多少？"
+      "core": "每瓶矿泉水重#千克甲箱装了#瓶乙箱装了#瓶两箱矿泉水一共重多少千克",
+      "sample": "每瓶矿泉水重 0.25 千克，甲箱装了 4 瓶，乙箱装了 8 瓶。两箱矿泉水一共重多少千克？（用"
     },
     {
       "kp": "math-g6-up-u02-k003",
@@ -19122,8 +19122,8 @@
       "hasOptions": false,
       "isJudge": true,
       "hasBlank": false,
-      "core": "#−##",
-      "sample": "16 − 7 = 10（对还是错？）"
+      "core": "用运算律简便计算#×(#+##",
+      "sample": "用运算律简便计算：0.25 × (4 + 12) = 5（对还是错？）"
     },
     {
       "kp": "math-g6-up-u02-k003",
@@ -19137,7 +19137,7 @@
       "isJudge": false,
       "hasBlank": false,
       "core": "下面哪个算式等于#",
-      "sample": "下面哪个算式等于 15？"
+      "sample": "下面哪个算式等于 3？"
     },
     {
       "kp": "math-g6-up-u02-k004",
@@ -21530,8 +21530,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "同学们排队做操每行站#人正好站#行如果每行站#人可以站多少行",
-      "sample": "同学们排队做操，每行站 12 人，正好站 15 行。如果每行站 18 人，可以站多少行？"
+      "core": "买#米彩带要#元买#米同样的彩带要多少元",
+      "sample": "买 3 米彩带要 15 元，买 8 米同样的彩带要多少元？"
     },
     {
       "kp": "math-g6-down-u04-k004",
@@ -21558,8 +21558,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "列式计算买#支同样的钢笔要用#元买#支这样的钢笔要用多少元列式#÷#×#",
-      "sample": "列式计算：买 4 支同样的钢笔要用 20 元，买 4 支这样的钢笔要用多少元？列式：20 ÷ 4"
+      "core": "列式计算一批货物共#吨用载重#吨的卡车运正好#次运完如果改用载重#吨的卡车运要运多少次列式#÷#",
+      "sample": "列式计算：一批货物共 30 吨，用载重 10 吨的卡车运，正好 3 次运完。如果改用载重 15 "
     },
     {
       "kp": "math-g6-down-u04-k005",
@@ -21572,8 +21572,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "一辆汽车#小时行驶了#千米照这样的速度#小时能行驶千米",
-      "sample": "一辆汽车 3 小时行驶了 180 千米。照这样的速度，5 小时能行驶（  ）千米。"
+      "core": "装订一批练习本每本#页正好装订#本如果每本#页可以装订本",
+      "sample": "装订一批练习本，每本 30 页，正好装订 6 本。如果每本 36 页，可以装订（  ）本。"
     },
     {
       "kp": "math-g6-down-u04-k005",
@@ -21600,8 +21600,8 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "买#千克苹果付了#元买#千克同样的苹果要付多少元",
-      "sample": "买 4 千克苹果付了 12 元，买 7 千克同样的苹果要付多少元？（  ）"
+      "core": "学校组织#人去春游原来每条船坐#人正好租了#条船如果改租每条坐#人的船需要多少条船",
+      "sample": "学校组织 360 人去春游，原来每条船坐 60 人，正好租了 6 条船。如果改租每条坐 90 人"
     },
     {
       "kp": "math-g6-down-u04-k006",

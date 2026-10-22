@@ -3,7 +3,7 @@
  *
  * 旧版单体（~1160 行）已拆分为职责单一的子模块（均 <300 行，增量挂载到 window.PluginUtil / window.App）：
  *   core.js        运行时核心：站点常量/路由/年级参数、随机·标准化工具、灵活列数布局、知识点覆盖
- *   check.js        computeResult（逐题委托 AnswerValidator.gradeUserAnswer）/ pickOpt
+ *   check.js        computeResult（逐题委托 AnswerValidator.gradeUserAnswer）
  *   ui-state.js     escHtml / UIState
  *   storage.js      本地练习状态持久化 StorageManager
  *   （render.js 已按 P28-22 删除：renderCard/renderGrid/clockSVG/createPlugin 无生产调用，
@@ -11,7 +11,9 @@
  *
  * 浏览器：经 document.write 按站点根相对路径注入子模块（路径由 document.currentScript.src 推导，
  *         兼容各页面从不同深度引用 shared/core/common.js）；子模块自挂载后本文件无需再组装。
- * Node：经 require 加载子模块并导出 PluginUtil（保持 `const PluginUtil = require('./shared/core/common.js')` 契约不变）。
+ * Node：仅聚合 core.js 并导出 PluginUtil（P42-9 解耦：check/ui-state/storage 在 Node 由真实
+ *       消费方直接 require——practice-session→check.js、learner-storage→storage.js、
+ *       测试→ui-state.js；浏览器聚合入口职责不变）。
  *
  * 浏览器：<script src="shared/core/common.js"></script>
  *   全局 App：页面路由、年级参数、页面控制器
@@ -29,11 +31,8 @@
     document.write('<script src="' + base + '../state/ui-state.js"></script>');
     document.write('<script src="' + base + '../state/storage.js"></script>');
   } else if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
-    // Node：子模块经 require 加载后已增量挂载到 global.PluginUtil / global.App
+    // Node：仅加载 core.js（纯工具）；check/ui-state/storage 按需由真实消费方直接 require（P42-9）
     require('./core.js');
-    require('./check.js');
-    require('../state/ui-state.js');
-    require('../state/storage.js');
   }
 
   // 兜底：确保 App / PluginUtil 存在（子模块已增量挂载，这里仅防御性补全）

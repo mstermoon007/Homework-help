@@ -151,9 +151,9 @@ var CANDIDATES = [
     file: 'shared/core/check.js',
     symbol: 'pickOpt / __pickOpt（.opt.chosen 选中态处理）',
     prodCalls: 0, testCalls: 0, bundleCalls: 0,
-    status: 'CANDIDATE-DEFERRED (P28-UI-PRINTSTYLE-CLEANUP-01)',
-    decision: 'KEEP',
-    note: '批改链候选（.opt 类已无任何产出方，pickOpt 零调用）；属批改链非本轮样式/打印范围，暂留待后续批改链治理任务处置'
+    status: 'DEAD-SYMBOL-REMOVED (P42-10)',
+    decision: 'REMOVE-SYMBOL',
+    note: 'pickOpt 操作的 .opt 类已随 P28-UI-PRINTSTYLE-CLEANUP-01 删除（零产出方）；pickOpt/__pickOpt 经全库检索 prod/test/bundle 三方零调用，P42-10 物理删除（函数+双挂载+导出），check.js 头注释留痕'
   }
 ];
 

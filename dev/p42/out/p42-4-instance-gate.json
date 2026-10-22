@@ -1,0 +1,104 @@
+{
+  "seed": "p42|<kp>|<qt>|d3",
+  "thresholds": {
+    "qualityFloor": 0.5,
+    "qualityTarget": 0.6
+  },
+  "stats": {
+    "total": 1570,
+    "genErr": 0,
+    "diffFailN": 0,
+    "diffWarnN": 0,
+    "qPass": 1554,
+    "qWatch": 16,
+    "qFail": 0
+  },
+  "qualityDist": {
+    "1": 939,
+    "0.75": 615,
+    "0.5": 16
+  },
+  "fails": [],
+  "watch": [
+    {
+      "kp": "math-g1-down-u01-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g3-down-u06-k001",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g3-down-u06-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g3-down-u08-k004",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u02-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u02-k003",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u06-k001",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u06-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u07-k001",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g4-up-u07-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g5-down-u04-k001",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g5-down-u07-k001",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g5-down-u07-k001",
+      "qt": "apply",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g5-down-u07-k002",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g5-down-u07-k003",
+      "qt": "fill",
+      "quality": 0.5
+    },
+    {
+      "kp": "math-g6-up-u04-k001",
+      "qt": "apply",
+      "quality": 0.5
+    }
+  ]
+}

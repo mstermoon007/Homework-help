@@ -122,7 +122,22 @@ function getMoneyMeta(kp, name, concept) {
   }
   var lt = (kp && kp.source && kp.source.legacyType) || (kp && kp.legacy && kp.legacy.legacyType);
   var cat = kp && kp.legacy && kp.legacy.category;
-  return { legacyType: lt, category: cat, kind: kind };
+  // P42-2A（P42-020~022）：KP 名称显式列举 ≥2 个本族单位时（如「认识厘米和米」）
+  // 认领为该 KP 的显式单位集合，换算题双方必须 ⊆ 该集合（消费点：makeMeasurementConversionQuestion）。
+  // 长单位名优先认领（千米/毫米先于米、毫升先于升、千克先于克），已认领段以占位符
+  // 顶替，防子串误吞（「千米的认识」不得再认领出「米」）。名称无 ≥2 单位信号 → null，
+  // 消费点维持族级全表，行为零变化。信号只取自 KBL KP 名称本身，不内联第二套语义表。
+  var kpUnits = null;
+  var kindUnits = (kind !== 'rmb' && MEASUREMENT_KINDS[kind]) ? MEASUREMENT_KINDS[kind].units : null;
+  if (kindUnits && name) {
+    var claimed = String(name);
+    var picked = [];
+    kindUnits.slice().sort(function (a, b) { return b.length - a.length; }).forEach(function (u) {
+      if (claimed.indexOf(u) !== -1) { picked.push(u); claimed = claimed.split(u).join('□'); }
+    });
+    if (picked.length >= 2) kpUnits = picked;
+  }
+  return { legacyType: lt, category: cat, kind: kind, kpUnits: kpUnits };
 }
 
 function randDenom(rng, maxYuan) {
@@ -271,6 +286,12 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var units = table.filter(function(u){
     return MEASUREMENT_KINDS[kind] && MEASUREMENT_KINDS[kind].units && MEASUREMENT_KINDS[kind].units.indexOf(u.unit) !== -1;
   });
+  // P42-2A（P42-020~022）：KP 显式单位集合（getMoneyMeta 由 KP 名称认领）收窄换算
+  // 双方——「认识厘米和米」不得产出毫米/千米换算；认领不足 2 个时维持族级全表。
+  if (meta.kpUnits) {
+    var kpUnits = units.filter(function (u) { return meta.kpUnits.indexOf(u.unit) !== -1; });
+    if (kpUnits.length >= 2) units = kpUnits;
+  }
   
   if (units.length < 2) {
     return makeRMBConversionQuestion(plan, context, i, meta);

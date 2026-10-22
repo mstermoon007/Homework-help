@@ -1,0 +1,14 @@
+{
+  "seed": "p42|<kp>|<qt>|d3",
+  "stats": {
+    "total": 1570,
+    "PASS": 766,
+    "FAIL": 0,
+    "UNVERIFIED": 804
+  },
+  "checkedClauses": {
+    "prompt": 226,
+    "explanation": 786
+  },
+  "fails": []
+}

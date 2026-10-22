@@ -810,7 +810,7 @@ function normalizeExplText(s) {
   return coerceString(s)
     .replace(/−/g, '-')
     .replace(/＝/g, '=')
-    .replace(/[^\u4e00-\u9fa50-9a-zA-Z=+\-*/×÷().]/g, '');
+    .replace(/[^\u4e00-\u9fa50-9a-zA-Z=+\-*/×÷().<>☆]/g, ''); // P42-8：补 < > ☆（符号答案归一，watch A 类 9 行根因）
 }
 
 function explanationAnswerString(sq) {
@@ -832,6 +832,19 @@ function isExplanationRestatement(normExpl, normPrompt, normAns) {
   return normPrompt.indexOf(normExpl) === 0 && normExpl.length >= 4;
 }
 
+// ④′ judge 布尔答案专用（P42-6）：解析须含与答案一致的结论词。
+// 否定词优先（「不对」含「对」子串，先否定后肯定防误判）；词集取自 judge 解析
+// 实证形态（「说法正确/错误」），不用 √/× 符号（normalizeExplText 会删除符号）。
+var JUDGE_NEG_RE = /错误|不对|不正确|不成立/;
+var JUDGE_POS_RE = /正确|对|成立/;
+function boolConclusionConsistent(normExpl, boolVal) {
+  if (!normExpl) return false;
+  var neg = JUDGE_NEG_RE.test(normExpl);
+  var pos = JUDGE_POS_RE.test(normExpl);
+  var concluded = neg ? false : (pos ? true : null);
+  return concluded !== null && concluded === boolVal;
+}
+
 function scoreExplanationQuality(sq) {
   var expl = sq && sq.answer ? coerceString(sq.answer.explanation).trim() : '';
   if (!expl) return 0; // ① 非空
@@ -841,7 +854,13 @@ function scoreExplanationQuality(sq) {
   var normAns = explanationAnswerString(sq);
   if (!isExplanationRestatement(normExpl, normPrompt, normAns)) passed++; // ②
   if (STEP_MARK_RE.test(expl)) passed++; // ③
-  if (normAns !== '' && normExpl.indexOf(normAns) !== -1) passed++; // ④
+  // ④/④′（P42-6）：judge 布尔答案走④′（解析含与答案一致的结论词）——原④
+  // 「解析含答案值子串」对 true/false 结构性不可达（register P42-4 新发现登记）。
+  if (sq && sq.answer && typeof sq.answer.value === 'boolean') {
+    if (boolConclusionConsistent(normExpl, sq.answer.value)) passed++; // ④′
+  } else if (normAns !== '' && normExpl.indexOf(normAns) !== -1) {
+    passed++; // ④
+  }
   return passed / 4;
 }
 
@@ -992,6 +1011,7 @@ function generatorProfile(scoredItems) {
 module.exports = {
   scoreQuestion: scoreQuestion,
   scoreBatch: scoreBatch,
+  scoreExplanationQuality: scoreExplanationQuality,
   generatorProfile: generatorProfile,
   WEIGHTS: WEIGHTS
 };

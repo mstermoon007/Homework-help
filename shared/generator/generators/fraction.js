@@ -306,7 +306,8 @@ function arithmeticTyped(sub, qt, rng, nr) {
 }
 
 // 概念类子类型（meaning/nature/compare/relation/proper/reciprocal）的四题型真分工
-function conceptTyped(sub, qt, rng, nr) {
+// P42-033：扩参 name——nature fill 按 KP 名称信号细分（约分/通分专属门控，见分支注释）。
+function conceptTyped(sub, qt, rng, nr, name) {
   if (sub === 'meaning') {
     var d0 = riC(rng, 4, 9, nr), n0 = riC(rng, 2, d0 - 2, nr);
     if (qt === 'calc') {
@@ -333,12 +334,27 @@ function conceptTyped(sub, qt, rng, nr) {
     if (qt === 'calc') {
       var g2 = riC(rng, 2, 5, nr), ca = riC(rng, 1, 4, nr), cb = ca + riC(rng, 1, 3, nr);
       var cn = g2 * ca, cd = g2 * cb, cr = simp(cn, cd);
-      return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + cr.n + '）：' +
+      // P42-4（P42-032）：列式右值为本步商 cn/g2（=ca）——旧模板误写最简分子 cr.n，
+      // gcd(ca,cb)>1 时（6/12：g2=2，simp→1/2）写出假等式「6 ÷ 2 = 1」（真值 6÷2=3）。
+      // gcd(ca,cb)=1 时 cr.n===ca，输出逐字节不变。
+      return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + ca + '）：' +
         cn + '/' + cd + ' = ？', answer: fs(cr), options: null,
         explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fs(cr) + '。' };
     }
     if (qt === 'fill') {
       var bd = riC(rng, 3, 8, nr), bk = riC(rng, 2, 5, nr);
+      // P42-033：约分/通分 KP（g5-down-u04-k005）名称信号专属门控——此前走「分数的
+      // 基本性质」填空模板（跨 KP 错挂家族根因）。名称含「约分/通分」canonical 唯一
+      // 命中 k005（k004 基本性质、k006 互化名称不含两词，零变化）；bd/bk rng 消费
+      // 顺序不变。bk/(bd·bk) 约分恒得最简 1/bd。
+      if (name && (name.indexOf('约分') !== -1 || name.indexOf('通分') !== -1)) {
+        // P42-033 收口：解析带等值等式（与 calc 分支文案同形）——无等式解析在
+        // 独立真值验证器下 checked=0 → UNVERIFIED（P42-011 反例）。
+        return { prompt: '把 ' + bk + '/' + (bd * bk) + ' 约成最简分数，结果是 ____。',
+          answer: '1/' + bd, options: null,
+          explain: '约分：' + bk + '/' + (bd * bk) + ' = 1/' + bd
+            + '，分子分母同时除以公因数 ' + bk + '。' };
+      }
       return { prompt: '分数的基本性质，在 ____ 里填数：1/' + bd + ' = ____/' + (bd * bk),
         answer: String(bk), options: null,
         explain: '分数的基本性质：分子分母同时乘 ' + bk + '，1/' + bd + ' = ' + bk + '/' + (bd * bk)
@@ -477,7 +493,7 @@ function buildQuestion(plan, context, i) {
   var nr = nrOf(plan);
 
   var ARITH_SUBS = { word: 1, addsub: 1, 'addsub-diff': 1, mix: 1, div: 1 };
-  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr);
+  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng, nr) : conceptTyped(sub, qt, rng, nr, name);
 
   var prompt = typed.prompt;
   var answer = typed.answer;

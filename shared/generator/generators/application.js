@@ -393,6 +393,101 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
   };
 }
 
+// P42-033：g5-down-u03-k006「不规则物体的体积」fill/choice/judge/apply 四题型
+// 原生 maker。此前这些题型落入通用应用题模板（买东西/行程等无关情境），跨 KP
+// 错挂家族根因。数字与 P28-GEO-NATIVE-04 排水法镜像（同组数、同 cuboid 描述符），
+// 四题型措辞互异（防跨题型 sim≥0.85）；该 KP ALLOW 集合无 calc，null 分支防御性兜底。
+function makeIrregularVolumeTyped(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var length = Rng.pick(rng, [10, 12]);
+  var width = Rng.pick(rng, [6, 8]);
+  var waterBefore = 5;
+  var rise = Rng.pick(rng, [2, 3]);
+  var waterAfter = waterBefore + rise;
+  var volume = length * width * rise;
+  var graphic = intentWantsGraphic(plan) ? {
+    type: 'geometry',
+    subtype: 'cuboid',
+    role: 'quantity-correspondence',
+    params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
+  } : null;
+  var dims = '长 ' + length + ' 厘米、宽 ' + width + ' 厘米';
+  var why = '石块体积 = 玻璃缸底面积 × 水面上升高度 = ' + length + ' × ' + width
+    + ' × ' + rise + ' = ' + volume + '（立方厘米）';
+  var base = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    answerMode: 'input',
+    data: {
+      mode: qt,
+      steps: 2,
+      kind: 'displacement-volume',
+      tankLength: length,
+      tankWidth: width,
+      waterBefore: waterBefore,
+      waterAfter: waterAfter,
+      rise: rise,
+      operation: 'mult',
+      graphic: graphic
+    }
+  };
+  if (qt === 'fill') {
+    base.prompt = '做一个实验：长方体玻璃缸从里面量' + dims + '，水深 5 厘米。放入一块不规则石块后水面上升到 '
+      + waterAfter + ' 厘米（水未溢出）。石块的体积是 ____ 立方厘米。';
+    base.answer = { value: String(volume), acceptable: [], explanation: why + '。' };
+    return base;
+  }
+  if (qt === 'apply') {
+    base.prompt = '小科做了一个排水法实验：长方体玻璃缸从里面量' + dims + '，缸里水深 5 厘米。他把一块不规则'
+      + '的石块完全浸没入水中（水没有溢出），水面上升到 ' + waterAfter + ' 厘米。这块石块的体积是多少立方厘米？';
+    base.answer = { value: String(volume), acceptable: [volume + '立方厘米'], explanation: why + '。' };
+    return base;
+  }
+  if (qt === 'choice') {
+    // 值约定镜像既有 choice：3 个为正、互异且不等于答案的干扰项，answer.value ∈ options
+    var distractors = [];
+    var guard = 0;
+    while (distractors.length < 3 && guard < 50) {
+      guard++;
+      var offset = randInt(rng, -30, 30);
+      if (offset === 0) offset = 1;
+      var dist = volume + offset;
+      if (dist > 0 && distractors.indexOf(dist) === -1 && dist !== volume) distractors.push(dist);
+    }
+    var options = Rng.shuffle(rng, [volume].concat(distractors).slice(0, 4)).map(function (n) { return String(n); });
+    base.prompt = '数学实验课上，长方体玻璃缸的内部' + dims + '，原有 5 厘米深的水。一块不规则石块完全浸入后，'
+      + '水面升到 ' + waterAfter + ' 厘米。石块的体积是多少？';
+    base.answer = { value: String(volume), acceptable: [], explanation: why + '，正确选项是「' + volume + '」。' };
+    base.answerMode = 'choice';
+    base.data.options = options;
+    base.data.correctIndex = options.indexOf(String(volume));
+    return base;
+  }
+  if (qt === 'judge') {
+    var isTrue = rng() < 0.5;
+    var judgeDelta = randInt(rng, -30, 30);
+    if (judgeDelta === 0) judgeDelta = 10;
+    var shown = isTrue ? volume : volume + judgeDelta;
+    base.prompt = '实验测量：长方体玻璃缸从里面量' + dims + '，水深 5 厘米。放入一块不规则石块完全浸没后'
+      + '水面上升到 ' + waterAfter + ' 厘米（水未溢出）。计算得石块体积是 ' + shown + ' 立方厘米 —— 对还是错？';
+    base.answer = { value: isTrue, acceptable: [], explanation: isTrue
+      ? '底面积 × 水面上升高度 = ' + length + ' × ' + width + ' × ' + rise + ' = ' + volume + '，计算正确，说法对。'
+      : '正确答案是 ' + volume + '，不是 ' + shown + '，说法错误。' };
+    base.answerMode = 'judge';
+    base.data.shownAnswer = shown;
+    if (!isTrue) {
+      base.data.misconception = '排水法理解错误：石块体积 = 底面积 × 水面上升高度 = ' + volume + '，题中给成了 ' + shown + '。';
+    }
+    return base;
+  }
+  return null;
+}
+
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var nr = nrOf(plan);
@@ -601,6 +696,15 @@ function createApplicationGenerator(spec) {
         // P28-GEO-NATIVE-04：geometry 行（不规则物体的体积/排水法）走原生几何 maker
         if (plan.questionTypeId === 'geometry') {
           questions.push(makeDisplacementVolumeQuestion(plan, context, i));
+          continue;
+        }
+        // P42-033：不规则物体的体积 fill/choice/judge/apply 四题型走排水法原生 maker，
+        // 不再落入通用应用题模板（跨 KP 错挂家族根因修复，名称信号 canonical 唯一命中）。
+        var volName = (plan.semanticParams && plan.semanticParams.name) || '';
+        if (volName.indexOf('不规则') !== -1 && volName.indexOf('体积') !== -1) {
+          var qv = makeIrregularVolumeTyped(plan, context, i);
+          if (!qv) continue; // 未授权题型 fail-closed（镜像 FINAL-31c）
+          questions.push(qv);
           continue;
         }
         q = makeApplicationQuestion(plan, context, i, meta);

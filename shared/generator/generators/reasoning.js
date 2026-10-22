@@ -72,7 +72,9 @@ function makeTable789Question(plan, context, i) {
 
   if (qt === 'calc') {
     // calc：口诀引导 + 直接算式求值
-    if (i % 2 === 0) {
+    // P42-033：奇偶翻转——i=0（面采样 canonical 主形态）落「用口诀求商」半边，
+    // 使除法 token（÷/求商）进入题面与解析，KP「7～9的乘、除法」语义回指成立。
+    if (i % 2 === 1) {
       prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ?';
       answer = String(p); operation = 'mult';
       tWhy = '想乘法口诀「' + b + ' ' + a + '」得 ' + p + '，所以 ' + a + ' × ' + b + ' = ' + p;
@@ -91,7 +93,8 @@ function makeTable789Question(plan, context, i) {
       tWhy = '除数 = 被除数 ÷ 商：' + p + ' ÷ ' + b + ' = ' + a; }
   } else if (qt === 'choice') {
     // choice：结果匹配——题干出得数，选项为算式
-    var isMult = i % 2 === 0;
+    // P42-033：同 calc 奇偶翻转，i=0 落除法半边（正确选项含 ÷，解析含求商）。
+    var isMult = i % 2 === 1;
     var target = isMult ? p : b;
     var correctExpr = isMult ? (a + ' × ' + b) : (p + ' ÷ ' + a);
     tWhy = (isMult ? '想乘法口诀「' + b + ' ' + a + '」得 ' + p
@@ -117,11 +120,14 @@ function makeTable789Question(plan, context, i) {
   } else { // apply：7~9 表内乘除情境，三组形式 × 四类物品轮换扩空间
     var goods = ['月饼', '笔记本', '彩笔', '气球'];
     var g = goods[i % goods.length];
-    if (i % 3 === 0) {
+    // P42-033：三形态轮换整体前移一位——i=0 落「平均分」除法情境，
+    // 解析含 ÷ token，KP「7～9的乘、除法」语义回指成立。
+    var form = (i + 1) % 3;
+    if (form === 0) {
       prompt = '每盒' + g + '有 ' + b + ' 个，买了 ' + a + ' 盒，一共有多少个' + g + '？';
       answer = String(p); operation = 'mult';
       tWhy = '每盒个数 × 盒数 = 总数：' + b + ' × ' + a + ' = ' + p;
-    } else if (i % 3 === 1) {
+    } else if (form === 1) {
       prompt = '把 ' + p + ' 个' + g + '平均分给 ' + a + ' 个小组，每个小组分得多少个？';
       answer = String(b); operation = 'div';
       tWhy = '总数 ÷ 组数 = 每组分得数：' + p + ' ÷ ' + a + ' = ' + b;
@@ -211,7 +217,10 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('找次品') !== -1 || name.indexOf('天平') !== -1) type = 'find-defect';
   else if (name.indexOf('握手') !== -1) type = 'handshake';
   // P36-03：原 sudoku/winning 分支已物理删除——canonical 375 KP 名零命中（可达性裁决，见 docs/P36/change-log.md）
-  else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
+  // P42-033：优化/统筹族补「最优/策略」名称信号（canonical 唯一命中「最优策略」族 KP；
+  // 「找次品的基本策略」已被前方 find-defect 分支先命中，零外溢）。
+  else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1
+    || name.indexOf('最优') !== -1 || name.indexOf('策略') !== -1) type = 'optimization';
   else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
@@ -345,23 +354,26 @@ function makeReasoningQuestion(plan, context, i, kp) {
     nativeWhy = '每个对象和其余 ' + (n - 1) + ' 个各配一次，共 ' + n + ' × ' + (n - 1)
       + ' 次；每对被重复算两次，除以 2：' + n + ' × ' + (n - 1) + ' ÷ 2 = ' + answer;
   } else if (type === 'optimization') {
+    // P42-033：名称含「最优/策略」的 KP，解析前缀补「最优」语义 token（跨题型回指）；
+    // 名称不含两词的既有优化 KP（如「推理与优化」）前缀为空串，产出零变化。
+    var stratNamed = name.indexOf('最优') !== -1 || name.indexOf('策略') !== -1;
     if (v % 3 === 0) {
       var pans = riC(rng, 2, 5, nr);
       prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
       fillP = '一张饼两面都要烙，每面需要2分钟，一口锅每次最多同时烙两面。烙' + pans + '张饼最少需要____分钟。';
       answer = pans * 2; steps = 3;
-      nativeWhy = '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
+      nativeWhy = (stratNamed ? '最优方案：' : '') + '每次让锅里同时烙两张饼的两个面，不空锅：' + pans + ' 张饼共 ' + pans
         + ' × 2 = ' + pans * 2 + ' 个面，每锅 2 分钟烙两个面，共 ' + answer + ' 分钟';
     } else if (v % 3 === 1) {
       prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
       fillP = '煮一个鸡蛋需要8分钟，洗锅的2分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 8; steps = 2;
-      nativeWhy = '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
+      nativeWhy = (stratNamed ? '最优安排：' : '') + '煮鸡蛋的 8 分钟里可以同时洗锅，洗锅的 2 分钟被包含，所以至少需要 8 分钟';
     } else {
       prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
       fillP = '看一集动画需要15分钟，写作业的10分钟可以安排在这段时间里同时完成，至少需要____分钟。';
       answer = 15; steps = 2;
-      nativeWhy = '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
+      nativeWhy = (stratNamed ? '最优安排：' : '') + '看动画的 15 分钟里可以同时写作业，10 分钟包含在内，所以至少需要 15 分钟';
     }
   } else if (type === 'seq') {
     var SEQ = [

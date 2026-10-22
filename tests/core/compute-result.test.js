@@ -8,9 +8,10 @@ const assert = require('node:assert/strict');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-// Node 侧装载：common.js → core.js/check.js 增量挂载 global.PluginUtil
+// P42-9：common.js Node 序列仅聚合 core.js；computeResult 契约来源 = check.js 模块导出。
+// 仍 require common.js 以回归「defaultQCheck/normalizeAns 删除后无残留」断言（经 global.PluginUtil）。
 require(path.join(ROOT, 'shared', 'core', 'common.js'));
-const computeResult = global.PluginUtil.computeResult;
+const computeResult = require(path.join(ROOT, 'shared', 'core', 'check.js')).computeResult;
 
 function leg(questionType, answer, answerSpec, extra) {
   return Object.assign({

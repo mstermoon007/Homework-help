@@ -199,6 +199,9 @@ run('20. Doc          (历史数字扫描)', 'node dev/p28/check-doc-consistency
 run('21. Dead Code    (死代码矩阵)', 'node dev/p28/check-dead-code.js');
 run('22. Legacy       (Legacy 治理矩阵)', 'node dev/p28/check-legacy-matrix.js');
 
+// ── 23. Instance Gates（P42-4 实例级质量：028 难度完整性 + 029 解析质量底线）──
+run('23. Instance     (实例级难度完整性 + 解析质量底线)', 'node dev/p42/check-instance-gates.js', { timeout: 600000 });
+
 // ── FINAL-91 只读门禁复核 ──
 const AFTER = snapshot();
 const readonlyDiffs = [];

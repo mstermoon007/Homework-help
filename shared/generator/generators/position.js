@@ -259,21 +259,24 @@ function intentWantsGraphic(plan) {
 function translationGraphic(dx, dy) {
   return {
     type: 'geometry', subtype: 'translationDemo', role: 'number-position',
-    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 30 }
+    // P42-033：unitPx 30→35 与证据规则（T2 evidence-rules 平移族冻结值 35）对齐；
+    // 30 为质量单位族 rectangle 图形专属冻结值，translationDemo 无 30 冻结行，零外溢。
+    params: { points: [[0, 0], [1.5, 0], [1.5, 1], [0, 1]], dx: dx, dy: dy, unitPx: 35 }
   };
 }
 function rotationGraphic(angle, dir) {
   return {
     type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
     params: { points: [[-1, -0.5], [1, -0.5], [1, 0.5], [-1, 0.5]], cx: 0, cy: 0,
-      deg: dir === '顺时针' ? -angle : angle, unitPx: 34 }
+      deg: dir === '顺时针' ? -angle : angle, unitPx: 35 }
   };
 }
-function clockHandGraphic() {
-  // 钟面指针 12 → 3（顺时针 90°，deg 取负与 SVG y 向下一致）
+function clockHandGraphic(deg) {
+  // 钟面指针 12 → 3（顺时针 90°，deg 取负与 SVG y 向下一致）。
+  // P42-033：可选 deg 供旋转 geometry/apply 分支按方向传值；缺省 -90 零变化。
   return {
     type: 'geometry', subtype: 'rotationDemo', role: 'number-position',
-    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: -90, unitPx: 34 }
+    params: { points: [[0, 0], [0.16, -2.8], [-0.16, -2.8]], cx: 0, cy: 0, deg: deg === undefined ? -90 : deg, unitPx: 35 }
   };
 }
 function observeCubeGraphic() {
@@ -366,12 +369,42 @@ function makeTranslationQuestion(plan, context, i) {
       data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移', graphic: transGraphic }
     };
   }
+  // P42-033：平移 geometry/apply 此前被 spatialType bypass 成「观察下图，X在Y的什么方向」
+  // 跨 KP 方向兜底题（面审计 P2 差分不回指）。收窄 bypass 后按本 KP 平移语义直出：
+  // geometry 看图数单向平移格数（图形 translationGraphic(dx,0) 承载位移演示，不印答案）；
+  // apply 棋子两步移动求总格数。检索 token（平移）在题面与解析同时在场；
+  // fill/choice/judge 分支零变化。
+  if (qt === 'geometry') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'geometry', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '看图：方格纸上的图形向' + hDir + '平移后到了新位置。图形平移了 ____ 格。',
+      answer: { value: String(Math.abs(dx)), acceptable: [],
+        explanation: '平移不改变图形的形状和大小，对应点移动的距离相同：从图上数得图形向'
+          + hDir + '平移了 ' + Math.abs(dx) + ' 格。' }, answerMode: 'input',
+      data: { mode: 'geometry', steps: 1, shapeName: '平移', graphic: intentWantsGraphic(plan) ? translationGraphic(dx, 0) : null }
+    };
+  }
+  if (qt === 'apply') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '棋盘游戏：一枚棋子先向' + hDir + '平移 ' + Math.abs(dx) + ' 格，再向' + vDir
+        + '平移 ' + Math.abs(dy) + ' 格。棋子一共平移了多少格？',
+      answer: { value: String(answer), acceptable: [],
+        explanation: '分两步平移，总格数是两次格数之和：' + Math.abs(dx) + '＋' + Math.abs(dy)
+          + '＝' + answer + ' 格。' }, answerMode: 'input',
+      data: { mode: 'apply', steps: 1, shapeName: '平移', graphic: transGraphic }
+    };
+  }
   // judge
   var transIsTrue = shown === answer;
   var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown), graphic: transGraphic };
   var transExplanation = transIsTrue
     ? '图形平移了 ' + answer + ' 格，题中答案正确。'
-    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
+    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格，说法错误。'; // P42-7：补结论词（④′判据）
   if (!transIsTrue) {
     transData.misconception = '平移格数数错：' + (shown > answer ? '多数' : '少数') +
       '了 1 格，正确应为 ' + answer + ' 格。';
@@ -413,6 +446,26 @@ function makeRotationQuestion(plan, context, i) {
         explanation: '钟面上指针从 12 走到 3 转过一个直角，直角是 90 度，与顺时针还是逆时针无关。' },
       answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic() : null }
+    };
+  }
+  // P42-033：旋转 geometry/apply 此前被 bypass 成方向兜底题。按本 KP 旋转语义直出：
+  // 钟面指针从 12 绕中心旋转 angle 度求指向数字（每大格 30 度；deg 取负与 SVG y 向下
+  // 一致）。检索 token（旋转）在题面与解析同时在场；judge/fill/choice 分支零变化。
+  if (qt === 'geometry' || qt === 'apply') {
+    var rotDeg = dir === '顺时针' ? -angle : angle;
+    var rotPos = (dir === '顺时针' ? ['12', '3', '6', '9'] : ['12', '9', '6', '3'])[(angle / 90) % 4];
+    var rotPrompt = qt === 'geometry'
+      ? '看图：钟面上一根指针从数字 12 开始，绕中心' + dir + '旋转 ' + angle + ' 度。指针指向数字 ____。'
+      : '钟面上，分针从数字 12 开始，绕中心' + dir + '旋转 ' + angle + ' 度。分针指向数字 ____。';
+    return {
+      knowledgePointId: pkp(plan), questionType: qt, difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: rotPrompt,
+      answer: { value: rotPos, acceptable: [],
+        explanation: '钟面被 12 个数字平均分成 12 大格，每大格 30 度。指针绕中心' + dir + '旋转 '
+          + angle + ' 度，转过 ' + (angle / 30) + ' 大格，从 12 指向数字 ' + rotPos + '。' },
+      answerMode: 'input',
+      data: { mode: qt, steps: 1, shapeName: '旋转', graphic: wantsG ? clockHandGraphic(rotDeg) : null }
     };
   }
   // choice
@@ -556,10 +609,11 @@ function createPositionGenerator(spec) {
         var q;
         var qt = plan.questionTypeId;
 
-        if ((spatialType === 'translation' || spatialType === 'rotation' ||
-             spatialType === 'observe' || spatialType === 'coordinate') &&
+        if ((spatialType === 'observe' || spatialType === 'coordinate') &&
             (qt === 'geometry' || qt === 'apply')) {
-          // P25-08：这些子类型的 maker 仅覆盖 choice/judge/fill；geometry/apply 走场景兜底
+          // P42-033：仅观察/数对子类型的 maker 仍不覆盖 geometry/apply，保留场景兜底；
+          // 平移/旋转子类型已补 geometry/apply 分支（含「平移」「旋转」语义 token），
+          // 不再兜底成无关方向题（跨 KP 错挂家族根因修复）。
           q = null;
         } else if (spatialType === 'translation') {
           q = makeTranslationQuestion(plan, context, i);
@@ -609,8 +663,9 @@ function createPositionGenerator(spec) {
             q.data.graphic = graphic;
           }
         }
-        // P25-08：translation/rotation/observe/coordinate 子类型的 maker 仅覆盖
-        // choice/judge/fill；geometry/apply 请求走兜底，保证 questionType 匹配不被过滤。
+        // P42-033：observe/coordinate 子类型的 maker 仅覆盖 choice/judge/fill，
+        // geometry/apply 请求走兜底，保证 questionType 匹配不被过滤；
+        // translation/rotation 已补 geometry/apply 分支，不再走兜底。
         if (!q) {
           var scene2 = generateScene(rng, nr);
           var graphic2 = makeGraphicForPosition(scene2);

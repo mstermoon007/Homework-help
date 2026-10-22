@@ -28,10 +28,10 @@
       "relations/math/relations.json": "d50d5a57b3f8f29d137253750d45cc631789763559f1b33846eb51cf968649c9",
       "mappings/generation-contract/math.json": "e3fc2017b954d67b8aa61d396c96c521c0fd593f069bdbd486ed5cd4628c2136",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3",
-      "teaching/misconception-profiles.json": "9512ac59a6b5cedc985950d026fc9c23c9b2e17e15e9b7bc62eab7d888d6cfec",
+      "teaching/misconception-profiles.json": "714d7334873804d8182f1e2064f651d00a106152a6845c415e757659b2b681d0",
       "teaching/context-library.json": "9ec50a6f42f0ab6787c1c95de8f473897c415c43ccd7cf3d65916d9ca53c7fac",
       "teaching/qt-intent-runtime.json": "5d8e9e9603cc6a17b5274dd0ad6aaccad24165f97808230702fc75e3320ef2f3"
     },
-    "rootHash": "3df605b9f42bf8ef836a1927262a78ef04b7a532e24e5c9c3984aa578806dba5"
+    "rootHash": "a83db4cf2d4fb5a615b80c1395d286fba8f088a3db10f829bfcdb4e2459d1fd1"
   }
 }
