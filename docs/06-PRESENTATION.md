@@ -51,6 +51,7 @@ SemanticQuestion 是全链唯一题目数据契约，禁止第二套题目对象
 | A4 版式常量（210/190mm、12mm 10mm、718px@96dpi） | `Print.LAYOUT`（print.js），practice.html 与 practice-session.js 只读不复制 |
 | 打印文档骨架（CSP 禁 script / @page / .print-sheet / .ps-title） | `Print.buildPrintDocument()`（克隆链与直渲链共用） |
 | 判断题打印形态（去按钮 /「正确（　）错误（　）」） | `Print.buildJudgePrintCss()`（双链共用） |
+| 打印题目/题卡样式（试卷式：无卡片框 / 紧凑序号 / 自然流式） | `Print.buildPaperQuestionCss()`（克隆链与直渲链共用）；克隆链专属 chrome 规则由 `Print.buildClonePrintCss()` 追加，不得重复定义题卡外观 |
 | 列数 / 列跨唯一决策（P31-03 结构特征决策表：题型/图形档/选项/作答信号 + 长度信号） | `QuestionLayout.plan()`（shared/presentation/layout.js；P31-02 自 core.js 物理迁入，P31-03 升级为 plan/itemFor/spanToCss；长度阈值 ≥50 通栏、≥26 半宽仅对 choice/classify/apply/未知 DTO 保留） |
 | 屏 / 打密度差异 | 仅 tokens.css 的 `--grid-gap-print`、`--card-padding-print`；print.js 兜底值由契约测试锁定一致 |
 | 打印态页面 chrome 隐藏 | 元素打 `data-print-hide` 标记；唯一规则在 shared/styles/components.css |

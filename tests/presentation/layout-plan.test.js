@@ -147,6 +147,15 @@ test('plan 列数：ctx.columns 优先；否则按宽度动态 [1,4]', () => {
   assert.ok(planOf([]).columns === 3, '空集回落 3 列');
 });
 
+test('P43-02 列数估算：inline-after-equals 按 72px 作答宽（两位数口算 3 列）', () => {
+  // 10 字符题干 + 内联空白盒：90 + 72 + 48 = 210px → (718+12)/(210+12) → 3 列
+  const inline = Array.from({ length: 6 }, () => ({ questionType: 'calc', prompt: '15 ÷ 4 = ?', response: { layout: 'inline-after-equals' } }));
+  assert.strictEqual(planOf(inline).columns, 3);
+  // 同一题干改为块状作答（96px）仍为 234px → 2 列，行内缩窄不扩散到块状作答
+  const block = inline.map(function (q) { return { questionType: 'calc', prompt: q.prompt }; });
+  assert.strictEqual(planOf(block).columns, 2);
+});
+
 test('固定列模式：ctx.fixed=true 时任何题 span=1（P31-10：meta.columns 死数据面已删）', () => {
   const qs = [{ questionType: 'geometry', prompt: '看图', graphic: { type: 'geometry', subtype: 'circle', params: {} } },
              { questionType: 'apply', prompt: '长'.repeat(60) }];

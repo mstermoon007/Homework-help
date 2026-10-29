@@ -58,14 +58,17 @@
     var cn = (txt.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
     var en = txt.length - cn;
     w += cn * CN_W + en * EN_W;
+    // P43-02：内联作答（等号后空白盒）真实宽 72px（components .answer-inp-inline / --answer-w-print），
+    // 不再按块状作答的 96px 估算；原值使两位数口算卡宽虚高，2/3 列边界被误判为 2 列。
+    var ansW = (q && q.response && q.response.layout === 'inline-after-equals') ? 72 : 96;
     try {
       var h = (typeof q.render === 'function') ? q.render(idx) : '';
       if (h.indexOf('combine-inp') !== -1) w += 96 * 3;
       else if (q.inputCount && q.inputCount > 1) w += 96 * q.inputCount;
       else if (q.type === 'multi' || (q.answer && Array.isArray(q.answer))) w += 96 * 2;
-      else w += 96;
+      else w += ansW;
       if (h.indexOf('<svg') !== -1 || h.indexOf('<canvas') !== -1 || h.indexOf('scene-box') !== -1) w += 120;
-    } catch (e) { w += 96; }
+    } catch (e) { w += ansW; }
     w += 32 + 16; // 卡片内边距 + 安全边距
     return Math.max(w, 140);
   }

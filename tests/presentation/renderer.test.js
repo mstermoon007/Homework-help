@@ -911,6 +911,51 @@ test('P31-08 print.js：克隆链徽章覆盖删除（同源继承）、直渲�
   assert.ok(/\.question-stem\s*\{[^}]*font-size:15px;\s*line-height:1\.5;\s*font-weight:600/.test(html), '打印题干保持纸张口径 15px/1.5/600');
 });
 
+test('P43-01 打印两路径共用试卷式题卡样式（去卡片框 + 单一来源）', () => {
+  const paper = Print.buildPaperQuestionCss({ answerRule: false });
+  // 试卷式题卡：无边框 / 无圆角 / 无底色 / 无阴影 / 流式排布，间距走打印 token
+  assert.ok(/\.question-card \{ display:block; position:relative; margin:0; padding:6px 8px; border:0; border-radius:0; background:transparent; box-shadow:none;/.test(paper),
+    '题卡必须去卡片框（border/radius/background/shadow 全部归零）');
+  assert.ok(/\.questions-grid \{[\s\S]*?margin:0; \}/.test(paper), '克隆文档复制来的屏幕网格 margin 必须被压平');
+  assert.ok(/\.question-stem \{ font-size:15px; line-height:1.5; font-weight:600; \}/.test(paper), '打印题干口径唯一 15px/1.5/600');
+  assert.ok(/body \{ font-family:-apple-system[\s\S]*?line-height:1\.5; \}/.test(paper), '行高与题干口径同源');
+  // 直渲链 extraCss 与共用块逐字相同
+  const direct = Print.buildFromQuestions([{ questionType: 'calc', prompt: '1 + 1 = ?', answer: { value: 2 } }],
+    { title: 'P43-01', answerRule: false });
+  assert.ok(direct.indexOf(paper) !== -1, '直渲链必须原样携带共用试卷式样式');
+  // 克隆链 = 同一份共用块 + 克隆专属规则；不得再私写题卡外观/分页
+  const clone = Print.buildClonePrintCss();
+  assert.strictEqual(clone.indexOf(paper), 0, '克隆链必须以同一份共用样式块开头');
+  assert.ok(!/\.print-sheet \.question-card/.test(clone), '克隆链不得再私写题卡覆盖');
+  assert.ok(!/#problemsArea .questions-grid .question-card/.test(clone), '克隆链不得再私写题卡 padding !important');
+  assert.ok(!/\.question-card \{\s*page-break-inside: avoid; \}/.test(clone), '分页兜底已并入共用块');
+  assert.ok(clone.indexOf('.timer-bar, .controls, footer { display: none !important; }') !== -1, '克隆专属 chrome 隐藏免规则保留');
+  // 源码层：克隆路径实际消费唯一组装，旧第二套 QCSS 构建器已删除
+  const src = fs.readFileSync(path.join(ROOT, 'shared', 'presentation', 'print.js'), 'utf8');
+  assert.ok(src.indexOf('extraCss: buildClonePrintCss()') !== -1, '克隆链必须消费唯一组装');
+  assert.ok(src.indexOf('buildPrintQcss') === -1, '旧第二套 QCSS 构建器已物理删除');
+});
+
+test('P43-01 双链打印文档：页边距 / 网格间距 / 题卡外观同源', () => {
+  const paper = Print.buildPaperQuestionCss({ answerRule: false });
+  const cloneDoc = Print.buildPrintDocument({
+    title: '克隆链',
+    headTags: '<link rel="stylesheet" href="shared/styles/components.css">',
+    extraCss: Print.buildClonePrintCss(),
+    bodyHtml: '<div class="questions-grid"><div class="question-card"></div></div>'
+  });
+  const directDoc = Print.buildFromQuestions(
+    [{ questionType: 'calc', prompt: '1 + 1 = ?', answer: { value: 2 } }],
+    { title: '直渲链', answerRule: false }
+  );
+  [cloneDoc, directDoc].forEach(function (doc) {
+    assert.ok(doc.indexOf(paper) !== -1, '两文档必须携带同一份试卷式题目样式');
+    assert.ok(doc.indexOf('@page { size: A4 portrait; margin: 12mm 10mm; }') !== -1, '页边距同源');
+    assert.ok(doc.indexOf('gap:8px 6px') !== -1, '网格间距同源（--grid-gap-print）');
+    assert.ok(doc.indexOf('padding:6px 8px') !== -1, '题卡内边距同源（--card-padding-print）');
+  });
+});
+
 test('P31-08 practice.html 题目组件内联样式清零（含渲染后 fb.style.color）；.num DOM 文本仍为纯数字', () => {
   const page = fs.readFileSync(path.join(ROOT, 'practice.html'), 'utf8');
   assert.ok(!/#problemsArea \.question-card \.num/.test(page), '页面不再私写题号样式');

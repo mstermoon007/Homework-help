@@ -10,6 +10,8 @@
  *   - 版式常量 Print.LAYOUT（A4 / 190mm / 12mm 10mm / 718px），双链与屏显预览共用
  *   - 打印文档骨架唯一来源 buildPrintDocument（CSP / @page / shell / 标题），两条链都调用
  *   - 判断题打印形态唯一来源 buildJudgePrintCss（克隆链去按钮化 / 直渲链（　）形态）
+ *   - P43-01：打印题目/题卡样式（试卷式：无卡片框/紧凑序号流式）唯一来源 buildPaperQuestionCss，
+ *     克隆链与直渲链共用；克隆链只额外叠加「页面 chrome 隐藏」等克隆专属规则（buildClonePrintCss）
  *   - 列数 / 列跨算法唯一来源 shared/presentation/layout.js 的 QuestionLayout（P31-02 自 core.js 物理迁入；
  *     P31-05 起经 planFor 缓存取数，克隆链采信渲染期内联样式，零二次度量）
  *   - 屏 / 打密度差异只经 tokens.css 的 --grid-gap-print / --card-padding-print 表达
@@ -204,42 +206,15 @@
       originalStyles += '<style>\n' + styleTags[m].textContent + '\n</style>\n';
     }
 
-    // 克隆链专属打印覆盖（骨架/@page/shell/judge 已由 buildBasePrintCss 统一提供）。
+    // P43-01：题目/题卡样式唯一来源 buildPaperQuestionCss（与直渲链逐字相同）；
+    // 克隆链只额外叠加「页面 chrome 隐藏」等克隆专属规则。
     // P28-23 安全边界：clone 是页面 #problemsArea 的深拷贝 DOM（已由
     // PresentationRenderer→HTMLRenderer 经安全渲染管线产出，非 raw HTML 字符串）。
     // outerHTML 仅做 DOM 序列化，不引入用户输入；打印窗口 CSP 已禁 script-src。
-    var cloneCss =
-      '  /* 兜底：确保卡片撑满网格列（主力已在克隆 DOM 设内联 style） */\n' +
-      '  .print-sheet .question-card { justify-self: stretch !important; width: 100% !important; box-sizing: border-box !important; }\n' +
-      // 自 pages.css @media print 迁入（P28-UI-PRINT-WYSIWYG-01）：克隆保留 id=#problemsArea，
-      // 用与屏幕态同 id 权重的选择器压过屏幕 padding/对齐
-      '  #problemsArea .questions-grid .question-card,\n' +
-      '  #problemsArea .q-grid .question-card { padding: var(--card-padding-print,' + PRINT_TOKEN_DEFAULTS['--card-padding-print'] + ') !important; text-align: left !important; }\n' +
-      // P31-08：原克隆链 22×22 灰色圆徽章覆盖整条删除——题号纯文本「N.」规则唯一定义在
-      // components.css（.question-card .num + ::after），克隆文档原样复制页面样式自然继承，屏打同形。
-      // P28-UI-ANSWER-LINE-REMOVE-01：克隆链打印与屏显一致——输入框下方不再保留作答横线
-      '  .print-sheet .question-answer { border-bottom: none; }\n' +
-      '  /* 隐藏交互元素（DOM已移除，CSS兜底） */\n' +
-      '  .btn, button, .btn-row, .score-btns, .score-panel,\n' +
-      '  .back-home, .settings-card, .panel.controls,\n' +
-      '  .actions, .meta, .result, .wrong-section, .history-box,\n' +
-      '  .mark-icon, .correct-answer, .feedback, .reveal, .step-hint,\n' +
-      '  .badge, .formula-placeholder, .tb-feedback, .tb-think, .tb-num, .timer-bar, .controls, footer { display: none !important; }\n' +
-      '  /* 分页兜底：直渲链卡片带 density-*/break 内联（PRINT_QCSS 档位规则），克隆链降级渲染产物无档位标记 → 整卡 avoid */\n' +
-      '  .question-card { page-break-inside: avoid; }\n' +
-      // 自 pages.css @media print 迁入：M13 乘除法表静态卡片（单卡通栏 + 表格边框）
-      '  #problemsArea .preview-table-card { grid-column: 1 / -1; text-align: center !important; }\n' +
-      '  .preview-table { border-collapse: collapse; margin: 10px auto 2px; font-size: 13px; }\n' +
-      '  .preview-table caption { font-size: 12px; color: var(--muted); margin-bottom: 6px; }\n' +
-      '  .preview-table td { border: 1px solid var(--line); padding: 4px 8px; white-space: nowrap; }\n' +
-      // 自 pages.css @media print 迁入：批改反馈空时不占高
-      '  .question-card .feedback { min-height: 0; margin-top: 4px; }\n' +
-      '  .question-card .feedback:empty { display: none; }\n';
-
     return buildPrintDocument({
       title: title || '练习题',
       headTags: originalStyles,
-      extraCss: cloneCss,
+      extraCss: buildClonePrintCss(),
       bodyHtml: clone.outerHTML
     });
   }
@@ -305,24 +280,31 @@
     return PRINT_TOKEN_DEFAULTS[name];
   }
 
-  // A4 竖版打印专用 CSS（不依赖页面自带样式，独立自足）
-  // P1.1（Issue #1 [Frozen Core Fix]）：打印去卡片化 + 间距收紧——纸张上无框无底，靠间距分隔。
-  // @page / body 纸宽 / shell / 标题 / judge 形态已在 buildBasePrintCss，此处仅网格与题卡。
-  // P31-05：分页决策 = plan 档位（density 类经渲染期注入 HTML）：
-  //   compact 连续排（auto）/ standard 不拆卡（avoid）/ expanded 不拆卡 + 卡内联 break:keep 最高优先；
-  //   无档位卡（fixed 固定列模式不透传档位）回落整卡 avoid。列数/列跨决策不在此（唯 plan 经内联样式表达）。
-  function buildPrintQcss(opts) {
+  /**
+   * P43-01：打印题目/题卡样式唯一来源（克隆链 / 直渲链逐字共用）。
+   *
+   * 试卷式排版：纸张上无卡片框 / 无圆角 / 无底色 / 无阴影，题目为「序号 + 题面 + 作答区」
+   * 自然流式（display:block），靠 grid 间距与卡内间距分隔；卡片外观全部由本函数重置，
+   * 不依赖页面 components.css（克隆链即使复制了屏幕卡片样式也在此被唯一规则覆盖）。
+   *
+   * @param {Object} [opts] { answerRule:false → 作答区不画虚线（克隆链已有输入框 / 纯口算卷） }
+   * @returns {string} 打印题目样式片段
+   */
+  function buildPaperQuestionCss(opts) {
     opts = opts || {};
     // P3.2（Issue #1）：answerRule=false 时口算/填空卷去作答虚线，由网格间距分隔（默认保留）
     var keepRule = opts.answerRule !== false;
-    return 'body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }' +
-    '.questions-grid { display:grid; gap:' + cssTokenVal('--grid-gap-print') + '; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); grid-auto-flow:row dense; }' +
-    '.question-card { position:relative; padding:' + cssTokenVal('--card-padding-print') + '; box-sizing:border-box; }' +
+    return 'body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.5; }' +
+    // 网格：列数由 plan 经 --grid-cols 注入；margin 归零（克隆文档会复制 pages.css 的屏幕 margin）
+    '.questions-grid { display:grid; gap:' + cssTokenVal('--grid-gap-print') + '; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); grid-auto-flow:row dense; margin:0; }' +
+    // 题卡去卡片化（试卷式）：重置 border/radius/background/shadow/overflow，流式排布
+    '.question-card { display:block; position:relative; margin:0; padding:' + cssTokenVal('--card-padding-print') + '; border:0; border-radius:0; background:transparent; box-shadow:none; overflow:visible; box-sizing:border-box; text-align:left; align-self:stretch; justify-self:stretch; }' +
     // P31-05 分页三档（消费渲染期注入的 density-* 类）
     '.density-compact { page-break-inside:auto; break-inside:auto; }' +
     '.density-standard { page-break-inside:avoid; break-inside:avoid; }' +
     '.density-expanded { page-break-inside:avoid; break-inside:avoid; }' +
     '.question-card:not([class~="density-compact"]):not([class~="density-standard"]):not([class~="density-expanded"]) { page-break-inside:avoid; break-inside:avoid; }' +
+    // 纸张字号口径：克隆文档会复制 components.css 的屏幕 token 字号，此处唯一压平为打印口径
     '.question-stem { font-size:15px; line-height:1.5; font-weight:600; }' +
     // P31-08：题号纯文本「N.」（直渲文档不引 components.css，此为同规则自持字面量；
     // .num DOM 文本仍为纯数字，句号由 ::after 生成），与屏幕/克隆链同形
@@ -338,7 +320,8 @@
     // P31-07：选项两档（inline 继承 flex 流式；two-column 两列网格，与屏幕 components.css 同规则）
     '.question-options.options-two-column { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px 14px; }' +
     '.question-options .option-letter { display:inline-block; min-width:20px; font-weight:700; color:#7c5cff; margin-right:4px; }' +
-    '.question-answer { margin-top:6px; min-height:20px;' + (keepRule ? ' border-bottom:1px dashed #b9c6de;' : '') + ' }' +
+    // 作答区：显式声明 border-bottom（克隆文档会复制 components.css 的屏幕虚线，须同源覆盖）
+    '.question-answer { margin-top:6px; min-height:20px; border-bottom:' + (keepRule ? '1px dashed #b9c6de' : 'none') + '; }' +
     '.question-answer-print { min-height:20px; }' +
     // P28-INLINE-ANSWER-01：横向算式等号后空白盒（直渲 print 模式，与屏幕输入框等宽等高，无问号）
     // P31-07：宽高走打印 token（--answer-w-print/--answer-h-print，与 tokens.css 同源）
@@ -346,6 +329,29 @@
     '.answer-inp-inline { display:inline-block; width:' + cssTokenVal('--answer-w-print') + '; height:' + cssTokenVal('--answer-h-print') + '; margin-left:2px; vertical-align:middle; box-sizing:border-box; }' +
     '.answer-inp-printblank { border:2px dashed #c9d4e6; border-radius:7px; background:#fafbff; }' +
     '.feedback { display:none; }';
+  }
+
+  /**
+   * P43-01：克隆链打印 CSS = 共用试卷式题目样式 + 克隆专属规则
+   * （隐藏页面 chrome / M13 静态表格 / 空反馈不占高）。
+   * 题目/题卡外观不得在此重复定义——唯一来源是 buildPaperQuestionCss。
+   */
+  function buildClonePrintCss() {
+    return buildPaperQuestionCss({ answerRule: false }) +
+    // 隐藏交互元素（DOM 已移除，CSS 兜底）
+    '.btn, button, .btn-row, .score-btns, .score-panel,' +
+    '.back-home, .settings-card, .panel.controls,' +
+    '.actions, .meta, .result, .wrong-section, .history-box,' +
+    '.mark-icon, .correct-answer, .feedback, .reveal, .step-hint,' +
+    '.badge, .formula-placeholder, .tb-feedback, .tb-think, .tb-num, .timer-bar, .controls, footer { display: none !important; }' +
+    // 自 pages.css @media print 迁入：M13 乘除法表静态卡片（单卡通栏 + 表格边框）
+    '#problemsArea .preview-table-card { grid-column: 1 / -1; text-align: center !important; }' +
+    '.preview-table { border-collapse: collapse; margin: 10px auto 2px; font-size: 13px; }' +
+    '.preview-table caption { font-size: 12px; color: var(--muted); margin-bottom: 6px; }' +
+    '.preview-table td { border: 1px solid var(--line); padding: 4px 8px; white-space: nowrap; }' +
+    // 自 pages.css @media print 迁入：批改反馈空时不占高
+    '.question-card .feedback { min-height: 0; margin-top: 4px; }' +
+    '.question-card .feedback:empty { display: none; }';
   }
 
   /**
@@ -400,7 +406,7 @@
     var answerRule = options.answerRule != null ? !!options.answerRule : hasWrite;
     return buildPrintDocument({
       title: title,
-      extraCss: buildPrintQcss({ answerRule: answerRule }),
+      extraCss: buildPaperQuestionCss({ answerRule: answerRule }),
       bodyHtml: all.html
     });
   }
@@ -425,6 +431,9 @@
     open: open,
     buildPrintDocument: buildPrintDocument,
     buildJudgePrintCss: buildJudgePrintCss,
+    // P43-01：打印题目样式唯一来源与克隆链 CSS 组装（双链一致性契约测试入口）
+    buildPaperQuestionCss: buildPaperQuestionCss,
+    buildClonePrintCss: buildClonePrintCss,
     buildFromQuestions: buildFromQuestions,
     openFromQuestions: openFromQuestions
   };
