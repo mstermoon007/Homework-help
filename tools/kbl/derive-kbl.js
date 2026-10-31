@@ -21,6 +21,8 @@ var path = require('path');
 var ROOT = path.join(__dirname, '..', '..');
 // P40 战役二 T-05：概念族 SSOT 与派生逻辑同源于 derive-relations.js（同树单文件，不建第二知识系统）。
 var DR = require('./derive-relations.js');
+// P44 T-07：年级难度锚点表（既有唯一来源，不新建第二份锚点常量）。
+var Anchor = require(path.join(ROOT, 'dev', 'difficulty-anchor-table.js'));
 var RAW = path.join(ROOT, 'kbl', 'import', 'extract-raw.json');
 var COURSE_OUT = path.join(ROOT, 'kbl', 'canonical', 'course.json');
 var KNOW_OUT = path.join(ROOT, 'kbl', 'canonical', 'knowledge.json');
@@ -220,6 +222,30 @@ function derive() {
       derivation: { rules: ev, evidence: (rng.evidence.concat(fam, ops).slice(0, 8)) }
     };
   });
+
+  // P44 T-07：族内期望难度下界 progressLevel（只增注解，不改 seedDifficulty，不影响生成内容）。
+  // 口径：progressLevel = max(本年级锚点下界, 族内前序 stageOrder 已出现的最高 seedDifficulty)。
+  // 唯一消费者：shared/validator/difficulty-integrity-validator.js 的族内偏离判定。
+  (function attachProgressLevel() {
+    var byFam = {};
+    capability.forEach(function (c) {
+      if (c.familyId == null || c.stageOrder == null) return;
+      (byFam[c.familyId] = byFam[c.familyId] || []).push(c);
+    });
+    Object.keys(byFam).forEach(function (fam) {
+      var arr = byFam[fam].slice().sort(function (a, b) {
+        if (a.stageOrder !== b.stageOrder) return a.stageOrder - b.stageOrder;
+        return a.knowledgeId < b.knowledgeId ? -1 : (a.knowledgeId > b.knowledgeId ? 1 : 0);
+      });
+      var runMax = null;
+      arr.forEach(function (c) {
+        var an = Anchor.anchorOf(Number(String(c.grade).replace(/^g/, '')));
+        var lo = an ? an[0] : 1;
+        c.progressLevel = runMax === null ? lo : Math.max(lo, runMax);
+        if (runMax === null || c.seedDifficulty > runMax) runMax = c.seedDifficulty;
+      });
+    });
+  })();
 
   // 生成器注册表（运行时真实能力词表）用于映射 pluginId 校验
   var genList = [];

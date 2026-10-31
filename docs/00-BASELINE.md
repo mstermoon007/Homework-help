@@ -50,7 +50,7 @@
 
 前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（用户 2026-09-30 显式指令：不设人工确认环节，上线零 LLM 依赖）。派生器 `tools/kbl/derive-relations.js`：R-REL-01 同单元序号顺序 277 条 + R-REL-02 同册跨单元递进 86 条 + R-REL-03 跨册/跨年级概念主干链 44 条（整数认识/加减/乘除/分数/小数/图形/测量/线角/数系/运动/负数/观察物体/方向与位置 14 族；P44/H10-A 新增 fam_negative、H10-B 新增 fam_observation、H10-C 新增 fam_direction 主干链，373→407）。`inferred:true` 为溯源标记，`llm-finalized-dev` 表示 LLM 即开发期最终确认者；三元组全局去重、链内年级严格递增收敛无环。root Excel 本身无关系字段。
 
-> **概念族模型（P40 战役二）**：族表 `CONCEPT_FAMILIES`（14 主干族，含有序阶段表 stages + 演化 op 数组；P44/H10 起含 fam_negative、fam_observation、fam_direction）与 `EXTRA_FAMILIES`（11 扩展族，regex 归类）声明于 `tools/kbl/derive-relations.js`（SSOT）。每 KP 经 `computeStageOrders` 得到 `{familyId, stageOrder}`（族内全序无并列），回填 `kbl/canonical/capability.json`（375/375）。R-REL-03 的 44 条边携带 `evolution{familyId, fromStageOrder, toStageOrder, op}`（op∈{extend_number\|increase_complexity\|abstract_up\|inverse}）。跨族前置为运行时聚合投影（不落盘）；族内难度递进校验检出 53 处 needs-review 倒挂（人工裁决，不自动改数；P44/H10-B 族归属纠正消解 1 处）。
+> **概念族模型（P40 战役二）**：族表 `CONCEPT_FAMILIES`（14 主干族，含有序阶段表 stages + 演化 op 数组；P44/H10 起含 fam_negative、fam_observation、fam_direction）与 `EXTRA_FAMILIES`（11 扩展族，regex 归类）声明于 `tools/kbl/derive-relations.js`（SSOT）。每 KP 经 `computeStageOrders` 得到 `{familyId, stageOrder}`（族内全序无并列），回填 `kbl/canonical/capability.json`（375/375）。R-REL-03 的 44 条边携带 `evolution{familyId, fromStageOrder, toStageOrder, op}`（op∈{extend_number\|increase_complexity\|abstract_up\|inverse}）。跨族前置为运行时聚合投影（不落盘）。族内难度偏离校验以 capability 派生字段 `progressLevel`（= max(本年级锚点下界, 族内前序最高 seedDifficulty)）为基准，检出 **126 处** needs-review 偏离（原局部相邻倒挂 53 处为其子集；人工裁决，不自动改数；P44/T-07 口径升级，`seedDifficulty` 一分未动）。
 
 ---
 
@@ -92,9 +92,9 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 测试文件 | **101** | `tests/**/*.test.js` |
-| 测试用例 | **936** | `npm test` |
-| PASS | **936** | 同上 |
+| 测试文件 | **102** | `tests/**/*.test.js` |
+| 测试用例 | **937** | `npm test` |
+| PASS | **937** | 同上 |
 | FAIL | **0** | 同上 |
 | 测试套件数 | 16 | 同上 |
 
@@ -155,7 +155,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 18s（934 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 18s（937 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1566 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -196,7 +196,7 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 | 2 | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | `dev/lint-check.js` | 静态质量 lint |
 | 4 | `dev/check-syntax.js` | 全项目 JS 语法（342 文件） |
-| 5 | `npm test` | 全链测试（934/934） |
+| 5 | `npm test` | 全链测试（937/937） |
 | 6a | `dev/check-allow-generation.js` | 1566 ALLOW 真实生成 |
 | 6b | `dev/p28/check-generation-matrix-freeze.js` | 生成矩阵冻结 |
 | 6c | `dev/p28/check-generator-matrix.js` | Generator Registry |

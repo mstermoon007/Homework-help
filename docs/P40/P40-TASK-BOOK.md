@@ -12,7 +12,7 @@
 >
 > **编号勘误（P40-NUM-FIX）**：Q-18/Q-19 为早期误用 Q-15/Q-16 号的两条债务修复新号，详见 change-log 头部勘误块。
 >
-> **needs-review 挂账处置（随签收收口，维持现状存档、不自动改数）**：①战役一 Q-14 复现题集 163 题（`dev/p40/out/q01-review.md`）；②战役二 T-07 族内难度倒挂 54 处（`dev/p40/out/t07-family-difficulty.json`，三主线含 13 处）；③T-06 族间投影环（primary-family 折叠产物）；④T-08 解释抽样 20 题（`dev/p40/out/t08-explanation-samples.md`）。详见 `docs/P40/p40-final-closure.md` §6。
+> **needs-review 挂账处置（随签收收口，维持现状存档、不自动改数）**：①战役一 Q-14 复现题集 163 题（`dev/p40/out/q01-review.md`）；②战役二 T-07 族内难度偏离 126 处（`dev/p40/out/t07-family-difficulty.json`；原局部相邻倒挂 53 处为 P44 全局期望下界口径的子集）；③T-06 族间投影环（primary-family 折叠产物）；④T-08 解释抽样 20 题（`dev/p40/out/t08-explanation-samples.md`）。详见 `docs/P40/p40-final-closure.md` §6。
 
 ---
 
@@ -93,7 +93,7 @@
 
 | 任务 | 内容 | 交付物 |
 |---|---|---|
-| **P40-Q-01** | 质量基线抽样：G1-G6 × 7 题型 × 4 domain 分层抽样 ≥120 题（6a 真实生成），按 §1.1 五层 23 维（R1-R23）逐维评分——可脚本化维度脚本评（R7-R11/R19/R20），其余人工评（R1-R6/R12-R18/R22/R23），产出基线报告 + 复现题集（L3/L4 每维 ≥10 例未达标）+ R8/R11 缺口量化（缺口>0 时列修补任务建议） | `docs/P40/p40-q-baseline.md` + 复现题清单（登记于本任务书附录，不入 docs/ 冗余文件） |
+| **P40-Q-01** | 质量基线抽样：G1-G6 × 7 题型 × 4 domain 分层抽样 ≥120 题（6a 真实生成），按 §1.1 五层 23 维（R1-R23）逐维评分——可脚本化维度脚本评（R7-R11/R19/R20），其余人工评（R1-R6/R12-R18/R22/R23），产出基线报告 + 复现题集（L3/L4 每维 ≥10 例未达标）+ R8/R11 缺口量化（缺口>0 时列修补任务建议） | `docs/archive/phases/p40/p40-q-baseline.md` + 复现题清单（登记于本任务书附录，不入 docs/ 冗余文件） |
 | **P40-Q-02** | 竖式/分数/图文消费盘点：①svg-calculation 全 API 的生产调用图（谁在什么条件下 emit）；②calc 多位数题竖式命中率（应配未配清单）；③分数题图示覆盖率；④graphic 各 subtype 在 1570 行上的分布 | 盘点报告（含 G4 缺口定量结论） |
 
 **过门判据**：23 维基线分数出齐（L1/L2 缺口量化、L3/L4 复现题集、L5 复证结论）；每维有可复现未达标题；G4 消费现状有调用图证据。**用户确认后进阶段二。**
@@ -287,7 +287,7 @@ P40-FINAL（两役收口 + 00-BASELINE 更新 + 日志收口 + 全量 30/0/1）
 
 ## 附录 A · P40-Q-01 复现题登记（2026-10-12 基线）
 
-> 编号 #i 指 `dev/p40/out/q01-evidence.json` 数组下标（含 kp/qt/prompt/答案/解析/图形全量证据，seed 可复跑）。完整分析见 `docs/P40/p40-q-baseline.md`。
+> 编号 #i 指 `dev/p40/out/q01-evidence.json` 数组下标（含 kp/qt/prompt/答案/解析/图形全量证据，seed 可复跑）。完整分析见 `docs/archive/phases/p40/p40-q-baseline.md`。
 
 | 维度 | #i | 缺陷一句话 |
 |---|---|---|

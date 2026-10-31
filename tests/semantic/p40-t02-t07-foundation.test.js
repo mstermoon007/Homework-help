@@ -10,7 +10,9 @@
  *   T-04 evolution：44/44 边带合法 evolution（op∈闭集、stageOrder 严格递增、familyId 非空）；validateEvolution 通过。
  *   T-05 capability 回填：375/375 带 familyId + stageOrder；manifest.rootHash 为 64 位十六进制。
  *   T-06 跨族前置投影：reportCrossFamily 返回族内/跨族计数与族间边；intra+cross=全部边；KP 级图无环。
- *   T-07 族内难度递进：validateFamilyDifficultyMonotonic 检出 53 处倒挂（挂 needs-review，不自动改数；P44/H10-B 族归属纠正消解 1 处）。
+ *   T-07 族内难度偏离：progressLevel 派生覆盖 375/375；validateFamilyDifficultyMonotonic 按
+ *        「seedDifficulty < progressLevel（期望下界）」检出 126 处偏离（挂 needs-review，不自动改数）。
+ *        P44 H10 前口径为局部相邻倒挂 53 处；P44 T-07 改全局期望下界口径后为 126 处（原 53 为其子集）。
  *   P44/H10-C：fam_direction 升主干链（g2 上→g4 上→g6 上）且 R-REL-02 取消综合实践/复习单元排除，
  *   族表 13/12→14/11、evolution 42→44、族间边 60→82（倒挂 53 未变）。
  */
@@ -94,18 +96,26 @@ test('T-06 跨族前置投影：intra+cross=全部边 + 族间边 + KP 级图无
   assert.equal(vis, Object.keys(nodes).length, 'KP 级前置图无环');
 });
 
-test('T-07 族内难度递进：现网检出 53 处倒挂（needs-review）+ 合成倒挂可被判出', () => {
-  const rows = cap.map((c) => ({ knowledgeId: c.knowledgeId, familyId: c.familyId, stageOrder: c.stageOrder, seedDifficulty: c.seedDifficulty }));
+test('T-07 族内难度偏离：progressLevel 覆盖 375 + 现网偏离 126 处（needs-review）+ 真实消费 progressLevel', () => {
+  assert.equal(cap.filter((c) => c.progressLevel != null).length, 375, 'progressLevel 派生覆盖 375/375');
+  const rows = cap.map((c) => ({ knowledgeId: c.knowledgeId, grade: c.grade, familyId: c.familyId, stageOrder: c.stageOrder, seedDifficulty: c.seedDifficulty, progressLevel: c.progressLevel }));
   const res = DiffVal.validateFamilyDifficultyMonotonic(rows);
   assert.equal(res.checked, 375, '扫描 375 行');
-  assert.equal(res.violations.length, 53, '现网倒挂 53 处（与 T-07 扫描脚本一致；P44/H10-B 族归属纠正消解 1 处）');
-  assert.equal(res.valid, false, '存在倒挂 → valid=false（挂 needs-review 不自动改数）');
+  assert.equal(res.violations.length, 126, '现网偏离期望下界 126 处（全局口径，含局部相邻倒挂 53）');
+  assert.equal(res.valid, false, '存在偏离 → valid=false（挂 needs-review 不自动改数）');
+  res.violations.forEach((v) => {
+    assert.ok(v.seedDifficulty < v.progressLevel, v.knowledgeId + ' 违规行必然低于期望下界');
+    assert.equal(v.difficultyDelta, v.seedDifficulty - v.progressLevel, 'difficultyDelta 为负偏离');
+  });
   const artifact = json('dev/p40/out/t07-family-difficulty.json');
   assert.equal(artifact.violations, res.violations.length, '扫描产物与校验器一致');
 
+  // 真实消费证据：携带 progressLevel 时按字段判定（邻接口径下第 3 行不会告警）
   const synth = DiffVal.validateFamilyDifficultyMonotonic([
-    { knowledgeId: 'a', familyId: 'x', stageOrder: 1, seedDifficulty: 3 },
-    { knowledgeId: 'b', familyId: 'x', stageOrder: 2, seedDifficulty: 2 }
+    { knowledgeId: 'a', familyId: 'x', stageOrder: 1, seedDifficulty: 6, progressLevel: 6 },
+    { knowledgeId: 'b', familyId: 'x', stageOrder: 2, seedDifficulty: 6, progressLevel: 6 },
+    { knowledgeId: 'c', familyId: 'x', stageOrder: 3, seedDifficulty: 6, progressLevel: 7 }
   ]);
-  assert.equal(synth.violations.length, 1, '合成倒挂被检出');
+  assert.equal(synth.violations.length, 1, 'progressLevel=7 时 seed 6 被检出（仅邻接比较不会）');
+  assert.equal(synth.violations[0].knowledgeId, 'c', '命中偏离行 c');
 });

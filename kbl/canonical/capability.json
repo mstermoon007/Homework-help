@@ -45,7 +45,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-up-u01-k002",
@@ -92,7 +93,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-up-u01-k003",
@@ -138,7 +140,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u02-k001",
@@ -187,7 +190,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u02-k002",
@@ -236,7 +240,8 @@
           "mixed",
           "sequential"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u03-k001",
@@ -275,7 +280,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-up-u03-k002",
@@ -314,7 +320,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-up-u04-k001",
@@ -357,7 +364,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-up-u04-k002",
@@ -397,7 +405,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-up-u04-k003",
@@ -436,7 +445,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-up-u05-k001",
@@ -470,7 +480,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u05-k002",
@@ -507,7 +518,8 @@
         "evidence": [
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u05-k003",
@@ -546,7 +558,8 @@
         "evidence": [
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-up-u06-k001",
@@ -583,7 +596,8 @@
         "evidence": [
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u01-k001",
@@ -622,7 +636,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u02-k001",
@@ -662,7 +677,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u02-k002",
@@ -699,7 +715,8 @@
         "evidence": [
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u02-k003",
@@ -743,7 +760,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u03-k001",
@@ -783,7 +801,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u03-k002",
@@ -823,7 +842,8 @@
           "100以内",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u03-k003",
@@ -863,7 +883,8 @@
           "100以内",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u03-k004",
@@ -903,7 +924,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u03-k005",
@@ -943,7 +965,8 @@
           "100以内",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u03-k006",
@@ -986,7 +1009,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u04-k001",
@@ -1030,7 +1054,8 @@
           "整数域",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u04-k002",
@@ -1073,7 +1098,8 @@
           "整数域",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u04-k003",
@@ -1117,7 +1143,8 @@
           "整数域",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u04-k004",
@@ -1160,7 +1187,8 @@
           "整数域",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u04-k005",
@@ -1201,7 +1229,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u05-k001",
@@ -1245,7 +1274,8 @@
           "整数域",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u05-k002",
@@ -1289,7 +1319,8 @@
           "整数域",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u05-k003",
@@ -1329,7 +1360,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g1-down-u06-k001",
@@ -1367,7 +1399,8 @@
         "evidence": [
           "addition"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u06-k002",
@@ -1416,7 +1449,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u06-k003",
@@ -1461,7 +1495,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g1-down-u07-k001",
@@ -1500,7 +1535,8 @@
           "money",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u07-k002",
@@ -1538,7 +1574,8 @@
           "money",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u07-k003",
@@ -1575,7 +1612,8 @@
         "evidence": [
           "money"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g1-down-u08-k001",
@@ -1621,7 +1659,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 2
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
@@ -1656,7 +1695,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
@@ -1690,7 +1730,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u01-k003",
@@ -1730,7 +1771,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u01-k004",
@@ -1764,7 +1806,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u01-k005",
@@ -1804,7 +1847,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u01-k006",
@@ -1845,7 +1889,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u02-k001",
@@ -1890,7 +1935,8 @@
           "addition",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u02-k002",
@@ -1933,7 +1979,8 @@
           "2～6",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u02-k003",
@@ -1975,7 +2022,8 @@
           "subtraction",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u02-k004",
@@ -2016,7 +2064,8 @@
           "addition",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u03-k001",
@@ -2054,7 +2103,8 @@
         "evidence": [
           "division"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u03-k002",
@@ -2092,7 +2142,8 @@
         "evidence": [
           "division"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u03-k003",
@@ -2134,7 +2185,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u03-k004",
@@ -2179,7 +2231,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u03-k005",
@@ -2218,7 +2271,8 @@
         "evidence": [
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u04-k001",
@@ -2256,7 +2310,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u04-k002",
@@ -2294,7 +2349,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u04-k003",
@@ -2332,7 +2388,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u04-k004",
@@ -2366,7 +2423,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u05-k001",
@@ -2407,7 +2465,8 @@
           "ratio",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u05-k002",
@@ -2445,7 +2504,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u05-k003",
@@ -2484,7 +2544,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u05-k004",
@@ -2522,7 +2583,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u05-k005",
@@ -2567,7 +2629,8 @@
           "ratio",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u06-k001",
@@ -2605,7 +2668,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-up-u07-k001",
@@ -2651,7 +2715,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u07-k002",
@@ -2699,7 +2764,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-up-u08-k001",
@@ -2744,7 +2810,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u01-k001",
@@ -2782,7 +2849,8 @@
         "evidence": [
           "time"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-down-u01-k002",
@@ -2815,7 +2883,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-down-u01-k003",
@@ -2849,7 +2918,8 @@
           "R10:步数=1"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-down-u02-k001",
@@ -2892,7 +2962,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u02-k002",
@@ -2934,7 +3005,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u02-k003",
@@ -2977,7 +3049,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u02-k004",
@@ -3023,7 +3096,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u02-k005",
@@ -3070,7 +3144,8 @@
           "graph",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u03-k001",
@@ -3109,7 +3184,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u03-k002",
@@ -3151,7 +3227,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u03-k003",
@@ -3189,7 +3266,8 @@
         "evidence": [
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u03-k004",
@@ -3234,7 +3312,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u03-k005",
@@ -3277,7 +3356,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u03-k006",
@@ -3323,7 +3403,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u04-k001",
@@ -3362,7 +3443,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g2-down-u04-k002",
@@ -3401,7 +3483,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u04-k003",
@@ -3442,7 +3525,8 @@
           "万以内",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u04-k004",
@@ -3481,7 +3565,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u04-k005",
@@ -3524,7 +3609,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u04-k006",
@@ -3563,7 +3649,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u04-k007",
@@ -3607,7 +3694,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u05-k001",
@@ -3651,7 +3739,8 @@
           "整数域",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u05-k002",
@@ -3695,7 +3784,8 @@
           "整数域",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u05-k003",
@@ -3739,7 +3829,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u05-k004",
@@ -3786,7 +3877,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u06-k001",
@@ -3825,7 +3917,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 3
     },
     {
       "knowledgeId": "math-g2-down-u06-k002",
@@ -3876,7 +3969,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u06-k003",
@@ -3915,7 +4009,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u06-k004",
@@ -3954,7 +4049,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g2-down-u07-k001",
@@ -4001,7 +4097,8 @@
           "subtraction",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u07-k002",
@@ -4044,7 +4141,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g2-down-u07-k003",
@@ -4083,7 +4181,8 @@
         "evidence": [
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u01-k001",
@@ -4123,7 +4222,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u01-k002",
@@ -4161,7 +4261,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u01-k003",
@@ -4199,7 +4300,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u02-k001",
@@ -4237,7 +4339,8 @@
         "evidence": [
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u02-k002",
@@ -4281,7 +4384,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u02-k003",
@@ -4315,7 +4419,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u02-k004",
@@ -4349,7 +4454,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u02-k005",
@@ -4394,7 +4500,8 @@
           "整数域",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u03-k001",
@@ -4432,7 +4539,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u03-k002",
@@ -4470,7 +4578,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u03-k003",
@@ -4510,7 +4619,8 @@
           "money",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u03-k004",
@@ -4552,7 +4662,8 @@
           "time",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u04-k001",
@@ -4585,7 +4696,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u04-k002",
@@ -4623,7 +4735,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u04-k003",
@@ -4662,7 +4775,8 @@
           "money",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u04-k004",
@@ -4700,7 +4814,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u05-k001",
@@ -4743,7 +4858,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g3-up-u05-k002",
@@ -4786,7 +4902,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u05-k003",
@@ -4828,7 +4945,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u05-k004",
@@ -4870,7 +4988,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u05-k005",
@@ -4914,7 +5033,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u06-k001",
@@ -4953,7 +5073,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u06-k002",
@@ -4985,7 +5106,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u06-k003",
@@ -5018,7 +5140,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u06-k004",
@@ -5056,7 +5179,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u06-k005",
@@ -5089,7 +5213,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-up-u07-k001",
@@ -5127,7 +5252,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u07-k002",
@@ -5166,7 +5292,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u07-k003",
@@ -5205,7 +5332,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u07-k004",
@@ -5239,7 +5367,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u08-k001",
@@ -5283,7 +5412,8 @@
           "整数域",
           "fraction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-up-u08-k002",
@@ -5327,7 +5457,8 @@
           "整数域",
           "fraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-up-u08-k003",
@@ -5372,7 +5503,8 @@
           "fraction",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-up-u08-k004",
@@ -5421,7 +5553,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-up-u08-k005",
@@ -5466,7 +5599,8 @@
           "整数域",
           "fraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-up-u09-k001",
@@ -5512,7 +5646,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u01-k001",
@@ -5550,7 +5685,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u01-k002",
@@ -5588,7 +5724,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u01-k003",
@@ -5626,7 +5763,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u01-k004",
@@ -5664,7 +5802,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u02-k001",
@@ -5708,7 +5847,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u02-k002",
@@ -5751,7 +5891,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u02-k003",
@@ -5793,7 +5934,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u02-k004",
@@ -5835,7 +5977,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u02-k005",
@@ -5877,7 +6020,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u02-k006",
@@ -5921,7 +6065,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u03-k001",
@@ -5960,7 +6105,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u03-k002",
@@ -6001,7 +6147,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u03-k003",
@@ -6040,7 +6187,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u03-k004",
@@ -6078,7 +6226,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u04-k001",
@@ -6119,7 +6268,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u04-k002",
@@ -6159,7 +6309,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u04-k003",
@@ -6200,7 +6351,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u04-k004",
@@ -6240,7 +6392,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u04-k005",
@@ -6280,7 +6433,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u05-k001",
@@ -6320,7 +6474,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u05-k002",
@@ -6360,7 +6515,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u05-k003",
@@ -6403,7 +6559,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u05-k004",
@@ -6438,7 +6595,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u06-k001",
@@ -6471,7 +6629,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u06-k002",
@@ -6513,7 +6672,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u07-k001",
@@ -6557,7 +6717,8 @@
           "整数域",
           "decimal"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u07-k002",
@@ -6602,7 +6763,8 @@
           "decimal",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u07-k003",
@@ -6651,7 +6813,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u07-k004",
@@ -6697,7 +6860,8 @@
           "decimal",
           "measure"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u08-k001",
@@ -6744,7 +6908,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u08-k002",
@@ -6789,7 +6954,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u08-k003",
@@ -6830,7 +6996,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g3-down-u08-k004",
@@ -6868,7 +7035,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g3-down-u08-k005",
@@ -6904,7 +7072,8 @@
         "evidence": [
           "measure"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g3-down-u08-k006",
@@ -6947,7 +7116,8 @@
           "整数域",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 4
     },
     {
       "knowledgeId": "math-g4-up-u01-k001",
@@ -6986,7 +7156,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u01-k002",
@@ -7029,7 +7200,8 @@
           "整数域",
           "direction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u01-k003",
@@ -7070,7 +7242,8 @@
           "一位数",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u01-k004",
@@ -7111,7 +7284,8 @@
           "亿以内",
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u01-k005",
@@ -7153,7 +7327,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u01-k006",
@@ -7195,7 +7370,8 @@
           "整数域",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u02-k001",
@@ -7234,7 +7410,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u02-k002",
@@ -7273,7 +7450,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u02-k003",
@@ -7311,7 +7489,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u03-k001",
@@ -7353,7 +7532,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u03-k002",
@@ -7397,7 +7577,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u03-k003",
@@ -7439,7 +7620,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u04-k001",
@@ -7486,7 +7668,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g4-up-u04-k002",
@@ -7530,7 +7713,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u04-k003",
@@ -7574,7 +7758,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u05-k001",
@@ -7613,7 +7798,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u05-k002",
@@ -7651,7 +7837,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u05-k003",
@@ -7690,7 +7877,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u05-k004",
@@ -7728,7 +7916,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u06-k001",
@@ -7768,7 +7957,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g4-up-u06-k002",
@@ -7811,7 +8001,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u06-k003",
@@ -7845,7 +8036,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u06-k004",
@@ -7887,7 +8079,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u07-k001",
@@ -7932,7 +8125,8 @@
           "graph",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u08-k001",
@@ -7969,7 +8163,8 @@
         "evidence": [
           "direction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u08-k002",
@@ -8010,7 +8205,8 @@
           "整数域",
           "direction"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-up-u08-k003",
@@ -8043,7 +8239,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-up-u09-k001",
@@ -8090,7 +8287,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u01-k001",
@@ -8135,7 +8333,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g4-down-u01-k002",
@@ -8182,7 +8381,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u01-k003",
@@ -8228,7 +8428,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g4-down-u01-k004",
@@ -8270,7 +8471,8 @@
           "ratio",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g4-down-u02-k001",
@@ -8310,7 +8512,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-down-u02-k002",
@@ -8350,7 +8553,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-down-u02-k003",
@@ -8384,7 +8588,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-down-u03-k001",
@@ -8422,7 +8627,8 @@
         "evidence": [
           "addition"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u03-k002",
@@ -8460,7 +8666,8 @@
         "evidence": [
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u03-k003",
@@ -8498,7 +8705,8 @@
         "evidence": [
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u03-k004",
@@ -8545,7 +8753,8 @@
           "subtraction",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g4-down-u04-k001",
@@ -8597,7 +8806,8 @@
           "percent",
           "division"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k002",
@@ -8640,7 +8850,8 @@
           "整数域",
           "decimal"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k003",
@@ -8683,7 +8894,8 @@
           "整数域",
           "decimal"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k004",
@@ -8728,7 +8940,8 @@
           "decimal",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k005",
@@ -8779,7 +8992,8 @@
           "percent",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k006",
@@ -8827,7 +9041,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u04-k007",
@@ -8870,7 +9085,8 @@
           "整数域",
           "decimal"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u05-k001",
@@ -8908,7 +9124,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u05-k002",
@@ -8946,7 +9163,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u05-k003",
@@ -8984,7 +9202,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u05-k004",
@@ -9022,7 +9241,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u05-k005",
@@ -9060,7 +9280,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u05-k006",
@@ -9098,7 +9319,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u06-k001",
@@ -9147,7 +9369,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u06-k002",
@@ -9196,7 +9419,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u06-k003",
@@ -9247,7 +9471,8 @@
           "subtraction",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u06-k004",
@@ -9296,7 +9521,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u07-k001",
@@ -9334,7 +9560,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-down-u07-k002",
@@ -9377,7 +9604,8 @@
           "整数域",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 5
     },
     {
       "knowledgeId": "math-g4-down-u07-k003",
@@ -9422,7 +9650,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u07-k004",
@@ -9456,7 +9685,8 @@
           "R10:步数=2"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u07-k005",
@@ -9498,7 +9728,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u08-k001",
@@ -9542,7 +9773,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u08-k002",
@@ -9585,7 +9817,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u08-k003",
@@ -9628,7 +9861,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u08-k004",
@@ -9670,7 +9904,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g4-down-u09-k001",
@@ -9708,7 +9943,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u09-k002",
@@ -9746,7 +9982,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u09-k003",
@@ -9790,7 +10027,8 @@
           "整数域",
           "equation"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g4-down-u10-k001",
@@ -9844,7 +10082,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g5-up-u01-k001",
@@ -9884,7 +10123,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u01-k002",
@@ -9924,7 +10164,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u01-k003",
@@ -9962,7 +10203,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u02-k001",
@@ -10009,7 +10251,8 @@
           "decimal",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u02-k002",
@@ -10055,7 +10298,8 @@
           "decimal",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u02-k003",
@@ -10102,7 +10346,8 @@
           "decimal",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u02-k004",
@@ -10149,7 +10394,8 @@
           "decimal",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u02-k005",
@@ -10197,7 +10443,8 @@
           "decimal",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k001",
@@ -10243,7 +10490,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k002",
@@ -10290,7 +10538,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k003",
@@ -10332,7 +10581,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k004",
@@ -10378,7 +10628,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k005",
@@ -10425,7 +10676,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u03-k006",
@@ -10460,7 +10712,8 @@
           "R10:步数=4"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g5-up-u04-k001",
@@ -10506,7 +10759,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g5-up-u04-k002",
@@ -10547,7 +10801,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u04-k003",
@@ -10590,7 +10845,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u05-k001",
@@ -10631,7 +10887,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u05-k002",
@@ -10674,7 +10931,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u05-k003",
@@ -10716,7 +10974,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u05-k004",
@@ -10755,7 +11014,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u06-k001",
@@ -10795,7 +11055,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u06-k002",
@@ -10835,7 +11096,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u06-k003",
@@ -10875,7 +11137,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u06-k004",
@@ -10921,7 +11184,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u06-k005",
@@ -10966,7 +11230,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u06-k006",
@@ -11009,7 +11274,8 @@
           "graph",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u07-k001",
@@ -11043,7 +11309,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u07-k002",
@@ -11083,7 +11350,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u07-k003",
@@ -11123,7 +11391,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u07-k004",
@@ -11163,7 +11432,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-up-u08-k001",
@@ -11199,7 +11469,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u08-k002",
@@ -11235,7 +11506,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-up-u08-k003",
@@ -11271,7 +11543,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u08-k004",
@@ -11316,7 +11589,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-up-u09-k001",
@@ -11371,7 +11645,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u01-k001",
@@ -11409,7 +11684,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-down-u01-k002",
@@ -11454,7 +11730,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 6
     },
     {
       "knowledgeId": "math-g5-down-u01-k003",
@@ -11492,7 +11769,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u02-k001",
@@ -11536,7 +11814,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u02-k002",
@@ -11578,7 +11857,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u02-k003",
@@ -11620,7 +11900,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u02-k004",
@@ -11662,7 +11943,8 @@
           "整数域",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u02-k005",
@@ -11704,7 +11986,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u02-k006",
@@ -11743,7 +12026,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k001",
@@ -11783,7 +12067,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k002",
@@ -11823,7 +12108,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k003",
@@ -11863,7 +12149,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k004",
@@ -11903,7 +12190,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k005",
@@ -11943,7 +12231,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u03-k006",
@@ -11986,7 +12275,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u04-k001",
@@ -12033,7 +12323,8 @@
           "fraction",
           "division"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u04-k002",
@@ -12079,7 +12370,8 @@
           "fraction",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u04-k003",
@@ -12124,7 +12416,8 @@
           "fraction",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u04-k004",
@@ -12172,7 +12465,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u04-k005",
@@ -12218,7 +12512,8 @@
           "fraction",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u04-k006",
@@ -12266,7 +12561,8 @@
           "decimal",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u05-k001",
@@ -12307,7 +12603,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u05-k002",
@@ -12347,7 +12644,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u05-k003",
@@ -12386,7 +12684,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u05-k004",
@@ -12429,7 +12728,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u06-k001",
@@ -12478,7 +12778,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u06-k002",
@@ -12528,7 +12829,8 @@
           "subtraction",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u06-k003",
@@ -12579,7 +12881,8 @@
           "subtraction",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u06-k004",
@@ -12628,7 +12931,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u06-k005",
@@ -12678,7 +12982,8 @@
           "addition",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u07-k001",
@@ -12724,7 +13029,8 @@
           "measure",
           "subtraction"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u07-k002",
@@ -12767,7 +13073,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u07-k003",
@@ -12807,7 +13114,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u08-k001",
@@ -12848,7 +13156,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u08-k002",
@@ -12886,7 +13195,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u08-k003",
@@ -12918,7 +13228,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u09-k001",
@@ -12960,7 +13271,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u09-k002",
@@ -13004,7 +13316,8 @@
           "direction",
           "division"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g5-down-u09-k003",
@@ -13045,7 +13358,8 @@
           "整数域",
           "division"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g5-down-u10-k001",
@@ -13082,7 +13396,8 @@
         "evidence": [
           "time"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u10-k002",
@@ -13123,7 +13438,8 @@
           "整数域",
           "time"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u10-k003",
@@ -13164,7 +13480,8 @@
           "整数域",
           "time"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u10-k004",
@@ -13203,7 +13520,8 @@
         "evidence": [
           "整数域"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g5-down-u11-k001",
@@ -13257,7 +13575,8 @@
           "multiplication",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u01-k001",
@@ -13305,7 +13624,8 @@
           "graph",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 8
     },
     {
       "knowledgeId": "math-g6-up-u01-k002",
@@ -13350,7 +13670,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u01-k003",
@@ -13396,7 +13717,8 @@
           "direction",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u02-k001",
@@ -13443,7 +13765,8 @@
           "fraction",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u02-k002",
@@ -13493,7 +13816,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u02-k003",
@@ -13550,7 +13874,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u02-k004",
@@ -13594,7 +13919,8 @@
           "整数域",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u03-k001",
@@ -13645,7 +13971,8 @@
           "direction",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u03-k002",
@@ -13693,7 +14020,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u03-k003",
@@ -13741,7 +14069,8 @@
           "multiplication",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u03-k004",
@@ -13796,7 +14125,8 @@
           "division",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u03-k005",
@@ -13846,7 +14176,8 @@
           "equation",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u04-k001",
@@ -13890,7 +14221,8 @@
           "graph",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u04-k002",
@@ -13935,7 +14267,8 @@
           "ratio",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u04-k003",
@@ -13984,7 +14317,8 @@
           "graph",
           "addition"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u04-k004",
@@ -14026,7 +14360,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u04-k005",
@@ -14069,7 +14404,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u05-k001",
@@ -14117,7 +14453,8 @@
           "percent",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u05-k002",
@@ -14169,7 +14506,8 @@
           "percent",
           "division"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u05-k003",
@@ -14215,7 +14553,8 @@
           "fraction",
           "percent"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u05-k004",
@@ -14263,7 +14602,8 @@
           "percent",
           "money"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u05-k005",
@@ -14309,7 +14649,8 @@
           "fraction",
           "percent"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u05-k006",
@@ -14356,7 +14697,8 @@
           "percent",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u06-k001",
@@ -14404,7 +14746,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-up-u07-k001",
@@ -14445,7 +14788,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 7
     },
     {
       "knowledgeId": "math-g6-up-u07-k002",
@@ -14487,7 +14831,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-up-u07-k003",
@@ -14530,7 +14875,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u01-k001",
@@ -14573,7 +14919,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u01-k002",
@@ -14616,7 +14963,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u01-k003",
@@ -14664,7 +15012,8 @@
           "measure",
           "direction"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u01-k004",
@@ -14708,7 +15057,8 @@
           "negative",
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u01-k005",
@@ -14752,7 +15102,8 @@
           "整数域",
           "negative"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u02-k001",
@@ -14790,7 +15141,8 @@
         "evidence": [
           "percent"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u02-k002",
@@ -14837,7 +15189,8 @@
           "fraction",
           "percent"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u02-k003",
@@ -14874,7 +15227,8 @@
         "evidence": [
           "ratio"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u02-k004",
@@ -14911,7 +15265,8 @@
         "evidence": [
           "money"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u02-k005",
@@ -14958,7 +15313,8 @@
           "fraction",
           "percent"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u03-k001",
@@ -15002,7 +15358,8 @@
           "整数域",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u03-k002",
@@ -15042,7 +15399,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u03-k003",
@@ -15082,7 +15440,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u03-k004",
@@ -15121,7 +15480,8 @@
         "evidence": [
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u03-k005",
@@ -15161,7 +15521,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u03-k006",
@@ -15203,7 +15564,8 @@
           "measure",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u04-k001",
@@ -15244,7 +15606,8 @@
           "ratio",
           "proportion"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k002",
@@ -15284,7 +15647,8 @@
           "ratio",
           "proportion"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k003",
@@ -15324,7 +15688,8 @@
           "ratio",
           "proportion"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k004",
@@ -15369,7 +15734,8 @@
           "ratio",
           "proportion"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k005",
@@ -15417,7 +15783,8 @@
           "proportion",
           "multiplication"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k006",
@@ -15463,7 +15830,8 @@
           "ratio",
           "proportion"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k007",
@@ -15503,7 +15871,8 @@
           "ratio",
           "graph"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u04-k008",
@@ -15556,7 +15925,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     },
     {
       "knowledgeId": "math-g6-down-u05-k001",
@@ -15588,7 +15958,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u05-k002",
@@ -15620,7 +15991,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u05-k003",
@@ -15653,7 +16025,8 @@
           "R10:步数=3"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u05-k004",
@@ -15687,7 +16060,8 @@
           "R10:步数=4"
         ],
         "evidence": []
-      }
+      },
+      "progressLevel": 9
     },
     {
       "knowledgeId": "math-g6-down-u06-k001",
@@ -15741,7 +16115,8 @@
           "graph",
           "mixed"
         ]
-      }
+      },
+      "progressLevel": 10
     }
   ]
 }

@@ -59,7 +59,7 @@ KBL 唯一可写方为离线派生/评审/收口工具，全部人工驱动，�
 | 脚本 | 职责 | 写入目标 |
 |---|---|---|
 | `tools/kbl/extract-source.js` | Root Excel → 原始抽取 | `kbl/import/` |
-| `tools/kbl/derive-kbl.js` | Canonical 派生入口（relations 先置空集；P40-T-05：capability 加 `familyId`/`stageOrder`） | `kbl/canonical/` |
+| `tools/kbl/derive-kbl.js` | Canonical 派生入口（relations 先置空集；P40-T-05：capability 加 `familyId`/`stageOrder`；P44/T-07：capability 加 `progressLevel` 期望难度下界注解，不改 `seedDifficulty`） | `kbl/canonical/` |
 | `tools/kbl/derive-relations.js` | 前置关系唯一派生（必须紧随 derive-kbl；P40-T-02/T-04：族表声明化 + R-REL-03 evolution） | `kbl/canonical/relations.json` |
 | `tools/kbl/derive-bc-evidence-rules.js` | B/C 通用算法 KP evidence 规则 | `kbl/teaching/evidence-rules.json` |
 | `tools/kbl/emit-canonical.js` | Canonical → 运行时分发（发射副本，禁止手改；P40-T-05：透出 `semantic.conceptFamily`） | `kbl/data`、`kbl/relations`、`kbl/mappings`、`kbl/index` |

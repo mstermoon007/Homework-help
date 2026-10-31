@@ -2621,9 +2621,11 @@ function validateBatchDifficultyIntegrity(questions, context) {
   return { valid: true, errors: errors, warnings: warnings, info: info, score: 1, checks: { difficultyIntegrity: 'pass' } };
 }
 
-// P40 T-07：概念族内难度递进断言——同 familyId 内 stageOrder 靠后的 KP，seedDifficulty 不得低于前序。
-// 违规登记 needs-review（挂人工），不自动改数；difficultyDelta 现算不落盘。
-// 消费面：KBL capability（familyId + stageOrder + seedDifficulty）经只读透出后校验。
+// P40 T-07 → P44 T-07：概念族内难度偏离判定。
+// 期望下界 progressLevel（KBL capability 派生字段）= max(本年级锚点下界, 族内前序 stageOrder 已出现最高 seedDifficulty)；
+// seedDifficulty < progressLevel 即登记 needs-review（挂人工），不自动改数；difficultyDelta（负偏离）现算不落盘。
+// 消费面：KBL capability（familyId + stageOrder + seedDifficulty + progressLevel）经只读透出后校验。
+// 兼容：行未携带 progressLevel 时回退「族内前序已出现最高难度」，既有调用方（t14 等）行为不变。
 function validateFamilyDifficultyMonotonic(rows) {
   var byFam = {};
   (rows || []).forEach(function (r) {
@@ -2634,18 +2636,27 @@ function validateFamilyDifficultyMonotonic(rows) {
   var violations = [];
   var checked = 0;
   Object.keys(byFam).forEach(function (f) {
-    var arr = byFam[f].slice().sort(function (a, b) { return a.stageOrder - b.stageOrder; });
+    var arr = byFam[f].slice().sort(function (a, b) {
+      if (a.stageOrder !== b.stageOrder) return a.stageOrder - b.stageOrder;
+      return a.knowledgeId < b.knowledgeId ? -1 : (a.knowledgeId > b.knowledgeId ? 1 : 0);
+    });
     checked += arr.length;
-    for (var i = 1; i < arr.length; i++) {
-      if (arr[i].seedDifficulty < arr[i - 1].seedDifficulty) {
+    var runMax = null;
+    arr.forEach(function (r) {
+      var expected = r.progressLevel != null ? r.progressLevel : runMax;
+      if (expected != null && r.seedDifficulty < expected) {
         violations.push({
           familyId: f,
-          fromId: arr[i - 1].knowledgeId, fromStageOrder: arr[i - 1].stageOrder, fromDifficulty: arr[i - 1].seedDifficulty,
-          toId: arr[i].knowledgeId, toStageOrder: arr[i].stageOrder, toDifficulty: arr[i].seedDifficulty,
-          difficultyDelta: arr[i].seedDifficulty - arr[i - 1].seedDifficulty
+          knowledgeId: r.knowledgeId,
+          grade: r.grade,
+          stageOrder: r.stageOrder,
+          seedDifficulty: r.seedDifficulty,
+          progressLevel: expected,
+          difficultyDelta: r.seedDifficulty - expected
         });
       }
-    }
+      if (runMax === null || r.seedDifficulty > runMax) runMax = r.seedDifficulty;
+    });
   });
   return { valid: violations.length === 0, checked: checked, families: Object.keys(byFam).length, violations: violations, needsReview: violations.slice() };
 }

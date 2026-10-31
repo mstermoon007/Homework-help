@@ -5,6 +5,36 @@
 
 ---
 
+## DOC-ARCHIVE-01 | 2026-10-31 | 过期历史文档归档 + README 对齐当前基线
+
+- **modified**:
+  - `README.md`：删除过期清单（P17–P23 主线、26/24 Generators、934 测试、218 文件），重写为当前基线精简版（375/98/407/1566、23 Generator、102 文件/937 用例、34 项门禁 33/0/1）。
+  - `docs/P42`/`P40`/`AUDIT-LOG` 等当前文档中的历史文档引用路径同步指向 `docs/archive/phases/`（`P42-DEFECT-REGISTER.md` 基线行、`P40-TASK-BOOK.md` 两处、`p40-final-closure.md`、`AUDIT-LOG.md`、`P41-REPORT.md` 内部链接）。
+- **deleted**: 无物理删除。9 份已过时历史文档移入归档区（`docs/archive/phases/`）：`p32/P32-TASK-BOOK.md`、`p33/P33-TASK-BOOK.md`、`p35/P35-TASK-BOOK.md`、`p38/P38-TASK-BOOK.md`、`p40/p40-q-baseline.md`、`p40/p40-q14-acceptance.md`、`p41/P41-REPORT.md`、`p41/P41-E-relations-research.md`、`p42/P42-BASELINE.md`。
+- **reason**: 用户 2026-10-31 显式指令「整理需要保留的文档，删除死代码和完全过时的旧文档，防止 AI 自动扩展污染项目」，并裁决「全部归档到 archive」「README 重写为当前基线精简版」。死代码侧 `dev/p28/check-dead-code.js` 15 个候选全部 PASS（9 已删 / 6 已清符号 / 1 KEEP），无新增可删项，故不展开扫描。
+- **tests**: `node dev/p28/check-doc-consistency.js` PASS（非 archive 文档数由 29 降至 20）；`npm test` **937/937 / 0 FAIL**；`node dev/check-all.js` **33 PASS / 0 FAIL / 1 SKIP**（#15 本机无 Chrome）。
+- **risk**: 低——①纯文档移动与入口重写，生产代码/KBL/测试/门禁零改动；②历史 `change-log.md` 内旧路径按 append-only 纪律不改写，仅当前文档更新引用；③回滚 = 将 9 份文件移回原目录并还原 5 处引用与 README；④未 git commit。
+
+---
+
+## T-07-PROGRESS | 2026-10-31 | 族内难度改全局期望下界：capability 派生 progressLevel（126 处 needs-review）
+
+- **modified**:
+  - `tools/kbl/derive-kbl.js`：新增 `require(dev/difficulty-anchor-table.js)`（复用既有唯一锚点表，不建第二份常量）与 `attachProgressLevel()` 派生后处理——`progressLevel = max(本年级锚点下界, 族内前序 stageOrder 已出现最高 seedDifficulty)`；**只增注解，`seedDifficulty` 一分未动**。
+  - `shared/validator/difficulty-integrity-validator.js`：`validateFamilyDifficultyMonotonic` 判定由「相邻 stageOrder 不得回落」改为「`seedDifficulty < progressLevel` 偏离」；行未携带 `progressLevel` 时回退前序最高难度（t14 等既有调用方行为不变）；违规对象新增 `progressLevel`/`difficultyDelta`。
+  - `dev/p40/t07-family-difficulty-scan.js`：规则文案同步（输出保持 `dev/p40/out/t07-family-difficulty.json`）。
+  - `kbl/canonical/capability.json`：375/375 行新增 `progressLevel`（`npm run kbl:derive` 确定性重派生，rootHash 仍 `bd24f572…`，未触发运行时副本变化）。
+  - `dev/p40/out/t07-family-difficulty.json`：偏离 **53 → 126**（全局期望下界口径，原 53 为其子集）。
+  - `tests/semantic/p40-t02-t07-foundation.test.js`：T-07 断言同步为 126 + progressLevel 覆盖 375 + 真实消费断言。
+  - `docs/P40/p40-final-closure.md` §6、`docs/P40/P40-TASK-BOOK.md` 头部：T-07 当前口径 126（局部相邻 53 为子集），历史 change-log 数字不改写。
+  - `shared/engine/presentation-engine.bundle.js`：因 validator 入 bundle，`npm run build:presentation` 重建（18 inlined / 69 delegated）。
+- **deleted**: 无（未删除任何第二实现；validator 保留无 `progressLevel` 时的前序回退，不建兼容层）。
+- **reason**: 用户 2026-10-31 显式裁决「建 progressLevel 作全局期望下界（126 处）」；实测原「年级锚点+stageOrder 插值」口径在 ±0/±1/±2 容差下分别命中 170/102/44 处「低于期望」，与 53 不等价，故采用可复算、无新客制常量的下界式 `max(锚点下界, 前序最高难度)`，把检查从局部相邻升级为全局期望，同时保证题目内容零变化。
+- **tests**: 定向 `node --test tests/semantic/p40-t02-t07-foundation.test.js` **6/6 PASS**（progressLevel 覆盖 375/375、偏离 126、合成「高于邻接但低于期望」被真实消费检出）；`npm test` **937/937 / 0 FAIL**；`node dev/check-all.js` **33 PASS / 0 FAIL / 1 SKIP**（#15 本机无 Chrome）；6a/6b/9a/9b 不受影响（`seedDifficulty` 分布与生成矩阵零变化）。
+- **risk**: 低——①纯派生注解，题面/答案/生成矩阵/KP 数/难度值零变化（6a 1566 真实生成、6b 冻结均 PASS）；②needs-review 由 53 扩到 126 是口径更完整而非新增缺陷，仍全部挂人工、不自动改数；③回滚 = 还原 4 个源码文件 + `npm run kbl:derive` + `npm run build:presentation`；④未 git commit。
+
+---
+
 ## H10-C-H | 2026-10-31 | 方向与位置链 fam_direction 升主干 + 取消综合实践/复习排除（用户显式裁决后执行）
 
 - **modified**:

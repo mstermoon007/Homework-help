@@ -67,7 +67,7 @@
 - `tests/generation/p41-question-type-contract.test.js`（6 例）锁定：7 类规范题型被 Schema/QTR/工厂/Contract 接受；别名被 Schema/QTR/Contract 接受但工厂拒绝（记录边界）；`read-aloud` 作为 questionType 被 Schema 拒绝、被工厂/Contract 接受，作为 answerMode 有效；未知题型被全网拒绝；**新增真实运行时链路用例**（经 `PracticeSession` 实跑生成，断言产出题型恒 ∈ canonical 7）。
 
 ### P41-E — 知识关系离线研究
-- 报告：`docs/maintenance/P41-E-relations-research.md`。
+- 报告：`docs/archive/phases/p41/P41-E-relations-research.md`。
 - 结论：373 边全部 `prerequisite` / `inferred:true` / `reviewStatus:'llm-finalized-dev'`；规则 R-REL-01 277、R-REL-02 58、R-REL-03 38；坏端点 0、环 0（DAG）；335 有后继 / 340 有前置 / 12 孤立；20 条跨年级（螺旋）边。建议不自动生成新边（ALLOW 共现 ≠ 前置）。
 
 ## 2bis. 签收前 5 点重点核对（P41-F 复验，含新增加固）
@@ -116,8 +116,8 @@ KBL 规模：375 KP / 98 units / 373 relations / 1570 mappings。
 - `tests/source/kbl-root-hash.test.js`
 - `tests/source/build-knowledge-pages-check.test.js`
 - `docs/maintenance/P41-C-difficulty-anchor-decision.md`
-- `docs/maintenance/P41-E-relations-research.md`
-- `docs/maintenance/P41-REPORT.md`（本文件）
+- `docs/archive/phases/p41/P41-E-relations-research.md`
+- `docs/archive/phases/p41/P41-REPORT.md`（本文件）
 
 **修改（P41）**
 - `shared/validator/kp-semantic-validator.js`、`shared/generator/generator-selector.js`

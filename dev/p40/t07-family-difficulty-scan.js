@@ -3,8 +3,8 @@
  * dev/p40/t07-family-difficulty-scan.js — P40-T-07 概念族内难度递进扫描（只读）
  *
  * 消费 difficulty-integrity-validator.validateFamilyDifficultyMonotonic：
- *   同 familyId 内 stageOrder 靠后的 KP，seedDifficulty ≥ 前序；
- *   倒挂登记 needs-review（挂人工，不自动改数）。
+ *   同 familyId 内 seedDifficulty < progressLevel（期望下界 = 本年级锚点下界 + 族内前序已出现最高难度）；
+ *   偏离登记 needs-review（挂人工，不自动改数）。
  * 输出：stdout 报告 + dev/p40/out/t07-family-difficulty.json（本战役验收证据）。
  */
 var fs = require('fs');
@@ -17,7 +17,7 @@ var r = Validator.validateFamilyDifficultyMonotonic(cap);
 var report = {
   task: 'P40-T-07',
   generatedBy: 'dev/p40/t07-family-difficulty-scan.js',
-  rule: '同 familyId 内 stageOrder 靠后者 seedDifficulty ≥ 前序（倒挂→needs-review，不自动改数）',
+  rule: '同 familyId 内 seedDifficulty ≥ progressLevel（期望下界；偏离→needs-review，不自动改数）',
   rowsScanned: cap.length,
   checkedInFamilies: r.checked,
   families: r.families,

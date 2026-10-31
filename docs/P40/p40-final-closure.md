@@ -14,7 +14,7 @@ P40 两大战役——**战役一 P40-Q（单题内容质量深化）** 与 **�
 
 | 战役 | 机判状态 | 关闭条件 | 结果 |
 |---|---|---|---|
-| 战役一 P40-Q | 七项验收全过（`p40-q14-acceptance.md`） | 用户完成 ② 163 题人工评审签收 | ✅ 已签收关闭 |
+| 战役一 P40-Q | 七项验收全过（`docs/archive/phases/p40/p40-q14-acceptance.md`） | 用户完成 ② 163 题人工评审签收 | ✅ 已签收关闭 |
 | 战役二 P40-T | S0-S3 全 14 任务完成，门禁全过 | 用户完成 T-14 链路图人工签收 | ✅ 已签收关闭 |
 | P40-FINAL | 两役收口 + 00-BASELINE 对齐 + 日志收口 | 本记录签收 | ✅ 已签收关闭 |
 
@@ -89,7 +89,7 @@ T-05 回填 `familyId`/`stageOrder` 至 `capability.json` 375/375（加字段不
 |---|---|---|---|
 | 1 | 战役一 Q-14 复现题集人工评审（163 题，覆盖 G1-G6×7 题型） | `dev/p40/out/q01-review.md` | ✅ 接受现状存档 |
 | 2 | 战役二 T-14 三主线（加法/分数/面积）全链链路图人工评审 | `dev/p40/out/t14-mainline-audit.md` | ✅ 接受现状存档 |
-| 3 | T-07 族内难度递进倒挂 54 处（三主线含 13 处） | `dev/p40/out/t07-family-difficulty.json` | ✅ 维持现状存档（不自动改数） |
+| 3 | T-07 族内难度偏离：原局部相邻倒挂 53 处（`54→53` 为 H10-B 修正）→ P44 改全局期望下界口径后 **126 处**（原 53 为其子集；三主线含 13 处为局部口径） | `dev/p40/out/t07-family-difficulty.json` | ✅ 维持现状存档（不自动改数；口径变更见 `docs/P44/change-log.md`） |
 | 4 | T-06 族间投影环观察项（`fam_multiply ⇄ fam_divide` 等 primary-family 折叠；KP 级 canonical 前置为无环 DAG） | `docs/P40/change-log.md`（T-06） | ✅ 观察项存档 |
 | 5 | T-08 解释承上启下抽样 20 题人工评审 | `dev/p40/out/t08-explanation-samples.md` | ✅ 接受现状存档 |
 

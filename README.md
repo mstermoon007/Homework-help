@@ -1,94 +1,58 @@
 # Homework Help · 小学练习本
 
-一个**完全免费、无广告、无弹窗**的小学 1-6 年级练习题生成与打印工具。
+一个**完全免费、无广告、无弹窗**的小学 1–6 年级数学练习题生成与打印工具。
 
-数学支持 **一年级至六年级**，2025 人教版基础知识点全覆盖（375 个知识点）。竞赛模式（C1–C9）入口已预留，但竞赛知识点暂未纳入 2025 人教版 KBL 发布包。只需选好年级、题型、难度、题量，点击生成，即可自动进入练习。
+数学支持 **一年级至六年级**，2025 人教版基础知识点全覆盖（375 个知识点）。选好年级、题型、难度、题量，点击生成即可进入练习、批改、错题重做与 A4 打印。
 
----
-
-## 🚀 P17–P23 产品化收口完成
-
-**P17-FINAL**：架构收口、7类真实生成、数量闭环、难度闭环、依赖门禁  
-**P18**：练习闭环、异常处理、稳定性验证  
-**P19**：页面产品化（二级/三级页面统一、UI服务收口）  
-**P20**：题目质量治理（375 KP覆盖、Generator质量抽检、低容量KP治理）  
-**P21**：性能优化、浏览器/打印兼容  
-
-**P23**：数学产品化收口专项——数据源清洗、派生链路验证、生成链路健康、产品验收、最终冻结
-
-**核心冻结边界**：KBL/Runtime/KnowledgeContext/POL/Strategy/24 Generators/Validator/SemanticQuestion/Presentation 均为只读态。（GenerationCore 为测试/历史资产，见下。）
-
-**健康检查入口**：`npm run verify:frozen-core`、`npm run verify:p17-deps`、`npm test`（全链）
+纯前端静态站，**零运行时依赖**，无注册、无数据上传。
 
 ---
 
-## 📦 版本信息
+## 当前基线（与 `docs/00-BASELINE.md` 同步）
 
-**当前版本**：5.2.0
+| 项 | 值 |
+|---|---|
+| 版本 | **5.2.0** |
+| KP / Units / Relations / ALLOW | **375 / 98 / 407 / 1566** |
+| Canonical 题型 | **7 类**（calc / fill / choice / judge / geometry / classify / apply） |
+| Generator | **23**（PRODUCTION 20 / COMBINE-ONLY 1 / DORMANT-CARRIER 2） |
+| 测试 | **102 文件 / 937 用例 / 0 FAIL** |
+| 门禁 | **34 项**：本地 33 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome）；CI 设 `CHROME_BIN` 为 34/0/0 |
+| Sitemap | **382 URL**（6 公共页 + 375 KP 页 + 1 索引页） |
 
-**版本变更说明**：
-- V5.2.0（2026-10-12）：P34~P39 收口——数据正确性战役（题目语义/表述、图形分类、开放设计讲解、解析质量、难度执行端修复）；P35~P37 难度执行端消费 + 遗留债务/活账处置；P38 107 条图形生成真断链清零（意图运行时投影 + 六生成器配图 + SVG 渲染器扩族）；P39 死代码清理与文档/文件清洗（rawType 死链清零、schema 图形子类型白名单收敛、文档口径全量对齐）。详见 `docs/CHANGELOG.md`
-- V5.1.0（2026-10-08）：P30/P31/P32 收口——答案系统单一判分权威 + 答案防污染；自适应变式读回接通；图形语义生成收口（GenerationParameters 唯一入口 + Maker 分工矩阵冻结）
-- V5.0.1（2026-09-29）：二级选择页 select.html 重构后正式接入（sitemap/SW 预缓存）；练习页布局对齐二级页、Hero 通栏与可折叠工具栏/题量自定义；横向算式填写框内联等号后、问号虚化、打印空白；「数的组成」题目多样化并去除题干答案；图形生成器派生链与证据治理；年级内容边界修复；设计令牌统一；首页百度站点验证 meta；死代码定点清理
-- P17-FINAL：共同生成内核与旧链最终收口
-- P18–P21：产品化闭环、页面产品化、题目质量、工程稳定性
-- P23：数学产品化收口——数据源清洗、派生链路健康、生成链健康、产品验收、冻结
-- P24：产品化一致性收口——知识页/sitemap 重建（375=375=375）、ALLOW 真实性门禁（1570/1570）、Capacity Map 重建、版本统一 5.0.0、语法门禁补齐
-- P28-29：Bundle 最终收口——strategy/presentation bundle 清理 legacy/测试/GenerationCore/重复 renderer/registry 死代码（strategy 71 defs、presentation 21 defs 全可达，node:path/node:fs/generator-contract/generation-core 零内联）
-- P28-30：Practice 首屏性能治理——45 项同步脚本中的 21 项（渲染栈/SVG 生成器含非核心插件/打印模块）移出首屏，经 `ensureDeferredReady()` 顺序惰性装载（约 -168KB 初始 JS：46→25 静态标签）；首次生成/打印前门控就绪，语义与旧同步装载零差异；sw.js CORE 补齐 render-options/render-result 保离线；`resolved Print` 惰性化（practice-session）
-- P28-33：KBL→页面→AI 数据边界（FROZEN）——公开知识内容单向 `KBL→Static Page`；SEO/AI/Crawler/LLM 禁反向修改 KBL（KBL 唯一可写方=离线派生白名单）；`build-knowledge-pages.js --check` 升级为真漂移校验（页面哈希 vs 当前 KBL 投影，审计归零 11 个过期 kbgen:hash 页面）；新增门禁 `check:kbl-ai-boundary`（写方白名单 + 零漂移 + 公开物驻留，已接入 run-all-checks 第 6 步）
-- P28-34：SEO/AI 历史数据隔离（FROZEN）——`archive/migration/audit-results/.trae/test/dev` 六目录不进 sitemap/内部导航/llms 知识源；robots.txt 补齐 4 项 Disallow；历史 html（`dev/svg-test.html`、`archive/legacy-tests/…`）补 `noindex`；llms.txt 新增「知识源单一性声明」= 正式发布知识页面唯一；新增门禁 `check:seo-ai-history`（run-all-checks 第 7 步）
-- P28-35：sitemap 最终冻结（FROZEN）——集合定死 5 公共页 + 375 KP + 索引（381 条）；逐 URL 验证 HTTP 200·无 redirect·文件存在·canonical 与 sitemap URL 完全一致（补上 index.html 缺失 canonical）；新增门禁 `check:sitemap-freeze`（run-all-checks 第 8 步）
-- P28-36：AI Agent 抓取最终测试（FROZEN）——模拟不执行 JS 的抓取（GET→HTML→link→knowledge→practice）；入口 index.html 仅靠静态链接图可达全部 KP；375/375 可发现·375/375 可读取（服务端含名称+释义）·375/375 identity 正确（canonical/知识点 ID/h1=KBL 名称）；新增门禁 `check:ai-crawl`（run-all-checks 第 9 步）
-
-**已完成的关键交付**：
-- 7类真实生成矩阵测试（p17-14） through 11 tests
-- 数量闭环测试（p17-15） through 4 tests  
-- 难度闭环测试（p17-16） through 4 tests
-- 依赖硬门禁（p17-17） through 5 WARN/0 Violation
-- 练习会话闭环验证
-- 生成异常与短缺处理
-- 生成稳定性与会话一致性
-- 7类真实生成基线固化
-- KBL幂等重建验证
-- Capacity Map 重生成与一致性验证
-- frozen-core 完整性完好
-- npm test 全链 PASS
-
-**冻结边界**：
-- KBL数据模型、KBL运行API
-- POL编排职责
-- GenerationCore共同生成内核 = **测试/历史资产**（非生产）：源文件保留（T9「不误删」），但生产 bundle 不内联、生产链不经过；仅 `tests/orchestration/p17-10/14/15/16` 直接装载验证其 execute 语义
-- 26个Generator算法
-- Validator核心规则
-- SemanticQuestion数据契约
-- 7个canonical question types
-- 难度公式/数量分配原则
-
-**健康检查**（当前基线，详见 `docs/00-BASELINE.md`）：
-- `npm run verify`（M0 聚合门禁）：5/5 PASS
-- `npm run verify:syntax`：218 文件 / 0 错误
-- `npm run verify:allow-gen`：ALLOW 真实性 1566/1566 PASS
-- `npm test`：934/934 PASS
-- `bash scripts/run-all-checks.sh`：一键全绿（与 CI 等价）
+唯一执行链：`KBL → KnowledgeContext → POL → Strategy → Generator → Validator → SemanticQuestion → Presentation → SVG`。
 
 ---
 
-## 📁 仓库结构要点
+## 快速验证
 
-- `docs/`：当前基线（00-BASELINE ~ 11-SECURITY + CHANGELOG，按主题域组织）；历史阶段报告在 `docs/archive/phases/`（ARCHIVED）
-- `dev/`：验证与检查脚本
+```bash
+npm run verify          # M0 聚合门禁（8 步）
+npm test                # 全链测试（937/937）
+node dev/check-all.js   # 全量门禁（34 项）
+```
+
+---
+
+## 仓库结构
+
+- `docs/`：当前开发文档（`00-BASELINE.md` ~ `11-SECURITY.md`、`CHANGELOG.md`、各阶段 `change-log.md`）；历史报告在 `docs/archive/phases/`（ARCHIVED，不作开发依据）
+- `dev/`：验证与门禁脚本
 - `tests/`：单元与集成测试
-- `shared/`：核心源代码（冻结模块）
-- `kbl/`：知识基线数据
-- `tools/kbl/`：KBL构建与验证工具
+- `shared/`：核心源码（冻结模块，唯一下沉层）
+- `kbl/`：知识基线数据（T1/T2 数据层）
+- `tools/kbl/`：KBL 构建与校验工具
 
 ---
 
-## 📜 版本变更日志
+## 文档入口
 
-> 详细变更请参考 `docs/CHANGELOG.md` 与 `docs/archive/` 下的历史审计报告。
-> 版本号遵循语义化版本；5.0.0 为 2026-09-19 产品冻结版本，5.0.1 为 2026-09-29 更新版本，5.1.0 为 2026-10-08 更新版本，5.2.0 为 2026-10-12 当前版本。
+| 文档 | 内容 |
+|---|---|
+| `docs/00-BASELINE.md` | **唯一当前基线**；任何「项目现在是什么」只以此为准 |
+| `docs/01-ARCHITECTURE.md` | 冻结架构、层级归属、跨层禁令 |
+| `docs/02-KBL.md` ~ `docs/11-SECURITY.md` | 各领域事实与契约 |
+| `docs/CHANGELOG.md` | 版本变更历史 |
+| `docs/archive/` | 历史阶段报告（仅追溯，不作依据） |
 
----
-*生成时间：2026-10-13*
+规则：`.trae/rules/ai-coding-workflow.md`（九步流水线）+ P30/P31 专项规则。
