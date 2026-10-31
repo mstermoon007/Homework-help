@@ -35,7 +35,7 @@
 - [项目基线](docs/00-BASELINE.md)：项目当前状态、关键数据事实、门禁、冻结纪律
 - [架构层级与 AI 规则](docs/01-ARCHITECTURE.md)：唯一执行链、12 层归责、跨层禁止矩阵、AI 编程规则
 - [知识库事实源](docs/02-KBL.md)：KBL 数据、构建链、历史隔离、KBL→页→AI 单向边界
-- [编排与生成链](docs/03-POL-GENERATION.md)：题型收口、1570 矩阵、Generator Registry、四轴禁令
+- [编排与生成链](docs/03-POL-GENERATION.md)：题型收口、1566 矩阵（P28 快照记 1570，P44/H9 后 1566）、Generator Registry、四轴禁令
 - [难度权威链](docs/04-DIFFICULTY.md)：唯一难度公式与溯源
 - [验证管线](docs/05-VALIDATION.md)：分层验证、Semantic PASS/WARN/FAIL、固定 Seed
 - [题目表达链](docs/06-PRESENTATION.md)：SemanticQuestion、Legacy 边界、渲染链、Print 约定

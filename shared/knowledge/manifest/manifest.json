@@ -30,8 +30,8 @@
       "index/index.json": "50653616f422ee6792a58305bae35a284ff4d80150e3f557e29d567837016a74",
       "teaching/misconception-profiles.json": "f098b715a69d7a603f601e1c197131439ab9036d8d29cba4a537b568e089c2e4",
       "teaching/context-library.json": "9ec50a6f42f0ab6787c1c95de8f473897c415c43ccd7cf3d65916d9ca53c7fac",
-      "teaching/qt-intent-runtime.json": "51107697b3bfd82b2d2a96df1b82ee14faccffd221424d691b1e7c207900c8e1"
+      "teaching/qt-intent-runtime.json": "187f913ba16ea712715680820d1927df330cf11f2d1014b6d44e23b8c9e9751c"
     },
-    "rootHash": "309ced9fdce1e6ea65eaa63f9175eb66fbecc89c61249be693d3abaebade48c8"
+    "rootHash": "bd24f572cde8531cb35c5719f6aaae369905c4109a17fb479eb89849eb6477d1"
   }
 }
