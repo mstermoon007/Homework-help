@@ -20,7 +20,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_direction",
-          "stageOrder": 12
+          "stageOrder": 10
         },
         "concept": "由两个有顺序的数组成的数对，用来精准表示平面内一个点的位置，格式记作（列数，行数）。书写规则为先列后行，先横向、后纵向，两个数字用逗号隔开，整体加小括号。同一列的点，数对第一个数字相同；同一行的点，数对第二个数字相同。数对有序，（3,5）和（5,3）表示完全不同的位置",
         "operations": [],
@@ -146,7 +146,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_direction",
-          "stageOrder": 13
+          "stageOrder": 11
         },
         "concept": "精准定位三要素为观测点、方向（角度）、距离，三者缺一不可。方向表述优先用北偏东、北偏西、南偏东、南偏西表述。角度以正南、正北方向为起始边，向东西方向偏转测量。位置具有相对性——A在B的北偏东30°，则B在A的南偏西30°。画图步骤为定观测点→画方向标→量角度→按比例尺算图上距离→定点标注",
         "operations": [],
@@ -272,7 +272,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_direction",
-          "stageOrder": 14
+          "stageOrder": 12
         },
         "concept": "数对适合方格图定位，方向距离适合现实场景定位。所有位置问题必须先找观测点，观测点改变，位置描述随之改变",
         "operations": [],
@@ -390,23 +390,24 @@
       "unitNo": 2,
       "knowledgeNo": "1",
       "unitName": "分数乘法",
-      "module": "geometry",
+      "module": "algebra",
       "name": "分数乘整数",
       "aliases": [],
-      "type": "geometry",
+      "type": "calculation",
       "semantic": {
-        "family": "geometry",
+        "family": "fraction",
         "conceptFamily": {
           "id": "fam_fraction",
           "stageOrder": 17
         },
         "concept": "求几个相同分数的和的简便运算，与整数乘法意义相同。计算法则为分子与整数相乘，分母不变；能约分先约分，再计算，结果化为最简分数。简便原则是整数和分母约分，约分后再相乘",
-        "operations": [],
-        "representations": [
-          "numeric",
-          "graphic"
+        "operations": [
+          "multiplication"
         ],
-        "category": "geometry",
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
         "tags": []
       },
       "content": {
@@ -418,7 +419,7 @@
       "assessment": {
         "questionTypes": [
           {
-            "type": "geometry",
+            "type": "calc",
             "coefficient": 1
           },
           {
@@ -427,10 +428,6 @@
           },
           {
             "type": "apply",
-            "coefficient": 1
-          },
-          {
-            "type": "judge",
             "coefficient": 1
           },
           {
@@ -447,7 +444,7 @@
         "pluginId": "generator:arithmetic-addition",
         "capabilities": [
           {
-            "id": "geometry",
+            "id": "calc",
             "type": "question-format"
           },
           {
@@ -456,10 +453,6 @@
           },
           {
             "id": "apply",
-            "type": "question-format"
-          },
-          {
-            "id": "judge",
             "type": "question-format"
           },
           {
@@ -516,23 +509,25 @@
       "unitNo": 2,
       "knowledgeNo": "2",
       "unitName": "分数乘法",
-      "module": "geometry",
+      "module": "algebra",
       "name": "一个数乘分数",
       "aliases": [],
-      "type": "geometry",
+      "type": "calculation",
       "semantic": {
-        "family": "geometry",
+        "family": "fraction",
         "conceptFamily": {
           "id": "fam_fraction",
           "stageOrder": 18
         },
         "concept": "乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据）。分数乘分数法则为分子乘分子作新分子，分母乘分母作新分母，先约分再计算。积的大小规律：一个数（0除外）乘大于1的分数，积大于本身；乘小于1的分数，积小于本身；乘1，积等于本身。核心解题公式：单位“1”的量 × 对应分率 = 对应分量",
-        "operations": [],
-        "representations": [
-          "numeric",
-          "graphic"
+        "operations": [
+          "multiplication",
+          "division"
         ],
-        "category": "geometry",
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
         "tags": []
       },
       "content": {
@@ -544,7 +539,7 @@
       "assessment": {
         "questionTypes": [
           {
-            "type": "geometry",
+            "type": "calc",
             "coefficient": 1
           },
           {
@@ -553,10 +548,6 @@
           },
           {
             "type": "apply",
-            "coefficient": 1
-          },
-          {
-            "type": "judge",
             "coefficient": 1
           },
           {
@@ -573,7 +564,7 @@
         "pluginId": "generator:arithmetic-addition",
         "capabilities": [
           {
-            "id": "geometry",
+            "id": "calc",
             "type": "question-format"
           },
           {
@@ -582,10 +573,6 @@
           },
           {
             "id": "apply",
-            "type": "question-format"
-          },
-          {
-            "id": "judge",
             "type": "question-format"
           },
           {
@@ -642,23 +629,28 @@
       "unitNo": 2,
       "knowledgeNo": "3",
       "unitName": "分数乘法",
-      "module": "geometry",
+      "module": "algebra",
       "name": "分数、小数混合运算及运算律",
       "aliases": [],
-      "type": "geometry",
+      "type": "calculation",
       "semantic": {
-        "family": "geometry",
+        "family": "fraction",
         "conceptFamily": {
           "id": "fam_fraction",
           "stageOrder": 19
         },
         "concept": "运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内。整数乘法交换律、结合律、分配律完全适用于分数、小数乘法。分配律高频考点：(a±b)×c = a×c±b×c",
-        "operations": [],
-        "representations": [
-          "numeric",
-          "graphic"
+        "operations": [
+          "addition",
+          "subtraction",
+          "multiplication",
+          "division",
+          "mixed"
         ],
-        "category": "geometry",
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
         "tags": []
       },
       "content": {
@@ -670,7 +662,7 @@
       "assessment": {
         "questionTypes": [
           {
-            "type": "geometry",
+            "type": "calc",
             "coefficient": 1
           },
           {
@@ -679,10 +671,6 @@
           },
           {
             "type": "apply",
-            "coefficient": 1
-          },
-          {
-            "type": "judge",
             "coefficient": 1
           },
           {
@@ -699,7 +687,7 @@
         "pluginId": "generator:arithmetic-addition",
         "capabilities": [
           {
-            "id": "geometry",
+            "id": "calc",
             "type": "question-format"
           },
           {
@@ -708,10 +696,6 @@
           },
           {
             "id": "apply",
-            "type": "question-format"
-          },
-          {
-            "id": "judge",
             "type": "question-format"
           },
           {
@@ -768,12 +752,12 @@
       "unitNo": 2,
       "knowledgeNo": "4",
       "unitName": "分数乘法",
-      "module": "geometry",
+      "module": "algebra",
       "name": "解决问题",
       "aliases": [],
-      "type": "geometry",
+      "type": "calculation",
       "semantic": {
-        "family": "geometry",
+        "family": "calculation",
         "conceptFamily": {
           "id": "fam_fraction",
           "stageOrder": 20
@@ -781,10 +765,9 @@
         "concept": "连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”",
         "operations": [],
         "representations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
-        "category": "geometry",
+        "category": "algebra",
         "tags": []
       },
       "content": {
@@ -796,7 +779,7 @@
       "assessment": {
         "questionTypes": [
           {
-            "type": "geometry",
+            "type": "calc",
             "coefficient": 1
           },
           {
@@ -805,10 +788,6 @@
           },
           {
             "type": "apply",
-            "coefficient": 1
-          },
-          {
-            "type": "judge",
             "coefficient": 1
           },
           {
@@ -825,7 +804,7 @@
         "pluginId": "generator:arithmetic-addition",
         "capabilities": [
           {
-            "id": "geometry",
+            "id": "calc",
             "type": "question-format"
           },
           {
@@ -834,10 +813,6 @@
           },
           {
             "id": "apply",
-            "type": "question-format"
-          },
-          {
-            "id": "judge",
             "type": "question-format"
           },
           {

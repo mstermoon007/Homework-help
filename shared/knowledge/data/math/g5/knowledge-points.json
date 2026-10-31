@@ -19,8 +19,8 @@
       "semantic": {
         "family": "geometry",
         "conceptFamily": {
-          "id": "fam_direction",
-          "stageOrder": 10
+          "id": "fam_observation",
+          "stageOrder": 7
         },
         "concept": "辨认从前面、上面、左面观察由若干小正方体搭成的简单组合体所看到的平面图形。不同方向观察同一组合体，看到的形状可能不同",
         "operations": [],
@@ -146,7 +146,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 6
+          "stageOrder": 8
         },
         "concept": "根据从某一方向看到的平面图形，推测组合体可能的搭法；根据从三个方向看到的图形，还原组合体的形状",
         "operations": [],
@@ -272,7 +272,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 7
+          "stageOrder": 9
         },
         "concept": "通过观察、操作、想象、推理等活动，建立二维平面图形与三维立体图形之间的对应关系，培养空间想象力和推理意识",
         "operations": [],
@@ -4367,7 +4367,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 8
+          "stageOrder": 10
         },
         "concept": "从正面、左面、上面观察由小正方体搭成的立体图形，能正确辨认看到的平面图形",
         "operations": [],
@@ -4493,7 +4493,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 9
+          "stageOrder": 11
         },
         "concept": "根据从一个方向看到的图形，用给定数量的小正方体摆出相应的立体图形；根据从三个方向看到的图形，还原立体图形",
         "operations": [],
@@ -4619,7 +4619,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 10
+          "stageOrder": 12
         },
         "concept": "通过观察、操作、想象、推理等活动，实现二维平面图形与三维立体图形之间的相互转化，培养空间想象力和推理能力",
         "operations": [],
@@ -8850,7 +8850,7 @@
         "family": "application-word",
         "conceptFamily": {
           "id": "fam_direction",
-          "stageOrder": 11
+          "stageOrder": 9
         },
         "concept": "三面涂色的小正方体在大正方体的顶点处（8个）；两面涂色的小正方体在棱上（除去顶点），数量为12×(n−2)；一面涂色的小正方体在面上（除去棱和顶点），数量为6×(n−2)²；没有涂色的小正方体在内部，数量为(n−2)³",
         "operations": [

@@ -52,7 +52,7 @@ function fail(msg) { console.error('INVARIANT FAIL: ' + msg); process.exit(1); }
 // ---------- 1. 载入 ----------
 var matrix = JSON.parse(fs.readFileSync(MATRIX_FILE, 'utf8'));
 var allowRows = (matrix.mappings || []).filter(function (m) { return m.permission === 'allow'; });
-if (allowRows.length !== 1570) fail('ALLOW 行数 ' + allowRows.length + ' ≠ 1570');
+if (allowRows.length !== 1566) fail('ALLOW 行数 ' + allowRows.length + ' ≠ 1566');
 
 var intentDoc = JSON.parse(fs.readFileSync(INTENT_FILE, 'utf8'));
 var intentByKey = {};

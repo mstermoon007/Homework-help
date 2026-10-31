@@ -158,3 +158,216 @@
 | H6 | P34-H1 三视图 15 行图形锚定删除 | 教学评审+授权 | 否（已签批执行完成 2026-10-08） | 项目负责人/教研 |
 | H7 | P35-DEBT-2/3 三视图/组合体图形表达裁决 | 教学评审+授权 | 否（阻塞 P35 阶段四 CLOSE 收口） | 项目负责人/教研 |
 | H8 | P35-DEBT-6 13 条矩阵数据事实缺口 | 数据/业务确认 | 否（阻塞 P35 阶段四 CLOSE 收口） | 内容/数据/教研 |
+| H9 | G6 分数乘法 4 KP 域误判（源 Excel 数学分类错误） | 数据（T0 Excel） | 否（不阻塞生成，但域错导致题型声明与题面形态偏误） | 内容/数据 |
+| H10 | 前置关系三条链评审（负数 / 观察物体 / 方向与位置） | 教学评审 | 否（不阻塞运行；影响组合题校验与知识图谱完整性） | 教研 |
+
+---
+
+## H9｜2026-10 年级审计：G6「分数乘法」4 KP 域误判（源 Excel）
+
+> 来源：2026-10-29 只读年级适配审计（G1–G6 知识范围 / 前置知识 / 题型声明 / 难度边界）。
+> 当前状态：**仅登记，零写入，375/98/373/1570 基线不变**。AI 不改 Excel、不手编 canonical。
+
+| 项 | 内容 |
+|---|---|
+| **需要** | Root Excel 行 324–327「数学分类」字段由 `图形与几何` 改为 `数与代数`；或人工确认该处分类确属几何（若属后者本请求即销账） |
+| **受影响 KP** | `math-g6-up-u02-k001` 分数乘整数、`k002` 一个数乘分数、`k003` 分数、小数混合运算及运算律、`k004` 解决问题（共 4 个 KP，单元「分数乘法」） |
+| **证据** | 源抽取 `kbl/import/extract-raw.json` 行 324–327：`数学分类=图形与几何`；同册「分数除法」「百分数」「确定位置」分别为 `数与代数`/`数与代数`/`图形与几何`（正常）；全库 12 个含「分数/小数/运算」关键词的单元仅此单元为 geometry |
+| **当前后果** | ① `derive-kbl.js` 按 `DOMAIN_TYPES.geometry = [geometry, fill, apply, judge, choice]` 派生 allowedTypes——**4 个 KP 没有 calc**，只能生成「看图列式计算…」线段图形态题（实测 `geometry` 渲染 SUCCESS，带 `data.graphic.subtype=segment`），而非口算/列式计算题；② 域标记与教材实际内容偏离，可能影响后续语义族归类与统计视图 |
+| **评审后动作（须 Excel 改值方启动）** | `npm run kbl:rebuild`（`derive-kbl` → `derive-relations` → `emit-canonical` → `build`）→ 同步 `shared/knowledge` 运行时镜像 → 重跑 `dev/check-allow-generation.js` 1570→1566 回归（4 个 KP allowedTypes 由 5→4，geometry 被替换为 calc）→ 6a/6b 矩阵 `--write` 重冻 → 更新 `docs/00-BASELINE.md` → `node dev/check-all.js` → 追加 P43 或后续战役 change-log |
+| **禁止** | 绕过 T0 人工源、直接在 `kbl/canonical/knowledge.json` 改 domain；在派生器内对这 4 个 KP 硬编码特判；运行时修改 allowedTypes |
+| **影响面** | 仅 4 个 KP；ALLOW 映射总数 **1570 → 1566**（域从 geometry 改 algebra：`DOMAIN_TYPES.geometry` 5 条 `[geometry,fill,apply,judge,choice]` → `DOMAIN_TYPES.algebra` 4 条 `[calc,fill,apply,choice]`，共同 3 条保留，几何独有 geometry/judge 两条消失，代数独有 calc 一条新增，净减 1 条 per KP，4×1 = 4 条）；**relations 373 不受影响**（relations 仅取决于 familyId + CONCEPT_FAMILIES，与 domain 无关）；运行时 bundle 重建 |
+| **选项** | A）改正 Excel 并重派生（推荐）；B）确认该处分类合理，销账；C）维持现状登记 needs-review |
+
+### H9 执行步骤（待签批；签批前 AI 零动作）
+
+> 执行前提：用户在 Root Excel 行 324–327 把「数学分类」由 `图形与几何` 改为 `数与代数` 并保存。
+> 唯一允许改 Excel 的是人（T0）；AI 只执行 T1 重派生与代码/文档同步。
+
+| 步 | 动作 | 命令 / 改动点 | 预期结果 |
+|---|---|---|---|
+| 0 | 执行前取证（只读） | 记录 `kbl/canonical/*.json`、两个 `manifest.json` 的 SHA256；`git status --short` 须干净 | 可回滚基线 |
+| 1 | T0 人工改 Excel | 行 324–327「数学分类」→ `数与代数`；记录新 Excel SHA256 | — |
+| 2 | T1 重派生 | `npm run kbl:rebuild`（extract → derive-kbl → derive-relations → emit-canonical → build → build:knowledge） | 4 KP `domain` 改 `algebra`；`allowedTypes` 5→4（去 geometry/judge、加 calc）；`capacity` 68→66；mappings/生成矩阵 **1570→1566**；relations **373 不变** |
+| 3 | 校验派生数值 | `node tools/kbl/validate.js`（先改 106 行断言 1566） | 映射数 1566、permission 全 allow |
+| 4 | T2 顺延（不手编） | 改 `dev/p25/derive-qt-intent.js` 2 处断言 `1570`→`1566` 后重跑 | `qt-intent.json` 1570→1566 行（4 KP 的 geometry/judge 消失、calc 新增）；`requiredRelations` 投影仍 = 373 |
+| 5 | T2 孤儿行处置 | 只读核查 `evidence-rules.json`：4 KP 的 geometry/judge 共 8 行将无 ALLOW 承载（A 类人工定稿，AI **不删不补**） | 登记 needs-review（H9-T2-01）走人工评审；不阻塞主链 |
+| 6 | 矩阵重冻 | 先改硬编码：`check-generation-matrix-freeze.js` 3 处（83/84/85）+ md 文案 7 处、`check-kp-qt-maker-matrix.js` 55 行、`check-answer-leak.js` 340 行 `1570`→`1566`；再 `--write` 重冻 6b/6c/6e | 1566 行 0 FAIL；6g 泄露门禁按新 ALLOW 面实跑并登记，不绕过 |
+| 7 | 基线断言同步 | `dev/verify-kbl-runtime.js` 39–40、`dev/check-kbl-quality.js` 33、`dev/p25/build-baseline.js` 76、`dev/p30/check-kbl-lineage.js` 120（文案） | 全部 1566 / relations 373 |
+| 8 | 派生快照 | `node dev/p25/build-baseline.js` | `kbl/teaching/kp-matrix.json` allow 分布更新；`docs/archive/phases/p25/P25-BASELINE.md` 派生快照随之更新（change-log 记明） |
+| 9 | 当前口径文档 | `docs/00-BASELINE.md`（61–63）、`docs/02-KBL.md`（13）、`docs/DESIGN-REPORT.md`（17）、`README.md`（71）、`llms.txt`（38） | 1570→1566；`docs/03-POL-GENERATION.md` 为 P28-08 FROZEN 历史快照，不重写数字，仅加注「当前口径见 00-BASELINE」 |
+| 10 | 门禁 | 定向 `node --test tests/semantic tests/generation` → `npm test` → `npm run verify:allow-gen`（1566/1566）→ `npm run verify:coverage` → `node dev/check-all.js` | 34 项 33 PASS / 0 FAIL / 1 SKIP（CI 34/0/0）；6a/6b/6c/6e/6g/7/8 全 PASS |
+| 11 | 日志 | 追加新战役 `docs/P44/change-log.md` 六字段 | modified/deleted/reason/tests/risk |
+
+- **回滚**：Excel 还原 → `npm run kbl:rebuild` → 反向改回断言 → 重冻 6b/6c/6e；数据类禁止手改 `kbl/canonical/`。
+- **风险**：①4 KP 由「看图列式」变为「口算/列式」，4×4=16 行产出变化 → 6b/6e/6g 必重冻；②evidence-rules 8 行孤儿；③capacity 68→66 影响覆盖率报告；④若评审认定原分类确为几何，本请求销账，不执行任何步骤。
+
+---
+
+## H10｜2026-10 年级审计：前置关系三条链评审请求
+
+> 来源：2026-10-29 年级适配审计 → 继续只读取证（用户签批「继续只读取证」）。
+> 当前状态：**仅登记，零写入，373 基线不变**。不改派生器、不补边、不移动 `isExcluded`。
+
+### 根因（规则声明边界）
+
+`tools/kbl/derive-relations.js` 明确把概念分两组：
+- **主干概念族**（11 个，`CONCEPT_FAMILIES`）：R-REL-03 为其生成跨册概念链（带 `evolution{familyId,fromStageOrder,toStageOrder,op}`），如 `fam_integer / fam_addsub / fam_fraction / fam_decimal / fam_shape / fam_measure …`
+- **非主干族**（`EXTRA_FAMILIES`）：注释「仅 regex 归类，无跨册概念链」，包括 `fam_negative / fam_observation / fam_direction / fam_statistics / fam_time / fam_review …`
+
+缺口即后者的设计边界——**不是数据丢失**，也**不阻断运行时生成**；唯一影响点是 `shared/validator/composite-validator.js` 的组合题合法性校验（需 prerequisite 边可达）。
+
+### 特别强调的三个边界
+
+1. 不因图谱追求完整而人为制造前置关系。
+2. 不因某个 KP 名称包含「方向」「位置」就自动改变概念族。
+3. 不把图谱关系缺失直接等同于运行时题目生成错误。
+
+### 候选 1：负数链（优先评审）
+
+| 项 | 内容 |
+|---|---|
+| **族归属** | 单元 `g6-up-u07`（综合实践——生活中的负数，3 KP）+ `g6-down-u01`（负数，5 KP）→ 全部 regex 命中 `/负数/` → `fam_negative`（EXTRA，stageOrder 1–8） |
+| **断点** | 两单元之间：`g6-up-u07-k003 应用负数` → `g6-down-u01-k001 负数的意义` 完全无连边 |
+| **候选补边（按 R-REL-03 机制）** | 段端点取「单元内 knowledgeNo 最小 KP」：`math-g6-up-u07-k001 寻找负数 → math-g6-down-u01-k001 负数的意义`（G6 上下册同一明确概念；教学上「综合实践中初步认识负数」→「正式学习负数意义与应用」构成自然前置）。需把 `fam_negative` 由 `EXTRA_FAMILIES` 移入 `CONCEPT_FAMILIES`（stages=`[['g6','up','负数'],['g6','down','负数']]`，ops=`['abstract_up']`），否则 R-REL-03 不遍历该族；本行修正了原 `k003 → k001` 与机制不符的写法 |
+| **族归属调整** | 无 |
+| **组合题校验影响** | 补边前两单元 KP 不能跨单元组合；补边后组合题新增合法路径 1 条 |
+| **派生基线影响** | relations 373 → 374（+1 条 R-REL-03 evolution 边）；R-REL-03 38 → 39；族表 11 主干 / 14 扩展 → 12 / 13；`fam_negative` 成员 `stageOrder` 按 `computeStageOrders` 重算（预期仍为 1–8，需派生后实测核对） |
+| **教学依据** | 六年级上 `负数` 为综合实践，下册为正式单元；教材编排天然是后者的前置 |
+
+### 候选 2：观察物体链（优先评审，含族归属分裂）
+
+| 项 | 内容 |
+|---|---|
+| **族归属分裂** | `g4-down-u02-k001 从不同方向观察物体` regex 命中 `/方向/`（FAMILY_RULES 第 88 行优先级高于第 91 行 `/观察/`）→ `fam_direction`；同单元 k002/k003 仍属 `fam_observation`；`g5-up-u01-k001 从不同方向观察组合体` 同理被分到 `fam_direction` |
+| **断点** | ① `g3-up-u01-k003 观察正方体` → `g4-down-u02-k001 从不同方向观察物体`；② `g4-down-u02-k003` → `g5-up-u01-k001`；③ `g5-up-u01-k003` → `g5-down-u01-k001`（共 3 处，且第一处为跨族） |
+| **候选补边（两步）** | **第一步（纠正分裂）**：把 `fam_observation` 由 `EXTRA_FAMILIES` 移入 `CONCEPT_FAMILIES`，stages=`[['g3','up','观察物体'],['g4','down','观察物体'],['g5','up','观察简单组合体'],['g5','down','观察物体']]`，ops 3 个；`familyMembership` 对命中阶段的单元优先采用链族（`chainFamiliesForUnit`），**无需改 `FAMILY_RULES`** 即自动消除「方向/观察」分裂。**第二步（R-REL-03 单元首 KP 端点）**：① `math-g3-up-u01-k001 观察原则 → math-g4-down-u02-k001 从不同方向观察物体`；② `math-g4-down-u02-k001 → math-g5-up-u01-k001 从不同方向观察组合体`；③ `math-g5-up-u01-k001 → math-g5-down-u01-k001 从不同角度观察立体图形` |
+| **族归属调整** | 是：升级为主干族后，`math-g4-down-u02-k001`、`math-g5-up-u01-k001` 自动由 `fam_direction` 纠正为 `fam_observation`（不改 `FAMILY_RULES`、不改正则优先级） |
+| **组合题校验影响** | 三处断点打通后组合题跨册合法范围扩大 |
+| **派生基线影响** | relations 373 → 376（+3）；R-REL-03 38 → 41（单独实施本链时；与负数链同批为 42）；族表 11/14 → 12/13（两条链同批为 13/12）；4 个观察单元内 KP 的 `familyId/stageOrder` 重算，`semantic.conceptFamily` 发射副本随 `emit-canonical` 变化 |
+| **教学依据** | G3 观察单物体 → G4 观察物体（二）三方向 → G5 组合体三视图 → G5 搭建立体，是教材完整螺旋链 |
+
+### 已裁决并执行：方向与位置链 + 取消综合实践与复习单元排除（2026-10-31）
+
+| 项 | 内容 |
+|---|---|
+| **暂缓理由（历史记录）** | `fam_direction` 跨越 G2→G3→G4→G5→G6 共 7 单元，其中 G5 无「位置」对应单元（仅数学广角）、G4→G6 跳 G5 是否构成直接前置关系需教学评审确认；不能仅凭名称相似建立关系 |
+| **维持排除（已被覆盖）** | > **2026-10-31 用户显式指令覆盖**：Q1/Q2/Q3/Q4 全部成立，「不做排除，按照册、单元做综合总结」；`isExcluded` 已物理删除，12 个复习/综合课 KP 参与 R-REL-02 递进。执行见下方「H10-C 裁决与执行」。 |
+
+### 评审后动作（须逐项签批方启动）
+
+| 优先级 | 动作 | 门禁 |
+|---|---|---|
+| 高 | 先对负数链族升级 + 1 条补边做教学评审 | 评审通过后按「H10-A 执行步骤」：`fam_negative` 移入 `CONCEPT_FAMILIES`（同步从 EXTRA 删除）→ 重跑 `derive-relations` → `emit-canonical` → `build.js` → 373→374 / R-REL-03 38→39 → 全量门禁 |
+| 高 | 对观察物体链族升级 + 3 条补边做教学评审 | 评审通过后按「H10-B 执行步骤」：`fam_observation` 移入 `CONCEPT_FAMILIES`（不改 `FAMILY_RULES`，链族优先自动纠正分裂）→ 373→376 / R-REL-03 38→41 → 全量门禁 |
+| 暂缓 | 方向与位置链评审挂起 | — |
+| 不动 | 综合实践与复习单元维持排除 | — |
+
+### H10-A 执行步骤（负数链 · 待签批；签批前 AI 零动作）
+
+> 前提：教学评审通过「G6 上·综合实践（生活中的负数）→ G6 下·负数」构成自然前置。
+> 一任务一链：本步骤只做负数链，不夹带观察物体链与方向链。
+
+| 步 | 动作 | 命令 / 改动点 | 预期结果 |
+|---|---|---|---|
+| 0 | 只读取证 | 记录 `canonical/relations.json` SHA256、`grep -c fam_negative` 现有边数、`kbl/manifest` counts | 可回滚基线 |
+| 1 | 改派生器（唯一改动点） | `tools/kbl/derive-relations.js`：`CONCEPT_FAMILIES` 追加 `{familyId:'fam_negative', name:'负数', ops:['abstract_up'], stages:[['g6','up','负数'],['g6','down','负数']]}`；`EXTRA_FAMILIES` 删除 `fam_negative`；**不改 `FAMILY_RULES`** | `validateFamilyTable()` 通过（ops 1 = stages 2−1） |
+| 2 | 重派生 | `npm run kbl:derive && npm run build:knowledge`（Excel 未变，不跑 extract） | relations **373→374**；R-REL-03 **38→39**；族表 **12 主干 / 13 扩展**；新边 `math-g6-up-u07-k001 寻找负数 → math-g6-down-u01-k001 负数的意义`，带 `evolution{fam_negative, abstract_up}` |
+| 3 | 校验 | 核对新边端点、`evolution.fromStageOrder < toStageOrder`、无重复边/无环；`fam_negative` 成员 stageOrder 实测仍 1–8 | 不符合 → 停手排查，不手改 canonical |
+| 4 | T2 顺延 | `node dev/p25/derive-qt-intent.js`（`requiredRelations` 断言为动态，随 +1 自动成立；ALLOW 仍 1570 不需改数字） | `qt-intent.json` 对应 KP 前置集 +1；**不重跑** variation/misconception（题面/答案零变化） |
+| 5 | 测试断言同步 | `tests/semantic/p40-t02-t07-foundation.test.js`：11→12、14→13、38→39；`tests/generation/p40-t11-family-contract.test.js`：38→39；`dev/p40/t12-regression-baseline.js`：38→39 及 `/38` 文案；61（族间边）/54（倒挂）**派生后实测回填** | 定向测试全过 |
+| 6 | 基线/文档同步 | `dev/verify-kbl-runtime.js` 39（relations 374）、`dev/check-kbl-quality.js` 33、`dev/p30/check-kbl-lineage.js` 120（文案）；`docs/00-BASELINE.md`（373→374、38→39、11/14、54 实测）、`docs/02-KBL.md`、`docs/DESIGN-REPORT.md`、`README.md`、`llms.txt`；`docs/maintenance/P41-E-relations-research.md` 加注「H10-A 后 374」 | 当前口径一致；历史 change-log/任务书不改 |
+| 7 | 审计快照 | `node dev/p40/t07-family-difficulty-scan.js` | `dev/p40/out/t07-family-difficulty.json` 更新（倒挂数实测） |
+| 8 | 门禁 | 定向 `node --test tests/semantic tests/generation tests/validator` → `npm test` → `npm run verify` → `node dev/p40/t12-regression-baseline.js` → `node dev/check-all.js` | 34 项 33 PASS / 0 FAIL / 1 SKIP（CI 34/0/0）；6a/6b/6e 复跑证明题目产出零变化 |
+| 9 | 日志 | 追加 `docs/P44/change-log.md` 六字段 | — |
+
+- **回滚**：还原 `derive-relations.js` 族表 → `npm run kbl:derive && npm run build:knowledge` → 断言/文档反向还原 → 重跑门禁。禁止手改 `kbl/canonical/relations.json`。
+- **风险**：低——题面/答案零变化；组合题合法路径 +1（`shared/validator/composite-validator.js` 无需改代码，需定向测试证明）；若评审驳回，本步骤整体作废。
+
+### H10-B 执行步骤（观察物体链 · 待签批；签批前 AI 零动作）
+
+> 前提：教学评审通过「先纠正族归属分裂，再补跨册 3 条边」。
+> 与 H10-A 分开签批、分开门禁；若同批执行，按 A→门禁→B→门禁 顺序，不得同时改两族。
+
+| 步 | 动作 | 命令 / 改动点 | 预期结果 |
+|---|---|---|---|
+| 0 | 只读取证 | 记录 4 个观察单元精确名（`g3-up 观察物体`、`g4-down 观察物体（二）`、`g5-up 观察简单组合体`、`g5-down 观察物体（三）`）与各单元首 KP | 端点确认 |
+| 1 | 改派生器 | `tools/kbl/derive-relations.js`：`CONCEPT_FAMILIES` 追加 `{familyId:'fam_observation', name:'观察物体', ops:['abstract_up','increase_complexity','increase_complexity'], stages:[['g3','up','观察物体'],['g4','down','观察物体'],['g5','up','观察简单组合体'],['g5','down','观察物体']]}`；`EXTRA_FAMILIES` 删除 `fam_observation`；**不改 `FAMILY_RULES`**（`chainFamiliesForUnit` 链族优先自动纠正分裂） | `validateFamilyTable()` 通过（ops 3 = stages 4−1） |
+| 2 | 重派生 | `npm run kbl:derive && npm run build:knowledge` | relations **373→376**；R-REL-03 **38→41**；族表 **12 主干 / 13 扩展**（单独实施）；3 条新边：`g3-up-u01-k001 观察原则 → g4-down-u02-k001 从不同方向观察物体`、`g4-down-u02-k001 → g5-up-u01-k001 从不同方向观察组合体`、`g5-up-u01-k001 → g5-down-u01-k001 从不同角度观察立体图形` |
+| 3 | 校验归属纠正 | 核对 `math-g4-down-u02-k001`、`math-g5-up-u01-k001` 等 KP 的 `capability.familyId` 由 `fam_direction` 纠正为 `fam_observation`；`fam_direction` 成员相应减少；`fam_observation` / `fam_direction` stageOrder 重算 | 若新边 <376（去重命中）→ 停手核对，不强行补 |
+| 4 | T2 顺延 | `node dev/p25/derive-qt-intent.js`（`requiredRelations` 动态断言随 +3 成立；ALLOW 仍 1570） | 前置集 +3；**不重跑** variation/misconception |
+| 5 | 测试断言同步 | 同 H10-A，但数字为 **376 / 41**；`tests/semantic/p40-t02-t07-foundation.test.js` 的 61（族间边）/54（倒挂）**派生后实测回填**（族归属变化会改变两族排序，不得沿用旧值） | 定向测试全过 |
+| 6 | 基线/文档同步 | `dev/verify-kbl-runtime.js`（relations 376）、`dev/check-kbl-quality.js`、`dev/p30/check-kbl-lineage.js`；`docs/00-BASELINE.md`（373→376、38→41、11/14、54 实测）、`docs/02-KBL.md`、`docs/DESIGN-REPORT.md`、`README.md`、`llms.txt`、`P41-E` 加注 | 当前口径一致 |
+| 7 | 审计快照 | `node dev/p40/t07-family-difficulty-scan.js` | 倒挂/族内递进实测留档 |
+| 8 | 门禁 | 同 H10-A：定向测试 → `npm test` → `npm run verify` → `node dev/p40/t12-regression-baseline.js` → `node dev/check-all.js` | 34 项 33 PASS / 0 FAIL / 1 SKIP（CI 34/0/0）；6a/6b/6e 题目产出零变化 |
+| 9 | 日志 | 追加 `docs/P44/change-log.md` 六字段 | — |
+
+- **回滚**：还原族表 → `npm run kbl:derive && npm run build:knowledge` → 断言/文档反向还原。
+- **风险**：中低——题面/答案零变化，但**族归属与 stageOrder 重算面大于 A**（4 个观察单元全部 KP），且 `fam_direction` 成员缩减；组合题合法跨册路径 +3；`p40-t02` 的 61/54 必须实测，不得估算。
+- **与 A 的合并口径**：两链同批时 relations **377**、R-REL-03 **42**、族表 **13 主干 / 12 扩展**；`61/54` 仍以派生后实测为准。
+
+### H10-C 方向与位置链：取证、裁决与执行（2026-10-31）
+
+> 来源：用户 2026-10-31 指令「好的，执行吧」（接续本档案「暂缓：方向与位置链」），以及对 Q1–Q4 的裁决原话：
+> 「G2 方向实践课构成 G4「方向+位置」的自然前置。跨 G3、G5 直连 G4→G6 成立，每一个综合实践均为前一阶段的总结和回顾。不做排除，按照册、单元做综合总结。」
+> 性质：**已执行**。改动唯一文件 `tools/kbl/derive-relations.js`（族表 + `isExcluded` 删除），canonical 由派生器重生，未手改。
+
+（以下取证表为执行前只读实测，保留作证据）
+
+| 单元（实测全名） | 类型 | KP | 首 KP | isExcluded |
+|---|---|---|---|---|
+| g2 上 `math-g2-up-u04` 综合实践——方向 | 综合实践 | 4（辨认方向 / 地图上的方向 / 描述物体所在方向 / 描述行走路线） | `math-g2-up-u04-k001` | 是 |
+| g3 下 `math-g3-down-u08` 复习与关联 | 复习 | 1（图形的认识与测量、位置与运动） | `math-g3-down-u08-k003` | 是 |
+| g4 上 `math-g4-up-u08` 综合实践——方向、位置 | 综合实践 | 3（认识方向与位置 / 描述位置 / 读图与绘图） | `math-g4-up-u08-k001` | 是 |
+| g5 下 `math-g5-down-u09` 综合实践——探索图形 | 综合实践 | 1（各类涂色小正方体的位置特征，**内容不属方向定位**） | `math-g5-down-u09-k002` | 是 |
+| g6 上 `math-g6-up-u01` 确定位置 | **常规单元** | 3（用有序数对确定位置 / 用方向和距离确定位置 / 两种定位方法适用场景） | `math-g6-up-u01-k001` | 否 |
+
+> 说明：`g4-down-u02-k001`（从不同方向观察物体）、`g5-up-u01-k001`（从不同方向观察组合体）名称含「方向」，但**已随 H10-B 归 `fam_observation`**，不属本链，不得回拉到 `fam_direction`。
+
+**取证结论（四条硬事实）**
+
+1. **G1–G5 无常规「位置/方向」教学单元**；唯一常规单元是 G6 上「确定位置」。G2/G4 可作锚点的单元均为**综合实践**，G3 命中项是复习、G5 命中项是「涂色小正方体位置特征」（语义不连贯）。
+2. 现网 `fam_direction` 共 **12 KP / 7 条族内前置边**，全部为单元内链（`k001→k002→k003…`），**零跨册边**。
+3. 两处跨册首 KP 端点边**缺失**：`g2-up-u04-k001 → g4-up-u08-k001`、`g4-up-u08-k001 → g6-up-u01-k001`。
+4. 若按三阶段升主干族（g2 上 → g4 上 → g6 上）：relations **377→379**、R-REL-03 **42→44**、族表 **14 主干 / 11 扩展**，跨度 G2→G4→G6（跳 G3、G5）；若只连 G4→G6：**377→378 / 43**，锚点仍为综合实践单元。
+
+**评审问题（须教研逐条裁决；任一否决即维持现状）**
+
+| # | 问题 | 依据/背景 |
+|---|---|---|
+| Q1 | G2「综合实践——方向」（辨认方向/地图方向/行走路线）是否构成 G4「综合实践——方向、位置」的自然前置？ | 两者均为实践课，G2 为方向辨认，G4 为方向+位置描述，存在语义递进但非教材常规单元顺序 |
+| Q2 | 跨 G3、G5 直连 G4→G6 是否成立？ | G3 无方向单元，G5 无位置单元；G6 才引入数对与「方向+距离」的坐标化定位，属抽象升级（`abstract_up` 可解释） |
+| Q3 | 是否接受以「综合实践」单元作为 R-REL-03 链锚点？ | 先例：H10-A 已用「综合实践——生活中的负数」作锚点（`isExcluded` 仅约束 R-REL-02，不约束 R-REL-03） |
+| Q4 | 综合实践/复习单元是否继续 `isExcluded` 排除？ | 现设计维持排除；若为连边纳入将改动 `isExcluded`，属红线，须显式授权 |
+
+**裁决后动作（签批才启动，按 H10-A 同流程）**
+
+1. 唯一改动点 `tools/kbl/derive-relations.js`：`CONCEPT_FAMILIES` 追加 `fam_direction`（stages 按裁决结果 3 段或 2 段），`EXTRA_FAMILIES` 同步删除；**不改 `FAMILY_RULES`**；`isExcluded` 按 Q4 裁决物理删除（用户 2026-10-31 显式授权）。
+2. `npm run kbl:derive && npm run build:knowledge` → `node tools/kbl/build.js` 重冻 rootHash → `node dev/p25/derive-qt-intent.js`。
+3. 断言/文档同步（实测 377→407、42→44、族表 14/11）→ t07 快照 → `npm test` → `npm run verify` → t12 → `node dev/check-all.js` → 追加 `docs/P44/change-log.md`。
+4. **禁止**：手改 canonical 边、因名称含「方向/位置」自动改族、为图谱完整强行连边。
+
+**裁决结论（用户 2026-10-31 显式指令，覆盖原「暂缓/维持排除」）**
+
+| # | 问题 | 裁决 |
+|---|---|---|
+| Q1 | G2「综合实践——方向」是否为 G4「方向+位置」自然前置 | **成立**（用户原话：「G2 方向实践课构成 G4「方向+位置」的自然前置」） |
+| Q2 | 跨 G3、G5 直连 G4→G6 是否成立 | **成立**（用户原话：「跨 G3、G5 直连 G4→G6 成立」） |
+| Q3 | 是否接受综合实践单元作 R-REL-03 锚点 | **接受**（用户原话：「每一个综合实践均为前一阶段的总结和回顾」） |
+| Q4 | 综合实践/复习单元是否继续 `isExcluded` 排除 | **取消排除**（用户原话：「不做排除，按照册、单元做综合总结」）——显式授权覆盖「改 isExcluded 属红线」 |
+
+**执行结果（实测）**
+
+1. `CONCEPT_FAMILIES` 追加 `fam_direction`（3 段：g2 上「综合实践——方向」→ g4 上「综合实践——方向、位置」→ g6 上「确定位置」；ops：`increase_complexity` → `abstract_up`）；`EXTRA_FAMILIES` 同步删除该族。
+2. `isExcluded` 函数与 R-REL-02 排除判断**物理删除**（全库零残留）。
+3. 重派生实测：Relations **377→407**（R-REL-01 277 / R-REL-02 **58→86** / R-REL-03 **42→44**）；族表 **13/12 → 14/11**；新增链边 `g2-up-u04-k001 → g4-up-u08-k001`（1→6，`increase_complexity`）、`g4-up-u08-k001 → g6-up-u01-k001`（6→10，`abstract_up`）；新增 R-REL-02 28 条（综合实践/复习单元进出）。T-06 族间边 **60→82**（族投影环为既有 primary-family 折叠观察项）；T-07 倒挂仍 **53**。KP/Units/ALLOW 375/98/1566 不变。
+
+**当前状态**：已执行并过门禁。
+
+### 禁止
+
+- 不因图谱追求完整而人为制造前置关系。
+- 不因某个 KP 名称包含「方向」「位置」就自动改变概念族。
+- 不把图谱关系缺失直接等同于运行时题目生成错误（当前运行时零阻塞，唯一影响点为 `composite-validator` 组合题校验）。
+- 跳过评审直接改 `derive-relations.js` 或在 canonical 中手插边。
+- ~~改 `isExcluded` 规则强行纳入复习/实践单元。~~ **已被用户 2026-10-31 显式指令覆盖**（H10-C Q4「不做排除」），`isExcluded` 已物理删除；此禁令仅对未获显式授权的场景有效。

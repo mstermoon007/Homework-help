@@ -7420,7 +7420,7 @@
         "unitName": "分数乘法",
         "unitOrdinal": 2
       },
-      "domain": "geometry",
+      "domain": "algebra",
       "definition": "求几个相同分数的和的简便运算，与整数乘法意义相同。计算法则为分子与整数相乘，分母不变；能约分先约分，再计算，结果化为最简分数。简便原则是整数和分母约分，约分后再相乘",
       "edition": "2026",
       "status": "active",
@@ -7443,7 +7443,7 @@
         "unitName": "分数乘法",
         "unitOrdinal": 2
       },
-      "domain": "geometry",
+      "domain": "algebra",
       "definition": "乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据）。分数乘分数法则为分子乘分子作新分子，分母乘分母作新分母，先约分再计算。积的大小规律：一个数（0除外）乘大于1的分数，积大于本身；乘小于1的分数，积小于本身；乘1，积等于本身。核心解题公式：单位“1”的量 × 对应分率 = 对应分量",
       "edition": "2026",
       "status": "active",
@@ -7466,7 +7466,7 @@
         "unitName": "分数乘法",
         "unitOrdinal": 2
       },
-      "domain": "geometry",
+      "domain": "algebra",
       "definition": "运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内。整数乘法交换律、结合律、分配律完全适用于分数、小数乘法。分配律高频考点：(a±b)×c = a×c±b×c",
       "edition": "2026",
       "status": "active",
@@ -7489,7 +7489,7 @@
         "unitName": "分数乘法",
         "unitOrdinal": 2
       },
-      "domain": "geometry",
+      "domain": "algebra",
       "definition": "连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”",
       "edition": "2026",
       "status": "active",

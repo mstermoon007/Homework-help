@@ -2253,6 +2253,14 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g1-up-u05-k003",
+      "toId": "math-g1-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g1-down-u01-k001",
       "toId": "math-g1-down-u02-k001",
       "relation": "prerequisite",
@@ -2301,6 +2309,14 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g1-down-u07-k003",
+      "toId": "math-g1-down-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g2-up-u01-k006",
       "toId": "math-g2-up-u02-k001",
       "relation": "prerequisite",
@@ -2311,6 +2327,54 @@
     {
       "fromId": "math-g2-up-u02-k004",
       "toId": "math-g2-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u03-k005",
+      "toId": "math-g2-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u04-k004",
+      "toId": "math-g2-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u05-k005",
+      "toId": "math-g2-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u06-k001",
+      "toId": "math-g2-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u07-k002",
+      "toId": "math-g2-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-down-u01-k003",
+      "toId": "math-g2-down-u02-k001",
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
@@ -2341,6 +2405,22 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g2-down-u05-k004",
+      "toId": "math-g2-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-down-u06-k004",
+      "toId": "math-g2-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g3-up-u01-k003",
       "toId": "math-g3-up-u02-k001",
       "relation": "prerequisite",
@@ -2357,8 +2437,48 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g3-up-u03-k004",
+      "toId": "math-g3-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u04-k004",
+      "toId": "math-g3-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u05-k005",
+      "toId": "math-g3-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u06-k005",
+      "toId": "math-g3-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g3-up-u07-k004",
       "toId": "math-g3-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u08-k005",
+      "toId": "math-g3-up-u09-k001",
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
@@ -2413,6 +2533,14 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g3-down-u07-k004",
+      "toId": "math-g3-down-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g4-up-u01-k006",
       "toId": "math-g4-up-u02-k001",
       "relation": "prerequisite",
@@ -2447,6 +2575,30 @@
     {
       "fromId": "math-g4-up-u05-k004",
       "toId": "math-g4-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u06-k004",
+      "toId": "math-g4-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u07-k001",
+      "toId": "math-g4-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u08-k003",
+      "toId": "math-g4-up-u09-k001",
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
@@ -2517,6 +2669,14 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g4-down-u09-k003",
+      "toId": "math-g4-down-u10-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g5-up-u01-k003",
       "toId": "math-g5-up-u02-k001",
       "relation": "prerequisite",
@@ -2559,6 +2719,22 @@
     {
       "fromId": "math-g5-up-u06-k006",
       "toId": "math-g5-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u07-k004",
+      "toId": "math-g5-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u08-k004",
+      "toId": "math-g5-up-u09-k001",
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
@@ -2621,6 +2797,30 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g5-down-u08-k003",
+      "toId": "math-g5-down-u09-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u09-k003",
+      "toId": "math-g5-down-u10-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u10-k004",
+      "toId": "math-g5-down-u11-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g6-up-u01-k003",
       "toId": "math-g6-up-u02-k001",
       "relation": "prerequisite",
@@ -2653,6 +2853,22 @@
       "rule": "R-REL-02:同册跨单元递进"
     },
     {
+      "fromId": "math-g6-up-u05-k006",
+      "toId": "math-g6-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-up-u06-k001",
+      "toId": "math-g6-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
       "fromId": "math-g6-down-u01-k005",
       "toId": "math-g6-down-u02-k001",
       "relation": "prerequisite",
@@ -2679,6 +2895,14 @@
     {
       "fromId": "math-g6-down-u04-k008",
       "toId": "math-g6-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-down-u05-k004",
+      "toId": "math-g6-down-u06-k001",
       "relation": "prerequisite",
       "inferred": true,
       "reviewStatus": "llm-finalized-dev",
@@ -3214,6 +3438,90 @@
         "fromStageOrder": 10,
         "toStageOrder": 13,
         "op": "increase_complexity"
+      }
+    },
+    {
+      "fromId": "math-g6-up-u07-k001",
+      "toId": "math-g6-down-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(负数)",
+      "evolution": {
+        "familyId": "fam_negative",
+        "fromStageOrder": 1,
+        "toStageOrder": 4,
+        "op": "abstract_up"
+      }
+    },
+    {
+      "fromId": "math-g3-up-u01-k001",
+      "toId": "math-g4-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(观察物体)",
+      "evolution": {
+        "familyId": "fam_observation",
+        "fromStageOrder": 1,
+        "toStageOrder": 4,
+        "op": "abstract_up"
+      }
+    },
+    {
+      "fromId": "math-g4-down-u02-k001",
+      "toId": "math-g5-up-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(观察物体)",
+      "evolution": {
+        "familyId": "fam_observation",
+        "fromStageOrder": 4,
+        "toStageOrder": 7,
+        "op": "increase_complexity"
+      }
+    },
+    {
+      "fromId": "math-g5-up-u01-k001",
+      "toId": "math-g5-down-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(观察物体)",
+      "evolution": {
+        "familyId": "fam_observation",
+        "fromStageOrder": 7,
+        "toStageOrder": 10,
+        "op": "increase_complexity"
+      }
+    },
+    {
+      "fromId": "math-g2-up-u04-k001",
+      "toId": "math-g4-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(方向与位置)",
+      "evolution": {
+        "familyId": "fam_direction",
+        "fromStageOrder": 1,
+        "toStageOrder": 6,
+        "op": "increase_complexity"
+      }
+    },
+    {
+      "fromId": "math-g4-up-u08-k001",
+      "toId": "math-g6-up-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:概念主干链(方向与位置)",
+      "evolution": {
+        "familyId": "fam_direction",
+        "fromStageOrder": 6,
+        "toStageOrder": 10,
+        "op": "abstract_up"
       }
     }
   ]

@@ -4,16 +4,17 @@
  * tests/generation/p28-hollow-plan1-native.test.js — P28-HOLLOW-01 方案 1（空心治理）
  *
  * 背景：因数和倍数 2 KP（8 行）原绑 arithmetic，产出纯算式题（与因数/倍数语义无关）；
- * 分数乘整数 g6-up-u02-k001 的 4 个非几何行（fill/choice/judge/apply）此前回落
- * shape 泛型认图（空心）。统计族 25 KP × 5 行（125 行）的路由与真实生成由
- * tests/orchestration/p17-10-classify.test.js 收口，本文件不重复。
+ * 分数乘整数 g6-up-u02-k001 的 4 个非几何行（calc/fill/choice/apply）此前回落
+ * shape 泛型认图（空心）。P44/H9 源 Excel 改判「数与代数」后 geometry/judge 行移除、
+ * calc 行新增，4 行一律禁图（intent 无 graphicRole）。统计族 25 KP × 5 行（125 行）的
+ * 路由与真实生成由 tests/orchestration/p17-10-classify.test.js 收口，本文件不重复。
  *
  * 冻结不变量：
  *   1. 选择器精确路由：因数 8 行 → generator:concept-meaning；
- *      分数乘整数 5 行 → generator:shape-recognition（match 全 1）。
+ *      分数乘整数 4 行 → generator:shape-recognition（match 全 1）。
  *   2. 原生 maker 真实产出：题型/KP 回显、TypeContract 通过、KpSemantic 通过、
- *      answer 非空、题干含 KP 语义关键词；分数乘整数行不回落泛型认图、不挂算术 operation
- *      （该 KP relationNot 八条算术/分数关系），5 行 graphic 均可真实渲染 SVG。
+ *      answer 非空、题干含 KP 语义关键词；分数乘整数行不回落泛型认图、operation=mult、
+ *      4 行均不携带 graphic 描述符。
  *   3. PracticeSession E2E（固定冻结 seed）元数据 generator 与路由一致。
  */
 
@@ -30,14 +31,6 @@ const TC = require(path.join(ROOT, 'shared', 'generator', 'core', 'type-contract
 const KpSem = require(path.join(ROOT, 'shared', 'validator', 'kp-semantic-validator.js'));
 const PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
 
-// SVG 渲染链（Node 直载）
-require(path.join(ROOT, 'shared', 'svg', 'svg-core.js'));
-require(path.join(ROOT, 'plugins', 'svg-area.js'));
-require(path.join(ROOT, 'plugins', 'svg-fraction.js'));
-require(path.join(ROOT, 'shared', 'svg', 'svg-diagram.js'));
-require(path.join(ROOT, 'shared', 'svg', 'svg-geometry.js'));
-const SvgRegistry = require(path.join(ROOT, 'shared', 'presentation', 'svg-registry.js'));
-
 const CONCEPT = 'generator:concept-meaning';
 const SHAPE = 'generator:shape-recognition';
 
@@ -52,11 +45,10 @@ const ROWS = [
   ['math-g5-down-u02-k002', 'fill', CONCEPT, /倍数|因数|____/],
   ['math-g5-down-u02-k002', 'choice', CONCEPT, /倍数|因数/],
   ['math-g5-down-u02-k002', 'apply', CONCEPT, /倍数|因数/],
-  // 分数乘整数（shape 内部参数化 maker，1 KP × 5 行）
-  ['math-g6-up-u02-k001', 'geometry', SHAPE, /分数|单位“1”|\d+\/\d+/],
+  // 分数乘整数（shape 内部参数化 maker，1 KP × 4 行；H9 后 geometry/judge 移除、calc 新增）
+  ['math-g6-up-u02-k001', 'calc', SHAPE, /分数|单位“1”|\d+\/\d+/],
   ['math-g6-up-u02-k001', 'fill', SHAPE, /分数|\d+\/\d+|×|____/],
   ['math-g6-up-u02-k001', 'choice', SHAPE, /分数|\d+\/\d+|×/],
-  ['math-g6-up-u02-k001', 'judge', SHAPE, /分数|\d+\/\d+|×/],
   ['math-g6-up-u02-k001', 'apply', SHAPE, /分数|\d+\/\d+|×|彩带/]
 ];
 
@@ -66,7 +58,7 @@ function gradeOf(kp) {
 
 /* ---------------- 1. 选择器精确路由 ---------------- */
 
-test('selector：因数 8 行 → concept-meaning，分数乘整数 5 行 → shape-recognition', () => {
+test('selector：因数 8 行 → concept-meaning，分数乘整数 4 行 → shape-recognition', () => {
   ROWS.forEach(function (row) {
     const plan = { knowledgePointIds: [row[0]], questionTypeId: row[1], difficulty: 3, count: 1 };
     const sel = Selector.selectGenerator(plan);
@@ -108,15 +100,10 @@ test('maker：题型/KP 回显，TypeContract + KpSemantic 通过，题干含 KP
       // 不回落泛型认图
       assert.ok(!/写出它的名称|它叫什么名字|是什么图形/.test(String(q.prompt)),
         kp + ' / ' + qt + ' 不得回落泛型认图: ' + q.prompt);
-      // 该 KP operations=[]、relationNot 八条算术/分数关系：禁止挂算术 operation
-      assert.ok(!q.data || q.data.operation === undefined, kp + ' / ' + qt + ' 不得挂 data.operation');
-      // 5 行均带单位分数条 graphic，且可真实渲染
-      const graphic = q.data && q.data.graphic;
-      assert.ok(graphic && graphic.type, kp + ' / ' + qt + ' 带 graphic 描述符');
-      const rendered = SvgRegistry.renderFor(graphic);
-      assert.equal(rendered.status, 'SUCCESS',
-        kp + ' / ' + qt + ' graphic ' + graphic.type + '/' + graphic.subtype + ' 可渲染: ' + rendered.reason);
-      assert.ok(/<svg/.test(rendered.svg));
+      // H9 语义事实：该 KP 四个 ALLOW 行统一 operation=mult
+      assert.equal(q.data && q.data.operation, 'mult', kp + ' / ' + qt + ' data.operation=mult');
+      // H9 意图禁图：4 行一律不携带 graphic 描述符
+      assert.ok(!(q.data && q.data.graphic), kp + ' / ' + qt + ' 不得携带 graphic 描述符');
     }
   });
 });

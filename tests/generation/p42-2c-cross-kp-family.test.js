@@ -15,8 +15,8 @@
  *   4. application.js—— 新增 makeIrregularVolumeTyped（排水法实验，石块/体积 token，
  *      四题型措辞互异；未授权题型 fail-closed）。
  *   5. arithmetic.js —— 新增 makeFractionDecimalMixedQuestion（分配律，运算律/小数
- *      混合运算 token）；镜像通用路径 P38 意图闸门挂 calculation-support 图形
- *      （k003 全题型 intent.graphicRole=auxiliary/carrier 强制配图）。
+ *      混合运算 token）；P44/H9 源 Excel 改判「数与代数」后该 KP 的 qt-intent
+ *      graphicRole 由 auxiliary/carrier 回落 null，图形强制配图诉求随意图重派生撤销。
  *   6. semantic-relations.js —— 新增 makeInversePropTyped（货运/装订/行船，反比例
  *      token）+ makeDirectPropApply（彩带归一，正比例 token）；choice 补 q.prompt。
  *   7. fraction.js   —— 约分/通分名称信号 fill 分支（约分 token）。
@@ -80,11 +80,11 @@ const ROWS = [
   ['math-g5-down-u03-k006', 'apply', ['石块', '体积']],
   ['math-g5-down-u03-k006', 'choice', ['石块', '体积']],
   ['math-g5-down-u03-k006', 'judge', ['石块', '体积']],
-  // 分数、小数混合运算及运算律（4 行）
+  // 分数、小数混合运算及运算律（4 行；H9 后 judge 行移除、calc 行新增）
   ['math-g6-up-u02-k003', 'fill', ['运算律', '小数混合运算']],
   ['math-g6-up-u02-k003', 'apply', ['运算律', '小数混合运算']],
   ['math-g6-up-u02-k003', 'choice', ['运算律', '小数混合运算']],
-  ['math-g6-up-u02-k003', 'judge', ['运算律', '小数混合运算']],
+  ['math-g6-up-u02-k003', 'calc', ['运算律', '小数混合运算']],
   // 正/反比例（4 行）
   ['math-g6-down-u04-k004', 'apply', ['正比例']],
   ['math-g6-down-u04-k005', 'calc', ['反比例']],
@@ -141,18 +141,13 @@ test('P42-033 33 行登记 seed 逐行 KP 概念 token 回指（正反比例/最
   }
 });
 
-test('P42-033 k003 图形意图闸门：fill/choice 天平图、apply/judge 首步分组图（auxiliary 强制配图）', async () => {
-  for (const qt of ['fill', 'choice', 'apply', 'judge']) {
+test('P42-033 k003 图形意图闸门（H9 后）：calc/fill/choice/apply 四行 graphicRole=null 不强制配图', async () => {
+  for (const qt of ['calc', 'fill', 'choice', 'apply']) {
     const sq = await makeOne('math-g6-up-u02-k003', qt, 'p42|math-g6-up-u02-k003|' + qt + '|d3');
     assert.ok(sq, 'k003|' + qt + ' 应产出题目');
-    const g = sq.data && sq.data.graphic;
-    assert.ok(g, 'k003|' + qt + ' intent.graphicRole=auxiliary 必须配图');
-    assert.equal(g.role, 'calculation-support', 'k003|' + qt + ' 图形角色为 calculation-support');
-    if (qt === 'fill' || qt === 'choice') {
-      assert.equal(g.subtype, 'balance', 'k003|' + qt + ' 天平图');
-    } else {
-      assert.equal(g.subtype, 'groups', 'k003|' + qt + ' 首步分组图');
-    }
+    assert.ok(!(sq.data && sq.data.graphic), 'k003|' + qt + ' intent.graphicRole=null 不得配图');
+    const text = String(sq.prompt) + ' ' + String(sq.answer && sq.answer.explanation);
+    assert.ok(/运算律|小数混合运算/.test(text), 'k003|' + qt + ' 保留运算律语义');
   }
 });
 

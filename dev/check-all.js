@@ -147,7 +147,7 @@ run('4.  Syntax       (全量 JS 语法)', 'node dev/check-syntax.js');
 run('5.  Unit         (全链测试)', 'node --test "tests/**/*.test.js"');
 
 // ── 6. Generation ──
-run('6a. Generation   (1570 ALLOW 真实生成)', 'node dev/check-allow-generation.js', { timeout: 600000 });
+run('6a. Generation   (1566 ALLOW 真实生成)', 'node dev/check-allow-generation.js', { timeout: 600000 });
 run('6b. Generation   (矩阵冻结)', 'node dev/p28/check-generation-matrix-freeze.js');
 run('6c. Generation   (Generator Registry)', 'node dev/p28/check-generator-matrix.js');
 run('6d. Generation   (四轴不夺权)', 'node dev/p28/check-generator-noninterference.js');

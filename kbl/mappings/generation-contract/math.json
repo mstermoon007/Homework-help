@@ -2,9 +2,9 @@
   "schemaVersion": "1.0.0",
   "subject": "math",
   "source": "kbl-derived",
-  "count": 1570,
+  "count": 1566,
   "stats": {
-    "allow": 1570,
+    "allow": 1566,
     "forbid": 0,
     "degrade": 0,
     "missing": 0
@@ -12162,10 +12162,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12184,15 +12184,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12207,10 +12198,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12229,15 +12220,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12252,10 +12234,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12274,15 +12256,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12297,10 +12270,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -12319,15 +12292,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived"
     },

@@ -246,13 +246,13 @@
   ],
   "coverage": {
     "totalKp": 375,
-    "multiFamilyKp": 124,
+    "multiFamilyKp": 123,
     "byFamilyMembership": {
       "number-sense": 46,
       "integer-arithmetic": 54,
       "multiplicative-relation": 41,
       "multiple-ratio": 3,
-      "fraction": 32,
+      "fraction": 31,
       "decimal": 27,
       "percent": 11,
       "ratio-proportion": 7,
@@ -269,7 +269,7 @@
       "integer-arithmetic": 29,
       "multiplicative-relation": 38,
       "multiple-ratio": 3,
-      "fraction": 25,
+      "fraction": 24,
       "decimal": 24,
       "percent": 11,
       "ratio-proportion": 7,
@@ -279,15 +279,15 @@
       "spatial-reasoning": 29,
       "statistics-probability": 22,
       "classification": 4,
-      "word-application": 54
+      "word-application": 55
     },
-    "flaggedCount": 4
+    "flaggedCount": 0
   },
   "coarseToFamilyCrosswalk": {
     "calculation": {
       "number-sense": 30,
       "integer-arithmetic": 28,
-      "word-application": 16,
+      "word-application": 17,
       "unit-measurement": 6,
       "percent": 2,
       "ratio-proportion": 6
@@ -297,10 +297,8 @@
       "spatial-reasoning": 35,
       "geometric-measurement": 29,
       "unit-measurement": 6,
-      "word-application": 5,
-      "classification": 2,
-      "fraction": 4,
-      "decimal": 1
+      "word-application": 4,
+      "classification": 2
     },
     "application-word": {
       "word-application": 60,
@@ -325,9 +323,9 @@
       "ratio-proportion": 1
     },
     "fraction": {
-      "fraction": 28,
+      "fraction": 31,
       "number-sense": 2,
-      "decimal": 2,
+      "decimal": 3,
       "word-application": 2,
       "percent": 7
     },
@@ -342,36 +340,7 @@
       "word-application": 1
     }
   },
-  "flaggedAssignments": [
-    {
-      "knowledgeId": "math-g6-up-u02-k001",
-      "name": "分数乘整数",
-      "flags": [
-        "coarse-family-conflict"
-      ]
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k002",
-      "name": "一个数乘分数",
-      "flags": [
-        "coarse-family-conflict"
-      ]
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k003",
-      "name": "分数、小数混合运算及运算律",
-      "flags": [
-        "coarse-family-conflict"
-      ]
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k004",
-      "name": "解决问题",
-      "flags": [
-        "coarse-family-conflict"
-      ]
-    }
-  ],
+  "flaggedAssignments": [],
   "kpFamilies": {
     "math-g1-up-u01-k001": {
       "name": "1-5数的认识",
@@ -7243,9 +7212,9 @@
       "evidence": [
         {
           "family": "fraction",
-          "rule": "unitname-domain-fraction",
-          "field": "unitName",
-          "matched": "分数乘法"
+          "rule": "coarse-fraction",
+          "field": "semantic.family",
+          "matched": "fraction"
         },
         {
           "family": "fraction",
@@ -7254,9 +7223,7 @@
           "matched": "分数"
         }
       ],
-      "flags": [
-        "coarse-family-conflict"
-      ]
+      "flags": []
     },
     "math-g6-up-u02-k002": {
       "name": "一个数乘分数",
@@ -7267,9 +7234,9 @@
       "evidence": [
         {
           "family": "fraction",
-          "rule": "unitname-domain-fraction",
-          "field": "unitName",
-          "matched": "分数乘法"
+          "rule": "coarse-fraction",
+          "field": "semantic.family",
+          "matched": "fraction"
         },
         {
           "family": "fraction",
@@ -7278,9 +7245,7 @@
           "matched": "分数"
         }
       ],
-      "flags": [
-        "coarse-family-conflict"
-      ]
+      "flags": []
     },
     "math-g6-up-u02-k003": {
       "name": "分数、小数混合运算及运算律",
@@ -7292,9 +7257,9 @@
       "evidence": [
         {
           "family": "fraction",
-          "rule": "unitname-domain-fraction",
-          "field": "unitName",
-          "matched": "分数乘法"
+          "rule": "coarse-fraction",
+          "field": "semantic.family",
+          "matched": "fraction"
         },
         {
           "family": "fraction",
@@ -7309,24 +7274,15 @@
           "matched": "小数"
         }
       ],
-      "flags": [
-        "coarse-family-conflict"
-      ]
+      "flags": []
     },
     "math-g6-up-u02-k004": {
       "name": "解决问题",
-      "primary": "fraction",
+      "primary": "word-application",
       "families": [
-        "fraction",
         "word-application"
       ],
       "evidence": [
-        {
-          "family": "fraction",
-          "rule": "unitname-domain-fraction",
-          "field": "unitName",
-          "matched": "分数乘法"
-        },
         {
           "family": "word-application",
           "rule": "word-name",
@@ -7334,9 +7290,7 @@
           "matched": "解决问题"
         }
       ],
-      "flags": [
-        "coarse-family-conflict"
-      ]
+      "flags": []
     },
     "math-g6-up-u03-k001": {
       "name": "倒数的认识",

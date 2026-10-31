@@ -3867,8 +3867,8 @@
       "semantic": {
         "family": "geometry",
         "conceptFamily": {
-          "id": "fam_direction",
-          "stageOrder": 9
+          "id": "fam_observation",
+          "stageOrder": 4
         },
         "concept": "从前面、上面、左面观察由小正方体组成的立体图形，看到的形状可能不同",
         "operations": [],
@@ -3994,7 +3994,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 4
+          "stageOrder": 5
         },
         "concept": "根据从不同方向看到的平面图形，推断和还原立体图形的形状",
         "operations": [],
@@ -4120,7 +4120,7 @@
         "family": "geometry",
         "conceptFamily": {
           "id": "fam_observation",
-          "stageOrder": 5
+          "stageOrder": 6
         },
         "concept": "通过观察、操作、想象、推理等活动，发展空间观念和推理能力",
         "operations": [],

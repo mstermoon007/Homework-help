@@ -5,7 +5,7 @@
   "rowsScanned": 375,
   "checkedInFamilies": 375,
   "families": 22,
-  "violations": 54,
+  "violations": 53,
   "needsReview": [
     {
       "familyId": "fam_addsub",
@@ -309,21 +309,11 @@
     },
     {
       "familyId": "fam_direction",
-      "fromId": "math-g4-up-u08-k003",
-      "fromStageOrder": 8,
-      "fromDifficulty": 6,
-      "toId": "math-g4-down-u02-k001",
-      "toStageOrder": 9,
-      "toDifficulty": 5,
-      "difficultyDelta": -1
-    },
-    {
-      "familyId": "fam_direction",
       "fromId": "math-g6-up-u01-k001",
-      "fromStageOrder": 12,
+      "fromStageOrder": 10,
       "fromDifficulty": 9,
       "toId": "math-g6-up-u01-k002",
-      "toStageOrder": 13,
+      "toStageOrder": 11,
       "toDifficulty": 8,
       "difficultyDelta": -1
     },
@@ -410,10 +400,10 @@
     {
       "familyId": "fam_observation",
       "fromId": "math-g5-down-u01-k002",
-      "fromStageOrder": 9,
+      "fromStageOrder": 11,
       "fromDifficulty": 8,
       "toId": "math-g5-down-u01-k003",
-      "toStageOrder": 10,
+      "toStageOrder": 12,
       "toDifficulty": 6,
       "difficultyDelta": -2
     },

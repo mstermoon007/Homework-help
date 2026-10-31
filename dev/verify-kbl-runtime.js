@@ -36,8 +36,8 @@ function assert(name, cond, detail) {
 // ---- 1. 数据装载 + 完整性 ----
 const s = K.stats();
 assert('数量守恒: 375 KP', s.knowledgePoints === 375, JSON.stringify(s.byGrade));
-assert('单元 98 / 关系 373 / 映射 1570', s.units === 98 && s.relations === 373 && s.mappings === 1570);
-assert('permission 全 allow(canonical: 1570 allow)', s.permissions.allow === 1570 && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0);
+assert('单元 98 / 关系 407 / 映射 1566', s.units === 98 && s.relations === 407 && s.mappings === 1566);
+assert('permission 全 allow(canonical: 1566 allow)', s.permissions.allow === 1566 && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0);
 
 const manifest = require(path.join(ROOT, 'shared/knowledge/manifest/manifest.json'));
 // P41-B1：rootHash 输入清单/算法以 tools/kbl/root-hash.js 为单一权威，禁止本地再维护副本。

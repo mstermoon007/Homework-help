@@ -14,7 +14,7 @@
 | 线上 | [https://home.modouyu.top/](https://home.modouyu.top/)（nginx 静态托管 + HTTPS/Let's Encrypt） |
 | 形态 | 纯前端静态站，**零运行时依赖**；浏览器与 Node 双环境兼容 |
 | 核心功能 | 首页 → 年级/科目选择 → 题型选择 → 题目生成 → 在线练习 → 批改 → 答案显隐/错题重做 → 预览 → A4 打印 |
-| 内容规模 | 375 知识点（KP）· 98 单元 · 373 前置关系 · 1570 生成矩阵 · 23 生成器 · 7 规范题型 |
+| 内容规模 | 375 知识点（KP）· 98 单元 · 407 前置关系 · 1566 生成矩阵 · 23 生成器 · 7 规范题型 |
 | 页面 | 6 公共页 + 375 知识页 + 索引 = 382 sitemap URL |
 | 学科 | 数学（G1–G6，人教版）；架构预留扩展其他学科 |
 
@@ -108,9 +108,9 @@ practice.html (UI/事件/状态)
 - **唯一构建链**（`docs/02-KBL.md` §2，P30-02 锁定）：源 Excel → `tools/kbl/extract-source.js` → `derive-kbl.js` → `derive-relations.js` → `emit-canonical.js` → `build.js` → 运行时副本 `shared/knowledge/` + 静态页 `knowledge/*.html`。**真源 vs 发射副本禁止双写**。
 - **写方白名单**：KBL 唯一可写方 = 离线派生工具链（`tools/kbl/*.js` + `dev/p25|p27/*.js`）；运行时只读（`KBL_WRITER_WHITELIST` 17 条，`check-kbl-ai-boundary.js`）。
 - **确定性构建**：同输入必得同输出 + `kbgen:hash` 指纹（`check-bundle-determinism` / `build-knowledge-pages --check`）。
-- **概念族模型**（P40 战役二）：族表 `CONCEPT_FAMILIES`（11 主干族，含有序 stages + 演化 op）与 `EXTRA_FAMILIES`（14 扩展族）声明于 `tools/kbl/derive-relations.js`（SSOT）；每 KP 得 `{familyId, stageOrder}` 回填 `capability.json`（375/375）；R-REL-03 的 38 条边携带 `evolution`。
+- **概念族模型**（P40 战役二）：族表 `CONCEPT_FAMILIES`（14 主干族，含有序 stages + 演化 op；P44/H10 起含 fam_negative、fam_observation、fam_direction）与 `EXTRA_FAMILIES`（11 扩展族）声明于 `tools/kbl/derive-relations.js`（SSOT）；每 KP 得 `{familyId, stageOrder}` 回填 `capability.json`（375/375）；R-REL-03 的 44 条边携带 `evolution`。
 
-**当前基线数字**：KP 375 · Units 98 · Relations 373 · ALLOW 映射 1570（=静态行=动态端点，FAIL=0，真实生成 1570/1570）。
+**当前基线数字**：KP 375 · Units 98 · Relations 407 · ALLOW 映射 1566（=静态行=动态端点，FAIL=0，真实生成 1566/1566；P44/H9 源 Excel 改判后 1570→1566，P44/H10-A fam_negative +1、H10-B fam_observation +3、H10-C fam_direction 升主干链 +2 且取消 R-REL-02 排除 +28 后 373→407）。
 
 ---
 
@@ -121,7 +121,7 @@ practice.html (UI/事件/状态)
 - **Strategy**：按计划决定「如何生成」，不得重选 KP/数量/题型/难度，KBL 只读经 KnowledgeContext。
 - **Generator Registry**：23 个 Generator = PRODUCTION 20 + PRODUCTION-COMBINE-ONLY 1（`generator:composite`）+ DORMANT-CONTRACT-CARRIER 2（`selection-choice`/`selection-judge`）+ DORMANT-NO-BINDING 0。
 - **四轴不夺权（Z1–Z4）**：Generator 不得自决数量/题型/难度/KP，回显须等于计划；门禁 `check-generator-noninterference.js`（8 组运行时探测）。
-- **生成矩阵冻结**：1570 逐行真实生成 ≥1、题型/KP 一致、Schema 校验、Validator 通过、TypeContract 不变量、答案非空。
+- **生成矩阵冻结**：1566 逐行真实生成 ≥1、题型/KP 一致、Schema 校验、Validator 通过、TypeContract 不变量、答案非空。
 
 ---
 
@@ -229,7 +229,7 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 | 版本 | 5.2.0（`VERSION`=`package.json`=`version.js`=`sw.js CACHE` 四方一致） |
 | 基线 commit | `5779805`（本次审计修复未提交） |
 | 门禁 | `check-all` 33 PASS / 0 FAIL / 1 SKIP（34 项；#15 无 Chrome SKIP；CI 设 `CHROME_BIN` 为 34/34 含真实 Chrome E2E 9/9），`npm test` 936/936 |
-| KBL | 375 / 98 / 373 / 1570 |
+| KBL | 375 / 98 / 407 / 1566 |
 | 线上 | VERSION 5.2.0；`index/select/practice.html` 与本地**字节一致**；dev/tests/kbl 不可达；`/stats` 404 |
 
 ---

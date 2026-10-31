@@ -1,6 +1,6 @@
 {
   "schemaVersion": "p26-evidence.3",
-  "note": "P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（undefined KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。派生真值源：dev/p25/reports/evidence-derive-report.json（真实生成产出字段稳定性 + KBL 语义事实跨家族守卫），派生脚本 dev/p25/derive-evidence-candidates.js，合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind：A 类仅 field/fieldNot/relation/relationNot；B/C 类另有 relationAny/constructAny（算法类型∈允许集正面断言）。required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。",
+  "note": "P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（312 KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。派生真值源：dev/p25/reports/evidence-derive-report.json（真实生成产出字段稳定性 + KBL 语义事实跨家族守卫），派生脚本 dev/p25/derive-evidence-candidates.js，合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind：A 类仅 field/fieldNot/relation/relationNot；B/C 类另有 relationAny/constructAny（算法类型∈允许集正面断言）。required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。P44-H9：--refresh-stale 按锚点漂移原子替换失效行（不改 B/C 行、不手编语义）。",
   "assertionKinds": {
     "required": [
       "field(path,value): sq 字段断言（路径相对 sq 根，如 data.operation）",
@@ -71647,8 +71647,12 @@
       "knowledgePointId": "math-g6-up-u02-k001",
       "knowledgePointName": "分数乘整数",
       "questionType": "apply",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "semantic.family=fraction; semantic.operations=[multiplication]",
       "required": [
+        {
+          "kind": "relation",
+          "relation": "multiply-by-times"
+        },
         {
           "kind": "field",
           "path": "data.mode",
@@ -71661,236 +71665,79 @@
         },
         {
           "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
+          "path": "data.kind",
+          "value": "fraction-times-integer"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 25
+          "path": "data.operation",
+          "value": "mult"
         }
       ],
       "forbidden": [
         {
-          "kind": "relationNot",
-          "relation": "add-combine"
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "add"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "div"
         },
         {
           "kind": "relationNot",
-          "relation": "sub-take-away"
+          "relation": "vertex-rays"
         },
         {
           "kind": "relationNot",
-          "relation": "multiply-by-times"
+          "relation": "area-surface"
         },
         {
           "kind": "relationNot",
-          "relation": "divide-share"
+          "relation": "length-measure"
         },
         {
           "kind": "relationNot",
-          "relation": "unit-one"
+          "relation": "angle-observe"
         },
         {
           "kind": "relationNot",
-          "relation": "fraction-meaning"
+          "relation": "shape-identify"
         },
         {
           "kind": "relationNot",
-          "relation": "percent-rate"
+          "relation": "perimeter-calc"
         },
         {
           "kind": "relationNot",
-          "relation": "count-quantity"
+          "relation": "volume-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "chart-read"
         }
       ]
     },
     {
       "knowledgePointId": "math-g6-up-u02-k001",
       "knowledgePointName": "分数乘整数",
-      "questionType": "choice",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "questionType": "calc",
+      "kblAnchor": "semantic.family=fraction; semantic.operations=[multiplication]",
       "required": [
         {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "choice"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
+          "kind": "relation",
           "relation": "multiply-by-times"
         },
         {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k001",
-      "knowledgePointName": "分数乘整数",
-      "questionType": "fill",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
           "kind": "field",
           "path": "data.mode",
-          "value": "fill"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k001",
-      "knowledgePointName": "分数乘整数",
-      "questionType": "geometry",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k001",
-      "knowledgePointName": "分数乘整数",
-      "questionType": "judge",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "judge"
+          "value": "calc"
         },
         {
           "kind": "field",
@@ -71899,52 +71746,214 @@
         },
         {
           "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
+          "path": "data.kind",
+          "value": "fraction-times-integer"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 25
+          "path": "data.operation",
+          "value": "mult"
         }
       ],
       "forbidden": [
         {
-          "kind": "relationNot",
-          "relation": "add-combine"
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "add"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "div"
         },
         {
           "kind": "relationNot",
-          "relation": "sub-take-away"
+          "relation": "vertex-rays"
         },
         {
           "kind": "relationNot",
+          "relation": "area-surface"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "length-measure"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "angle-observe"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "shape-identify"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "perimeter-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "volume-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "chart-read"
+        }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g6-up-u02-k001",
+      "knowledgePointName": "分数乘整数",
+      "questionType": "choice",
+      "kblAnchor": "semantic.family=fraction; semantic.operations=[multiplication]",
+      "required": [
+        {
+          "kind": "relation",
           "relation": "multiply-by-times"
         },
         {
-          "kind": "relationNot",
-          "relation": "divide-share"
+          "kind": "field",
+          "path": "data.mode",
+          "value": "choice"
+        },
+        {
+          "kind": "field",
+          "path": "data.kind",
+          "value": "fraction-times-integer"
+        },
+        {
+          "kind": "field",
+          "path": "data.operation",
+          "value": "mult"
+        }
+      ],
+      "forbidden": [
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "add"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "div"
         },
         {
           "kind": "relationNot",
-          "relation": "unit-one"
+          "relation": "vertex-rays"
         },
         {
           "kind": "relationNot",
-          "relation": "fraction-meaning"
+          "relation": "area-surface"
         },
         {
           "kind": "relationNot",
-          "relation": "percent-rate"
+          "relation": "length-measure"
         },
         {
           "kind": "relationNot",
-          "relation": "count-quantity"
+          "relation": "angle-observe"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "shape-identify"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "perimeter-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "volume-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "chart-read"
+        }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g6-up-u02-k001",
+      "knowledgePointName": "分数乘整数",
+      "questionType": "fill",
+      "kblAnchor": "semantic.family=fraction; semantic.operations=[multiplication]",
+      "required": [
+        {
+          "kind": "relation",
+          "relation": "multiply-by-times"
+        },
+        {
+          "kind": "field",
+          "path": "data.mode",
+          "value": "fill"
+        },
+        {
+          "kind": "field",
+          "path": "data.kind",
+          "value": "fraction-times-integer"
+        },
+        {
+          "kind": "field",
+          "path": "data.operation",
+          "value": "mult"
+        }
+      ],
+      "forbidden": [
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "add"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "fieldNot",
+          "path": "data.operation",
+          "value": "div"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "vertex-rays"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "area-surface"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "length-measure"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "angle-observe"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "shape-identify"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "perimeter-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "volume-calc"
+        },
+        {
+          "kind": "relationNot",
+          "relation": "chart-read"
         }
       ]
     },
@@ -71952,724 +71961,249 @@
       "knowledgePointId": "math-g6-up-u02-k002",
       "knowledgePointName": "一个数乘分数",
       "questionType": "apply",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[multiplication,division]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
+      "forbidden": []
+    },
+    {
+      "knowledgePointId": "math-g6-up-u02-k002",
+      "knowledgePointName": "一个数乘分数",
+      "questionType": "calc",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[multiplication,division]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "required": [
         {
-          "kind": "relationNot",
-          "relation": "add-combine"
+          "kind": "fieldPresent",
+          "path": "data.operation"
         },
         {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
+          "kind": "relationAny",
+          "any": [
+            "multiply-by-times",
+            "divide-share"
+          ]
         },
         {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
+          "kind": "constructAny",
+          "any": [
+            "multiplication",
+            "division"
+          ]
         }
-      ]
+      ],
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k002",
       "knowledgePointName": "一个数乘分数",
       "questionType": "choice",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[multiplication,division]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k002",
       "knowledgePointName": "一个数乘分数",
       "questionType": "fill",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[multiplication,division]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "knowledgePointName": "一个数乘分数",
-      "questionType": "geometry",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "knowledgePointName": "一个数乘分数",
-      "questionType": "judge",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k003",
       "knowledgePointName": "分数、小数混合运算及运算律",
       "questionType": "apply",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[addition,subtraction,multiplication,division,mixed]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "add-combine",
+            "sub-take-away",
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "addition",
+            "subtraction",
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
+      "forbidden": []
+    },
+    {
+      "knowledgePointId": "math-g6-up-u02-k003",
+      "knowledgePointName": "分数、小数混合运算及运算律",
+      "questionType": "calc",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[addition,subtraction,multiplication,division,mixed]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "required": [
         {
-          "kind": "relationNot",
-          "relation": "add-combine"
+          "kind": "fieldPresent",
+          "path": "data.operation"
         },
         {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
+          "kind": "relationAny",
+          "any": [
+            "add-combine",
+            "sub-take-away",
+            "multiply-by-times",
+            "divide-share"
+          ]
         },
         {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
+          "kind": "constructAny",
+          "any": [
+            "addition",
+            "subtraction",
+            "multiplication",
+            "division"
+          ]
         }
-      ]
+      ],
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k003",
       "knowledgePointName": "分数、小数混合运算及运算律",
       "questionType": "choice",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[addition,subtraction,multiplication,division,mixed]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "add-combine",
+            "sub-take-away",
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "addition",
+            "subtraction",
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k003",
       "knowledgePointName": "分数、小数混合运算及运算律",
       "questionType": "fill",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
+      "kblAnchor": "generic-algorithm draftSemanticLevel=B; semantic.operations=[addition,subtraction,multiplication,division,mixed]",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
       "required": [
         {
           "kind": "fieldPresent",
           "path": "data.operation"
+        },
+        {
+          "kind": "relationAny",
+          "any": [
+            "add-combine",
+            "sub-take-away",
+            "multiply-by-times",
+            "divide-share"
+          ]
+        },
+        {
+          "kind": "constructAny",
+          "any": [
+            "addition",
+            "subtraction",
+            "multiplication",
+            "division"
+          ]
         }
       ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "knowledgePointName": "分数、小数混合运算及运算律",
-      "questionType": "geometry",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "knowledgePointName": "分数、小数混合运算及运算律",
-      "questionType": "judge",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "knowledgePointName": "解决问题",
-      "questionType": "apply",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "knowledgePointName": "解决问题",
-      "questionType": "choice",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "knowledgePointName": "解决问题",
-      "questionType": "fill",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "knowledgePointName": "解决问题",
-      "questionType": "geometry",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "field",
-          "path": "data.mode",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "knowledgePointName": "解决问题",
-      "questionType": "judge",
-      "kblAnchor": "semantic.family=geometry; semantic.operations=[]",
-      "required": [
-        {
-          "kind": "fieldPresent",
-          "path": "data.operation"
-        }
-      ],
-      "forbidden": [
-        {
-          "kind": "relationNot",
-          "relation": "add-combine"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "sub-take-away"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "multiply-by-times"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "divide-share"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "unit-one"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "fraction-meaning"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "percent-rate"
-        },
-        {
-          "kind": "relationNot",
-          "relation": "count-quantity"
-        }
-      ]
+      "forbidden": []
     },
     {
       "knowledgePointId": "math-g6-up-u03-k001",

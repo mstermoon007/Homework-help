@@ -4,11 +4,11 @@
 
 | 指标 | 值 |
 | --- | --- |
-| 覆盖 | 1570/1570 ALLOW 行（集合相等断言） |
+| 覆盖 | 1566/1566 ALLOW 行（集合相等断言） |
 | **confirmed（人工抽查通过）** | **169** |
-| ai-verified（待抽查） | 1401（其中被「打回」0 行待修正重审） |
+| ai-verified（待抽查） | 1397（其中被「打回」0 行待修正重审） |
 | needs-review（未裁决） | 0（旗标：{"representation-conflict":4}） |
-| 题型分布 | {"calc":189,"fill":375,"apply":375,"choice":375,"geometry":105,"judge":126,"classify":25} |
+| 题型分布 | {"calc":193,"fill":375,"apply":375,"choice":375,"geometry":101,"judge":122,"classify":25} |
 
 ## needs-review 旗标语义（内容为 null 的原因，全部为机械可判定事实）
 
@@ -19,5 +19,5 @@
 
 ## 产物
 
-- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）
+- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1566 行意图矩阵（五问 + 逐问状态 + evidence 溯源）
 - [qt-intent-sample.xlsx](../../../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（66 行，按语义族分层 + needs-review 负面样本）

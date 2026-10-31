@@ -59,14 +59,20 @@ var CONCEPT_FAMILIES = [
   { familyId: 'fam_number_algebra', name: '数系与代数', ops: ['increase_complexity', 'abstract_up', 'increase_complexity'],
     stages: [['g5', 'up', '用字母表示数和数量关系'], ['g5', 'down', '因数与倍数'], ['g6', 'up', '百分数'], ['g6', 'down', '比例']] },
   { familyId: 'fam_motion', name: '图形运动', ops: ['abstract_up', 'increase_complexity', 'increase_complexity'],
-    stages: [['g3', 'down', '生活中的运动现象'], ['g4', 'down', '图形的运动（二）'], ['g5', 'up', '图形的运动'], ['g5', 'down', '图形的运动（三）']] }
+    stages: [['g3', 'down', '生活中的运动现象'], ['g4', 'down', '图形的运动（二）'], ['g5', 'up', '图形的运动'], ['g5', 'down', '图形的运动（三）']] },
+  { familyId: 'fam_negative', name: '负数', ops: ['abstract_up'],
+    stages: [['g6', 'up', '负数'], ['g6', 'down', '负数']] },
+  { familyId: 'fam_observation', name: '观察物体', ops: ['abstract_up', 'increase_complexity', 'increase_complexity'],
+    stages: [['g3', 'up', '观察物体'], ['g4', 'down', '观察物体'], ['g5', 'up', '观察简单组合体'], ['g5', 'down', '观察物体']] },
+  { familyId: 'fam_direction', name: '方向与位置', ops: ['increase_complexity', 'abstract_up'],
+    stages: [['g2', 'up', '综合实践——方向'], ['g4', 'up', '综合实践——方向、位置'], ['g6', 'up', '确定位置']] }
 ];
 
 // 非主干线的概念族（仅 regex 归类，无跨册概念链）：familyId → 唯一显示名。
 var EXTRA_FAMILIES = {
-  fam_percent: '百分数', fam_ratio: '比例', fam_factor_multiple: '因数与倍数', fam_negative: '负数',
-  fam_time: '时间', fam_money: '人民币', fam_direction: '方向与位置', fam_statistics: '统计',
-  fam_probability: '可能性', fam_observation: '观察物体', fam_operation_law: '运算律',
+  fam_percent: '百分数', fam_ratio: '比例', fam_factor_multiple: '因数与倍数',
+  fam_time: '时间', fam_money: '人民币', fam_statistics: '统计',
+  fam_probability: '可能性', fam_operation_law: '运算律',
   fam_relation: '数量关系', fam_problem_solving: '数学广角', fam_review: '复习与关联'
 };
 
@@ -101,10 +107,6 @@ var FAMILY_RULES = [
 var BOOK_RANK = { up: 0, down: 1 };
 function gradeNum(g) { return parseInt(String(g).replace(/[^0-9]/g, ''), 10) || 0; }
 function kn(kp) { return parseFloat(kp.knowledgeNo); }
-function isExcluded(unitName) {
-  if (!unitName) return false;
-  return /复习与关联|综合实践|整理和复习/.test(unitName);
-}
 
 function familyName(familyId) {
   for (var i = 0; i < CONCEPT_FAMILIES.length; i++) if (CONCEPT_FAMILIES[i].familyId === familyId) return CONCEPT_FAMILIES[i].name;
@@ -231,7 +233,6 @@ function main() {
     for (var i = 1; i < ords.length; i++) {
       var prev = units[ords[i - 1]];
       var curr = units[ords[i]];
-      if (isExcluded(prev.name) || isExcluded(curr.name)) continue;
       var prevKps = prev.kps.sort(function (a, b) { return kn(a) - kn(b); });
       var currKps = curr.kps.sort(function (a, b) { return kn(a) - kn(b); });
       addEdge(prevKps[prevKps.length - 1], currKps[0], 'R-REL-02:同册跨单元递进');

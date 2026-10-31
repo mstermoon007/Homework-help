@@ -98,7 +98,12 @@ function crossFamilyForbidden(kpSem) {
 var rows = [];
 var done = 0;
 var existingKeys = {};
-evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|' + r.questionType] = true; });
+var existingByKey = {};
+evidenceRules.rules.forEach(function (r) {
+  var k = r.knowledgePointId + '|' + r.questionType;
+  existingKeys[k] = true;
+  existingByKey[k] = r;
+});
 
 (async function run() {
   for (var i = 0; i < pairs.length; i++) {
@@ -106,6 +111,19 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     var kpMeta = aById[p.kp];
     var kpSem = kpSemanticOf(p.kp);
     var allowedRels = KpSemantic.getAllowedRelations(kpSem);
+
+    // P44-H9：证据锚点随 KBL 语义事实漂移（源 Excel 变更 → 家族/运算集改写）后，
+    // 既有规则行与新语义不再对应。仅把「锚点与当前运行时事实一致」的行计入基线 fail 门，
+    // 锚点过期行改由候选派生 + apply --refresh-stale 原子替换（不手编 JSON）。
+    // currentAnchor 取运行时 KC 事实（kpSem），不受 kp-matrix 陈旧影响。
+    var currentAnchor = 'semantic.family=' + (kpSem && kpSem.family != null ? kpSem.family : 'null')
+      + '; semantic.operations=[' + ((kpSem && kpSem.operations) || []).join(',') + ']';
+    // 仅「本脚本产出的规范锚点格式（semantic.family=...）」的行参与漂移判定：
+    // 历史人工/自由文本锚点（semantic.concept=...、generic-algorithm ...）属标签口径差异，
+    // 其规则内容仍受基线 fail 门约束，不得被 --refresh-stale 覆盖。
+    var existingRule = existingByKey[p.kp + '|' + p.qt];
+    var staleAnchor = !!(existingRule && existingRule.kblAnchor.indexOf('semantic.family=') === 0
+      && existingRule.kblAnchor !== currentAnchor);
 
     var samples = [];
     var probeSamples = [];
@@ -180,8 +198,12 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
         }
       }
 
-      var ev = KpSemantic.checkSemanticEvidence(q, p.kp);
-      states[ev.state] = (states[ev.state] || 0) + 1;
+      if (staleAnchor) {
+        states.stale = (states.stale || 0) + 1;
+      } else {
+        var ev = KpSemantic.checkSemanticEvidence(q, p.kp);
+        states[ev.state] = (states[ev.state] || 0) + 1;
+      }
       if (prompts.length < 3 && q.prompt) prompts.push(String(q.prompt).slice(0, 80));
     });
 
@@ -278,6 +300,7 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     var ruleable = (requiredFields.length + requiredRelations.length) >= 1;
     if (!ruleable && samples.length) flags.push('no-stable-evidence');
     if (existingKeys[p.kp + '|' + p.qt]) flags.push('existing-rule-kept');
+    if (staleAnchor) flags.push('stale-anchor');
 
     rows.push({
       kp: p.kp,
@@ -293,11 +316,13 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
       allowedRelations: Object.keys(allowedRels),
       stableFields: stableFields,
       intentConflicts: intentConflicts.slice(0, 3),
+      kblAnchor: currentAnchor,
+      staleAnchor: staleAnchor,
       candidate: ruleable ? {
         knowledgePointId: p.kp,
         knowledgePointName: kpMeta ? kpMeta.name : undefined,
         questionType: p.qt,
-        kblAnchor: 'semantic.family=' + (kpMeta && kpMeta.semanticFamily) + '; semantic.operations=[' + ((kpMeta && kpMeta.operations) || []).join(',') + ']',
+        kblAnchor: currentAnchor,
         required: requiredRelations.map(function (r) { return { kind: 'relation', relation: r }; }).concat(requiredFields),
         forbidden: forbidden
       } : null,

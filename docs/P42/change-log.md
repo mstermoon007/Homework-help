@@ -5,6 +5,21 @@
 
 ---
 
+## P42-024 | 2026-10-31 | 开放式 Apply 答案标 read-aloud（7 例，用户裁决）
+
+- **modified**:
+  - `shared/generator/generators/shape.js`：①非度量类 KP 的生活观察开放 apply 分支（`else` 出口，6 例）`answerMode` input→`read-aloud`；②`shapeTheme` scenes 支持可选第 4 元 `mode`（未声明保持 input），`makeThemedShapeQuestion` apply 分支消费 `sItem.mode`；③表内 2 条开放场景（`math-g2-up-u06-k001` 身体尺估测、`math-g4-down-u02-k002` 摆法不唯一）补 `null, 'read-aloud'`
+  - `shared/generator/generators/semantic-special.js`：code-recognition apply 题库开放设计条目（图书馆图书编码）补 `open: true`；`makeCodeByKind` 对 `qt==='apply' && item.open` 设 `answerMode='read-aloud'`
+  - `tests/generation/p42-024-open-apply-answer-mode.test.js`（新增 3 用例）：7 例 `answerMode` 断言 + read-aloud 渲染消费（屏幕态零 `<input>`/`.answer-inp`）+ 旁证可判分 apply 仍 input 且保留输入框
+  - `docs/maintenance/P42-DEFECT-REGISTER.md`：P42-024 登记状态转「已修复」
+  - `shared/engine/strategy-engine.bundle.js`：按 P30 §9 重建（generator 属 strategy bundle 内联链）
+- **deleted**: 无
+- **reason**: 用户 2026-10-31 显式裁决「标 read-aloud，保留题」。P42-024 七例（P42-2B 分类器 placeholder 7 行：`举例合理即可`×4、估测口述×1、`方案不唯一`×1、`摆法不唯一`×1）答案无唯一判据，书面输入框无意义；`read-aloud` 是 schema 合法 answerMode 且 `generator-contract` 明示允许（`input|read-aloud`，answer 可空），渲染层原生支持（read-aloud 屏幕态不作答、打印留空）。题面与答案文案**零改动**，仅元数据；判分分派唯一键仍为 questionType（apply 不入自动批改，家长检查通道不变）
+- **tests**: 定向 `node --test tests/generation/p42-024-open-apply-answer-mode.test.js` **3/3**；`npm test` **937/937**；`node dev/check-all.js` **33 PASS / 0 FAIL / 1 SKIP / 34 项**（第 15 项无 Chrome SKIP 属正常）；6b 矩阵冻结复核 **PASS**（1566 行 / FAIL 0 / git diff 0——answerMode 不入冻结指纹，无需重冻）；16/17 bundle 确定性与 source==bundle ✓；1570 面实跑 answerMode 分布 input 2818 / choice 830 / judge 360 / read-aloud 15（count=3：5 例整行 ×3 + 2 例仅首变式 ×1，与 7 行口径一致）
+- **risk**: 低——①仅元数据变更，375/98/373/1570 与 7 题型集合零变动；②显示侧行为变化限于 7 例：屏幕态不再画无判处输入框，打印态原为留空作答区，无新增/删除题目；③`shapeTheme` 第 4 元为可选（既有 3 元条目零影响），未扩表、未新增 KP；④未 git commit
+
+---
+
 ## P42-11 | 2026-10-19 | 推送前整理：当前态文档关键数据对账 + 死代码 pickOpt 清理
 
 - **modified**:

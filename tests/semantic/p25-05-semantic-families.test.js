@@ -116,16 +116,18 @@ test('倍数族：倍的认识/倍数应用题归 multiple-ratio，数论倍数�
   assert.equal(kp('g5-down-u02-k004').primary, 'number-sense'); // 奇数与偶数
 });
 
-test('分数乘除噪声单元 g6-up-u02：不挂任何图形族，按 name/unitName 归分数', () => {
-  ['g6-up-u02-k001', 'g6-up-u02-k002', 'g6-up-u02-k003', 'g6-up-u02-k004'].forEach((id) => {
+test('分数乘除单元 g6-up-u02：不挂任何图形族，按 coarse/name 派生（H9 源 Excel 改判数与代数）', () => {
+  ['g6-up-u02-k001', 'g6-up-u02-k002', 'g6-up-u02-k003'].forEach((id) => {
     const a = kp(id);
     assert.ok(!a.families.some((f) => /geometric|spatial/.test(f)), id + ' 误挂图形族');
     assert.ok(a.families.includes('fraction'), id + ' 应归分数族');
-    assert.ok(a.flags.includes('coarse-family-conflict'), id + ' 应列账 root 冲突');
+    assert.deepEqual(a.flags, [], id + ' H9 后 coarse 已与名称一致，无 root 冲突账');
   });
-  // k004 名称无领域词，由 unitName=分数乘法 提供证据，且属问题解决
+  // k004 粗族为 calculation（无默认族），名称「解决问题」仅由 word-name 提供证据
+  assert.equal(kp('g6-up-u02-k004').primary, 'word-application');
   assert.ok(kp('g6-up-u02-k004').families.includes('word-application'));
-  assert.ok(kp('g6-up-u02-k004').evidence.some((e) => e.field === 'unitName' && /分数/.test(e.matched)));
+  assert.ok(!kp('g6-up-u02-k004').families.some((f) => /geometric|spatial/.test(f)));
+  assert.ok(kp('g6-up-u02-k004').evidence.some((e) => e.field === 'name' && /解决问题/.test(e.matched)));
 });
 
 test('百分数族：折扣/税率/利率/成数/达标线归 percent，与分数族重叠', () => {

@@ -30,7 +30,7 @@ var Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-reg
 var REG_TYPES = (Registry.TYPES || []).map(function (t) { return t.id; });
 var CANON_ID = /^math-g[1-6]-(up|down|mixed|advance|comprehensive)-u\d{2}-k\d{3}$/;
 
-var EXPECT = { knowledgePoints: 375, units: 98, relations: 373, mappings: 1570 };
+var EXPECT = { knowledgePoints: 375, units: 98, relations: 407, mappings: 1566 };
 
 function readJson(p) { return JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8')); }
 
@@ -57,7 +57,7 @@ if (!Array.isArray(mappings)) mappings = mappings.mappings || [];
 
 // ---- Q1 数量守恒 ----
 var mc = manifest.counts || {};
-item('Q1 数量守恒(kbl/manifest 98/375/373/1570)',
+item('Q1 数量守恒(kbl/manifest 98/375/407/1566)',
   mc.units === EXPECT.units && mc.knowledgePoints === EXPECT.knowledgePoints && mc.relations === EXPECT.relations && mc.mappings === EXPECT.mappings,
   JSON.stringify(mc));
 
@@ -109,13 +109,13 @@ mappings.forEach(function (m) {
     missingCount++;
   } else badPerm++;
 });
-item('Q6 映射真实性(allow1570/missing0/派生合规)',
+item('Q6 映射真实性(allow1566/missing0/派生合规)',
   allowCount === EXPECT.mappings && missingCount === 0 && badPerm === 0 && badAllowQt === 0 && badAllowPlugin === 0,
   'allow=' + allowCount + ' missing=' + missingCount + ' badPerm=' + badPerm + ' badAllowQt=' + badAllowQt + ' badPlugin=' + badAllowPlugin);
 
 // ---- Q7 Canonical↔Release 快照一致（kbl/manifest ↔ shared manifest 计数三方一致） ----
 var dc = distManifest.counts || {};
-item('Q7 kbl/manifest ↔ shared manifest 计数一致(98/375/0/1570)',
+item('Q7 kbl/manifest ↔ shared manifest 计数一致(98/375/407/1566)',
   dc.units === EXPECT.units && dc.knowledgePoints === EXPECT.knowledgePoints && dc.relations === EXPECT.relations && dc.mappings === EXPECT.mappings,
   'shared counts=' + JSON.stringify(dc));
 
@@ -130,7 +130,7 @@ var runtimeOk = (function () {
       && s.permissions.allow === EXPECT.mappings && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0;
   } catch (e) { return false; }
 })();
-item('Q8 运行时 stats 一致(98/375/0/1570)', runtimeOk, 'runtime 未通过');
+item('Q8 运行时 stats 一致(98/375/407/1566)', runtimeOk, 'runtime 未通过');
 
 // ---- Q9 释放包 rootHash 复算审计（与 build.js 共用 root-hash.js 权威算法） ----
 var hashOk = (function () {

@@ -2,7 +2,7 @@
 'use strict';
 // dev/p30/check-generation-failure-classify.js — P30-19 全量真实生成矩阵失败分类
 //
-// 目的：对 1570 行 ALLOW(KP, QT) 做「真实执行链」失败分类（P30 阶段二收尾证据）。
+// 目的：对 1566 行 ALLOW(KP, QT) 做「真实执行链」失败分类（P30 阶段二收尾证据）。
 //       与 6b 冻结门禁（check-generation-matrix-freeze.js，只看终态）互补：
 //       本脚本把失败按链路位置细分归类，并暴露 6b 不可见的 plan 级中间观测
 //       （重试消耗 / 容量缺口 / FAILED 计划 / 中间验证错误码）。
@@ -79,7 +79,7 @@ function gradeOf(kp) {
   return m ? Number(m[1]) : 1;
 }
 
-// ---------- 1. 动态枚举 1570 行（与 6a/6b 同机制） ----------
+// ---------- 1. 动态枚举 1566 行（与 6a/6b 同机制） ----------
 var ALL = CANONICAL;
 var kps = [];
 for (var g = 1; g <= 6; g++) {
@@ -93,8 +93,8 @@ kps.forEach(function (k) {
   var m = (ev.matrix && ev.matrix[k.id]) || {};
   ALL.forEach(function (t) { if (m[t] === 'ALLOW') pairs.push({ kp: k.id, grade: k.grade, qt: t }); });
 });
-if (pairs.length !== 1570) {
-  console.error('INVARIANT FAIL: 动态枚举 ' + pairs.length + ' != 1570');
+if (pairs.length !== 1566) {
+  console.error('INVARIANT FAIL: 动态枚举 ' + pairs.length + ' != 1566');
   process.exit(1);
 }
 
@@ -353,7 +353,7 @@ function classifyFailedPlan(plan) {
       pass: pass,
       rule: 'Layer A 零 FAIL 行 且 Layer B 无 failedPlan 且无 0 题行 → PASS；retries/capacityGap 为能力记账（FINAL-142），不判 FAIL',
       summary: pass
-        ? '1570 行全量真实生成：Layer A 全绿（11 类失败分类均 0），Layer B 无 FAILED 计划、无 0 题行'
+        ? '1566 行全量真实生成：Layer A 全绿（11 类失败分类均 0），Layer B 无 FAILED 计划、无 0 题行'
         : '存在失败行，见 layerA.failRowDetails / layerB.failedPlanDetails'
     }
   };

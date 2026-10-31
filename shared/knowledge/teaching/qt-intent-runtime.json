@@ -5,15 +5,15 @@
     "kblData": "kbl/data/math/g1..g6/knowledge-points.json",
     "allowMappings": "kbl/mappings/generation-contract/math.json",
     "qtr": "shared/knowledge/question-type-registry.js",
-    "sourceFingerprint": "8d4ebef5",
+    "sourceFingerprint": "84133699",
     "counts": {
       "knowledgePoints": 375,
-      "allow": 1570
+      "allow": 1566
     }
   },
   "projection": "status+assessment（P38-DATA-01：教学文本不进运行时，仅机器约束投影）",
   "counts": {
-    "rows": 1570
+    "rows": 1566
   },
   "rows": [
     {
@@ -19665,6 +19665,7 @@
         ],
         "focus": "geometry",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -19687,6 +19688,7 @@
         ],
         "focus": "written",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -19711,6 +19713,7 @@
         ],
         "focus": "application",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -19734,6 +19737,7 @@
         ],
         "focus": "selection",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -19757,6 +19761,7 @@
         ],
         "focus": "selection",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -23494,7 +23499,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -23514,7 +23521,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -23536,7 +23545,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -23557,7 +23568,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -23578,7 +23591,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -27114,7 +27129,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -27134,7 +27151,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -27156,7 +27175,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -27177,7 +27198,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -27198,7 +27221,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -31737,25 +31762,27 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k001"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       }
     },
     {
@@ -31771,16 +31798,17 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -31796,39 +31824,16 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k001"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g5-down-u06-k001",
-          "math-g6-up-u01-k003"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -31844,37 +31849,41 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k002"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       }
     },
     {
@@ -31889,16 +31898,18 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -31913,38 +31924,17 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k002"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k001"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -31959,37 +31949,45 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k003"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       }
     },
     {
@@ -32004,16 +32002,21 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -32028,38 +32031,20 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k003"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k002"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -32074,37 +32059,42 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k004"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k003"
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       }
     },
     {
@@ -32121,14 +32111,13 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -32145,36 +32134,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k004"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k003"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -32191,13 +32156,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       }
     },
     {
@@ -34113,7 +34077,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "calculation",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -34133,7 +34099,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -34154,7 +34122,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -34174,7 +34144,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"

@@ -117,7 +117,7 @@ function runLineageChecks(ROOT) {
     rootHashCalc.slice(0, 12) + ' vs ' + ((sharedManifest.integrity || {}).rootHash || '').slice(0, 12));
   check('L6b', 'kbl manifest rootHash == shared manifest rootHash',
     kblManifest.rootHash === (sharedManifest.integrity || {}).rootHash);
-  check('L6c', 'manifest counts == 实测（375/98/373/1570）',
+  check('L6c', 'manifest counts == 实测（375/98/407/1566）',
     kblManifest.counts && kblManifest.counts.knowledgePoints === knowDoc.knowledge.length &&
     kblManifest.counts.units === unitSet.size &&
     kblManifest.counts.relations === canonRel.length &&

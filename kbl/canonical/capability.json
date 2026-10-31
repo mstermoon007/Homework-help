@@ -8285,8 +8285,8 @@
         "direction",
         "graph"
       ],
-      "familyId": "fam_direction",
-      "stageOrder": 9,
+      "familyId": "fam_observation",
+      "stageOrder": 4,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8326,7 +8326,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 4,
+      "stageOrder": 5,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -8363,7 +8363,7 @@
       "operations": [],
       "families": [],
       "familyId": "fam_observation",
-      "stageOrder": 5,
+      "stageOrder": 6,
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
@@ -9859,8 +9859,8 @@
         "direction",
         "graph"
       ],
-      "familyId": "fam_direction",
-      "stageOrder": 10,
+      "familyId": "fam_observation",
+      "stageOrder": 7,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9900,7 +9900,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 6,
+      "stageOrder": 8,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -9939,7 +9939,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 7,
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11386,7 +11386,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 8,
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -11428,7 +11428,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 9,
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -11469,7 +11469,7 @@
         "graph"
       ],
       "familyId": "fam_observation",
-      "stageOrder": 10,
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
@@ -12980,7 +12980,7 @@
         "direction"
       ],
       "familyId": "fam_direction",
-      "stageOrder": 11,
+      "stageOrder": 9,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -13278,7 +13278,7 @@
         "graph"
       ],
       "familyId": "fam_direction",
-      "stageOrder": 12,
+      "stageOrder": 10,
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
@@ -13323,7 +13323,7 @@
         "graph"
       ],
       "familyId": "fam_direction",
-      "stageOrder": 13,
+      "stageOrder": 11,
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
@@ -13369,7 +13369,7 @@
         "graph"
       ],
       "familyId": "fam_direction",
-      "stageOrder": 14,
+      "stageOrder": 12,
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
@@ -13404,7 +13404,7 @@
       "book": "up",
       "unitId": "math-g6-up-u02",
       "knowledgeName": "分数乘整数",
-      "domain": "geometry",
+      "domain": "algebra",
       "numberRange": {
         "max": 100,
         "numMax": null
@@ -13425,13 +13425,12 @@
         "maxLevel": 4
       },
       "allowedTypes": [
-        "geometry",
+        "calc",
         "fill",
         "apply",
-        "judge",
         "choice"
       ],
-      "capacity": 68,
+      "capacity": 66,
       "derivation": {
         "rules": [
           "R02:数域=整数域",
@@ -13452,7 +13451,7 @@
       "book": "up",
       "unitId": "math-g6-up-u02",
       "knowledgeName": "一个数乘分数",
-      "domain": "geometry",
+      "domain": "algebra",
       "numberRange": {
         "max": 100,
         "numMax": null
@@ -13474,13 +13473,12 @@
         "maxLevel": 4
       },
       "allowedTypes": [
-        "geometry",
+        "calc",
         "fill",
         "apply",
-        "judge",
         "choice"
       ],
-      "capacity": 68,
+      "capacity": 66,
       "derivation": {
         "rules": [
           "R02:数域=整数域",
@@ -13503,7 +13501,7 @@
       "book": "up",
       "unitId": "math-g6-up-u02",
       "knowledgeName": "分数、小数混合运算及运算律",
-      "domain": "geometry",
+      "domain": "algebra",
       "numberRange": {
         "max": 100,
         "numMax": null
@@ -13529,13 +13527,12 @@
         "maxLevel": 4
       },
       "allowedTypes": [
-        "geometry",
+        "calc",
         "fill",
         "apply",
-        "judge",
         "choice"
       ],
-      "capacity": 68,
+      "capacity": 66,
       "derivation": {
         "rules": [
           "R02:数域=整数域",
@@ -13561,7 +13558,7 @@
       "book": "up",
       "unitId": "math-g6-up-u02",
       "knowledgeName": "解决问题",
-      "domain": "geometry",
+      "domain": "algebra",
       "numberRange": {
         "max": 100,
         "numMax": null
@@ -13580,13 +13577,12 @@
         "maxLevel": 6
       },
       "allowedTypes": [
-        "geometry",
+        "calc",
         "fill",
         "apply",
-        "judge",
         "choice"
       ],
-      "capacity": 68,
+      "capacity": 66,
       "derivation": {
         "rules": [
           "R02:数域=整数域",

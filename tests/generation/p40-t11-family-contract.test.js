@@ -5,7 +5,7 @@
  *
  * 冻结断言：familyId/stageOrder 经 knowledge-contract 既有公开口只读可及——
  *   ① get(id).semantic.conceptFamily 返回 {id, stageOrder}（375/375 覆盖）；
- *   ② relationsFor 返回 R-REL-03 边的 evolution{familyId,fromStageOrder,toStageOrder,op}（38/38）；
+ *   ② relationsFor 返回 R-REL-03 边的 evolution{familyId,fromStageOrder,toStageOrder,op}（44/44）；
  *   ③ 不新增 PUBLIC_API（白名单长度与成员冻结不变）；UI 展示不实施（P31 冻结，挂账）。
  */
 
@@ -37,10 +37,10 @@ test('P40-T-11 ① get(id).semantic.conceptFamily 覆盖 375/375', () => {
   assert.equal(withFamily, 375, 'conceptFamily 覆盖率 100%');
 });
 
-test('P40-T-11 ② relationsFor 透出 evolution（38/38）', () => {
+test('P40-T-11 ② relationsFor 透出 evolution（44/44）', () => {
   const relDoc = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl/canonical/relations.json'), 'utf8'));
   const evo = relDoc.relations.filter((r) => r.evolution);
-  assert.equal(evo.length, 38, 'evolution 边 38 条');
+  assert.equal(evo.length, 44, 'evolution 边 44 条');
   evo.forEach((r) => {
     assert.ok(EVO_OPS.includes(r.evolution.op), 'op 合法: ' + r.evolution.op);
     assert.ok(r.evolution.toStageOrder > r.evolution.fromStageOrder, 'stageOrder 严格递增');

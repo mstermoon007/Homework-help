@@ -73,7 +73,7 @@ var semById = {};
 
 // ---------- 2. 不变式 ----------
 assert(kpIds.length === 375, 'KP 总数应为 375，实际 ' + kpIds.length);
-assert(mapRows.length === 1570, 'ALLOW 映射应为 1570，实际 ' + mapRows.length);
+assert(mapRows.length === 1566, 'ALLOW 映射应为 1566，实际 ' + mapRows.length);
 assert(capRows.length === 375, 'capability 应为 375，实际 ' + capRows.length);
 mapRows.forEach(function (m, i) {
   assert(m.permission === 'allow', '映射 #' + i + ' permission=' + m.permission);

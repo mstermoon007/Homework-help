@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "source": "kbl-derived",
   "subject": "math",
-  "count": 1570,
+  "count": 1566,
   "mappings": [
     {
       "knowledgeId": "math-g1-up-u01-k001",
@@ -13506,10 +13506,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3"
@@ -13530,16 +13530,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived",
-      "derivation": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3"
@@ -13556,10 +13546,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R07:理解;R10:步数=4"
@@ -13580,16 +13570,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived",
-      "derivation": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R07:理解;R10:步数=4"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R07:理解;R10:步数=4"
@@ -13606,10 +13586,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3"
@@ -13630,16 +13610,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived",
-      "derivation": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3"
@@ -13656,10 +13626,10 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "geometry",
-      "capability": "geometry",
+      "questionType": "calc",
+      "capability": "calc",
       "permission": "allow",
-      "pluginId": "generator:arithmetic-mixed-calculation",
+      "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=4"
@@ -13680,16 +13650,6 @@
       "capability": "apply",
       "permission": "allow",
       "pluginId": "generator:arithmetic-addition",
-      "coefficient": 1,
-      "source": "kbl-derived",
-      "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=4"
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "judge",
-      "capability": "judge",
-      "permission": "allow",
-      "pluginId": "generator:selection-judge",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=4"

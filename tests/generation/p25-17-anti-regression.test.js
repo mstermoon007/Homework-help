@@ -12,7 +12,7 @@
  *   4. verify-m0.js steps 含 edu-gen/coverage/golden 三键
  *
  * 防退化（6）：
- *   5. ALLOW 基线 = 1570（实时跑 buildEligibility 统计）
+ *   5. ALLOW 基线 = 1566（实时跑 buildEligibility 统计；H9 后 1570→1566）
  *   6. educational-generation-report.json 存在且 semanticFail = 0
  *   7. golden-validation-report.json passed = true（0 errors）
  *   8. 黄金题 kpId 全部 ∈ kp-matrix 375 KP（A 类概念 + B/C 通用算法）
@@ -72,7 +72,7 @@ test('4. verify-m0.js steps 含 edu-gen/coverage/golden 三键', () => {
 
 // ---------- 防退化（6） ----------
 
-test('5. ALLOW 基线 = 1570（实时跑 buildEligibility）', () => {
+test('5. ALLOW 基线 = 1566（实时跑 buildEligibility）', () => {
   const ALL = QTR.TYPES.map(function (t) { return t.id; });
   let count = 0;
   for (var g = 1; g <= 6; g++) {
@@ -83,7 +83,7 @@ test('5. ALLOW 基线 = 1570（实时跑 buildEligibility）', () => {
       ALL.forEach(function (t) { if (row[t] === 'ALLOW') count++; });
     });
   }
-  assert.equal(count, 1570, 'ALLOW 实时统计 = 1570（防退化基线）');
+  assert.equal(count, 1566, 'ALLOW 实时统计 = 1566（防退化基线）');
 });
 
 test('6. educational-generation-report.json 存在且 semanticFail = 0', () => {

@@ -77,7 +77,7 @@ test('注册表：全量 375 KP 均有 core 生成器 native 绑定，且无残�
 /* ---------------- 2. 1570 ALLOW 对全部 kp=1 native 承载 ---------------- */
 
 test('selector：全部 1570 对 ALLOW 均由 kp=1 native 候选承载（无 kp=0 兜底截胡）', () => {
-  assert.ok(ALLOW_PAIRS.length >= 1570, 'ALLOW 对数基线 1570，实际 ' + ALLOW_PAIRS.length);
+  assert.ok(ALLOW_PAIRS.length >= 1566, 'ALLOW 对数基线 1566（H9 源 Excel 变更后 1570→1566），实际 ' + ALLOW_PAIRS.length);
   // P28-FIX-A：10 个 KP 的 geometry 行由 shape-recognition 经 form-bound 门 + capability 匹配承载
   //（kp=0 但 generator 正确），非 geometry 行已回落到本体生成器（kp=1）。
   const FORM_BOUND_GEOMETRY_OK = new Set([

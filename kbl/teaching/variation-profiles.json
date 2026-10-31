@@ -29,33 +29,33 @@
     "note": "硬轴值无关（生成器题面形态旗标），漂移即 FAIL；软轴依赖 RNG 抽样值/生成器内随机结构，漂移 report-only。结构边界由 validator check#5（maxSteps/structure）另行守护"
   },
   "counts": {
-    "kps": 313,
-    "rows": 1323,
-    "profiled": 1323
+    "kps": 312,
+    "rows": 1315,
+    "profiled": 1315
   },
   "summary": {
-    "aKps": 313,
-    "pairs": 1323,
-    "profiled": 1323,
+    "aKps": 312,
+    "pairs": 1315,
+    "profiled": 1315,
     "genError": 0,
     "noSample": 0,
-    "singleSample": 333,
-    "unknownNotObserved": 1027,
+    "singleSample": 325,
+    "unknownNotObserved": 1023,
     "byQt": {
-      "fill": 313,
-      "choice": 313,
-      "judge": 126,
-      "geometry": 105,
-      "apply": 313,
-      "calc": 128,
+      "fill": 312,
+      "choice": 312,
+      "judge": 122,
+      "geometry": 101,
+      "apply": 312,
+      "calc": 131,
       "classify": 25
     },
     "axisCoverage": {
-      "unknown": 296,
+      "unknown": 292,
       "numericVaries": 945,
-      "contextPresent": 1278,
-      "representationPresent": 664,
-      "structureMultiStep": 21
+      "contextPresent": 1270,
+      "representationPresent": 644,
+      "structureMultiStep": 17
     }
   },
   "rows": [
@@ -48549,6 +48549,334 @@
       ]
     },
     {
+      "knowledgePointId": "math-g5-down-u02-k001",
+      "questionType": "calc",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 18,
+          "answerMax": 72
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "在整数乘法中，两个乘数都是积的因数：列式计算 8 × 9 = ？（积的因数就是这两个乘数）",
+          "在整数乘法中，两个乘数都是积的因数：列式计算 2 × 9 = ？（积的因数就是这两个乘数）",
+          "在整数乘法中，两个乘数都是积的因数：列式计算 4 × 6 = ？（积的因数就是这两个乘数）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k001",
+      "questionType": "fill",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 12,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "根据 7 × 9 = 63 可知，____ 和 ____ 是 63 的因数。",
+          "根据 4 × 7 = 28 可知，____ 和 ____ 是 28 的因数。",
+          "根据 3 × 8 = 24 可知，____ 和 ____ 是 24 的因数。"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k001",
+      "questionType": "choice",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "把 42 块月饼装盒（6 × 7 = 42）。42 的因数是哪两个？（  ）",
+          "把 24 块月饼装盒（3 × 8 = 24）。24 的因数是哪两个？（  ）",
+          "把 56 块月饼装盒（7 × 8 = 56）。56 的因数是哪两个？（  ）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k001",
+      "questionType": "apply",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "礼品店把 30 块月饼装盒，每盒 5 块，正好装 6 盒（5 × 6 = 30）。哪两个数是 30 的因数？",
+          "礼品店把 63 块月饼装盒，每盒 7 块，正好装 9 盒（7 × 9 = 63）。哪两个数是 63 的因数？",
+          "礼品店把 15 块月饼装盒，每盒 3 块，正好装 5 盒（3 × 5 = 15）。哪两个数是 15 的因数？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k002",
+      "questionType": "calc",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 4,
+          "answerMax": 9
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "用一个数依次乘 1、2、3……可以找它的倍数：4 × 2 = 8，4 × 3 = 12。4 最小的倍数是多少？",
+          "用一个数依次乘 1、2、3……可以找它的倍数：7 × 2 = 14，7 × 3 = 21。7 最小的倍数是多少？",
+          "用一个数依次乘 1、2、3……可以找它的倍数：6 × 2 = 12，6 × 3 = 18。6 最小的倍数是多少？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k002",
+      "questionType": "fill",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 3,
+          "answerMax": 9
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "7 × 1 = ____，可见一个数最小的倍数就是它本身。",
+          "4 × 1 = ____，可见一个数最小的倍数就是它本身。",
+          "6 × 1 = ____，可见一个数最小的倍数就是它本身。"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k002",
+      "questionType": "choice",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 3,
+          "answerMax": 8
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "计数器按 8 的倍数累加，下面哪个选项正确？（  ）",
+          "计数器按 4 的倍数累加，下面哪个选项正确？（  ）",
+          "计数器按 5 的倍数累加，下面哪个选项正确？（  ）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u02-k002",
+      "questionType": "apply",
+      "grade": 5,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 3,
+          "answerMax": 9
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "计数器按 9 的倍数累加：9 × 2 = 18，9 × 3 = 27……照这样能一直写下去吗？9 最小的倍数是多少？",
+          "计数器按 3 的倍数累加：3 × 2 = 6，3 × 3 = 9……照这样能一直写下去吗？3 最小的倍数是多少？",
+          "计数器按 7 的倍数累加：7 × 2 = 14，7 × 3 = 21……照这样能一直写下去吗？7 最小的倍数是多少？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
       "knowledgePointId": "math-g5-down-u02-k003",
       "questionType": "calc",
       "grade": 5,
@@ -75648,6 +75976,49 @@
     },
     {
       "knowledgePointId": "math-g6-up-u02-k001",
+      "questionType": "calc",
+      "grade": 6,
+      "variation": {
+        "unknown": {
+          "positions": [
+            "data.steps"
+          ]
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 9,
+          "answerMin": 1,
+          "answerMax": 2
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": [
+            "data.steps=1"
+          ]
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:shape-recognition": 6
+        },
+        "samplePrompts": [
+          "计算：2/5 × 2 = ？",
+          "计算：3/5 × 2 = ？",
+          "计算：5/8 × 3 = ？"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "knowledgePointId": "math-g6-up-u02-k001",
       "questionType": "fill",
       "grade": 6,
       "variation": {
@@ -75665,43 +76036,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "3"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"3\""
-            ],
-            "data.graphic.params.total": [
-              "5"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"5\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -75715,7 +76051,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "看图填空：分数条把单位“1”平均分成 5 份，涂色部分表示 3/5。同样的涂色部分有 3 条，合起来是 3/5 × 3 = ____。"
+          "填空：把单位“1”平均分成 5 份，取其中的 3 份表示 3/5。同样的部分有 3 份，合起来是 3/5 × 3 = ____。"
         ]
       },
       "flags": [
@@ -75742,43 +76078,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "4"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"4\""
-            ],
-            "data.graphic.params.total": [
-              "6"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"6\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -75792,191 +76093,13 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "看图选择：分数条涂色部分是 4/6，有 3 条同样的涂色部分。4/6 × 3 的结果是哪个？"
+          "把单位“1”平均分成 6 份，取其中 4 份表示 4/6。这样的 3 份，计算 4/6 × 3 的结果是哪个？"
         ]
       },
       "flags": [
         "single-sample",
         "unknown-not-observed"
       ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k001",
-      "questionType": "judge",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 2,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "1",
-              "2",
-              "3",
-              "4",
-              "6"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"1\"",
-              "\"2\"",
-              "\"3\"",
-              "\"4\"",
-              "\"6\""
-            ],
-            "data.graphic.params.total": [
-              "5",
-              "6",
-              "8"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"5\"",
-              "\"6\"",
-              "\"8\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.params.unitPx": [
-              "25"
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 6,
-        "generators": {
-          "generator:shape-recognition": 6
-        },
-        "samplePrompts": [
-          "看图判断：2/5 乘 3，3 条涂色部分合起来表示 7/5。这个说法对吗？",
-          "看图判断：3/6 乘 3，3 条涂色部分合起来表示 9/6。这个说法对吗？",
-          "看图判断：2/8 乘 2，2 条涂色部分合起来表示 4/8。这个说法对吗？"
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k001",
-      "questionType": "geometry",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.steps"
-          ]
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 1,
-          "answerMax": 1
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "1",
-              "2"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"1\"",
-              "\"2\""
-            ],
-            "data.graphic.params.total": [
-              "4",
-              "5",
-              "8"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"4\"",
-              "\"5\"",
-              "\"8\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 5,
-        "generators": {
-          "generator:shape-recognition": 5
-        },
-        "samplePrompts": [
-          "看图列式计算：把单位“1”平均分成 5 份，取其中的 2 份表示 2/5。这样的 2 份，一共是单位“1”的几分之几？2/5 × 2 = ____",
-          "看图列式计算：把单位“1”平均分成 4 份，取其中的 2 份表示 2/4。这样的 3 份，一共是单位“1”的几分之几？2/4 × 3 = ____",
-          "看图列式计算：把单位“1”平均分成 4 份，取其中的 2 份表示 2/4。这样的 2 份，一共是单位“1”的几分之几？2/4 × 2 = ____"
-        ]
-      },
-      "flags": []
     },
     {
       "knowledgePointId": "math-g6-up-u02-k001",
@@ -75997,57 +76120,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "2",
-              "3",
-              "4"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"2\"",
-              "\"3\"",
-              "\"4\""
-            ],
-            "data.graphic.params.total": [
-              "4",
-              "5",
-              "6",
-              "8"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"4\"",
-              "\"5\"",
-              "\"6\"",
-              "\"8\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.params.unitPx": [
-              "25"
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -76061,1134 +76135,9 @@
           "generator:shape-recognition": 6
         },
         "samplePrompts": [
-          "看图解决问题：一根彩带长 2/4 米（分数条平均分成 4 份、涂色 2 份）。先说出一根彩带的长度，再列式计算 2 根这样的彩带一共长多少米：2/4 × 2 =",
-          "看图解决问题：一根彩带长 3/5 米（分数条平均分成 5 份、涂色 3 份）。先说出一根彩带的长度，再列式计算 3 根这样的彩带一共长多少米：3/5 × 3 =",
-          "看图解决问题：一根彩带长 4/6 米（分数条平均分成 6 份、涂色 4 份）。先说出一根彩带的长度，再列式计算 2 根这样的彩带一共长多少米：4/6 × 2 ="
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "questionType": "fill",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 17,
-          "answerMax": 17
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.rightLabel",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "9"
-            ],
-            "data.graphic.params.rightLabel": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"balance\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "填空：32 − ____ − 6 = 9"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "questionType": "choice",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.rightLabel",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "14"
-            ],
-            "data.graphic.params.rightLabel": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"balance\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "下面哪个算式等于 14？"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "questionType": "judge",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 2,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.part",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "10",
-              "2"
-            ],
-            "data.graphic.params.part": [
-              "1",
-              "19"
-            ],
-            "data.graphic.params.right": [
-              "1",
-              "6"
-            ],
-            "data.graphic.params.total": [
-              "32",
-              "4"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1",
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 4,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 4
-        },
-        "samplePrompts": [
-          "32 − 19 + 11 = 24（对还是错？）",
-          "10 + 1 = 11（对还是错？）",
-          "4 − 1 + 2 = 5（对还是错？）"
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "questionType": "geometry",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.graphic.params.part"
-          ]
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 5,
-          "answerMin": 2,
-          "answerMax": 12
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "12",
-              "2",
-              "4",
-              "8",
-              "9"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"?\""
-            ],
-            "data.graphic.params.total": [
-              "12",
-              "18",
-              "8"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"12\"",
-              "\"18\"",
-              "\"8\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"quantity-correspondence\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 5,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 5
-        },
-        "samplePrompts": [
-          "看图列式计算：一袋面粉重 8 千克，做点心用去了它的 1/4，用去了多少千克？8 × 1/4 = ____",
-          "看图列式计算：一袋面粉重 8 千克，做点心用去了它的 2/4，用去了多少千克？8 × 2/4 = ____",
-          "看图列式计算：一袋面粉重 12 千克，做点心用去了它的 4/6，用去了多少千克？12 × 4/6 = ____"
-        ]
-      },
-      "flags": []
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k002",
-      "questionType": "apply",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 8,
-          "answerMax": 28
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.part",
-            "data.graphic.params.right",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "2"
-            ],
-            "data.graphic.params.part": [
-              "12",
-              "2",
-              "3",
-              "6"
-            ],
-            "data.graphic.params.right": [
-              "25"
-            ],
-            "data.graphic.params.total": [
-              "15",
-              "20",
-              "23",
-              "31",
-              "5"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"brace\"",
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1",
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 6,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 6
-        },
-        "samplePrompts": [
-          "把 2，加 25，结果是多少？",
-          "把 31，减 3，结果是多少？",
-          "把 20，减 12，结果是多少？"
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "questionType": "fill",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 0.25,
-          "answerMax": 0.25
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.rightLabel",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "3"
-            ],
-            "data.graphic.params.rightLabel": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"balance\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "在 ____ 里填数（用运算律简便计算）：0.25 × (4 + 8) = 0.25 × 4 + ____ × 8 = 3"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "questionType": "choice",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.rightLabel",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "3"
-            ],
-            "data.graphic.params.rightLabel": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"balance\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "下面哪个算式等于 3？"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "questionType": "judge",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 2,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.boxText",
-            "data.graphic.params.boxes",
-            "data.graphic.params.topText",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.boxText": [
-              "0.2",
-              "0.25",
-              "0.4",
-              "0.5"
-            ],
-            "data.graphic.params.boxes": [
-              "2",
-              "4",
-              "5"
-            ],
-            "data.graphic.params.topText": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"groups\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 4,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 4
-        },
-        "samplePrompts": [
-          "用运算律简便计算：0.25 × (4 + 12) = 5（对还是错？）",
-          "用运算律简便计算：0.5 × (2 + 4) = 3（对还是错？）",
-          "用运算律简便计算：0.2 × (5 + 15) = 5（对还是错？）"
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "questionType": "geometry",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.graphic.params.part"
-          ]
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 6,
-          "answerMax": 6
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "6"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"?\""
-            ],
-            "data.graphic.params.total": [
-              "8"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"8\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"quantity-correspondence\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "看图用乘法分配律简便计算：一条线段长 8 米，先取它的 1/4，再取它的 2/4，两次一共取了多少米？(1/4 + 2/4) × 8 = ____"
-        ]
-      },
-      "flags": [
-        "single-sample"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k003",
-      "questionType": "apply",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.graphic.params.boxes"
-          ]
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 3,
-          "answerMax": 6
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.boxText",
-            "data.graphic.params.boxes",
-            "data.graphic.params.topText",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.boxText": [
-              "0.2",
-              "0.25",
-              "0.4",
-              "0.5"
-            ],
-            "data.graphic.params.boxes": [
-              "2",
-              "4",
-              "5"
-            ],
-            "data.graphic.params.topText": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"groups\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 6,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 6
-        },
-        "samplePrompts": [
-          "每瓶矿泉水重 0.25 千克，甲箱装了 4 瓶，乙箱装了 8 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）",
-          "每瓶矿泉水重 0.5 千克，甲箱装了 2 瓶，乙箱装了 4 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）",
-          "每瓶矿泉水重 0.2 千克，甲箱装了 5 瓶，乙箱装了 10 瓶。两箱矿泉水一共重多少千克？（用运算律简便计算）"
-        ]
-      },
-      "flags": []
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "questionType": "fill",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": [
-            "data.graphic.params.total"
-          ]
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 20,
-          "answerMax": 20
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.otherLabel",
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.otherLabel": [
-              "\"4\""
-            ],
-            "data.graphic.params.part": [
-              "16"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"16\""
-            ],
-            "data.graphic.params.total": [
-              "20"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"？\""
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "填空：____ − 4 = 16"
-        ]
-      },
-      "flags": [
-        "single-sample"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "questionType": "choice",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.left",
-            "data.graphic.params.rightLabel",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.left": [
-              "29"
-            ],
-            "data.graphic.params.rightLabel": [
-              "\"？\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"balance\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "下面哪个算式等于 29？"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "questionType": "judge",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 2,
-          "answerMin": null,
-          "answerMax": null
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "13",
-              "20",
-              "3",
-              "4"
-            ],
-            "data.graphic.params.total": [
-              "14",
-              "27",
-              "31",
-              "4"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1",
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 4,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 4
-        },
-        "samplePrompts": [
-          "31 − 20 + 16 = 27（对还是错？）",
-          "4 − 4 + 2 = 3（对还是错？）",
-          "27 − 3 − 9 = 16（对还是错？）"
-        ]
-      },
-      "flags": [
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "questionType": "geometry",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": 12,
-          "answerMax": 12
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel",
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "18"
-            ],
-            "data.graphic.params.partLabel": [
-              "\"18\""
-            ],
-            "data.graphic.params.total": [
-              "24"
-            ],
-            "data.graphic.params.totalLabel": [
-              "\"24\""
-            ],
-            "data.graphic.params.unit": [
-              "\"cm\""
-            ],
-            "data.graphic.role": [
-              "\"quantity-correspondence\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 1,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 1
-        },
-        "samplePrompts": [
-          "看图解决问题：果园里共有 24 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。红富士苹果树有多少棵？____"
-        ]
-      },
-      "flags": [
-        "single-sample",
-        "unknown-not-observed"
-      ]
-    },
-    {
-      "knowledgePointId": "math-g6-up-u02-k004",
-      "questionType": "apply",
-      "grade": 6,
-      "variation": {
-        "unknown": {
-          "positions": []
-        },
-        "numeric": {
-          "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 5,
-          "answerMax": 32
-        },
-        "context": {
-          "present": true,
-          "ratio": 1
-        },
-        "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.part",
-            "data.graphic.params.total",
-            "data.graphic.params.unit",
-            "data.graphic.role",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.part": [
-              "12",
-              "19",
-              "20",
-              "5",
-              "8"
-            ],
-            "data.graphic.params.total": [
-              "17",
-              "22",
-              "25",
-              "31",
-              "32"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.role": [
-              "\"calculation-support\""
-            ],
-            "data.graphic.subtype": [
-              "\"segment\""
-            ],
-            "data.graphic.type": [
-              "\"diagram\""
-            ]
-          }
-        },
-        "structure": {
-          "steps": [
-            "data.steps=1",
-            "data.steps=2"
-          ]
-        }
-      },
-      "evidence": {
-        "samples": 6,
-        "generators": {
-          "generator:arithmetic-mixed-calculation": 6
-        },
-        "samplePrompts": [
-          "把 31，减 12，结果是多少？",
-          "把 17，减 8，结果是多少？",
-          "把 32，减 19，结果是多少？"
+          "解决问题：一根彩带长 2/4 米。先说出一根彩带的长度，再列式计算 2 根这样的彩带一共长多少米：2/4 × 2 = ？（米）",
+          "解决问题：一根彩带长 3/5 米。先说出一根彩带的长度，再列式计算 3 根这样的彩带一共长多少米：3/5 × 3 = ？（米）",
+          "解决问题：一根彩带长 4/6 米。先说出一根彩带的长度，再列式计算 2 根这样的彩带一共长多少米：4/6 × 2 = ？（米）"
         ]
       },
       "flags": [

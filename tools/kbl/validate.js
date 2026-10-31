@@ -102,8 +102,8 @@ relDoc.relations.forEach(function (r) {
   relKey.add(key);
 });
 
-// ---- 映射/权限门禁（canonical 1570 全 allow） ----
-ok(mapDoc.mappings.length === 1570, '映射数 1570？（canonical 派生）实际 ' + mapDoc.mappings.length);
+// ---- 映射/权限门禁（canonical 1566 全 allow） ----
+ok(mapDoc.mappings.length === 1566, '映射数 1566？（canonical 派生）实际 ' + mapDoc.mappings.length);
 var permCount = { allow: 0, forbid: 0, degrade: 0, missing: 0 };
 var mapSet = new Set();
 mapDoc.mappings.forEach(function (m) {

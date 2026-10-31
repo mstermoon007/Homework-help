@@ -3,7 +3,7 @@
 /**
  * dev/p25/derive-qt-intent.js — P25-03 KP×QuestionType×题目意图矩阵推导（AI 受限推导核准流程）
  *
- * 职责：对 1570 条 ALLOW（KP×题型）逐行推导指令要求的「五问」意图：
+ * 职责：对 1566 条 ALLOW（KP×题型）逐行推导指令要求的「五问」意图：
  *   ① trainsWhat      这道题训练哪个知识点
  *   ② whyThisType     为什么用这个题型
  *   ③ differentiation 这道题与同一 KP 其他题型有何不同
@@ -33,7 +33,7 @@
  *     graphicRole           graphic 为图形与几何域×geometry 题主载体='carrier'；
  *                           KP 含图形且题型支持图形的其他行='auxiliary'；否则 null
  *
- * 输出：kbl/teaching/qt-intent.json（1570 行意图矩阵）
+ * 输出：kbl/teaching/qt-intent.json（1566 行意图矩阵）
  *       kbl/teaching/qt-intent-sample.xlsx（人工抽查单：按语义族分层抽样）
  *       docs/archive/phases/p25/P25-KP-QT-INTENT.md（报告，归档位）
  */
@@ -62,7 +62,7 @@ kps.forEach(function (k) { byId[k.knowledgeId] = k; });
 var mappingsRaw = require(path.join(ROOT, 'kbl', 'mappings', 'generation-contract', 'math.json'));
 var mappings = Array.isArray(mappingsRaw) ? mappingsRaw : mappingsRaw.mappings;
 var allow = mappings.filter(function (m) { return m.permission === 'allow'; });
-assert(allow.length === 1570, 'ALLOW 应为 1570，实际 ' + allow.length);
+assert(allow.length === 1566, 'ALLOW 应为 1566，实际 ' + allow.length);
 
 // P30-05：canonical 前置关系（唯一真源经发射副本；assessment.requiredRelations 投影输入）。
 // relations.json 边无独立 id（字段 fromId/toId/relation），故投影为指向本 KP 的前置 KP canonical 码集合。
@@ -368,14 +368,14 @@ function deriveRow(knowledgeId, questionType) {
   };
 }
 
-// ---------- 5. 全量 1570 行 ----------
+// ---------- 5. 全量 1566 行 ----------
 var rows = allow.map(function (m) { return deriveRow(m.knowledgeId, m.questionType); });
-assert(rows.length === 1570, '行数应为 1570');
+assert(rows.length === 1566, '行数应为 1566');
 // 集合相等断言：与 ALLOW 一一对应
 var keySet = {};
 rows.forEach(function (r) { keySet[r.knowledgeId + '|' + r.questionType] = true; });
 allow.forEach(function (m) { assert(keySet[m.knowledgeId + '|' + m.questionType], '缺行 ' + m.knowledgeId + '|' + m.questionType); });
-assert(Object.keys(keySet).length === 1570, '行集合应恰为 1570');
+assert(Object.keys(keySet).length === 1566, '行集合应恰为 1566');
 // 红线断言：needs-review 行的空问必须为 null；ai-verified 行五问全部非空
 rows.forEach(function (r) {
   ['trainsWhat', 'whyThisType', 'differentiation', 'driftRisk', 'legitimacy'].forEach(function (k) {
@@ -401,7 +401,7 @@ rows.forEach(function (r) {
   assert(a.expressionModes.length >= 1, 'expressionModes 空: ' + r.knowledgeId + '|' + r.questionType);
   assert(a.graphicRole === null || GRAPHIC_ROLES.indexOf(a.graphicRole) !== -1, 'graphicRole 非法: ' + a.graphicRole);
 });
-// 按去重 KP 汇总 requiredRelations（同 KP 的多行投影同一集合），必须恰好覆盖 373 条 canonical 前置边
+// 按去重 KP 汇总 requiredRelations（同 KP 的多行投影同一集合），必须恰好覆盖 407 条 canonical 前置边
 var prereqEdgesByKp = {};
 rows.forEach(function (r) { prereqEdgesByKp[r.knowledgeId] = r.assessment.requiredRelations; });
 var prereqTotal = Object.keys(prereqEdgesByKp).reduce(function (n, k) { return n + prereqEdgesByKp[k].length; }, 0);
@@ -493,7 +493,7 @@ var out = {
     allowMappings: 'kbl/mappings/generation-contract/math.json',
     qtr: 'shared/knowledge/question-type-registry.js',
     sourceFingerprint: extract.fingerprint.fileHash.slice(0, 8),
-    counts: { knowledgePoints: 375, allow: 1570 }
+    counts: { knowledgePoints: 375, allow: 1566 }
   },
   statuses: { AI_VERIFIED: 'ai-verified', NEEDS_REVIEW: 'needs-review', CONFIRMED: 'confirmed' },
   counts: {
@@ -558,7 +558,7 @@ md.push('> 由 `dev/p25/derive-qt-intent.js` 从 KBL 源受限推导生成；**A
 md.push('');
 md.push('| 指标 | 值 |');
 md.push('| --- | --- |');
-md.push('| 覆盖 | 1570/1570 ALLOW 行（集合相等断言） |');
+md.push('| 覆盖 | 1566/1566 ALLOW 行（集合相等断言） |');
 if (confirmedRows.length) {
   md.push('| **confirmed（人工抽查通过）** | **' + confirmedRows.length + '** |');
   md.push('| ai-verified（待抽查） | ' + aiRows.length + '（其中被「打回」' + rejectedRows.length + ' 行待修正重审） |');
@@ -578,7 +578,7 @@ md.push('- `no-type-evidence` / `no-type-contrast`：推导证据不足');
 md.push('');
 md.push('## 产物');
 md.push('');
-md.push('- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）');
+md.push('- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1566 行意图矩阵（五问 + 逐问状态 + evidence 溯源）');
 md.push('- [qt-intent-sample.xlsx](../../../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（' + sampleRows.length + ' 行，按语义族分层 + needs-review 负面样本）');
 md.push('');
 fs.mkdirSync(DOCS_DIR, { recursive: true });
@@ -586,7 +586,7 @@ fs.writeFileSync(path.join(DOCS_DIR, 'P25-KP-QT-INTENT.md'), md.join('\n'));
 
 // ---------- 9. 汇总 ----------
 console.log('[P25-03] 意图矩阵推导完成（AI 受限推导核准流程）');
-console.log('  1570/1570 行；confirmed=' + confirmedRows.length + ' ai-verified=' + aiRows.length + ' needs-review=' + nrRows.length + ' 打回=' + rejectedRows.length);
+console.log('  1566/1566 行；confirmed=' + confirmedRows.length + ' ai-verified=' + aiRows.length + ' needs-review=' + nrRows.length + ' 打回=' + rejectedRows.length);
 console.log('  旗标：' + JSON.stringify(flagDist));
 console.log('  抽查单：' + sampleRows.length + ' 行（' + Object.keys(sampledKp).length + ' 个 KP）');
 console.log('  产出：kbl/teaching/qt-intent.json, kbl/teaching/qt-intent-sample.xlsx, docs/archive/phases/p25/P25-KP-QT-INTENT.md');

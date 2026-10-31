@@ -2,13 +2,13 @@
 'use strict';
 // dev/p28/check-generation-matrix-freeze.js — P28-08 生成矩阵最终冻结
 //
-// 冻结判定：1570 条 ALLOW(KP, QT) 生成矩阵 = 动态能力端点（buildEligibility 动态枚举），
+// 冻结判定：1566 条 ALLOW(KP, QT) 生成矩阵 = 动态能力端点（buildEligibility 动态枚举），
 // 每条逐一对齐一条真实 Generator、真实生成 ≥1 题、通过 Validator（KpSemantic 全量语义校验）、
 // 产出是合法 SemanticQuestion（Schema 校验）、questionType/KP 与 ALLOW 记录一致、
 // 非空/非占位/非回退（禁 fake/placeholder/empty/fallback 题）。
 //
 // 判定规则：
-//   统计 ALLOW 静态矩阵 == 1570 == 动态枚举；每行 pluginId ∈ GeneratorRegistry（真实）；
+//   统计 ALLOW 静态矩阵 == 1566 == 动态枚举；每行 pluginId ∈ GeneratorRegistry（真实）；
 //   逐行重生成证据：n≥1、qt/kp 匹配、Schema valid、KpSemantic valid、TypeContract ok、
 //   元数据 generator 真实、prompt 非空非占位、answer 非空。任一 FAIL → 退出码 1。
 //
@@ -17,7 +17,7 @@
 //   docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.md（冻结结论）
 //
 // 用法（FINAL-14 默认只读）：
-//   node dev/p28/check-generation-matrix-freeze.js            只读复核：重生成 1570 行证据与冻结产物比对，
+//   node dev/p28/check-generation-matrix-freeze.js            只读复核：重生成 1566 行证据与冻结产物比对，
 //                                                             一致且 frozen=true → 退出 0；不一致/缺失 → 退出 1，绝不写盘
 //   node dev/p28/check-generation-matrix-freeze.js --write    显式重建冻结 JSON+MD（仅用于有意更新冻结数据）
 
@@ -80,9 +80,9 @@ R.all().forEach(function (rec) { registryIds[rec.id] = 1; });
 function consistency() {
   var lines = [];
   var ok = true;
-  if (rows.length !== 1570) { ok = false; lines.push('静态矩阵行数 ' + rows.length + ' != 1570'); }
-  if ((matrix.stats || {}).allow !== 1570) { ok = false; lines.push('stats.allow ' + matrix.stats.allow + ' != 1570'); }
-  if (pairs.length !== 1570) { ok = false; lines.push('动态枚举 ' + pairs.length + ' != 1570'); }
+  if (rows.length !== 1566) { ok = false; lines.push('静态矩阵行数 ' + rows.length + ' != 1566'); }
+  if ((matrix.stats || {}).allow !== 1566) { ok = false; lines.push('stats.allow ' + matrix.stats.allow + ' != 1566'); }
+  if (pairs.length !== 1566) { ok = false; lines.push('动态枚举 ' + pairs.length + ' != 1566'); }
   if (rows.some(function (r) { return r.permission !== 'allow'; })) {
     ok = false; lines.push('存在 permission != allow 的行');
   }
@@ -188,7 +188,7 @@ var fails = [];
 
   var generated = pairs.length - summaries.n0;
   var artifact = {
-    task: 'P28-08 1570 Generation Matrix 最终冻结',
+    task: 'P28-08 1566 Generation Matrix 最终冻结',
     date: new Date().toISOString().slice(0, 10),
     seedPolicy: {
       version: FREEZE_SEED_VERSION,
@@ -278,14 +278,14 @@ function diffArtifact(frozen, current) {
 
 function writeMd(a, rowFails, cons, generated) {
   var md = [];
-  md.push('# P28-Generation-Matrix-Freeze — 1570 生成矩阵最终冻结');
+  md.push('# P28-Generation-Matrix-Freeze — 1566 生成矩阵最终冻结');
   md.push('');
   md.push('| 项 | 值 |');
   md.push('|---|---|');
-  md.push('| 任务 | P28-08 生成矩阵最终冻结：1570 条 ALLOW(KP, QuestionType) 逐条对齐真实 Generator、真实生成、通过 Validator、产出合法 SemanticQuestion；禁 fake/placeholder/empty/fallback 题 |');
+  md.push('| 任务 | P28-08 生成矩阵最终冻结：1566 条 ALLOW(KP, QuestionType) 逐条对齐真实 Generator、真实生成、通过 Validator、产出合法 SemanticQuestion；禁 fake/placeholder/empty/fallback 题 |');
   md.push('| 执行日期 | ' + a.date + ' |');
   md.push('| 固定 seed | `' + a.seedPolicy.formula + '`（version=' + a.seedPolicy.version + '，difficulty=' + a.seedPolicy.difficulty + '）；同 KP/QT/Difficulty/Seed/Generator/KBL → prompt/answer/sample/promptLen 完全一致，连续复跑字节相同 |');
-  md.push('| 判定规则 | 静态矩阵 == 动态能力端点 == 1570；每行 pluginId ∈ GeneratorRegistry；逐行重生成证据 10 项全绿 |');
+  md.push('| 判定规则 | 静态矩阵 == 动态能力端点 == 1566；每行 pluginId ∈ GeneratorRegistry；逐行重生成证据 10 项全绿 |');
   md.push('');
   md.push('## 1. 矩阵一致性');
   md.push('');
@@ -293,12 +293,12 @@ function writeMd(a, rowFails, cons, generated) {
   md.push('|---|---|---|');
   md.push('| 静态矩阵行（generation-contract/math.json） | ' + rows.length + ' | ' + (cons.ok ? '✅' : '❌') + ' |');
   md.push('| stats.allow | ' + ((matrix.stats || {}).allow) + ' | ✅ |');
-  md.push('| 动态能力端点（buildEligibility 枚举） | ' + pairs.length + ' | ' + (pairs.length === 1570 ? '✅' : '❌') + ' |');
+  md.push('| 动态能力端点（buildEligibility 枚举） | ' + pairs.length + ' | ' + (pairs.length === 1566 ? '✅' : '❌') + ' |');
   md.push('| 规范 7 类覆盖 | ' + CANONICAL.join('/') + ' | ✅ |');
   md.push('| 矩阵 KP 数 | ' + new Set(rows.map(function (r) { return r.knowledgeId; })).size + ' | ✅ 375 |');
   md.push('| matrix pluginId 全数落于注册表 | — | ' + (cons.lines.filter(function (l) { return l.indexOf('pluginId') !== -1; }).length ? '❌' : '✅') + ' |');
   md.push('');
-  md.push('## 2. 1570 逐行重生成冻结复核');
+  md.push('## 2. 1566 逐行重生成冻结复核');
   md.push('');
   md.push('| 检查 | 通过 | FAIL |');
   md.push('|---|---|---|');
@@ -315,7 +315,7 @@ function writeMd(a, rowFails, cons, generated) {
   md.push('## 3. 冻结结论');
   md.push('');
   md.push(rowFails === 0 && cons.ok
-    ? '**ALLOW = ' + pairs.length + ' · 真实生成 = ' + generated + ' · 全部通过 Validator/Schema/TypeContract/真实性检查 —— 1570 生成矩阵冻结 ✅**'
+    ? '**ALLOW = ' + pairs.length + ' · 真实生成 = ' + generated + ' · 全部通过 Validator/Schema/TypeContract/真实性检查 —— 1566 生成矩阵冻结 ✅**'
     : '**存在 FAIL ' + rowFails + ' 项 —— 冻结未通过 ❌**');
   md.push('');
   md.push('逐行冻结证据：`docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`（' + evidence.length + ' 行）。');
@@ -323,6 +323,6 @@ function writeMd(a, rowFails, cons, generated) {
   md.push('## 4. 门禁');
   md.push('');
   md.push('- `node dev/p28/check-generation-matrix-freeze.js` —— 复跑本冻结（退出码 0 = 冻结保持，1 = 违规）');
-  md.push('- `node dev/check-allow-generation.js` —— P24-02 动态真实性（1570/1570）配套');
+  md.push('- `node dev/check-allow-generation.js` —— P24-02 动态真实性（1566/1566）配套');
   fs.writeFileSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATION-MATRIX-FROZEN.md'), md.join('\n') + '\n');
 }

@@ -5,12 +5,12 @@
   "counts": {
     "KP": 375,
     "capability": 375,
-    "relations": 373
+    "relations": 407
   },
   "items": {
     "evolution": {
-      "edges": 38,
-      "coverage": "38/38",
+      "edges": 44,
+      "coverage": "44/44",
       "bad": 0,
       "pass": true
     },
@@ -28,19 +28,19 @@
       "kpGraphAcyclic": true,
       "evolutionGraphAcyclic": true,
       "familyProjectionAcyclic": false,
-      "familyEdges": 61,
+      "familyEdges": 82,
       "familyProjectionNote": "primary-family 折叠产物（共享单元如「7～9的表内乘、除法」多族归属），登记 needs-review 观察，非数据违规",
       "pass": true
     },
     "qtIntentReplay": {
-      "sha256": "99115fa6868c432f7c7d4a322e92d1c155b2ab59ec23308e379dad40e85661ad",
+      "sha256": "c41424ddf263d5886c059d6dd07bc73511a6107ded78f25e200168560dd19255",
       "identical": true,
-      "rows": 1570,
+      "rows": 1566,
       "needsReview": 0,
       "pass": true
     },
     "allowGeneration": {
-      "pass6a": 1570,
+      "pass6a": 1566,
       "fail": 0,
       "pass": true
     }

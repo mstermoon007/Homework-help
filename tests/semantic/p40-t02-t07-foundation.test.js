@@ -5,12 +5,14 @@
  *
  * 补录（P40-FINAL）：T-02/T-03/T-04/T-05/T-06/T-07 此前仅由派生器内联断言 + T-12 回归基线间接覆盖，
  * 无独立测试文件。本测试对六个地基任务的验收判据逐条冻结：
- *   T-02 族表声明化：validateFamilyTable 通过；11 主干 + 14 扩展，familyId/name 唯一；computeStageOrders 全序唯一。
+ *   T-02 族表声明化：validateFamilyTable 通过；14 主干 + 11 扩展，familyId/name 唯一；computeStageOrders 全序唯一。
  *   T-03 T2 副本自检：kbl/teaching ↔ shared/knowledge/teaching 镜像逐字节一致（漂移即失败）。
- *   T-04 evolution：38/38 边带合法 evolution（op∈闭集、stageOrder 严格递增、familyId 非空）；validateEvolution 通过。
+ *   T-04 evolution：44/44 边带合法 evolution（op∈闭集、stageOrder 严格递增、familyId 非空）；validateEvolution 通过。
  *   T-05 capability 回填：375/375 带 familyId + stageOrder；manifest.rootHash 为 64 位十六进制。
  *   T-06 跨族前置投影：reportCrossFamily 返回族内/跨族计数与族间边；intra+cross=全部边；KP 级图无环。
- *   T-07 族内难度递进：validateFamilyDifficultyMonotonic 检出 54 处倒挂（挂 needs-review，不自动改数）。
+ *   T-07 族内难度递进：validateFamilyDifficultyMonotonic 检出 53 处倒挂（挂 needs-review，不自动改数；P44/H10-B 族归属纠正消解 1 处）。
+ *   P44/H10-C：fam_direction 升主干链（g2 上→g4 上→g6 上）且 R-REL-02 取消综合实践/复习单元排除，
+ *   族表 13/12→14/11、evolution 42→44、族间边 60→82（倒挂 53 未变）。
  */
 
 const { test } = require('node:test');
@@ -31,8 +33,8 @@ const EVO_OPS = ['extend_number', 'increase_complexity', 'abstract_up', 'inverse
 
 test('T-02 族表声明化：validateFamilyTable 通过 + 族名/ID 唯一 + stageOrder 全序唯一', () => {
   assert.doesNotThrow(() => DR.validateFamilyTable(), '族表语义合法（同名多族/重复 ID/op 非法一律抛错）');
-  assert.equal(DR.CONCEPT_FAMILIES.length, 11, '主干族 11 条');
-  assert.equal(Object.keys(DR.EXTRA_FAMILIES).length, 14, '扩展族 14 条');
+  assert.equal(DR.CONCEPT_FAMILIES.length, 14, '主干族 14 条');
+  assert.equal(Object.keys(DR.EXTRA_FAMILIES).length, 11, '扩展族 11 条');
 
   const orders = DR.computeStageOrders(knowledge);
   const ids = Object.keys(orders);
@@ -56,9 +58,9 @@ test('T-03 T2 副本自检：kbl/teaching ↔ shared/knowledge/teaching 镜像�
   });
 });
 
-test('T-04 evolution：38/38 边合法 + validateEvolution 无环通过', () => {
+test('T-04 evolution：44/44 边合法 + validateEvolution 无环通过', () => {
   const evo = rels.filter((r) => r.evolution);
-  assert.equal(evo.length, 38, 'evolution 边 38 条');
+  assert.equal(evo.length, 44, 'evolution 边 44 条');
   evo.forEach((r) => {
     assert.ok(DR.CONCEPT_FAMILIES.some((f) => f.familyId === r.evolution.familyId), 'familyId 属主干族: ' + r.evolution.familyId);
     assert.ok(EVO_OPS.includes(r.evolution.op), 'op 合法: ' + r.evolution.op);
@@ -78,7 +80,7 @@ test('T-05 capability 回填：375/375 familyId+stageOrder + manifest rootHash �
 test('T-06 跨族前置投影：intra+cross=全部边 + 族间边 + KP 级图无环', () => {
   const rep = DR.reportCrossFamily(rels, knowledge);
   assert.equal(rep.intra + rep.cross, rels.length, '族内+跨族=全部前置边');
-  assert.equal(Object.keys(rep.familyEdges).length, 61, '族间边 61 条');
+  assert.equal(Object.keys(rep.familyEdges).length, 82, '族间边 82 条（P44/H10-C 方向与位置升主干链后 60→82）');
   assert.equal(typeof rep.acyclic, 'boolean', '族间图无环标志存在');
 
   const adj = {}, indeg = {}, nodes = {};
@@ -92,11 +94,11 @@ test('T-06 跨族前置投影：intra+cross=全部边 + 族间边 + KP 级图无
   assert.equal(vis, Object.keys(nodes).length, 'KP 级前置图无环');
 });
 
-test('T-07 族内难度递进：现网检出 54 处倒挂（needs-review）+ 合成倒挂可被判出', () => {
+test('T-07 族内难度递进：现网检出 53 处倒挂（needs-review）+ 合成倒挂可被判出', () => {
   const rows = cap.map((c) => ({ knowledgeId: c.knowledgeId, familyId: c.familyId, stageOrder: c.stageOrder, seedDifficulty: c.seedDifficulty }));
   const res = DiffVal.validateFamilyDifficultyMonotonic(rows);
   assert.equal(res.checked, 375, '扫描 375 行');
-  assert.equal(res.violations.length, 54, '现网倒挂 54 处（与 T-07 扫描脚本一致）');
+  assert.equal(res.violations.length, 53, '现网倒挂 53 处（与 T-07 扫描脚本一致；P44/H10-B 族归属纠正消解 1 处）');
   assert.equal(res.valid, false, '存在倒挂 → valid=false（挂 needs-review 不自动改数）');
   const artifact = json('dev/p40/out/t07-family-difficulty.json');
   assert.equal(artifact.violations, res.violations.length, '扫描产物与校验器一致');

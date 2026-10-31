@@ -9,8 +9,8 @@
 |---|---|---|
 | KP | **375** | `kbl/canonical/knowledge.json` |
 | Units | **98** | `kbl/canonical/course.json` |
-| Relations | **373**（全 `inferred:true` / `prerequisite` / `llm-finalized-dev`：R-REL-01 277 + R-REL-02 58 + R-REL-03 38） | `kbl/canonical/relations.json`（唯一派生真源） |
-| ALLOW 映射 | **1570** | `kbl/canonical/mappings.json` |
+| Relations | **407**（全 `inferred:true` / `prerequisite` / `llm-finalized-dev`：R-REL-01 277 + R-REL-02 86 + R-REL-03 44；P44/H10-A fam_negative 升主干链 373→374、H10-B fam_observation 374→377、H10-C fam_direction 升主干链并取消 R-REL-02 排除 377→407） | `kbl/canonical/relations.json`（唯一派生真源） |
+| ALLOW 映射 | **1566**（P44/H9 源 Excel 改判「数与代数」后 1570→1566） | `kbl/canonical/mappings.json` |
 | Canonical ID | `{subject}-{grade}-{book}-u{nn}-k{nnn}` | KBL Runtime |
 | Root Excel | `kbl/root/小学G1-G6数学知识点.xlsx` | 人工维护，AI 不得修改 |
 
@@ -20,7 +20,7 @@
 Root Excel（kbl/root/，T0 人工事实源，只读）
   → tools/kbl/extract-source.js      → kbl/import/extract-raw.json
   → tools/kbl/derive-kbl.js          → kbl/canonical/{course,knowledge,capability,mappings,relations(空集)}
-  → tools/kbl/derive-relations.js    → kbl/canonical/relations.json（373 inferred，覆盖空集）
+  → tools/kbl/derive-relations.js    → kbl/canonical/relations.json（407 inferred，覆盖空集）
   → tools/kbl/emit-canonical.js      → kbl/data · kbl/relations · kbl/mappings · kbl/index（发射副本）
   → tools/kbl/build.js               → shared/knowledge 运行时镜像 + manifest（rootHash）
   → dev/build-knowledge-runtime.js + dev/build-knowledge-pages.js → runtime bundle + knowledge/*.html
@@ -142,13 +142,13 @@ node dev/p28/check-kbl-ai-boundary.js   # 回写白名单 + 页面漂移 + 公�
 
 | 规则 ID | 口径 | SSOT（命名常量） | 门禁/证据 |
 |---|---|---|---|
-| **R-FAM-01** 族定义三规则 | ①同运算/概念主线归族；②族内 `stageOrder` 全序无并列；③一 KP 一主族（副族 `secondaryFamilies` 不落盘，挂账待需） | `derive-relations.js` `CONCEPT_FAMILIES`（11 主干族）/ `EXTRA_FAMILIES`（14 非主干族）/ `FAMILY_RULES` | `validateFamilyTable()`（同名多族/同族多名/阶段数不符/op 非法即抛错）；T-12 ②③ |
+| **R-FAM-01** 族定义三规则 | ①同运算/概念主线归族；②族内 `stageOrder` 全序无并列；③一 KP 一主族（副族 `secondaryFamilies` 不落盘，挂账待需） | `derive-relations.js` `CONCEPT_FAMILIES`（14 主干族）/ `EXTRA_FAMILIES`（11 非主干族）/ `FAMILY_RULES` | `validateFamilyTable()`（同名多族/同族多名/阶段数不符/op 非法即抛错）；T-12 ②③ |
 | **R-FAM-02** stageOrder 排序五规则 | `grade → volume(up<down) → unit_no → 教材行序(knowledgeNo)`；选学/拓展排核心之后，允许小数序 | `derive-relations.js` `computeStageOrders()` | T-12 ②（族内无重复、按序年级非递减） |
-| **R-FAM-03** evolution 落边口径 | R-REL-03 的 38 边携带 `evolution{familyId,fromStageOrder,toStageOrder,op}`；`op` 机械判定（数域关键词→`extend_number`；步骤/括号→`increase_complexity`；认数→计算→`abstract_up`；加减/乘除对→`inverse`） | `derive-relations.js` 内联判定 + `CONCEPT_FAMILIES[].ops` | `validateEvolution()`（同族严格递增/年级不倒挂/跨族图无环）；T-12 ①④ |
-| **R-FAM-04** 口径边界 | evolution 只加属性、**不增边**（边数 373 不变）；`familyId`/`stageOrder` 经 `emit-canonical` 透出 `semantic.conceptFamily`；跨族前置族投影（T-06）为纯校验不落盘 | `derive-relations.js` `reportCrossFamily()` | T-12 快照；`dev/p40/out/t06`、`t12-regression-baseline.json` |
+| **R-FAM-03** evolution 落边口径 | R-REL-03 的 44 边携带 `evolution{familyId,fromStageOrder,toStageOrder,op}`；`op` 机械判定（数域关键词→`extend_number`；步骤/括号→`increase_complexity`；认数→计算→`abstract_up`；加减/乘除对→`inverse`） | `derive-relations.js` 内联判定 + `CONCEPT_FAMILIES[].ops` | `validateEvolution()`（同族严格递增/年级不倒挂/跨族图无环）；T-12 ①④ |
+| **R-FAM-04** 口径边界 | evolution 只加属性、**不增边**（当前边数 407；P44/H10-A fam_negative +1、H10-B fam_observation +3、H10-C fam_direction +2 升为主干链，且 H10-C 取消 R-REL-02 综合实践/复习单元排除 +28）；`familyId`/`stageOrder` 经 `emit-canonical` 透出 `semantic.conceptFamily`；跨族前置族投影（T-06）为纯校验不落盘 | `derive-relations.js` `reportCrossFamily()` | T-12 快照；`dev/p40/out/t06`、`t12-regression-baseline.json` |
 
 - **公开契约冻结**：`knowledge-contract.js` `PUBLIC_API` 保持既有 13 项，**不新增族相关方法**；`familyId`/`stageOrder` 仅经既有 `capability` / `relationsFor` 口只读可及（T-11 契约测试）。
-- **已知观察项（needs-review，非数据违规）**：T-06 族投影存在族间环（`fam_multiply ⇄ fam_divide` 等），根因为共享单元（如「7～9的表内乘、除法」）多族归属被 primary-family 折叠所致；KP 级 canonical 373 前置边为无环 DAG（T-12 ④ 权威判据），故登记观察不自动改数。
+- **已知观察项（needs-review，非数据违规）**：T-06 族投影存在族间环（`fam_multiply ⇄ fam_divide` 等），根因为共享单元（如「7～9的表内乘、除法」）多族归属被 primary-family 折叠所致；KP 级 canonical 407 前置边为无环 DAG（T-12 ④ 权威判据），故登记观察不自动改数。
 
 ## 8. 版本迁移挂账（P40-T-13，E7）
 

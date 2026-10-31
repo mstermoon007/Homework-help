@@ -28,6 +28,16 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':shape:' + i;
 }
 
+// H9/P44：k001「分数乘整数」随源 Excel 改判归入「数与代数」（family=fraction,
+// operations=[multiplication]），intent graphicRole=null + allowedRepresentations=['numeric']
+// → 题目禁图（kp-semantic-validator checkIntentAlignment fail-closed）。
+// 图形仅在意图明确授权（semanticParams.graphic.role 非空）时挂载；
+// 与 arithmetic.js/position.js 既有 intentWantsGraphic 同口径，不新增第二套判定。
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
+}
+
 // 图形类型映射：legacyType → SVGGeometry subtype
 var SHAPE_SUBTYPE = {
   // 立体图形
@@ -504,9 +514,10 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
 // 此前这些行经 shape 泛型兜底落入 flat 随机认图（认三角形/正方形），与分数乘整数语义无关。
 // 模型：单位分数条线段——把单位“1”平均分成 den 份，取 num 份，重复 times 次，
 // 求一共取了多少（num/den × times）。图形走已注册的 geometry.segment 描述符，禁止新增渲染层。
-// 证据形态（kbl/teaching/evidence-rules.json）：五行均要 graphic.type=geometry+unit=cm；
-// judge steps=1/apply steps=2 另要 unitPx=25；KP semantic.operations=[]，严禁 data.operation
-// （8 条 relationNot，含 multiply-by-times / fraction-meaning 等）。
+// H9/P44 口径变更：该 KP 现为 family=fraction / operations=[multiplication]，intent
+// graphicRole=null 且 allowedRepresentations=['numeric'] → 全部题型禁图；geometry 行不再有
+// ALLOW 承载（不会生成）。maker 依意图闸门挂图/去图，并补 calc 符号算式分支；
+// data.operation='mult' 为本题真实运算事实（requiredConstructs=[multiplication] 消费）。
 function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   var qt = plan.questionTypeId;
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
@@ -538,28 +549,33 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
 
+  var wantsG = intentWantsGraphic(plan);
   var data = {
     mode: qt,
     steps: 1,
     kind: 'fraction-times-integer',
-    graphic: fracGraphic(null),
     fractionNumerator: num,
     fractionDenominator: den,
-    times: times
+    times: times,
+    // H9/P44：本题真实运算事实（intent.requiredConstructs=[multiplication] 与
+    // semantic-evidence 声明 multiply-by-times 的唯一取数口）。
+    operation: 'mult'
   };
+  if (wantsG) data.graphic = fracGraphic(null);
   var prompt, answerObj, answerMode = 'input';
   // P34-14：分数乘整数的方法讲解（素材仅取该题 num/den/times/answer）；
   // P40-Q-18：先示原始积再约分（积未最简时追加约分句），答案与解析同源不二次计算
   var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + rawFrac + simpNote;
 
   if (qt === 'geometry') {
-    prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
+    prompt = (wantsG ? '看图列式计算：' : '列式计算：') + '把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
       ' 份表示 ' + num + '/' + den + '。这样的 ' + times + ' 份，一共是单位“1”的几分之几？' +
       expr + ' = ____';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'fill') {
-    prompt = '看图填空：分数条把单位“1”平均分成 ' + den + ' 份，涂色部分表示 ' + num + '/' + den
-      + '。同样的涂色部分有 ' + times + ' 条，合起来是 ' + expr + ' = ____。';
+    prompt = (wantsG ? '看图填空：分数条把单位“1”平均分成 ' : '填空：把单位“1”平均分成 ')
+      + den + ' 份，取其中的 ' + num + ' 份表示 ' + num + '/' + den
+      + '。同样的部分有 ' + times + ' 份，合起来是 ' + expr + ' = ____。';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'choice') {
     // 四个互异分数选项（含正确值），correctIndex 随洗牌定位。
@@ -579,16 +595,20 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     var options = Rng.shuffle(rng, pool);
     data.options = options;
     data.correctIndex = options.indexOf(answerStr);
-    prompt = '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times
-      + ' 条同样的涂色部分。' + expr + ' 的结果是哪个？';
+    var choiceLead = wantsG
+      ? '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times + ' 条同样的涂色部分。计算 '
+      : '把单位“1”平均分成 ' + den + ' 份，取其中 ' + num + ' 份表示 ' + num + '/' + den
+        + '。这样的 ' + times + ' 份，计算 ';
+    prompt = choiceLead + expr + ' 的结果是哪个？';
     answerObj = { value: answerStr, acceptable: acceptable,
       explanation: '正确选项是「' + answerStr + '」。' + fracExpl };
     answerMode = 'choice';
   } else if (qt === 'judge') {
     var isTrue = rng() < 0.5;
     var shownNum = isTrue ? numerator : numerator + 1;
-    data.graphic = fracGraphic(25);
-    prompt = '看图判断：' + num + '/' + den + ' 乘 ' + times + '，' + times + ' 条涂色部分合起来表示 '
+    if (wantsG) data.graphic = fracGraphic(25);
+    prompt = (wantsG ? '看图判断：' : '判断：') + num + '/' + den + ' 乘 ' + times + '，' +
+      (wantsG ? times + ' 条涂色部分' : times + ' 份同样的部分') + '合起来表示 '
       + shownNum + '/' + den + '。这个说法对吗？';
     answerObj = {
       value: isTrue,
@@ -600,11 +620,17 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
         : expr + ' = ' + rawFrac + '，不是 ' + shownNum + '/' + den + '，说法错误。'
     };
     answerMode = 'judge';
+  } else if (qt === 'calc') {
+    // H9/P44：calc 行此前落入 makeCalcMeasurementQuestion（整数度量减法），语义错。
+    // 现产出分数乘整数的符号算式（calc 契约 expressionPresent；禁图）。
+    prompt = '计算：' + expr + ' = ？';
+    answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else { // apply，steps=2
     data.steps = 2;
-    data.graphic = fracGraphic(25);
-    prompt = '看图解决问题：一根彩带长 ' + num + '/' + den + ' 米（分数条平均分成 ' + den
-      + ' 份、涂色 ' + num + ' 份）。先说出一根彩带的长度，再列式计算 ' + times
+    if (wantsG) data.graphic = fracGraphic(25);
+    prompt = (wantsG ? '看图解决问题' : '解决问题') + '：一根彩带长 ' + num + '/' + den + ' 米'
+      + (wantsG ? '（分数条平均分成 ' + den + ' 份、涂色 ' + num + ' 份）' : '')
+      + '。先说出一根彩带的长度，再列式计算 ' + times
       + ' 根这样的彩带一共长多少米：' + expr + ' = ？（米）';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   }
@@ -794,7 +820,9 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     answer = { value: '举例合理即可', acceptable: [] };
     expl = '只要举出的物体具有' + shapeMeta.meta.name + '的特征（'
       + shapeMeta.meta.features[0] + '），举例就合理。';
-    answerMode = 'input';
+    // P42-024（2026-10-31 用户裁决）：开放式观察题答案无唯一判据（「举例合理即可」），
+    // 标 read-aloud 口述作答——渲染层不再输出无意义的书面输入框（html-renderer 原生支持）。
+    answerMode = 'read-aloud';
   }
 
   answer.explanation = expl;
@@ -914,7 +942,7 @@ function shapeTheme(facts, wrongs, nums, scenes, opts) {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null }; }),
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null, mode: s[3] || null }; }),
     judgeGraphic: (opts && opts.judgeGraphic) || null,
     applyGraphic: (opts && opts.applyGraphic) || null
   };
@@ -1038,7 +1066,7 @@ var SHAPE_THEME = {
      ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1,
       { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
         params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }, { direction: 'front', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }]],
-    [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
+    [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一', null, 'read-aloud'],
      ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
      ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']],
   // P38 断链修复：judge/apply 配原材料图（P36-01 同款，去棱长标注，不泄判断/过程所求）
@@ -1123,7 +1151,7 @@ var SHAPE_THEME = {
      ['用身体尺量出的长度是精确值', '身体尺只能估出大约长度，精确测量要用尺子。'],
      ['身体尺不能用来估计教室的长度', '可以用步数估计：步长×步数≈教室长度。']],
     [['小明一拃约 10 厘米，量得课桌宽约 4 拃，课桌宽约____厘米', '40', 40], ['小红一步约 50 厘米，走 8 步大约是____厘米', '400', 400], ['小刚一庹约 1 米，黑板约 3 庹，黑板长约____米', '3', 3]],
-    [['先量出自己的一拃约几厘米，再用拃估测课桌的长', '如：一拃约 12 厘米，课桌约 5 拃，约 60 厘米'],
+    [['先量出自己的一拃约几厘米，再用拃估测课桌的长', '如：一拃约 12 厘米，课桌约 5 拃，约 60 厘米', null, 'read-aloud'],
      ['先用步数估计教室的长，再用卷尺量一量检验？', '步长×步数≈估计值，与实测对比'],
      ['先估一估黑板的长（用庹），再说说估测和精确测量有什么不同？', '身体尺得近似值，尺子量得精确值']]),
   'math-g3-up-u03-k003': shapeTheme( // 适用场景（毫米、分米和千米）
@@ -1896,6 +1924,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     var applyExpl = (sA.match(/[\u4e00-\u9fa5]/g) || []).length >= 4
       ? sA : blankStatement(sItem.t, sA);
     answer = { value: sItem.a, acceptable: [], explanation: applyExpl };
+    // P42-024：场景可显式声明作答模式（第 4 元 mode），未声明保持 input
+    if (sItem.mode) answerMode = sItem.mode;
   }
 
   return {
@@ -1953,10 +1983,10 @@ function createShapeGenerator(spec) {
 
         var q;
         var qt = plan.questionTypeId;
-        // P28-HOLLOW-04：分数乘整数 KP 的 fill/choice/judge/apply 与 geometry 一样走分数条
-        // 原生 maker（五行均要 geometry 分数条），不落 flat 随机认图/泛型度量。
+        // P28-HOLLOW-04：分数乘整数 KP 的 calc/fill/choice/judge/apply 与 geometry 一样走分数条
+        // 原生 maker（H9/P44 后该 KP 禁图、calc 走符号算式），不落 flat 随机认图/泛型度量。
         if (kpName.indexOf('分数乘整数') !== -1
-          && ['fill', 'choice', 'judge', 'apply', 'geometry'].indexOf(qt) !== -1) {
+          && ['calc', 'fill', 'choice', 'judge', 'apply', 'geometry'].indexOf(qt) !== -1) {
           questions.push(makeFractionTimesIntegerQuestion(plan, context, i, kpName));
           continue;
         }

@@ -65,11 +65,11 @@
 - 7个canonical question types
 - 难度公式/数量分配原则
 
-**健康检查**（2026-09-19 P24 冻结基线，详见 `docs/00-BASELINE.md`）：
+**健康检查**（当前基线，详见 `docs/00-BASELINE.md`）：
 - `npm run verify`（M0 聚合门禁）：5/5 PASS
 - `npm run verify:syntax`：218 文件 / 0 错误
-- `npm run verify:allow-gen`：ALLOW 真实性 1570/1570 PASS
-- `npm test`：239/239 PASS
+- `npm run verify:allow-gen`：ALLOW 真实性 1566/1566 PASS
+- `npm test`：934/934 PASS
 - `bash scripts/run-all-checks.sh`：一键全绿（与 CI 等价）
 
 ---

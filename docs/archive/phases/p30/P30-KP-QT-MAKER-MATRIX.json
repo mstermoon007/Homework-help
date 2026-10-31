@@ -7,24 +7,26 @@
     "sameCoreThreshold": 0.85
   },
   "counts": {
-    "rows": 1570,
+    "rows": 1566,
     "byLevel": {
-      "target": 1228,
-      "format": 8,
+      "target": 1219,
+      "format": 13,
       "target-frozen": 334
     },
     "byIntentStatus": {
       "confirmed": 169,
-      "ai-verified": 1401
+      "ai-verified": 1397
     },
     "kpClass": {
-      "pure-target": 301,
+      "pure-target": 299,
       "pure-format": 0,
-      "mixed": 4,
+      "mixed": 6,
       "frozen-only": 70
     },
-    "formatKps": 4,
+    "formatKps": 6,
     "formatByGenerator": {
+      "generator:shape-recognition": 2,
+      "generator:arithmetic-mixed-calculation": 3,
       "generator:reasoning": 8
     }
   },
@@ -18931,17 +18933,17 @@
     },
     {
       "kp": "math-g6-up-u02-k001",
-      "qt": "geometry",
+      "qt": "calc",
       "generator": "generator:shape-recognition",
-      "makerKey": "generator:shape-recognition|geometry",
+      "makerKey": "generator:shape-recognition|calc",
       "intentStatus": "ai-verified",
-      "focus": "geometry",
-      "level": "target",
+      "focus": "calculation",
+      "level": "format",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": true,
-      "core": "看图列式计算把单位“#”平均分成#份取其中的#份表示#/#这样的#份一共是单位“#”的几分之几#/#×#",
-      "sample": "看图列式计算：把单位“1”平均分成 5 份，取其中的 1 份表示 1/5。这样的 3 份，一共是"
+      "hasBlank": false,
+      "core": "计算#/#×#",
+      "sample": "计算：4/6 × 2 = ？"
     },
     {
       "kp": "math-g6-up-u02-k001",
@@ -18954,8 +18956,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "看图填空分数条把单位“#”平均分成#份涂色部分表示#/#同样的涂色部分有#条合起来是#/#×#",
-      "sample": "看图填空：分数条把单位“1”平均分成 8 份，涂色部分表示 6/8。同样的涂色部分有 3 条，合"
+      "core": "填空把单位“#”平均分成#份取其中的#份表示#/#同样的部分有#份合起来是#/#×#",
+      "sample": "填空：把单位“1”平均分成 8 份，取其中的 6 份表示 6/8。同样的部分有 3 份，合起来是"
     },
     {
       "kp": "math-g6-up-u02-k001",
@@ -18968,22 +18970,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "看图解决问题一根彩带长#/#米先说出一根彩带的长度再列式计算#根这样的彩带一共长多少米#/#×#",
-      "sample": "看图解决问题：一根彩带长 1/8 米（分数条平均分成 8 份、涂色 1 份）。先说出一根彩带的长"
-    },
-    {
-      "kp": "math-g6-up-u02-k001",
-      "qt": "judge",
-      "generator": "generator:shape-recognition",
-      "makerKey": "generator:shape-recognition|judge",
-      "intentStatus": "ai-verified",
-      "focus": "selection",
-      "level": "target",
-      "hasOptions": false,
-      "isJudge": true,
-      "hasBlank": false,
-      "core": "看图判断#/#乘##条涂色部分合起来表示#/#这个说法对吗",
-      "sample": "看图判断：1/8 乘 3，3 条涂色部分合起来表示 3/8。这个说法对吗？"
+      "core": "解决问题一根彩带长#/#米先说出一根彩带的长度再列式计算#根这样的彩带一共长多少米#/#×#",
+      "sample": "解决问题：一根彩带长 1/8 米。先说出一根彩带的长度，再列式计算 3 根这样的彩带一共长多少米"
     },
     {
       "kp": "math-g6-up-u02-k001",
@@ -18992,26 +18980,26 @@
       "makerKey": "generator:shape-recognition|choice",
       "intentStatus": "ai-verified",
       "focus": "selection",
-      "level": "target",
+      "level": "format",
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "看图选择分数条涂色部分是#/#有#条同样的涂色部分#/#×#的结果是哪个",
-      "sample": "看图选择：分数条涂色部分是 1/6，有 3 条同样的涂色部分。1/6 × 3 的结果是哪个？"
+      "core": "把单位“#”平均分成#份取其中#份表示#/#这样的#份计算#/#×#的结果是哪个",
+      "sample": "把单位“1”平均分成 6 份，取其中 1 份表示 1/6。这样的 3 份，计算 1/6 × 3 "
     },
     {
       "kp": "math-g6-up-u02-k002",
-      "qt": "geometry",
+      "qt": "calc",
       "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|geometry",
+      "makerKey": "generator:arithmetic-mixed-calculation|calc",
       "intentStatus": "ai-verified",
-      "focus": "geometry",
+      "focus": "calculation",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": true,
-      "core": "看图列式计算一袋面粉重#千克做点心用去了它的#/#用去了多少千克#×#/#",
-      "sample": "看图列式计算：一袋面粉重 6 千克，做点心用去了它的 2/3，用去了多少千克？6 × 2/3 ="
+      "hasBlank": false,
+      "core": "计算#×#/#",
+      "sample": "计算：20 × 2/5 = ？"
     },
     {
       "kp": "math-g6-up-u02-k002",
@@ -19024,8 +19012,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "填空−##",
-      "sample": "填空：____ − 1 = 1"
+      "core": "填空#×#/#求#的#/#是多少",
+      "sample": "填空：10 × 1/5 = ____。求 10 的 1/5 是多少。"
     },
     {
       "kp": "math-g6-up-u02-k002",
@@ -19038,22 +19026,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "把#减#结果是多少",
-      "sample": "把 12，减 2，结果是多少？"
-    },
-    {
-      "kp": "math-g6-up-u02-k002",
-      "qt": "judge",
-      "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|judge",
-      "intentStatus": "ai-verified",
-      "focus": "selection",
-      "level": "target",
-      "hasOptions": false,
-      "isJudge": true,
-      "hasBlank": false,
-      "core": "#+##",
-      "sample": "10 + 7 = 17（对还是错？）"
+      "core": "一袋面粉重#千克做点心用去了它的#/#用去了多少千克",
+      "sample": "一袋面粉重 24 千克，做点心用去了它的 1/8，用去了多少千克？"
     },
     {
       "kp": "math-g6-up-u02-k002",
@@ -19066,22 +19040,22 @@
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "下面哪个算式等于#",
-      "sample": "下面哪个算式等于 2？"
+      "core": "#×#/#的结果是下面哪一个",
+      "sample": "8 × 1/4 的结果是下面哪一个？"
     },
     {
       "kp": "math-g6-up-u02-k003",
-      "qt": "geometry",
+      "qt": "calc",
       "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|geometry",
+      "makerKey": "generator:arithmetic-mixed-calculation|calc",
       "intentStatus": "ai-verified",
-      "focus": "geometry",
+      "focus": "calculation",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": true,
-      "core": "看图用乘法分配律简便计算一条线段长#米先取它的#/#再取它的#/#两次一共取了多少米(#/#+#/#×#",
-      "sample": "看图用乘法分配律简便计算：一条线段长 8 米，先取它的 1/4，再取它的 2/4，两次一共取了多"
+      "hasBlank": false,
+      "core": "用运算律简便计算#×(#+#",
+      "sample": "用运算律简便计算：0.25 × (4 + 12) = ?"
     },
     {
       "kp": "math-g6-up-u02-k003",
@@ -19113,20 +19087,6 @@
     },
     {
       "kp": "math-g6-up-u02-k003",
-      "qt": "judge",
-      "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|judge",
-      "intentStatus": "ai-verified",
-      "focus": "selection",
-      "level": "target",
-      "hasOptions": false,
-      "isJudge": true,
-      "hasBlank": false,
-      "core": "用运算律简便计算#×(#+##",
-      "sample": "用运算律简便计算：0.25 × (4 + 12) = 5（对还是错？）"
-    },
-    {
-      "kp": "math-g6-up-u02-k003",
       "qt": "choice",
       "generator": "generator:arithmetic-mixed-calculation",
       "makerKey": "generator:arithmetic-mixed-calculation|choice",
@@ -19141,17 +19101,17 @@
     },
     {
       "kp": "math-g6-up-u02-k004",
-      "qt": "geometry",
+      "qt": "calc",
       "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|geometry",
+      "makerKey": "generator:arithmetic-mixed-calculation|calc",
       "intentStatus": "ai-verified",
-      "focus": "geometry",
+      "focus": "calculation",
       "level": "target",
       "hasOptions": false,
       "isJudge": false,
-      "hasBlank": true,
-      "core": "看图解决问题果园里共有#棵果树苹果树占#/#红富士苹果树又占苹果树的#/#红富士苹果树有多少棵",
-      "sample": "看图解决问题：果园里共有 24 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。红富"
+      "hasBlank": false,
+      "core": "计算#×#/#×#/#",
+      "sample": "计算：24 × 3/4 × 2/3 = ？"
     },
     {
       "kp": "math-g6-up-u02-k004",
@@ -19160,12 +19120,12 @@
       "makerKey": "generator:arithmetic-mixed-calculation|fill",
       "intentStatus": "ai-verified",
       "focus": "written",
-      "level": "target",
+      "level": "format",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": true,
-      "core": "填空+##",
-      "sample": "填空：____ + 2 = 11"
+      "core": "填空果园里共有#棵果树苹果树占#/#红富士苹果树又占苹果树的#/#红富士苹果树有棵",
+      "sample": "填空：果园里共有 24 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。红富士苹果树"
     },
     {
       "kp": "math-g6-up-u02-k004",
@@ -19174,26 +19134,12 @@
       "makerKey": "generator:arithmetic-mixed-calculation|apply",
       "intentStatus": "ai-verified",
       "focus": "application",
-      "level": "target",
+      "level": "format",
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "把#加#结果是多少",
-      "sample": "把 17，加 9，结果是多少？"
-    },
-    {
-      "kp": "math-g6-up-u02-k004",
-      "qt": "judge",
-      "generator": "generator:arithmetic-mixed-calculation",
-      "makerKey": "generator:arithmetic-mixed-calculation|judge",
-      "intentStatus": "ai-verified",
-      "focus": "selection",
-      "level": "target",
-      "hasOptions": false,
-      "isJudge": true,
-      "hasBlank": false,
-      "core": "#−##",
-      "sample": "15 − 5 = 11（对还是错？）"
+      "core": "果园里共有#棵果树苹果树占#/#红富士苹果树又占苹果树的#/#红富士苹果树有多少棵",
+      "sample": "果园里共有 36 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。红富士苹果树有多少"
     },
     {
       "kp": "math-g6-up-u02-k004",
@@ -19202,12 +19148,12 @@
       "makerKey": "generator:arithmetic-mixed-calculation|choice",
       "intentStatus": "ai-verified",
       "focus": "selection",
-      "level": "target",
+      "level": "format",
       "hasOptions": true,
       "isJudge": false,
       "hasBlank": false,
-      "core": "下面哪个算式等于#",
-      "sample": "下面哪个算式等于 14？"
+      "core": "果园里共有#棵果树苹果树占#/#红富士苹果树又占苹果树的#/#红富士苹果树有多少棵",
+      "sample": "果园里共有 24 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。红富士苹果树有多少"
     },
     {
       "kp": "math-g6-up-u03-k001",

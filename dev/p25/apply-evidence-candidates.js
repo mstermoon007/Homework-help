@@ -4,6 +4,8 @@
 //
 // 将 derive-evidence-candidates.js 的审后候选合并进 kbl/teaching/evidence-rules.json：
 //   - 既有规则行（P25-04 的 6 行）原样保留，键冲突即失败（不静默覆盖）
+//     --refresh-stale：仅当既有行 kblAnchor 与候选锚点不一致（KBL 语义事实已漂移）时，
+//     用同一候选原子替换该行（P44-H9 口径：锚点过期 = 规则失效，须随派生链刷新，禁止手编）。
 //   - 新增行为 75 个 A 类 KP × ALLOW 题型的机械派生契约（真值源见报告 builtFrom）
 //   - schemaVersion 升级；note 记录派生口径与四态语义不变
 //
@@ -12,7 +14,7 @@
 //   KP 在 A 类清单内；题型合法；relation 断言必须在 intent-relations 允许集内；
 //   relationNot 必须在跨家族禁表内；同一行 required/forbidden 无键冲突。
 //
-// 用法：node dev/p25/apply-evidence-candidates.js [--report <path>]
+// 用法：node dev/p25/apply-evidence-candidates.js [--report <path>] [--refresh-stale]
 
 var fs = require('fs');
 var path = require('path');
@@ -21,6 +23,7 @@ var ROOT = path.join(__dirname, '..', '..');
 var REPORT = path.join(__dirname, 'reports', 'evidence-derive-report.json');
 var iArg = process.argv.indexOf('--report');
 if (iArg !== -1 && process.argv[iArg + 1]) REPORT = path.resolve(process.argv[iArg + 1]);
+var REFRESH_STALE = process.argv.indexOf('--refresh-stale') !== -1;
 
 var RULES_PATH = path.join(ROOT, 'kbl', 'teaching', 'evidence-rules.json');
 var env = require(path.join(__dirname, '..', '_bundle-env.js'));
@@ -64,14 +67,15 @@ function sideOf(kpId) {
   return null;
 }
 
-var seen = {};
-doc.rules.forEach(function (r) {
+var seen = {}; // key -> doc.rules 下标
+doc.rules.forEach(function (r, idx) {
   var key = r.knowledgePointId + '|' + r.questionType;
-  if (seen[key]) fail('既有规则键重复: ' + key);
-  seen[key] = true;
+  if (seen[key] !== undefined) fail('既有规则键重复: ' + key);
+  seen[key] = idx;
 });
 
 var added = 0;
+var refreshed = 0;
 var skipped = 0;
 (report.rows || []).forEach(function (row) {
   if (!row.candidate) return;
@@ -80,8 +84,8 @@ var skipped = 0;
 
   if (!aIds[c.knowledgePointId]) fail('KP 不在 A 类清单: ' + c.knowledgePointId);
   if (!QT_IDS[c.questionType]) fail('非法题型: ' + key);
-  if (seen[key]) { skipped++; return; } // 既有规则保留（保守：不覆盖人工规则）
 
+  // 校验前置：刷新行同样必须过全部断言合法性闸门
   if (!Array.isArray(c.required) || c.required.length < 1) fail('required 为空: ' + key);
   var reqKeys = {};
   var relAllowed = {};
@@ -111,16 +115,43 @@ var skipped = 0;
     if (a.kind === 'relationNot' && reqRels[a.relation]) fail('required 与 forbidden 矛盾: ' + key + ' ← ' + a.relation);
   });
 
-  doc.rules.push({
+  var nextRule = {
     knowledgePointId: c.knowledgePointId,
     knowledgePointName: c.knowledgePointName,
     questionType: c.questionType,
     kblAnchor: c.kblAnchor,
     required: c.required,
     forbidden: c.forbidden
-  });
-  seen[key] = true;
+  };
+
+  var prevIdx = seen[key];
+  if (prevIdx !== undefined) {
+    var prev = doc.rules[prevIdx];
+    if (REFRESH_STALE && prev.kblAnchor.indexOf('semantic.family=') === 0
+      && prev.kblAnchor !== c.kblAnchor) {
+      doc.rules[prevIdx] = nextRule;   // 锚点过期：原子替换为当前语义事实派生行
+      refreshed++;
+    } else {
+      skipped++;                        // 既有规则保留（保守：不覆盖人工规则）
+    }
+    return;
+  }
+  doc.rules.push(nextRule);
+  seen[key] = doc.rules.length - 1;
   added++;
+});
+
+// A 类规则范围收敛：报告 rows 枚举与 A 类 ALLOW 行同源；不在报告中的 A 类规则
+// （其 ALLOW 行已被源数据移除，如 H9 后 k001 的 geometry/judge）为无消费者的死规则，
+// 物理剔除（脚本化清理，不手编 JSON）。B/C 规则由 derive-bc-evidence-rules.js 维护，不动。
+var reportKeys = {};
+(report.rows || []).forEach(function (row) { reportKeys[row.kp + '|' + row.qt] = true; });
+var pruned = 0;
+doc.rules = doc.rules.filter(function (r) {
+  if (!aIds[r.knowledgePointId]) return true;
+  if (reportKeys[r.knowledgePointId + '|' + r.questionType]) return true;
+  pruned++;
+  return false;
 });
 
 // ---------- 稳定排序 + 写出 ----------
@@ -131,7 +162,7 @@ doc.rules.sort(function (a, b) {
 });
 
 doc.schemaVersion = 'p26-evidence.3';
-doc.note = 'P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（' + aIds.length +
+doc.note = 'P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（' + Object.keys(aIds).length +
   ' KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。' +
   'B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。' +
   '派生真值源：dev/p25/reports/evidence-derive-report.json' +
@@ -141,11 +172,12 @@ doc.note = 'P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全
   'required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。' +
   '消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；' +
   '供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。' +
-  '四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。';
+  '四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。' +
+  'P44-H9：--refresh-stale 按锚点漂移原子替换失效行（不改 B/C 行、不手编语义）。';
 
 fs.writeFileSync(RULES_PATH, JSON.stringify(doc, null, 2) + '\n');
 
-console.log('既有规则保留：' + (doc.rules.length - added) + ' 行，新增：' + added + ' 行，键冲突跳过：' + skipped);
+console.log('既有规则保留：' + (doc.rules.length - added) + ' 行，新增：' + added + ' 行，锚点刷新：' + refreshed + ' 行，死规则剔除：' + pruned + ' 行，键冲突跳过：' + skipped);
 console.log('总规则行：' + doc.rules.length + '，覆盖 KP：' + new Set(doc.rules.map(function (r) { return r.knowledgePointId; })).size);
 console.log('schemaVersion：' + doc.schemaVersion);
 console.log('写入：' + RULES_PATH);

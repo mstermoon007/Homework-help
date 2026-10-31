@@ -7228,6 +7228,108 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
 
 
 
+
+
+
+
+
+function fractionChoiceOptions(rng, answer) {
+  var pool = [String(answer)];
+  var cands = [answer + 1, answer - 1, answer * 2, answer + 2];
+  for (var ci = 0; ci < cands.length && pool.length < 4; ci++) {
+    var v = cands[ci];
+    if (v >= 1 && pool.indexOf(String(v)) === -1) pool.push(String(v));
+  }
+  return Rng.shuffle(rng, pool);
+}
+
+function fractionMakerBase(plan, qt, prompt, answerValue, explanation, data, options) {
+  var constraints = plan.constraints || {};
+  var q = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 20 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: null,
+    prompt: prompt,
+    answer: { value: answerValue, acceptable: [], explanation: explanation },
+    answerMode: options ? 'choice' : 'input',
+    response: { layout: 'inline-after-equals' },
+    hint: null,
+    data: data
+  };
+  if (options) q.data.options = options;
+  return q;
+}
+
+function makeFractionOfQuantityQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var den = Rng.pick(rng, [3, 4, 5, 6, 8]);
+  var whole = den * Rng.randInt(rng, 2, 4);
+  var num = Rng.randInt(rng, 1, den - 1);
+  var part = (whole / den) * num;
+  var qt = plan.questionTypeId;
+  var frac = num + '/' + den;
+  var expr = whole + ' × ' + frac;
+  var why = '求一个数的几分之几是多少，用单位「1」的量乘对应分率：' + expr + ' = ' + part
+    + '，也就是把 ' + whole + ' 平均分成 ' + den + ' 份，取其中 ' + num + ' 份。';
+  var prompt, options = null;
+  if (qt === 'calc') {
+    prompt = '计算：' + expr + ' = ？';
+  } else if (qt === 'fill') {
+    prompt = '填空：' + expr + ' = ____。求 ' + whole + ' 的 ' + frac + ' 是多少。';
+  } else if (qt === 'choice') {
+    options = fractionChoiceOptions(rng, part);
+    prompt = expr + ' 的结果是下面哪一个？';
+  } else {
+    prompt = '一袋面粉重 ' + whole + ' 千克，做点心用去了它的 ' + frac + '，用去了多少千克？';
+  }
+  var q = fractionMakerBase(plan, qt, prompt, String(part), why,
+    { mode: qt, steps: 1, kind: 'fraction-of-quantity', operation: 'mult' }, options);
+  q.seed = seedFn(plan, context, i);
+  return q;
+}
+
+function makeFractionTwiceQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var total = 12 * Rng.pick(rng, [2, 3, 4]);   
+  var first = (total * 3) / 4;                 
+  var answer = (first * 2) / 3;                
+  var qt = plan.questionTypeId;
+  var why = '连续求一个数的几分之几要找准单位「1」：先求苹果树 ' + total + ' × 3/4 = ' + first
+    + '（棵），再求红富士 ' + first + ' × 2/3 = ' + answer + '（棵）。';
+  var prompt, options = null;
+  var story = '果园里共有 ' + total + ' 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。';
+  if (qt === 'calc') {
+    prompt = '计算：' + total + ' × 3/4 × 2/3 = ？';
+  } else if (qt === 'fill') {
+    prompt = '填空：' + story + '红富士苹果树有 ____ 棵。';
+  } else if (qt === 'choice') {
+    options = fractionChoiceOptions(rng, answer);
+    prompt = story + '红富士苹果树有多少棵？';
+  } else {
+    prompt = story + '红富士苹果树有多少棵？';
+  }
+  var steps = (qt === 'apply') ? 2 : 1;
+  var q = fractionMakerBase(plan, qt, prompt, String(answer), why,
+    { mode: qt, steps: steps, kind: 'fraction-twice', operation: 'mult' }, options);
+  q.seed = seedFn(plan, context, i);
+  return q;
+}
+
+
+
+
+
 function buildApplyStory(structure, op) {
   var ops = structure.operands, oprs = structure.operators;
   var a = ops[0], b = ops[1];
@@ -7559,6 +7661,16 @@ function createArithmeticGenerator(spec) {
           if (mixName.indexOf('小数混合运算') !== -1) {
             var normOpMix = Arith.normalizeOperation(context.operation || planOperationStr(plan) || op);
             questions.push(makeFractionDecimalMixedQuestion(plan, context, i, seedFor, normOpMix));
+            continue;
+          }
+          
+          
+          if (mixName.indexOf('一个数乘分数') !== -1) {
+            questions.push(makeFractionOfQuantityQuestion(plan, context, i, seedFor));
+            continue;
+          }
+          if (mixName.indexOf('解决问题') !== -1) {
+            questions.push(makeFractionTwiceQuestion(plan, context, i, seedFor));
             continue;
           }
         }
@@ -7977,6 +8089,16 @@ function seedFor(plan, context, i) {
   
   if (plan && plan.seed != null) return plan.seed + ':shape:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':shape:' + i;
+}
+
+
+
+
+
+
+function intentWantsGraphic(plan) {
+  return !!(plan && plan.semanticParams && plan.semanticParams.graphic &&
+    plan.semanticParams.graphic.role != null);
 }
 
 
@@ -8458,6 +8580,7 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
 
 
 
+
 function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   var qt = plan.questionTypeId;
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
@@ -8489,28 +8612,33 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
 
+  var wantsG = intentWantsGraphic(plan);
   var data = {
     mode: qt,
     steps: 1,
     kind: 'fraction-times-integer',
-    graphic: fracGraphic(null),
     fractionNumerator: num,
     fractionDenominator: den,
-    times: times
+    times: times,
+    
+    
+    operation: 'mult'
   };
+  if (wantsG) data.graphic = fracGraphic(null);
   var prompt, answerObj, answerMode = 'input';
   
   
   var fracExpl = '分数乘整数，用分子乘整数的积作分子、分母不变：' + expr + ' = ' + rawFrac + simpNote;
 
   if (qt === 'geometry') {
-    prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
+    prompt = (wantsG ? '看图列式计算：' : '列式计算：') + '把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
       ' 份表示 ' + num + '/' + den + '。这样的 ' + times + ' 份，一共是单位“1”的几分之几？' +
       expr + ' = ____';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'fill') {
-    prompt = '看图填空：分数条把单位“1”平均分成 ' + den + ' 份，涂色部分表示 ' + num + '/' + den
-      + '。同样的涂色部分有 ' + times + ' 条，合起来是 ' + expr + ' = ____。';
+    prompt = (wantsG ? '看图填空：分数条把单位“1”平均分成 ' : '填空：把单位“1”平均分成 ')
+      + den + ' 份，取其中的 ' + num + ' 份表示 ' + num + '/' + den
+      + '。同样的部分有 ' + times + ' 份，合起来是 ' + expr + ' = ____。';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else if (qt === 'choice') {
     
@@ -8530,16 +8658,20 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
     var options = Rng.shuffle(rng, pool);
     data.options = options;
     data.correctIndex = options.indexOf(answerStr);
-    prompt = '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times
-      + ' 条同样的涂色部分。' + expr + ' 的结果是哪个？';
+    var choiceLead = wantsG
+      ? '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times + ' 条同样的涂色部分。计算 '
+      : '把单位“1”平均分成 ' + den + ' 份，取其中 ' + num + ' 份表示 ' + num + '/' + den
+        + '。这样的 ' + times + ' 份，计算 ';
+    prompt = choiceLead + expr + ' 的结果是哪个？';
     answerObj = { value: answerStr, acceptable: acceptable,
       explanation: '正确选项是「' + answerStr + '」。' + fracExpl };
     answerMode = 'choice';
   } else if (qt === 'judge') {
     var isTrue = rng() < 0.5;
     var shownNum = isTrue ? numerator : numerator + 1;
-    data.graphic = fracGraphic(25);
-    prompt = '看图判断：' + num + '/' + den + ' 乘 ' + times + '，' + times + ' 条涂色部分合起来表示 '
+    if (wantsG) data.graphic = fracGraphic(25);
+    prompt = (wantsG ? '看图判断：' : '判断：') + num + '/' + den + ' 乘 ' + times + '，' +
+      (wantsG ? times + ' 条涂色部分' : times + ' 份同样的部分') + '合起来表示 '
       + shownNum + '/' + den + '。这个说法对吗？';
     answerObj = {
       value: isTrue,
@@ -8551,11 +8683,17 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
         : expr + ' = ' + rawFrac + '，不是 ' + shownNum + '/' + den + '，说法错误。'
     };
     answerMode = 'judge';
+  } else if (qt === 'calc') {
+    
+    
+    prompt = '计算：' + expr + ' = ？';
+    answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   } else { 
     data.steps = 2;
-    data.graphic = fracGraphic(25);
-    prompt = '看图解决问题：一根彩带长 ' + num + '/' + den + ' 米（分数条平均分成 ' + den
-      + ' 份、涂色 ' + num + ' 份）。先说出一根彩带的长度，再列式计算 ' + times
+    if (wantsG) data.graphic = fracGraphic(25);
+    prompt = (wantsG ? '看图解决问题' : '解决问题') + '：一根彩带长 ' + num + '/' + den + ' 米'
+      + (wantsG ? '（分数条平均分成 ' + den + ' 份、涂色 ' + num + ' 份）' : '')
+      + '。先说出一根彩带的长度，再列式计算 ' + times
       + ' 根这样的彩带一共长多少米：' + expr + ' = ？（米）';
     answerObj = { value: answerStr, acceptable: acceptable, explanation: fracExpl };
   }
@@ -8745,7 +8883,9 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     answer = { value: '举例合理即可', acceptable: [] };
     expl = '只要举出的物体具有' + shapeMeta.meta.name + '的特征（'
       + shapeMeta.meta.features[0] + '），举例就合理。';
-    answerMode = 'input';
+    
+    
+    answerMode = 'read-aloud';
   }
 
   answer.explanation = expl;
@@ -8849,7 +8989,7 @@ function shapeTheme(facts, wrongs, nums, scenes, opts) {
     facts: facts,
     wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
     nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2], shape: x[3] || null }; }),
-    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null }; }),
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1], g: s[2] || null, mode: s[3] || null }; }),
     judgeGraphic: (opts && opts.judgeGraphic) || null,
     applyGraphic: (opts && opts.applyGraphic) || null
   };
@@ -8973,7 +9113,7 @@ var SHAPE_THEME = {
      ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1,
       { type: 'geometry', subtype: 'view-cards', role: 'quantity-correspondence',
         params: { views: [{ direction: 'top', grid: [[1, 1], [1, 1]] }, { direction: 'front', grid: [[1, 1]] }], unit: 'cm', unitPx: 25 } }]],
-    [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
+    [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一', null, 'read-aloud'],
      ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
      ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']],
   
@@ -9058,7 +9198,7 @@ var SHAPE_THEME = {
      ['用身体尺量出的长度是精确值', '身体尺只能估出大约长度，精确测量要用尺子。'],
      ['身体尺不能用来估计教室的长度', '可以用步数估计：步长×步数≈教室长度。']],
     [['小明一拃约 10 厘米，量得课桌宽约 4 拃，课桌宽约____厘米', '40', 40], ['小红一步约 50 厘米，走 8 步大约是____厘米', '400', 400], ['小刚一庹约 1 米，黑板约 3 庹，黑板长约____米', '3', 3]],
-    [['先量出自己的一拃约几厘米，再用拃估测课桌的长', '如：一拃约 12 厘米，课桌约 5 拃，约 60 厘米'],
+    [['先量出自己的一拃约几厘米，再用拃估测课桌的长', '如：一拃约 12 厘米，课桌约 5 拃，约 60 厘米', null, 'read-aloud'],
      ['先用步数估计教室的长，再用卷尺量一量检验？', '步长×步数≈估计值，与实测对比'],
      ['先估一估黑板的长（用庹），再说说估测和精确测量有什么不同？', '身体尺得近似值，尺子量得精确值']]),
   'math-g3-up-u03-k003': shapeTheme( 
@@ -9831,6 +9971,8 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     var applyExpl = (sA.match(/[\u4e00-\u9fa5]/g) || []).length >= 4
       ? sA : blankStatement(sItem.t, sA);
     answer = { value: sItem.a, acceptable: [], explanation: applyExpl };
+    
+    if (sItem.mode) answerMode = sItem.mode;
   }
 
   return {
@@ -9891,7 +10033,7 @@ function createShapeGenerator(spec) {
         
         
         if (kpName.indexOf('分数乘整数') !== -1
-          && ['fill', 'choice', 'judge', 'apply', 'geometry'].indexOf(qt) !== -1) {
+          && ['calc', 'fill', 'choice', 'judge', 'apply', 'geometry'].indexOf(qt) !== -1) {
           questions.push(makeFractionTimesIntegerQuestion(plan, context, i, kpName));
           continue;
         }
@@ -15049,7 +15191,7 @@ var CODE_BANK = {
     ],
     apply: [
       { q: '请你为学校图书馆设计一套图书编码：要能看出图书类别、所在楼层和书架序号，并用一个具体例子说明每一位的含义。',
-        a: '示例 A-3-05：A 表示类别、3 表示楼层、05 表示第5架（方案不唯一，结构清晰、唯一规范即可）' },
+        a: '示例 A-3-05：A 表示类别、3 表示楼层、05 表示第5架（方案不唯一，结构清晰、唯一规范即可）', open: true },
       { q: '请为宾馆房间设计编号规则，使客人一看房号就知道楼层和房间序号，并写出 5 楼第 8 间、12 楼第 3 间的编号。',
         a: '规则：楼层数+两位房间序号；5楼第8间为 508，12楼第3间为 1203' },
       { q: '请为全校同学设计学号，要求包含入学年份、班级、序号和性别信息（末位用 1 表示男、2 表示女），并为 2024 年入学 2 班序号 16 的女生写出一个学号。',
@@ -15112,6 +15254,10 @@ function makeCodeByKind(plan, context, i, qt) {
     q.data.options = options;
     q.data.correctIndex = options.indexOf(item.a);
     q.answerMode = 'choice';
+  } else if (qt === 'apply' && item.open) {
+    
+    
+    q.answerMode = 'read-aloud';
   }
   return q;
 }

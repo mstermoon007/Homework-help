@@ -3,10 +3,10 @@
  * dev/p40/t12-regression-baseline.js — P40-T-12 回归基线快照（E6，只读 + 重放证明）
  *
  * 七项（任务书 §2.3）：
- *   ①38 边 evolution 覆盖率 100%（R-REL-03 边均带合法 evolution，op∈闭集，fromStageOrder<toStageOrder）
+ *   ① 44 边 evolution 覆盖率 100%（R-REL-03 边均带合法 evolution，op∈闭集，fromStageOrder<toStageOrder）
  *   ②同族 stageOrder 无重复无倒挂（族内 stageOrder 唯一、按序年级非递减）
  *   ③familyId 375/375（capability 全量回填）
- *   ④跨族前置无环（canonical 373 前置边 KP 级 DAG 无环 + evolution 图无环；T-06 族投影环为
+ *   ④跨族前置无环（canonical 407 前置边 KP 级 DAG 无环 + evolution 图无环；T-06 族投影环为
  *       primary-family 折叠产物，登记 needs-review 观察，非数据违规）
  *   ⑤qt-intent 重放逐字节一致（1570 零重冻证明：重跑派生器前后 SHA256 不变）
  *   ⑥6a 复跑零 fake（check-allow-generation 复跑 FAIL=0）
@@ -37,7 +37,7 @@ var evBad = evEdges.filter(function (r) {
   return !e.familyId || e.fromStageOrder == null || e.toStageOrder == null ||
     !OPS[e.op] || !(e.toStageOrder > e.fromStageOrder);
 });
-items.evolution = { edges: evEdges.length, coverage: evEdges.length + '/38', bad: evBad.length, pass: evEdges.length === 38 && evBad.length === 0 };
+items.evolution = { edges: evEdges.length, coverage: evEdges.length + '/44', bad: evBad.length, pass: evEdges.length === 44 && evBad.length === 0 };
 if (!items.evolution.pass) problems.push('① evolution 覆盖/字段异常');
 
 /* ② 同族 stageOrder 无重复无倒挂 */

@@ -3,13 +3,13 @@
 /**
  * tests/generation/p28-geometry-native-makers.test.js — P28-GEO-NATIVE
  *
- * 背景：11 个 geometry ALLOW 行（分数乘法单元 4 KP + 长度/面积 6 KP + 排水法体积 1 KP）
+ * 背景：7 个 geometry ALLOW 行（长度/面积 6 KP + 排水法体积 1 KP）。
+ * H9/P44 后分数乘法单元 4 KP 的 geometry 行已随源 Excel 改判移除（1570→1566）。
  * 源 Excel 标注 domain=图形与几何，此前由 shape-recognition 以 kp=0 泛型兜底，
  * 产出与 KP 无关的「认三角形/平行四边形」题（结构闭合、语义空心）。
  *
  * 冻结不变量：
- *   1. 选择器对 11 行精确路由：10 行换原生 producer（kp=1 + geometry 声明），
- *      k001 仍由 shape 承接但 shape 内部走分数乘整数原生分支。
+ *   1. 选择器对 7 行精确路由：k 行换原生 producer（kp=1 + geometry 声明）。
  *   2. 原生 maker 真实产出：geometry 题型、TypeContract 通过、graphic 描述符可真实渲染 SVG、
  *      answer 非空、题干含 KP 语义关键词（分数/长度单位/面积/体积），不回落泛型认图。
  *   3. PracticeSession E2E（bundle 重建后）元数据 generator 与路由一致。
@@ -36,17 +36,14 @@ require(path.join(ROOT, 'shared', 'svg', 'svg-diagram.js'));
 require(path.join(ROOT, 'shared', 'svg', 'svg-geometry.js'));
 const SvgRegistry = require(path.join(ROOT, 'shared', 'presentation', 'svg-registry.js'));
 
-const SHAPE = 'generator:shape-recognition';
-const MIXED = 'generator:arithmetic-mixed-calculation';
 const MONEY = 'generator:money-measurement';
 const APP = 'generator:application-word';
 
 // [kpId, 期望 producer, 题干语义关键词正则]
+// H9/P44：g6-up-u02 四 KP 的 geometry ALLOW 行随源 Excel 改判「数与代数」移除
+// （1570→1566），其几何原生 maker 不再有 ALLOW 消费者，故从本矩阵剔除；
+// 对应 KP 的新题型覆盖见 p40-q18（calc/fill/choice/apply，禁图）。
 const ROWS = [
-  ['math-g6-up-u02-k001', SHAPE, /分数|单位“1”/],
-  ['math-g6-up-u02-k002', MIXED, /几分之几|×/],
-  ['math-g6-up-u02-k003', MIXED, /分配律/],
-  ['math-g6-up-u02-k004', MIXED, /几分之几|占\s*\d\/\d/],
   ['math-g2-up-u05-k001', MONEY, /厘米|米/],
   ['math-g2-up-u05-k005', MONEY, /长度单位|厘米|米/],
   ['math-g3-down-u04-k002', MONEY, /面积单位|平方厘米/],
@@ -62,7 +59,7 @@ function gradeOf(kp) {
 
 /* ---------------- 1. 选择器精确路由 ---------------- */
 
-test('selector：11 个 geometry 行精确路由到原生 producer', () => {
+test('selector：7 个 geometry 行精确路由到原生 producer', () => {
   ROWS.forEach(function (row) {
     const plan = { knowledgePointIds: [row[0]], questionTypeId: 'geometry', difficulty: 3, count: 1 };
     const sel = Selector.selectGenerator(plan);

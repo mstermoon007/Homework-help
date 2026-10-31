@@ -8,10 +8,10 @@
 | 项 | 值 | 来源 |
 | --- | --- | --- |
 | KP 总数 | **375** | kbl/canonical/knowledge.json (generatedAt undefined) |
-| ALLOW 映射 | **1570**（permission 全 allow） | kbl/canonical/mappings.json (generatedAt —，与 generation-contract/math.json 同源同计数) |
+| ALLOW 映射 | **1566**（permission 全 allow） | kbl/canonical/mappings.json (generatedAt —，与 generation-contract/math.json 同源同计数) |
 | capability 视图 | 375 | kbl/canonical/capability.json |
 | runtime 语义库 | 375（semantic/assessment 块） | kbl/data/math/g1..g6（与 runtime 副本逐字节一致） |
-| 原生 Generator 记录 | 24（其中 22 个有 KP 绑定，绑定 KP 共 375 个） | shared/generator/generator-registry.js CORE_RECORDS |
+| 原生 Generator 记录 | 23（其中 21 个有 KP 绑定，绑定 KP 共 375 个） | shared/generator/generator-registry.js CORE_RECORDS |
 | 规范题型 | calc / fill / choice / judge / geometry / classify / apply | question-type-registry |
 
 不变式校验：KP=375 ✔ / ALLOW=1570 ✔ / capability 覆盖 375 ✔ / 语义库覆盖 375 ✔ / 映射无空 pluginId ✔
@@ -22,23 +22,23 @@
 
 ### 分布
 
-- 草拟分级：{"A":313,"B":61,"C":1}
-- domain 分布：{"geometry":101,"algebra":189,"practice":60,"statistics":25}
+- 草拟分级：{"A":312,"B":62,"C":1}
+- domain 分布：{"geometry":97,"algebra":193,"practice":60,"statistics":25}
 - 年级·册分布：{"g1-down":25,"g1-up":14,"g2-down":32,"g2-up":28,"g3-down":35,"g3-up":36,"g4-down":41,"g4-up":28,"g5-down":44,"g5-up":36,"g6-down":29,"g6-up":27}
 
 ## 2. 1570 条 KP×QuestionType 映射（对应指令第 3 项）
 
-全量 1570 行见 [generation-matrix.json](../../../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。
+全量 1570 行的唯一真源见 `kbl/canonical/mappings.json`（运行时发射副本 `kbl/mappings/generation-contract/math.json`；每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation，draftSemanticLevel 见 kp-matrix.json）。
 
-- 按题型分布：{"apply":375,"choice":375,"fill":375,"geometry":105,"judge":126,"calc":189,"classify":25}
-- 按草拟分级×题型：{"A":{"apply":313,"choice":313,"fill":313,"geometry":105,"judge":126,"calc":128,"classify":25},"B":{"apply":61,"calc":61,"choice":61,"fill":61},"C":{"apply":1,"choice":1,"fill":1}}
+- 按题型分布：{"apply":375,"choice":375,"fill":375,"geometry":101,"judge":122,"calc":193,"classify":25}
+- 按草拟分级×题型：{"A":{"apply":312,"choice":312,"fill":312,"geometry":101,"judge":122,"calc":131,"classify":25},"B":{"apply":62,"calc":62,"choice":62,"fill":62},"C":{"apply":1,"choice":1,"fill":1}}
 
 ## 3. 承载模型：每条映射实际使用的 Generator（对应指令第 4 项）
 
 「实际使用」需分三层表述（这是本基线的关键口径修正）：
 
-1. **canonical 粗派生承载**（mappings.json / generation-contract 的 pluginId，kbl-derived）：仅 5 种——arithmetic-addition(939)、classification(25)、selection-choice(375)、selection-fill(105)、selection-judge(126)。这是派生期的粗粒度归类，**不是运行时实际路由**。
-2. **registry 原生语义绑定**（CORE_RECORDS.knowledgePoints）：语义专项路由 SSOT，22 个 Generator 绑定 375 个 KP。逐 Generator 见 generatorIndex.registryGenerators。
+1. **canonical 粗派生承载**（mappings.json / generation-contract 的 pluginId，kbl-derived）：仅 5 种——arithmetic-addition(943)、arithmetic-mixed-calculation(101)、selection-choice(375)、selection-judge(122)、stats(25)。这是派生期的粗粒度归类，**不是运行时实际路由**。
+2. **registry 原生语义绑定**（CORE_RECORDS.knowledgePoints）：语义专项路由 SSOT，21 个 Generator 绑定 375 个 KP。逐 Generator 见 generatorIndex.registryGenerators。
 3. **运行时实证**：selector 按能力评分路由（kp > capability > qt），P24-02 `verify:allow-gen` 已实证 **1570/1570 全部可真实生成 ≥1 题**。静态基线不重跑生成，以该门禁为运行时事实引用。
 
 ## 4. 每 Generator 支持的语义族（对应指令第 5 项）
@@ -95,8 +95,8 @@ Generator 的「语义族」以其 questionTypes/capabilities + 所绑定 KP 的
 
 | 级别 | 数量 | 说明 |
 | --- | --- | --- |
-| A 深语义型 | 313 | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |
-| B 结构语义型 | 61 | 同上（=B） |
+| A 深语义型 | 312 | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |
+| B 结构语义型 | 62 | 同上（=B） |
 | C 通用基础型 | 1 | 同上（=C） |
 | D 待治理型 | 0 | 同上（=D）；P25-02 优先治理对象 |
 

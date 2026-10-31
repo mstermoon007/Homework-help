@@ -3,7 +3,7 @@
 /**
  * tests/generation/p40-t10-composite-cross-family.test.js — P40-T-10 跨族组合前置校验
  *
- * 断言：composite 组合跨族 KP 时，必须存在 prerequisite 可达边（复用既有 373 边 + T-06 口径）；
+ * 断言：composite 组合跨族 KP 时，必须存在 prerequisite 可达边（复用既有 407 边 + T-06 口径）；
  *   未满足跨族前置的组合被拒；同族组合不受影响；无解析器时跳过（生产既有行为不变）。
  */
 

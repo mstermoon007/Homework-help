@@ -123,6 +123,108 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
   };
 }
 
+// P44-H9：g6-up-u02-k002「一个数乘分数」/ k004「解决问题」非 geometry 行原生 maker。
+// H9 后该单元回归「数与代数」域：intent graphicRole=null、allowedRepresentations=['numeric']
+// → 全部题型禁图；k002 的 requiredConstructs 含 multiplication，题目须声明 data.operation。
+// 此前非 geometry 行落通用整数四则（如「____ + 20 − 18 = 10」「把 14，减 5」），与分数乘法
+// 语义无关，且被旧 geometry 锚点证据规则 fail-closed drop。派发信号取 plan.semanticParams.name
+// （mixed 生成器绑定 KP 集内唯一命中）：'一个数乘分数'→ whole × 分率；'解决问题'→ 连续求一个数
+// 的几分之几。结果恒整数（whole 为 den 的整数倍；total 为 12 的倍数），不产除不尽形态。
+// 共用选项构造：正确值必在选项内（值约定 answer.value=选项文本），且不写 data.correctIndex
+// （P32-AS-16 索引约定归一仅在 correctIndex 存在时触发，省略即无歧义）。
+function fractionChoiceOptions(rng, answer) {
+  var pool = [String(answer)];
+  var cands = [answer + 1, answer - 1, answer * 2, answer + 2];
+  for (var ci = 0; ci < cands.length && pool.length < 4; ci++) {
+    var v = cands[ci];
+    if (v >= 1 && pool.indexOf(String(v)) === -1) pool.push(String(v));
+  }
+  return Rng.shuffle(rng, pool);
+}
+
+function fractionMakerBase(plan, qt, prompt, answerValue, explanation, data, options) {
+  var constraints = plan.constraints || {};
+  var q = {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 20 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: null,
+    prompt: prompt,
+    answer: { value: answerValue, acceptable: [], explanation: explanation },
+    answerMode: options ? 'choice' : 'input',
+    response: { layout: 'inline-after-equals' },
+    hint: null,
+    data: data
+  };
+  if (options) q.data.options = options;
+  return q;
+}
+
+function makeFractionOfQuantityQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var den = Rng.pick(rng, [3, 4, 5, 6, 8]);
+  var whole = den * Rng.randInt(rng, 2, 4);
+  var num = Rng.randInt(rng, 1, den - 1);
+  var part = (whole / den) * num;
+  var qt = plan.questionTypeId;
+  var frac = num + '/' + den;
+  var expr = whole + ' × ' + frac;
+  var why = '求一个数的几分之几是多少，用单位「1」的量乘对应分率：' + expr + ' = ' + part
+    + '，也就是把 ' + whole + ' 平均分成 ' + den + ' 份，取其中 ' + num + ' 份。';
+  var prompt, options = null;
+  if (qt === 'calc') {
+    prompt = '计算：' + expr + ' = ？';
+  } else if (qt === 'fill') {
+    prompt = '填空：' + expr + ' = ____。求 ' + whole + ' 的 ' + frac + ' 是多少。';
+  } else if (qt === 'choice') {
+    options = fractionChoiceOptions(rng, part);
+    prompt = expr + ' 的结果是下面哪一个？';
+  } else {
+    prompt = '一袋面粉重 ' + whole + ' 千克，做点心用去了它的 ' + frac + '，用去了多少千克？';
+  }
+  var q = fractionMakerBase(plan, qt, prompt, String(part), why,
+    { mode: qt, steps: 1, kind: 'fraction-of-quantity', operation: 'mult' }, options);
+  q.seed = seedFn(plan, context, i);
+  return q;
+}
+
+function makeFractionTwiceQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var total = 12 * Rng.pick(rng, [2, 3, 4]);   // 24 / 36 / 48
+  var first = (total * 3) / 4;                 // 18 / 27 / 36
+  var answer = (first * 2) / 3;                // 12 / 18 / 24
+  var qt = plan.questionTypeId;
+  var why = '连续求一个数的几分之几要找准单位「1」：先求苹果树 ' + total + ' × 3/4 = ' + first
+    + '（棵），再求红富士 ' + first + ' × 2/3 = ' + answer + '（棵）。';
+  var prompt, options = null;
+  var story = '果园里共有 ' + total + ' 棵果树，苹果树占 3/4，红富士苹果树又占苹果树的 2/3。';
+  if (qt === 'calc') {
+    prompt = '计算：' + total + ' × 3/4 × 2/3 = ？';
+  } else if (qt === 'fill') {
+    prompt = '填空：' + story + '红富士苹果树有 ____ 棵。';
+  } else if (qt === 'choice') {
+    options = fractionChoiceOptions(rng, answer);
+    prompt = story + '红富士苹果树有多少棵？';
+  } else {
+    prompt = story + '红富士苹果树有多少棵？';
+  }
+  var steps = (qt === 'apply') ? 2 : 1;
+  var q = fractionMakerBase(plan, qt, prompt, String(answer), why,
+    { mode: qt, steps: steps, kind: 'fraction-twice', operation: 'mult' }, options);
+  q.seed = seedFn(plan, context, i);
+  return q;
+}
+
 // P30-GEN-06（P30-16）：算术族 apply 题面生成器。
 // - 单运算：真实情境（苹果/分物），不含符号算式，核心骨架与 calc 互异。
 // - 多步：用「加上/减去/乘/除以」文字运算词串联，自动尊重先乘除后加减，
@@ -458,6 +560,16 @@ function createArithmeticGenerator(spec) {
           if (mixName.indexOf('小数混合运算') !== -1) {
             var normOpMix = Arith.normalizeOperation(context.operation || planOperationStr(plan) || op);
             questions.push(makeFractionDecimalMixedQuestion(plan, context, i, seedFor, normOpMix));
+            continue;
+          }
+          // P44-H9：分数乘法单元 k002/k004 非 geometry 行原生 maker（名称信号在 mixed
+          // 生成器绑定 KP 集内唯一；此前落通用整数四则，语义错且旧证据规则 fail-closed）。
+          if (mixName.indexOf('一个数乘分数') !== -1) {
+            questions.push(makeFractionOfQuantityQuestion(plan, context, i, seedFor));
+            continue;
+          }
+          if (mixName.indexOf('解决问题') !== -1) {
+            questions.push(makeFractionTwiceQuestion(plan, context, i, seedFor));
             continue;
           }
         }

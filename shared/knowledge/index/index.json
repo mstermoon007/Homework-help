@@ -2260,28 +2260,28 @@
       "name": "分数乘整数",
       "status": "active",
       "publication": "published",
-      "domain": "geometry"
+      "domain": "algebra"
     },
     "math-g6-up-u02-k002": {
       "unitId": "math-g6-up-u02",
       "name": "一个数乘分数",
       "status": "active",
       "publication": "published",
-      "domain": "geometry"
+      "domain": "algebra"
     },
     "math-g6-up-u02-k003": {
       "unitId": "math-g6-up-u02",
       "name": "分数、小数混合运算及运算律",
       "status": "active",
       "publication": "published",
-      "domain": "geometry"
+      "domain": "algebra"
     },
     "math-g6-up-u02-k004": {
       "unitId": "math-g6-up-u02",
       "name": "解决问题",
       "status": "active",
       "publication": "published",
-      "domain": "geometry"
+      "domain": "algebra"
     },
     "math-g6-up-u03-k001": {
       "unitId": "math-g6-up-u03",
@@ -4152,6 +4152,10 @@
       "math-g5-down-u06-k003",
       "math-g5-down-u06-k004",
       "math-g5-down-u06-k005",
+      "math-g6-up-u02-k001",
+      "math-g6-up-u02-k002",
+      "math-g6-up-u02-k003",
+      "math-g6-up-u02-k004",
       "math-g6-up-u03-k001",
       "math-g6-up-u03-k002",
       "math-g6-up-u03-k003",
@@ -4269,10 +4273,6 @@
       "math-g6-up-u01-k001",
       "math-g6-up-u01-k002",
       "math-g6-up-u01-k003",
-      "math-g6-up-u02-k001",
-      "math-g6-up-u02-k002",
-      "math-g6-up-u02-k003",
-      "math-g6-up-u02-k004",
       "math-g6-up-u04-k001",
       "math-g6-up-u04-k002",
       "math-g6-up-u04-k003",
@@ -4446,6 +4446,7 @@
       "math-g5-up-u05-k001",
       "math-g5-up-u05-k004",
       "math-g5-down-u02-k006",
+      "math-g6-up-u02-k004",
       "math-g6-down-u01-k001",
       "math-g6-down-u01-k002",
       "math-g6-down-u01-k003",
@@ -4548,10 +4549,6 @@
       "math-g6-up-u01-k001",
       "math-g6-up-u01-k002",
       "math-g6-up-u01-k003",
-      "math-g6-up-u02-k001",
-      "math-g6-up-u02-k002",
-      "math-g6-up-u02-k003",
-      "math-g6-up-u02-k004",
       "math-g6-up-u04-k001",
       "math-g6-up-u04-k002",
       "math-g6-up-u04-k003",
@@ -4724,6 +4721,9 @@
       "math-g5-down-u06-k003",
       "math-g5-down-u06-k004",
       "math-g5-down-u06-k005",
+      "math-g6-up-u02-k001",
+      "math-g6-up-u02-k002",
+      "math-g6-up-u02-k003",
       "math-g6-up-u03-k001",
       "math-g6-up-u03-k002",
       "math-g6-up-u03-k003",

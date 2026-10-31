@@ -5,10 +5,10 @@
     "kblData": "kbl/data/math/g1..g6/knowledge-points.json",
     "allowMappings": "kbl/mappings/generation-contract/math.json",
     "qtr": "shared/knowledge/question-type-registry.js",
-    "sourceFingerprint": "8d4ebef5",
+    "sourceFingerprint": "84133699",
     "counts": {
       "knowledgePoints": 375,
-      "allow": 1570
+      "allow": 1566
     }
   },
   "statuses": {
@@ -17,23 +17,23 @@
     "CONFIRMED": "confirmed"
   },
   "counts": {
-    "rows": 1570,
+    "rows": 1566,
     "confirmed": 169,
-    "aiVerified": 1401,
+    "aiVerified": 1397,
     "needsReview": 0,
     "rejected": 0,
     "byQuestionType": {
-      "calc": 189,
+      "calc": 193,
       "fill": 375,
       "apply": 375,
       "choice": 375,
-      "geometry": 105,
-      "judge": 126,
+      "geometry": 101,
+      "judge": 122,
       "classify": 25
     },
     "byModule": {
-      "algebra": 760,
-      "geometry": 505,
+      "algebra": 776,
+      "geometry": 485,
       "practice": 180,
       "statistics": 125
     },
@@ -3722,7 +3722,9 @@
           "math-g1-up-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-up-u05-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -3787,7 +3789,9 @@
           "math-g1-up-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-up-u05-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -3854,7 +3858,9 @@
           "math-g1-up-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-up-u05-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -10489,7 +10495,9 @@
           "math-g1-down-u08-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-down-u07-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -10561,7 +10569,9 @@
           "math-g1-down-u08-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-down-u07-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -10635,7 +10645,9 @@
           "math-g1-down-u08-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g1-down-u07-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -15157,7 +15169,9 @@
           "math-g2-up-u04-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u03-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -15222,7 +15236,9 @@
           "math-g2-up-u04-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u03-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -15289,7 +15305,9 @@
           "math-g2-up-u04-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u03-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -15354,7 +15372,9 @@
           "math-g2-up-u04-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u03-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -15419,7 +15439,9 @@
           "math-g2-up-u04-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u03-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -16495,7 +16517,9 @@
           "math-g2-up-u05-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -16560,7 +16584,9 @@
           "math-g2-up-u05-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -16627,7 +16653,9 @@
           "math-g2-up-u05-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -16692,7 +16720,9 @@
           "math-g2-up-u05-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -16757,7 +16787,9 @@
           "math-g2-up-u05-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -18170,7 +18202,9 @@
           "math-g2-up-u06-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -18235,7 +18269,9 @@
           "math-g2-up-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -18302,7 +18338,9 @@
           "math-g2-up-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -18367,7 +18405,9 @@
           "math-g2-up-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -18432,7 +18472,9 @@
           "math-g2-up-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -18499,7 +18541,8 @@
         "focus": "calculation",
         "requiredRelations": [
           "math-g2-up-u02-k001",
-          "math-g2-up-u03-k001"
+          "math-g2-up-u03-k001",
+          "math-g2-up-u06-k001"
         ],
         "requiredConstructs": [
           "division",
@@ -18569,7 +18612,8 @@
         "focus": "written",
         "requiredRelations": [
           "math-g2-up-u02-k001",
-          "math-g2-up-u03-k001"
+          "math-g2-up-u03-k001",
+          "math-g2-up-u06-k001"
         ],
         "requiredConstructs": [
           "division",
@@ -18639,7 +18683,8 @@
         "focus": "application",
         "requiredRelations": [
           "math-g2-up-u02-k001",
-          "math-g2-up-u03-k001"
+          "math-g2-up-u03-k001",
+          "math-g2-up-u06-k001"
         ],
         "requiredConstructs": [
           "division",
@@ -18707,7 +18752,8 @@
         "focus": "selection",
         "requiredRelations": [
           "math-g2-up-u02-k001",
-          "math-g2-up-u03-k001"
+          "math-g2-up-u03-k001",
+          "math-g2-up-u06-k001"
         ],
         "requiredConstructs": [
           "division",
@@ -19049,7 +19095,9 @@
           "math-g2-up-u08-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u07-k002"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -19117,7 +19165,9 @@
           "math-g2-up-u08-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u07-k002"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -19187,7 +19237,9 @@
           "math-g2-up-u08-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u07-k002"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -20028,6 +20080,7 @@
         ],
         "focus": "calculation",
         "requiredRelations": [
+          "math-g2-down-u01-k003",
           "math-g2-up-u07-k001"
         ],
         "requiredConstructs": [
@@ -20100,6 +20153,7 @@
         ],
         "focus": "written",
         "requiredRelations": [
+          "math-g2-down-u01-k003",
           "math-g2-up-u07-k001"
         ],
         "requiredConstructs": [
@@ -20172,6 +20226,7 @@
         ],
         "focus": "application",
         "requiredRelations": [
+          "math-g2-down-u01-k003",
           "math-g2-up-u07-k001"
         ],
         "requiredConstructs": [
@@ -20242,6 +20297,7 @@
         ],
         "focus": "selection",
         "requiredRelations": [
+          "math-g2-down-u01-k003",
           "math-g2-up-u07-k001"
         ],
         "requiredConstructs": [
@@ -26033,7 +26089,9 @@
           "math-g2-down-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u05-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -26096,7 +26154,9 @@
           "math-g2-down-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u05-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -26161,7 +26221,9 @@
           "math-g2-down-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u05-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -26833,7 +26895,9 @@
           "math-g2-down-u07-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u06-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -26900,7 +26964,9 @@
           "math-g2-down-u07-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u06-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -26969,7 +27035,9 @@
           "math-g2-down-u07-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-down-u06-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -31135,7 +31203,9 @@
           "math-g3-up-u04-k001"
         ],
         "focus": "calculation",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u03-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -31199,7 +31269,9 @@
           "math-g3-up-u04-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u03-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -31263,7 +31335,9 @@
           "math-g3-up-u04-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u03-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -31325,7 +31399,9 @@
           "math-g3-up-u04-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u03-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -32226,7 +32302,8 @@
         ],
         "focus": "calculation",
         "requiredRelations": [
-          "math-g2-up-u07-k001"
+          "math-g2-up-u07-k001",
+          "math-g3-up-u04-k004"
         ],
         "requiredConstructs": [
           "multiplication"
@@ -32294,7 +32371,8 @@
         ],
         "focus": "written",
         "requiredRelations": [
-          "math-g2-up-u07-k001"
+          "math-g2-up-u07-k001",
+          "math-g3-up-u04-k004"
         ],
         "requiredConstructs": [
           "multiplication"
@@ -32362,7 +32440,8 @@
         ],
         "focus": "application",
         "requiredRelations": [
-          "math-g2-up-u07-k001"
+          "math-g2-up-u07-k001",
+          "math-g3-up-u04-k004"
         ],
         "requiredConstructs": [
           "multiplication"
@@ -32428,7 +32507,8 @@
         ],
         "focus": "selection",
         "requiredRelations": [
-          "math-g2-up-u07-k001"
+          "math-g2-up-u07-k001",
+          "math-g3-up-u04-k004"
         ],
         "requiredConstructs": [
           "multiplication"
@@ -33565,7 +33645,9 @@
           "math-g3-up-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -33628,7 +33710,9 @@
           "math-g3-up-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -33693,7 +33777,9 @@
           "math-g3-up-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u05-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -34544,7 +34630,9 @@
           "math-g3-up-u07-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u06-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -34609,7 +34697,9 @@
           "math-g3-up-u07-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u06-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -34676,7 +34766,9 @@
           "math-g3-up-u07-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u06-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -34741,7 +34833,9 @@
           "math-g3-up-u07-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u06-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -34806,7 +34900,9 @@
           "math-g3-up-u07-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u06-k005"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -37226,7 +37322,9 @@
           "math-g3-up-u09-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u08-k005"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -37294,7 +37392,9 @@
           "math-g3-up-u09-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u08-k005"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -37364,7 +37464,9 @@
           "math-g3-up-u09-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-up-u08-k005"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -46369,7 +46471,9 @@
           "math-g3-down-u08-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-down-u07-k004"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -46434,7 +46538,9 @@
           "math-g3-down-u08-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-down-u07-k004"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -46501,7 +46607,9 @@
           "math-g3-down-u08-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g3-down-u07-k004"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -54588,7 +54696,9 @@
           "math-g4-up-u07-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u06-k004"
+        ],
         "requiredConstructs": [
           "subtraction"
         ],
@@ -54656,7 +54766,9 @@
           "math-g4-up-u07-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u06-k004"
+        ],
         "requiredConstructs": [
           "subtraction"
         ],
@@ -54726,7 +54838,9 @@
           "math-g4-up-u07-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u06-k004"
+        ],
         "requiredConstructs": [
           "subtraction"
         ],
@@ -54794,7 +54908,10 @@
           "math-g4-up-u08-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k001",
+          "math-g4-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -54868,7 +54985,10 @@
           "math-g4-up-u08-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k001",
+          "math-g4-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -54944,7 +55064,10 @@
           "math-g4-up-u08-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g2-up-u04-k001",
+          "math-g4-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -55478,7 +55601,9 @@
           "math-g4-up-u09-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -55546,7 +55671,9 @@
           "math-g4-up-u09-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -55616,7 +55743,9 @@
           "math-g4-up-u09-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k003"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -56821,6 +56950,7 @@
         ],
         "focus": "geometry",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -56888,6 +57018,7 @@
         ],
         "focus": "written",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -56957,6 +57088,7 @@
         ],
         "focus": "application",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -57024,6 +57156,7 @@
         ],
         "focus": "selection",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -57091,6 +57224,7 @@
         ],
         "focus": "selection",
         "requiredRelations": [
+          "math-g3-up-u01-k001",
           "math-g4-down-u01-k004"
         ],
         "requiredConstructs": [],
@@ -67518,7 +67652,9 @@
           "math-g4-down-u10-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u09-k003"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -67589,7 +67725,9 @@
           "math-g4-down-u10-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u09-k003"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -67662,7 +67800,9 @@
           "math-g4-down-u10-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u09-k003"
+        ],
         "requiredConstructs": [
           "addition",
           "division",
@@ -67733,7 +67873,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -67798,7 +67940,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -67865,7 +68009,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -67930,7 +68076,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -67995,7 +68143,9 @@
           "math-g5-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-down-u02-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -77080,7 +77230,9 @@
           "math-g5-up-u08-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u07-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -77146,7 +77298,9 @@
           "math-g5-up-u08-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u07-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -77214,7 +77368,9 @@
           "math-g5-up-u08-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u07-k004"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -77904,7 +78060,9 @@
           "math-g5-up-u09-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u08-k004"
+        ],
         "requiredConstructs": [
           "division",
           "mixed",
@@ -77974,7 +78132,9 @@
           "math-g5-up-u09-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u08-k004"
+        ],
         "requiredConstructs": [
           "division",
           "mixed",
@@ -78046,7 +78206,9 @@
           "math-g5-up-u09-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u08-k004"
+        ],
         "requiredConstructs": [
           "division",
           "mixed",
@@ -78116,7 +78278,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -78191,7 +78355,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -78258,7 +78424,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -78323,7 +78491,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -78388,7 +78558,9 @@
           "math-g5-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-up-u01-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -88777,7 +88949,9 @@
           "math-g5-down-u09-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u08-k003"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -88853,7 +89027,9 @@
           "math-g5-down-u09-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u08-k003"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -88931,7 +89107,9 @@
           "math-g5-down-u09-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u08-k003"
+        ],
         "requiredConstructs": [
           "division"
         ],
@@ -89446,7 +89624,9 @@
           "math-g5-down-u10-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u09-k003"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -89509,7 +89689,9 @@
           "math-g5-down-u10-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u09-k003"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -89574,7 +89756,9 @@
           "math-g5-down-u10-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u09-k003"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -90228,7 +90412,9 @@
           "math-g5-down-u11-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u10-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "mixed",
@@ -90299,7 +90485,9 @@
           "math-g5-down-u11-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u10-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "mixed",
@@ -90372,7 +90560,9 @@
           "math-g5-down-u11-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g5-down-u10-k004"
+        ],
         "requiredConstructs": [
           "addition",
           "mixed",
@@ -90443,7 +90633,9 @@
           "math-g6-up-u01-k001"
         ],
         "focus": "geometry",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "graphic"
@@ -90508,7 +90700,9 @@
           "math-g6-up-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -90575,7 +90769,9 @@
           "math-g6-up-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -90640,7 +90836,9 @@
           "math-g6-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -90705,7 +90903,9 @@
           "math-g6-up-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g4-up-u08-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric",
@@ -91430,32 +91630,34 @@
     },
     {
       "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "intent": {
-        "trainsWhat": "通过geometry（操作/作图题）训练图形操作与直观辨认，对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载脱离图形的纯文字表述",
-        "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、judge。本题型差异——apply属综合应用而本题型属图形操作；apply带情境；choice属辨认判断而本题型属图形操作",
-        "driftRisk": "风险（geometry）：作图/操作要求在非交互载体上退化为文字描述，图形表征降级",
-        "legitimacy": "成立：认知层级「理解」落于geometry认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载概念表述与图形操作",
+        "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
+        "differentiation": "同 KP 其他允许题型：apply、choice、fill。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+        "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）",
+        "legitimacy": "成立：认知层级「理解」落于calc认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k001"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91468,30 +91670,29 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
-          "category": "geometry",
+          "category": "calculation",
           "cognitiveLevels": [
+            "recall",
             "recognize",
             "understand",
             "apply",
             "analyze"
           ],
           "supports": {
-            "context": false,
-            "graphic": true,
+            "context": true,
+            "graphic": false,
             "distractors": false
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
-          "范畴对应：图形与几何域知识点对应操作/作图题型"
+          "认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+          "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
         "flags": []
       }
@@ -91502,10 +91703,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过fill（填空题）训练关键步骤与结果的书面表达，对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载多步推理的完整表述",
-        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内；表征支持：本知识点含图形表征，fill题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、geometry、judge。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；choice属辨认判断而本题型属书面表达",
+        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、choice。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；calc属计算操作而本题型属书面表达",
         "driftRisk": "风险（fill）：答案唯一性约束下退化为机械计算或抄写，考查点从理解滑向记忆",
-        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -91516,16 +91717,17 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91538,11 +91740,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "written",
@@ -91560,8 +91761,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，fill题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -91572,10 +91772,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过apply（解决问题/应用题）训练在情境中运用与迁移，对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载方法定义的复述",
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：choice、fill、geometry、judge。本题型差异——choice属辨认判断而本题型属综合应用；choice含干扰项（辨认成分重）；fill属书面表达而本题型属综合应用",
+        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：calc、choice、fill。本题型差异——calc属计算操作而本题型属综合应用；calc仅文字/算式；calc认知跨度[了解/认识/理解/应用/分析]与本题型[认识/理解/应用/分析]不同",
         "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读",
-        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -91586,15 +91786,16 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91607,11 +91808,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "application",
@@ -91628,76 +91828,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，apply题型支持图形呈现"
-        ],
-        "flags": []
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k001",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "intent": {
-        "trainsWhat": "通过judge（判断题）训练特征与关系的正误辨析，对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载操作性任务与多步应用",
-        "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属辨认判断；choice含干扰项（辨认成分重）；fill属书面表达而本题型属辨认判断",
-        "driftRisk": "风险（judge）：50% 猜测成分，判断正确不能独立证明理解",
-        "legitimacy": "成立：认知层级「理解」落于judge认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
-      },
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k001"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g5-down-u06-k001",
-          "math-g6-up-u01-k003"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
-      },
-      "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
-        "differentiation": "ai-verified",
-        "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
-      },
-      "evidence": {
-        "kbl": {
-          "cognitiveLevel": "understand",
-          "representations": [
-            "numeric",
-            "graphic"
-          ],
-          "module": "geometry",
-          "family": "geometry"
-        },
-        "type": {
-          "category": "selection",
-          "cognitiveLevels": [
-            "recognize",
-            "understand",
-            "apply",
-            "analyze"
-          ],
-          "supports": {
-            "context": true,
-            "graphic": true,
-            "distractors": false
-          }
-        },
-        "matches": [
-          "认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，judge题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -91708,10 +91839,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过choice（选择题）训练辨认、对应与辨析（在干扰项下做出正确选择），对象为「分数乘整数」（求几个相同分数的和的简便运算，与整数乘法意义相同）；题型限定：不承载完整的书写与计算过程",
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、fill、geometry、judge。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；fill属书面表达而本题型属辨认判断",
+        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、fill。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；calc属计算操作而本题型属辨认判断",
         "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）",
-        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -91722,15 +91853,16 @@
           "math-g5-down-u06-k001",
           "math-g6-up-u01-k003"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91743,11 +91875,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "selection",
@@ -91764,39 +91895,41 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，choice题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "intent": {
-        "trainsWhat": "通过geometry（操作/作图题）训练图形操作与直观辨认，对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载脱离图形的纯文字表述",
-        "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、judge。本题型差异——apply属综合应用而本题型属图形操作；apply带情境；choice属辨认判断而本题型属图形操作",
-        "driftRisk": "风险（geometry）：作图/操作要求在非交互载体上退化为文字描述，图形表征降级",
-        "legitimacy": "成立：认知层级「理解」落于geometry认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载概念表述与图形操作",
+        "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
+        "differentiation": "同 KP 其他允许题型：apply、choice、fill。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+        "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）",
+        "legitimacy": "成立：认知层级「理解」落于calc认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k002"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91809,30 +91942,29 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
-          "category": "geometry",
+          "category": "calculation",
           "cognitiveLevels": [
+            "recall",
             "recognize",
             "understand",
             "apply",
             "analyze"
           ],
           "supports": {
-            "context": false,
-            "graphic": true,
+            "context": true,
+            "graphic": false,
             "distractors": false
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
-          "范畴对应：图形与几何域知识点对应操作/作图题型"
+          "认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+          "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
         "flags": []
       }
@@ -91843,10 +91975,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过fill（填空题）训练关键步骤与结果的书面表达，对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载多步推理的完整表述",
-        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内；表征支持：本知识点含图形表征，fill题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、geometry、judge。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；choice属辨认判断而本题型属书面表达",
+        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、choice。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；calc属计算操作而本题型属书面表达",
         "driftRisk": "风险（fill）：答案唯一性约束下退化为机械计算或抄写，考查点从理解滑向记忆",
-        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -91856,16 +91988,18 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91878,11 +92012,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "written",
@@ -91900,8 +92033,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，fill题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -91912,10 +92044,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过apply（解决问题/应用题）训练在情境中运用与迁移，对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载方法定义的复述",
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：choice、fill、geometry、judge。本题型差异——choice属辨认判断而本题型属综合应用；choice含干扰项（辨认成分重）；fill属书面表达而本题型属综合应用",
+        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：calc、choice、fill。本题型差异——calc属计算操作而本题型属综合应用；calc仅文字/算式；calc认知跨度[了解/认识/理解/应用/分析]与本题型[认识/理解/应用/分析]不同",
         "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读",
-        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -91925,15 +92057,17 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -91946,11 +92080,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "application",
@@ -91967,75 +92100,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，apply题型支持图形呈现"
-        ],
-        "flags": []
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k002",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "intent": {
-        "trainsWhat": "通过judge（判断题）训练特征与关系的正误辨析，对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载操作性任务与多步应用",
-        "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属辨认判断；choice含干扰项（辨认成分重）；fill属书面表达而本题型属辨认判断",
-        "driftRisk": "风险（judge）：50% 猜测成分，判断正确不能独立证明理解",
-        "legitimacy": "成立：认知层级「理解」落于judge认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
-      },
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k002"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k001"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
-      },
-      "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
-        "differentiation": "ai-verified",
-        "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
-      },
-      "evidence": {
-        "kbl": {
-          "cognitiveLevel": "understand",
-          "representations": [
-            "numeric",
-            "graphic"
-          ],
-          "module": "geometry",
-          "family": "geometry"
-        },
-        "type": {
-          "category": "selection",
-          "cognitiveLevels": [
-            "recognize",
-            "understand",
-            "apply",
-            "analyze"
-          ],
-          "supports": {
-            "context": true,
-            "graphic": true,
-            "distractors": false
-          }
-        },
-        "matches": [
-          "认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，judge题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -92046,10 +92111,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过choice（选择题）训练辨认、对应与辨析（在干扰项下做出正确选择），对象为「一个数乘分数」（乘法意义拓展为一个数乘分数，表示求这个数的几分之几是多少（本单元核心应用题依据））；题型限定：不承载完整的书写与计算过程",
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、fill、geometry、judge。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；fill属书面表达而本题型属辨认判断",
+        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、fill。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；calc属计算操作而本题型属辨认判断",
         "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）",
-        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92059,15 +92124,17 @@
         "requiredRelations": [
           "math-g6-up-u02-k001"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "division",
+          "multiplication"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92080,11 +92147,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "selection",
@@ -92101,39 +92167,44 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，choice题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "intent": {
-        "trainsWhat": "通过geometry（操作/作图题）训练图形操作与直观辨认，对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载脱离图形的纯文字表述",
-        "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、judge。本题型差异——apply属综合应用而本题型属图形操作；apply带情境；choice属辨认判断而本题型属图形操作",
-        "driftRisk": "风险（geometry）：作图/操作要求在非交互载体上退化为文字描述，图形表征降级",
-        "legitimacy": "成立：认知层级「理解」落于geometry认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载概念表述与图形操作",
+        "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
+        "differentiation": "同 KP 其他允许题型：apply、choice、fill。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+        "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）",
+        "legitimacy": "成立：认知层级「理解」落于calc认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k003"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92146,30 +92217,29 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
-          "category": "geometry",
+          "category": "calculation",
           "cognitiveLevels": [
+            "recall",
             "recognize",
             "understand",
             "apply",
             "analyze"
           ],
           "supports": {
-            "context": false,
-            "graphic": true,
+            "context": true,
+            "graphic": false,
             "distractors": false
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
-          "范畴对应：图形与几何域知识点对应操作/作图题型"
+          "认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+          "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
         "flags": []
       }
@@ -92180,10 +92250,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过fill（填空题）训练关键步骤与结果的书面表达，对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载多步推理的完整表述",
-        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内；表征支持：本知识点含图形表征，fill题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、geometry、judge。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；choice属辨认判断而本题型属书面表达",
+        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、choice。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；calc属计算操作而本题型属书面表达",
         "driftRisk": "风险（fill）：答案唯一性约束下退化为机械计算或抄写，考查点从理解滑向记忆",
-        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于fill认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92193,16 +92263,21 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92215,11 +92290,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "written",
@@ -92237,8 +92311,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，fill题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -92249,10 +92322,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过apply（解决问题/应用题）训练在情境中运用与迁移，对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载方法定义的复述",
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：choice、fill、geometry、judge。本题型差异——choice属辨认判断而本题型属综合应用；choice含干扰项（辨认成分重）；fill属书面表达而本题型属综合应用",
+        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：calc、choice、fill。本题型差异——calc属计算操作而本题型属综合应用；calc仅文字/算式；calc认知跨度[了解/认识/理解/应用/分析]与本题型[认识/理解/应用/分析]不同",
         "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读",
-        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于apply认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92262,15 +92335,20 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92283,11 +92361,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "application",
@@ -92304,75 +92381,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，apply题型支持图形呈现"
-        ],
-        "flags": []
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k003",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "intent": {
-        "trainsWhat": "通过judge（判断题）训练特征与关系的正误辨析，对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载操作性任务与多步应用",
-        "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属辨认判断；choice含干扰项（辨认成分重）；fill属书面表达而本题型属辨认判断",
-        "driftRisk": "风险（judge）：50% 猜测成分，判断正确不能独立证明理解",
-        "legitimacy": "成立：认知层级「理解」落于judge认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
-      },
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k003"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k002"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
-      },
-      "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
-        "differentiation": "ai-verified",
-        "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
-      },
-      "evidence": {
-        "kbl": {
-          "cognitiveLevel": "understand",
-          "representations": [
-            "numeric",
-            "graphic"
-          ],
-          "module": "geometry",
-          "family": "geometry"
-        },
-        "type": {
-          "category": "selection",
-          "cognitiveLevels": [
-            "recognize",
-            "understand",
-            "apply",
-            "analyze"
-          ],
-          "supports": {
-            "context": true,
-            "graphic": true,
-            "distractors": false
-          }
-        },
-        "matches": [
-          "认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，judge题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在apply题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -92383,10 +92392,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过choice（选择题）训练辨认、对应与辨析（在干扰项下做出正确选择），对象为「分数、小数混合运算及运算律」（运算顺序为同级运算从左往右，先乘除后加减，有括号先算括号内）；题型限定：不承载完整的书写与计算过程",
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、fill、geometry、judge。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；fill属书面表达而本题型属辨认判断",
+        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、fill。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；calc属计算操作而本题型属辨认判断",
         "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）",
-        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「理解」落于choice认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92396,15 +92405,20 @@
         "requiredRelations": [
           "math-g6-up-u02-k002"
         ],
-        "requiredConstructs": [],
+        "requiredConstructs": [
+          "addition",
+          "division",
+          "mixed",
+          "multiplication",
+          "subtraction"
+        ],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92417,11 +92431,10 @@
         "kbl": {
           "cognitiveLevel": "understand",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "fraction"
         },
         "type": {
           "category": "selection",
@@ -92438,39 +92451,38 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，choice题型支持图形呈现"
+          "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
     },
     {
       "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "geometry",
+      "questionType": "calc",
       "status": "ai-verified",
       "intent": {
-        "trainsWhat": "通过geometry（操作/作图题）训练图形操作与直观辨认，对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载脱离图形的纯文字表述",
-        "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「分析」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、judge。本题型差异——apply属综合应用而本题型属图形操作；apply带情境；choice属辨认判断而本题型属图形操作",
-        "driftRisk": "风险（geometry）：作图/操作要求在非交互载体上退化为文字描述，图形表征降级",
-        "legitimacy": "成立：认知层级「分析」落于geometry认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载概念表述与图形操作",
+        "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「分析」在calc题型认知区间[了解/认识/理解/应用/分析]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
+        "differentiation": "同 KP 其他允许题型：apply、choice、fill。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同",
+        "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）",
+        "legitimacy": "成立：认知层级「分析」落于calc认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
           "math-g6-up-u02-k004"
         ],
-        "focus": "geometry",
+        "focus": "calculation",
         "requiredRelations": [
           "math-g6-up-u02-k003"
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
-          "graphic-construction"
+          "expression"
         ],
-        "graphicRole": "carrier"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92483,30 +92495,29 @@
         "kbl": {
           "cognitiveLevel": "analyze",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "calculation"
         },
         "type": {
-          "category": "geometry",
+          "category": "calculation",
           "cognitiveLevels": [
+            "recall",
             "recognize",
             "understand",
             "apply",
             "analyze"
           ],
           "supports": {
-            "context": false,
-            "graphic": true,
+            "context": true,
+            "graphic": false,
             "distractors": false
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「分析」在geometry题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
-          "范畴对应：图形与几何域知识点对应操作/作图题型"
+          "认知匹配：本知识点认知层级「分析」在calc题型认知区间[了解/认识/理解/应用/分析]内",
+          "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
         "flags": []
       }
@@ -92517,10 +92528,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过fill（填空题）训练关键步骤与结果的书面表达，对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载多步推理的完整表述",
-        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「分析」在fill题型认知区间[了解/认识/理解/应用/分析]内；表征支持：本知识点含图形表征，fill题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、geometry、judge。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；choice属辨认判断而本题型属书面表达",
+        "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「分析」在fill题型认知区间[了解/认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、choice。本题型差异——apply属综合应用而本题型属书面表达；apply认知跨度[认识/理解/应用/分析]与本题型[了解/认识/理解/应用/分析]不同；calc属计算操作而本题型属书面表达",
         "driftRisk": "风险（fill）：答案唯一性约束下退化为机械计算或抄写，考查点从理解滑向记忆",
-        "legitimacy": "成立：认知层级「分析」落于fill认知区间[了解/认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「分析」落于fill认知区间[了解/认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92532,14 +92543,13 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "expression",
           "text"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92552,11 +92562,10 @@
         "kbl": {
           "cognitiveLevel": "analyze",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "calculation"
         },
         "type": {
           "category": "written",
@@ -92574,8 +92583,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「分析」在fill题型认知区间[了解/认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，fill题型支持图形呈现"
+          "认知匹配：本知识点认知层级「分析」在fill题型认知区间[了解/认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -92586,10 +92594,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过apply（解决问题/应用题）训练在情境中运用与迁移，对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载方法定义的复述",
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：choice、fill、geometry、judge。本题型差异——choice属辨认判断而本题型属综合应用；choice含干扰项（辨认成分重）；fill属书面表达而本题型属综合应用",
+        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：calc、choice、fill。本题型差异——calc属计算操作而本题型属综合应用；calc仅文字/算式；calc认知跨度[了解/认识/理解/应用/分析]与本题型[认识/理解/应用/分析]不同",
         "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读",
-        "legitimacy": "成立：认知层级「分析」落于apply认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「分析」落于apply认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92601,13 +92609,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "context-word"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92620,11 +92627,10 @@
         "kbl": {
           "cognitiveLevel": "analyze",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "calculation"
         },
         "type": {
           "category": "application",
@@ -92641,75 +92647,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「分析」在apply题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，apply题型支持图形呈现"
-        ],
-        "flags": []
-      }
-    },
-    {
-      "knowledgeId": "math-g6-up-u02-k004",
-      "questionType": "judge",
-      "status": "ai-verified",
-      "intent": {
-        "trainsWhat": "通过judge（判断题）训练特征与关系的正误辨析，对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载操作性任务与多步应用",
-        "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「分析」在judge题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属辨认判断；choice含干扰项（辨认成分重）；fill属书面表达而本题型属辨认判断",
-        "driftRisk": "风险（judge）：50% 猜测成分，判断正确不能独立证明理解",
-        "legitimacy": "成立：认知层级「分析」落于judge认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
-      },
-      "assessment": {
-        "targetCodes": [
-          "math-g6-up-u02-k004"
-        ],
-        "focus": "selection",
-        "requiredRelations": [
-          "math-g6-up-u02-k003"
-        ],
-        "requiredConstructs": [],
-        "allowedRepresentations": [
-          "numeric",
-          "graphic"
-        ],
-        "expressionModes": [
-          "binary-judgement"
-        ],
-        "graphicRole": "auxiliary"
-      },
-      "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
-        "differentiation": "ai-verified",
-        "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
-      },
-      "evidence": {
-        "kbl": {
-          "cognitiveLevel": "analyze",
-          "representations": [
-            "numeric",
-            "graphic"
-          ],
-          "module": "geometry",
-          "family": "geometry"
-        },
-        "type": {
-          "category": "selection",
-          "cognitiveLevels": [
-            "recognize",
-            "understand",
-            "apply",
-            "analyze"
-          ],
-          "supports": {
-            "context": true,
-            "graphic": true,
-            "distractors": false
-          }
-        },
-        "matches": [
-          "认知匹配：本知识点认知层级「分析」在judge题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，judge题型支持图形呈现"
+          "认知匹配：本知识点认知层级「分析」在apply题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -92720,10 +92658,10 @@
       "status": "ai-verified",
       "intent": {
         "trainsWhat": "通过choice（选择题）训练辨认、对应与辨析（在干扰项下做出正确选择），对象为「解决问题」（连续求一个数的几分之几的问题，求比一个数多（少）几分之几的问题，核心是找准单位“1”）；题型限定：不承载完整的书写与计算过程",
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「分析」在choice题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
-        "differentiation": "同 KP 其他允许题型：apply、fill、geometry、judge。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；fill属书面表达而本题型属辨认判断",
+        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「分析」在choice题型认知区间[认识/理解/应用/分析]内",
+        "differentiation": "同 KP 其他允许题型：apply、calc、fill。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；calc属计算操作而本题型属辨认判断",
         "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）",
-        "legitimacy": "成立：认知层级「分析」落于choice认知区间[认识/理解/应用/分析]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立：认知层级「分析」落于choice认知区间[认识/理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
       },
       "assessment": {
         "targetCodes": [
@@ -92735,13 +92673,12 @@
         ],
         "requiredConstructs": [],
         "allowedRepresentations": [
-          "numeric",
-          "graphic"
+          "numeric"
         ],
         "expressionModes": [
           "option-selection"
         ],
-        "graphicRole": "auxiliary"
+        "graphicRole": null
       },
       "intentStatus": {
         "trainsWhat": "kbl-derived",
@@ -92754,11 +92691,10 @@
         "kbl": {
           "cognitiveLevel": "analyze",
           "representations": [
-            "numeric",
-            "graphic"
+            "numeric"
           ],
-          "module": "geometry",
-          "family": "geometry"
+          "module": "algebra",
+          "family": "calculation"
         },
         "type": {
           "category": "selection",
@@ -92775,8 +92711,7 @@
           }
         },
         "matches": [
-          "认知匹配：本知识点认知层级「分析」在choice题型认知区间[认识/理解/应用/分析]内",
-          "表征支持：本知识点含图形表征，choice题型支持图形呈现"
+          "认知匹配：本知识点认知层级「分析」在choice题型认知区间[认识/理解/应用/分析]内"
         ],
         "flags": []
       }
@@ -97443,7 +97378,9 @@
           "math-g6-up-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u05-k006"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -97511,7 +97448,9 @@
           "math-g6-up-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u05-k006"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -97581,7 +97520,9 @@
           "math-g6-up-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u05-k006"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -97649,7 +97590,9 @@
           "math-g6-up-u07-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u06-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -97712,7 +97655,9 @@
           "math-g6-up-u07-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u06-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -97777,7 +97722,9 @@
           "math-g6-up-u07-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u06-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -98234,7 +98181,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "calculation",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -98298,7 +98247,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -98362,7 +98313,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -98424,7 +98377,9 @@
           "math-g6-down-u01-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-up-u07-k001"
+        ],
         "requiredConstructs": [],
         "allowedRepresentations": [
           "numeric"
@@ -105935,7 +105890,9 @@
           "math-g6-down-u06-k001"
         ],
         "focus": "application",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-down-u05-k004"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -106003,7 +105960,9 @@
           "math-g6-down-u06-k001"
         ],
         "focus": "written",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-down-u05-k004"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
@@ -106073,7 +106032,9 @@
           "math-g6-down-u06-k001"
         ],
         "focus": "selection",
-        "requiredRelations": [],
+        "requiredRelations": [
+          "math-g6-down-u05-k004"
+        ],
         "requiredConstructs": [
           "mixed"
         ],
