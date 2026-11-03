@@ -30,6 +30,11 @@ var N = 6;
 var argN = process.argv.indexOf('--n');
 if (argN !== -1 && process.argv[argN + 1]) N = Math.max(2, parseInt(process.argv[argN + 1], 10) || 6);
 
+// P45-08：变体采样固定种子组（仅用于基线已失败行的 probeAgg，只做降级、不强化锚点）。
+// 不叠加行号偏移：实测同一 KP×QT 在 260111/260121 为命名形态、260131/260171 为计数形态，
+// 需要覆盖到两种形态才能让 probeVaries 判定 subtype 非结构恒定量。
+var VARIANT_PROBE_SEEDS = [260111, 260121, 260131, 260141, 260151, 260161, 260171, 260181, 260191, 260201];
+
 var ALL = QTR.TYPES.map(function (t) { return t.id; });
 var matrix = require(path.join(__dirnameRoot, 'kbl', 'teaching', 'kp-matrix.json'));
 var intentRelations = require(path.join(__dirnameRoot, 'kbl', 'teaching', 'intent-relations.json'));
@@ -129,7 +134,8 @@ evidenceRules.rules.forEach(function (r) {
     var probeSamples = [];
     var err = null;
     try {
-      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt });
+      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt,
+        seed: 'p25-derive|' + p.kp + '|' + p.qt });
       await session.start();
       samples = (session.semanticQuestions || []).filter(function (q) {
         var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
@@ -150,14 +156,18 @@ evidenceRules.rules.forEach(function (r) {
 
     // 字段普查聚合 + 声明聚合 + 基线证据状态
     var fieldAgg = {};   // path -> {present, values:{json:count}, types:{}}
-    var probeAgg = {};   // path -> {present, values:{json:true}}（反面样本，只用于挑战恒定性）
+    // probeAgg 唯一承载反面样本（始终）+ 变体采样（仅 fail/samples<2 行）：
+    //   present/values              → 反面样本（所有行）
+    //   variantPresent/variantValues → 变体采样专属计数（仅变体行有值，P45-NEXT-03 起单次遍历同时喂两套）
+    var probeAgg = {};
+    var variantSamples = 0;
     var declSets = {};   // json( relations ) -> count
     var generators = {};
     var states = {};
     var prompts = [];
     var intentConflicts = [];
 
-    probeSamples.forEach(function (q) {
+    function aggregateProbe(q, asVariant) {
       var flat = {};
       census(q.data, flat, '', 3);
       Object.keys(flat).forEach(function (pth) {
@@ -166,8 +176,15 @@ evidenceRules.rules.forEach(function (r) {
         if (!probeAgg[pth]) probeAgg[pth] = { present: 0, values: {} };
         probeAgg[pth].present++;
         probeAgg[pth].values[JSON.stringify(f.v)] = true;
+        if (asVariant) {
+          var pa = probeAgg[pth];
+          if (!pa.variantPresent) { pa.variantPresent = 0; pa.variantValues = {}; }
+          pa.variantPresent++;
+          pa.variantValues[JSON.stringify(f.v)] = true;
+        }
       });
-    });
+    }
+    probeSamples.forEach(function (q) { aggregateProbe(q, false); });
 
     samples.forEach(function (q) {
       var gen = (q.metadata && q.metadata.generator) || '?';
@@ -207,17 +224,117 @@ evidenceRules.rules.forEach(function (r) {
       if (prompts.length < 3 && q.prompt) prompts.push(String(q.prompt).slice(0, 80));
     });
 
+    // P45-08（T2 锚）：主样本基线证据失败 = 该行存在多形态产出（如同一 KP×QT 的
+    // 计数题 subtype=count / 命名题 subtype=angle）。追加确定性变体采样，让 probeVaries
+    // 能挑战到另一形态；否则单形态值会被冻成 field 值断言，另一形态必然误报。
+    // 主窗口样本 < 2 时同样不可判定「结构恒定量」（单样本恒等于自身），一并挑战。
+    if (states.fail || samples.length < 2) {
+      for (var _vi = 0; _vi < VARIANT_PROBE_SEEDS.length; _vi++) {
+        try {
+          var variantSession = new PracticeSession({ subject: 'math', grade: p.grade, count: N,
+            knowledgePointId: p.kp, questionType: p.qt, seed: VARIANT_PROBE_SEEDS[_vi] });
+          await variantSession.start();
+          (variantSession.semanticQuestions || []).forEach(function (q) {
+            var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
+            if (q.questionType !== p.qt || qk !== p.kp) return;
+            // P45-NEXT-03：单次 census 同时喂反面样本池与变体专属计数（不再重复遍历）
+            aggregateProbe(q, true);
+            variantSamples++;
+          });
+        } catch (e3) { /* 变体采样失败不影响主判定 */ }
+      }
+    }
+
     // ---- 候选断言派生 ----
     var flags = [];
     if (err) flags.push('gen-error');
     if (samples.length === 0) flags.push('no-sample');
-    if (samples.length < N) flags.push('partial-sample');
+    // P45-NEXT-02（T2 派生器）：确定性产出空间「形态闭合」判定，替代「samples < N 即 partial」。
+    // 某些 KP×QT 的生成器有确定性产出上限（如 money 的 fill/choice 恒为 5 题，count=12 仍 5），
+    // 该行永远 partial-sample，导致 apply 的 lowSample 门控永久失效、无法刷新失效字段。
+    // 判定：仅对 2 ≤ samples < N 的行，用同一种子把 count 放大到 N×2 复采一次；
+    //       去重后形态数不再增长 → 空间闭合（同种子确定性），标 saturated-sample 替代 partial-sample。
+    // 不用异种子 probe 窗口判闭合：异种子产出本就可能不同；其字段证据已由 probeAgg 单独覆盖。
+    // samples === 1 维持既有 partial/single-sample 门控不变（不在本任务扩大范围）。
+    if (samples.length < N) {
+      if (samples.length === 1) {
+        flags.push('partial-sample');
+      } else {
+        var saturated = false;
+        try {
+          var growSession = new PracticeSession({
+            subject: 'math', grade: p.grade, count: N * 2,
+            knowledgePointId: p.kp, questionType: p.qt,
+            seed: 'p25-derive|' + p.kp + '|' + p.qt
+          });
+          await growSession.start();
+          var growSamples = (growSession.semanticQuestions || []).filter(function (q) {
+            var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
+            return q.questionType === p.qt && qk === p.kp;
+          });
+          saturated = growSamples.length === samples.length;
+        } catch (e) { saturated = false; }
+        flags.push(saturated ? 'saturated-sample' : 'partial-sample');
+      }
+    }
     var genIds = Object.keys(generators);
     if (genIds.length > 1) flags.push('multi-generator');
 
     // 确定性基线（P25 门禁同源）：会话输出确定，samples=1 表示该行 distinct 产出空间就是 1 题
     // （count:N 经会话内去重/生成器上限收敛为 1）。契约冻结成立，但须打标供人工评审。
     if (samples.length === 1) flags.push('single-sample');
+
+    // P45-09（D2）：证据过滤盲区——PracticeSession 会按当前证据规则过滤掉「另一合法形态」
+    // （如立体图形 KP 的「长方体…」与「正方体…」同时存在，后者被已有 subtype 值锚拒绝），
+    // 导致 derive 只看到少量样本、把 data.graphic.* 冻成单值/恒存在锚；该锚随后在生产冻结 seed
+    // 下必然误报。这里用 PracticeSession(skipValidation:true) 的原始输出（不经证据过滤）复核图形字段：
+    //   1. 取值出现多值 → 非结构恒定量，按既有 probeVaries 机制降级为 fieldPresent；
+    //   2. 某字段只在部分原始产出出现（如 ruler 形态无 params.length、circle 无 params.labelSides）
+    //      → 存在性断言不安全，并入 absentInSome 供 apply 删除。
+    // 仅复核 data.graphic.* 图形字段（D2 归因域），不扩大到整题面。
+    // D16（P45-13）：raw 探针统一经 PracticeSession 单一路径（skipValidation 跳过证据/批验证），
+    // 删除原 StrategyEngine.plan + GeneratorSelector + gen.generate 并行调用链。
+    var rawVariantPaths = {};
+    var rawAbsentPaths = {};
+    if (fieldAgg['graphic.subtype']
+      && genIds.length === 1 && genIds[0] === 'generator:shape-recognition') {
+      try {
+        var rawSeed = 'freeze:p28-v1|' + p.kp + '|' + p.qt + '|d3';
+        var rawSession = new PracticeSession({
+          subject: 'math', grade: p.grade, count: N, difficulty: 3,
+          knowledgePointId: p.kp, questionType: p.qt, seed: rawSeed, skipValidation: true
+        });
+        await rawSession.start();
+        var rawQs = (rawSession.semanticQuestions || []).filter(function (q) {
+          var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
+          return q.questionType === p.qt && qk === p.kp;
+        });
+        var rawAgg = {};
+        var rawN = 0;
+        rawQs.forEach(function (q) {
+          if (!q) return;
+          rawN++;
+          var flat = {};
+          census(q.data, flat, '', 3);
+          Object.keys(flat).forEach(function (pth) {
+            if (pth.indexOf('graphic.') !== 0) return;
+            var f = flat[pth];
+            if (f.t === 'object' || f.t === 'array' || f.t === 'null') return;
+            if (!rawAgg[pth]) rawAgg[pth] = { present: 0, values: {} };
+            rawAgg[pth].present++;
+            rawAgg[pth].values[JSON.stringify(f.v)] = true;
+          });
+        });
+        Object.keys(rawAgg).forEach(function (pth) {
+          var ra = rawAgg[pth];
+          if (ra.present < rawN) {
+            rawAbsentPaths['data.' + pth] = true;
+          } else if (Object.keys(ra.values).length > 1) {
+            rawVariantPaths['data.' + pth] = true;
+          }
+        });
+      } catch (e4) { /* 原始探针失败不影响派生 */ }
+    }
 
     var stableFields = [];
     Object.keys(fieldAgg).forEach(function (pth) {
@@ -227,6 +344,19 @@ evidenceRules.rules.forEach(function (r) {
       if (a.present === samples.length && scalarTypes.length === 1 && valKeys.length === 1) {
         stableFields.push({ path: 'data.' + pth, value: JSON.parse(valKeys[0]), type: scalarTypes[0] });
       }
+    });
+
+    // P45-09（D2）：字段存在性证据——仅部分样本出现（0 < present < samples），
+    // 供 apply 删除任何「存在性/取值」断言（该字段不是结构恒定量，另一合法形态无此字段）；
+    // 全样本出现但值不恒定（不在 stableFields）的路径由 apply 按「候选无断言」判定降级。
+    var absentInSome = [];
+    Object.keys(fieldAgg).forEach(function (pth) {
+      var a = fieldAgg[pth];
+      if (a.present > 0 && a.present < samples.length) absentInSome.push('data.' + pth);
+    });
+    // 原始形态探针发现的「仅部分合法产出出现」的图形字段，同样计入缺失证据
+    Object.keys(rawAbsentPaths).forEach(function (p) {
+      if (absentInSome.indexOf(p) === -1) absentInSome.push(p);
     });
 
     var declKeys = Object.keys(declSets);
@@ -258,13 +388,27 @@ evidenceRules.rules.forEach(function (r) {
     // boolean 字段不产值断言：bool 仅两值，小样本"全同值"无统计意义（N=6 时概率≈3%），
     // 冻结具体值必然埋雷（P28-FIX6b：judge 题 isTrue 被冻成 true 的 flake）——降级为存在性断言
     // 任何类型的标量再经反面样本挑战：异种子窗口取到不同值即非结构恒定量，同样降级 fieldPresent
+    /** P45-08：变体采样（仅基线失败行）对某字段的判定：'absent'=另一形态无此字段；'varies'=值不恒定
+     *  合并后读 probeAgg 的 variantPresent/variantValues（同一份变体样本的专属计数） */
+    function variantStatus(f) {
+      if (!variantSamples) return null;
+      var pa = probeAgg[f.path.replace(/^data\./, '')];
+      if (!pa || !pa.variantPresent) return 'absent';
+      if (pa.variantPresent < variantSamples) return 'absent';
+      return Object.keys(pa.variantValues).some(function (j) { return j !== JSON.stringify(f.value); }) ? 'varies' : null;
+    }
     function probeVaries(f) {
-      var pa = probeAgg[f.path];
+      if (rawVariantPaths[f.path]) return true;
+      if (variantStatus(f)) return true;
+      // C6 修复：probeAgg 键为 census(q.data) 产出的无前缀路径（如 graphic.subtype），
+      // 而 f.path 带 data. 前缀；与 variantStatus 同口径剥离前缀，否则反面采样永不生效。
+      var pa = probeAgg[f.path.replace(/^data\./, '')];
       if (!pa || !pa.present) return false;
       return Object.keys(pa.values).some(function (j) { return j !== JSON.stringify(f.value); });
     }
     var requiredFields = [];
     stableFields.forEach(function (f) {
+      if (variantStatus(f) === 'absent') { flags.push('variant-absent:' + f.path); return; }
       var vary = probeVaries(f);
       if (typeof f.value === 'number') {
         if (samples.length < 3) return;
@@ -315,6 +459,7 @@ evidenceRules.rules.forEach(function (r) {
       declaredRelations: declKeys.map(function (k) { return { relations: JSON.parse(k), count: declSets[k] }; }),
       allowedRelations: Object.keys(allowedRels),
       stableFields: stableFields,
+      absentInSome: absentInSome,
       intentConflicts: intentConflicts.slice(0, 3),
       kblAnchor: currentAnchor,
       staleAnchor: staleAnchor,
@@ -339,7 +484,7 @@ evidenceRules.rules.forEach(function (r) {
   var summary = {
     aKps: aKps.length,
     pairs: pairs.length,
-    genError: 0, noSample: 0, ruleable: 0, notRuleable: 0, existingKept: 0,
+    genError: 0, noSample: 0, partial: 0, saturated: 0, ruleable: 0, notRuleable: 0, existingKept: 0,
     counterDowngraded: 0,
     baseline: { pass: 0, warn: 0, skip: 0, fail: 0 },
     intentConflictRows: 0,
@@ -348,6 +493,8 @@ evidenceRules.rules.forEach(function (r) {
   rows.forEach(function (r) {
     if (r.flags.indexOf('gen-error') !== -1) summary.genError++;
     if (r.flags.indexOf('no-sample') !== -1) summary.noSample++;
+    if (r.flags.indexOf('partial-sample') !== -1) summary.partial++;
+    if (r.flags.indexOf('saturated-sample') !== -1) summary.saturated++;
     if (r.candidate) summary.ruleable++; else summary.notRuleable++;
     if (r.flags.indexOf('existing-rule-kept') !== -1) summary.existingKept++;
     if (r.intentConflicts.length) summary.intentConflictRows++;
@@ -362,7 +509,8 @@ evidenceRules.rules.forEach(function (r) {
   fs.writeFileSync(outPath, JSON.stringify({
     schemaVersion: 'p26-evidence-derive.2',
     generatedAt: new Date().toISOString(),
-    sampling: { n: N, counterSample: { n: N, seedBase: 260101, note: '显式异种子反面采样，挑战字段恒定性' } },
+    sampling: { n: N, counterSample: { n: N, seedBase: 260101, note: '显式异种子反面采样，挑战字段恒定性' },
+      growthProbe: { n: N * 2, note: 'P45-NEXT-02 同种子放大复采，去重形态数不再增长即判空间闭合（saturated-sample）' } },
     builtFrom: {
       aClass: 'kbl/teaching/kp-matrix.json draftSemanticLevel=A',
       allow: 'KCV.buildEligibility ALLOW 动态枚举（同 dev/check-allow-generation.js）',

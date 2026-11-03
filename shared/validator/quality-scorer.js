@@ -33,6 +33,39 @@ function coerceString(v) { return v == null ? '' : String(v); }
 
 function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
 
+/* ================================================================
+ * P45-07（V-C 分数既约）：答案中的分数形态必须既约。
+ *   分母 1 必须折叠为整数（`n/1` 恒为异常）。
+ *   非 1 分母的互质要求只对 calc（计算结果）生效——`fill` 的「把单位 1 平均分成 9 份，
+ *   表示这样 3 份」答案是 3/9 的表意本身（分数的意义/分数单位题以下去约分反而错），
+ *   不属 C 类缺陷；choice 的选项同理由题目语义决定，不在此门禁。
+ * ================================================================ */
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { var t = a % b; a = b; b = t; }
+  return a || 1;
+}
+
+/**
+ * 分数形态检查（纯函数，供 scoreQuestion 与门禁 23 复用）
+ * @param {Object} sq SemanticQuestion
+ * @returns {Array<string>} 违规描述（空数组 = 通过）
+ */
+function checkFractionForm(sq) {
+  var issues = [];
+  var val = coerceString(sq && sq.answer ? sq.answer.value : '').trim();
+  var m = /^(\d+)\s*\/\s*(\d+)$/.exec(val);
+  if (!m) return issues;
+  var n = Number(m[1]), d = Number(m[2]);
+  if (d === 1) {
+    issues.push('V-C 分数分母为 1，必须折叠为整数：' + val);
+  } else if (d > 1 && gcd(n, d) > 1 && (sq.questionType || sq.type) === 'calc') {
+    issues.push('V-C 计算结果未约分：' + val);
+  }
+  return issues;
+}
+
+
 // P40-Q-10：解析质量维（explanationQuality）四判据等权（各 0.25）
 //   ① 非空（sq.answer.explanation，schema defaultAnswer 单源）
 //   ② 非复述（非「题面原文 + 纯答案尾巴」照抄模板、非题面截断）
@@ -170,6 +203,9 @@ function scoreQuestion(sq, validationResult, context) {
   // ⑦ Explanation Quality (解析质量) — P40-Q-10（四判据等权，见 scoreExplanationQuality）
   breakdown.explanationQuality = scoreExplanationQuality(sq);
 
+  // P45-07（V-C）：分数形态为 details 级证据（不改加权总分，门禁 23 全量消费）
+  details.fractionForm = checkFractionForm(sq);
+
   // 加权总分
   var total = 0;
   Object.keys(WEIGHTS).forEach(function (k) {
@@ -263,6 +299,7 @@ module.exports = {
   scoreQuestion: scoreQuestion,
   scoreBatch: scoreBatch,
   scoreExplanationQuality: scoreExplanationQuality,
+  checkFractionForm: checkFractionForm,
   generatorProfile: generatorProfile,
   WEIGHTS: WEIGHTS
 };

@@ -90,7 +90,11 @@
       // FINAL-13：显式 seed（冻结/可复现场景）；UI 不传为 null，生成链保持 auto seed 行为
       seed: options.seed != null ? options.seed : null,
       // C1：combine 合并出题标志必须进入 config（_buildGenerationRequest 读取 this.config.combine）
-      combine: options.combine === true
+      combine: options.combine === true,
+      // D16（P45-13）：派生器 raw 探针单一路径——经 PracticeSession 暴露跳过证据/批验证的
+      // 原始生成输出，替代原 StrategyEngine.plan + GeneratorSelector + gen.generate 并行调用链。
+      // 仅 dev 派生期使用（evidence-rules 锚点对账），生产 UI 不传此标志。
+      skipValidation: options.skipValidation === true
     };
     // C2：跨代去重上下文（由编排层 bridge 持有并注入；本层不自行跨会话记忆）：
     // { generationId: 上一代 id, fingerprints: Set<questionFingerprint> }
@@ -125,6 +129,7 @@
     // 2. 调用统一生成 API (GenerationAPI)
     // C2：注入上一代指纹（previousSeenKeys）实现跨练习去重；generationId 随计划透传。
     var genOptions = { renderOptions: { mode: 'screen' } };
+    if (this.config.skipValidation) genOptions.skipValidation = true;
     if (this.previousGeneration) {
       if (this.previousGeneration.fingerprints) genOptions.previousSeenKeys = this.previousGeneration.fingerprints;
       if (this.previousGeneration.generationId) {

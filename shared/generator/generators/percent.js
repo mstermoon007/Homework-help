@@ -193,7 +193,7 @@ function makeDiscount(plan, context, i) {
     // evidence-rules：折扣 calc 行断言 data.ask='current'（T2 教学事实：calc=现价列式，
     // 「求便宜」问法由 fill/choice/apply 的 askSaved 变体承载），calc 不产 saved 变体
     return finish(bb,
-      '列式计算：一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？列式：' + price + ' × ' + d.rate + '% = ？',
+      '列式计算：一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？算式：' + price + ' × ' + d.rate + '% = ？',
       cur, '打' + d.label + '就是按原价的 ' + d.rate + '% 出售，现价 = 原价 × ' + d.rate + '% = ' + cur + ' 元');
   }
   if (askSaved) {
@@ -299,7 +299,7 @@ function makeTax(plan, context, i) {
   var t = qt(plan);
   var bb = buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate });
   var expl = '应纳税额 = 收入 × 税率：' + income + ' × ' + rate + '% = ' + tax + ' 元';
-  if (t === 'calc') return finish(bb, '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？列式：' + income + ' × ' + rate + '% = ？', tax, expl);
+  if (t === 'calc') return finish(bb, '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？算式：' + income + ' × ' + rate + '% = ？', tax, expl);
   if (t === 'fill') return finish(bb, '____ 元是 ' + income + ' 元营业额按 ' + rate + '% 税率缴纳的税款', tax, expl);
   if (t === 'choice') return finish(bb, '营业额 ' + income + ' 元，税率 ' + rate + '%，应纳税多少元？', tax, expl);
   return finish(bb, goods + '是 ' + income + ' 元，按规定要按 ' + rate + '% 的税率缴纳税款。这家应缴纳税款多少元？', tax, expl);
@@ -330,7 +330,7 @@ function makeChengshu(plan, context, i) {
   var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
   var bb = buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' });
   var expl = '增产' + c.label + '就是增产 ' + c.rate + '%，增产量 = 去年产量 × ' + c.rate + '%：' + base + ' × ' + c.rate + '% = ' + gain + ' 吨';
-  if (t === 'calc') return finish(bb, '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？列式：' + base + ' × ' + c.rate + '% = ？', gain, expl);
+  if (t === 'calc') return finish(bb, '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？算式：' + base + ' × ' + c.rate + '% = ？', gain, expl);
   if (t === 'fill') return finish(bb, '____ 吨是 ' + base + ' 吨' + crop + '今年增产' + c.label + '的增产量', gain, expl);
   if (t === 'choice') return finish(bb, '去年产' + crop + ' ' + base + ' 吨，今年增产' + c.label + '，增产多少吨？', gain, expl);
   return finish(bb, '李叔叔家去年产' + crop + ' ' + base + ' 吨，今年风调雨顺，比去年增产' + c.label + '（也就是 ' + c.rate + '%）。今年比去年增产多少吨？', gain, expl);
@@ -371,7 +371,7 @@ function makeLife(plan, context, i) {
   var t = qt(plan);
   var bb = buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct });
   var expl = '求总数量的百分之几是多少，用乘法：' + scenario.expr + ' = ' + scenario.ans;
-  if (t === 'calc') return finish(bb, '列式计算：' + scenario.story + '列式：' + scenario.expr + ' = ？', scenario.ans, expl);
+  if (t === 'calc') return finish(bb, '列式计算：' + scenario.story + '算式：' + scenario.expr + ' = ？', scenario.ans, expl);
   if (t === 'fill') return finish(bb, scenario.total + ' 的 ' + scenario.pct + '% 等于 ____', scenario.ans, expl);
   if (t === 'choice') return finish(bb, '求 ' + scenario.expr + ' 的结果是多少？', scenario.ans, expl);
   return finish(bb, scenario.story, scenario.ans, expl);

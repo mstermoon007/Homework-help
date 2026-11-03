@@ -107,6 +107,8 @@ function fsub(a, b) { var l = a.d * b.d / gcd(a.d, b.d); return simp(a.n * (l / 
 function fmul(a, b) { return simp(a.n * b.n, a.d * b.d); }
 function fdiv(a, b) { return simp(a.n * b.d, a.d * b.n); }
 function fstr(f) { return f.d === 1 ? String(f.n) : fs(f); }
+// P45-03：用户可见分数统一出口——先约分再格式化，分母 1 折叠为整数。
+function sfs(n, d) { return fstr(simp(n, d)); }
 
 // 受限分数四则求值（先同级左到右，仅用于备选项判重；出现负数/零除数返回 null）
 function fracEval(s) {
@@ -156,20 +158,20 @@ function calcItem(expr, ansF, hint, why, graphic) {
   // P40-Q-09（R6 复现 #142）：why 法则句整替换曾致解析冒号后空截断（7 处 calc 行全丢演算）。
   // 修复：法则句在前、逐步演算在后，闭环「法则 → 演算」；未传 why 保持 hint 旧形态。
   var explain = why
-    ? why + expr + ' = ' + fs(ansF) + '。'
-    : ((hint ? hint + '：' : '') + expr + ' = ' + fs(ansF) + '。');
-  var it = { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+    ? why + expr + ' = ' + fstr(ansF) + '。'
+    : ((hint ? hint + '：' : '') + expr + ' = ' + fstr(ansF) + '。');
+  var it = { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fstr(ansF), options: null, explain: explain };
   if (graphic) it.graphic = graphic;
   return it;
 }
 function choiceExprItem(rng, expr, ansF, stemPrefix, why) {
-  var explain = why || ('逐个计算四个选项，只有「' + expr + '」的得数是 ' + fs(ansF) + '。');
-  return { prompt: (stemPrefix || '下面哪个算式的得数是 ') + fs(ansF) + '？（  ）', answer: expr,
+  var explain = why || ('逐个计算四个选项，只有「' + expr + '」的得数是 ' + fstr(ansF) + '。');
+  return { prompt: (stemPrefix || '下面哪个算式的得数是 ') + fstr(ansF) + '？（  ）', answer: expr,
     options: exprOptionsFrac(rng, expr, ansF), explain: explain };
 }
 function applyItem(story, expr, ansF, why) {
-  var explain = why || ('按题意列式 ' + expr + ' = ' + fs(ansF) + '。');
-  return { prompt: story + '：' + expr + ' = ？', answer: fs(ansF), options: null, explain: explain };
+  var explain = why || ('按题意列式 ' + expr + ' = ' + fstr(ansF) + '。');
+  return { prompt: story + '：' + expr + ' = ？', answer: fstr(ansF), options: null, explain: explain };
 }
 
 // 运算类子类型（word/addsub/addsub-diff/mix/div）的四题型真分工
@@ -180,21 +182,22 @@ function arithmeticTyped(sub, qt, rng, nr) {
     if (qt === 'calc') return calcItem(wexpr, wans, null,
       '同分母分数相加，分母不变、分子相加：');
     if (qt === 'fill') {
+      var wrem = sfs(wd - wa, wd);
       return { prompt: '一块蛋糕，小明吃了这块蛋糕的 ' + wa + '/' + wd + '，剩下的小红正好吃完，小红吃了这块蛋糕的 ____',
-        answer: fs({ n: wd - wa, d: wd }), options: null,
+        answer: wrem, options: null,
         explain: '把整块蛋糕看作单位「1」，小红吃的部分是剩下的：1 − ' + wa + '/' + wd
-          + ' = ' + (wd - wa) + '/' + wd + '，所以填 ' + (wd - wa) + '/' + wd + '。' };
+          + ' = ' + wrem + '，所以填 ' + wrem + '。' };
     }
     if (qt === 'choice') {
       return { prompt: '一块蛋糕，小明吃了 ' + wa + '/' + wd + '，小红吃了 ' + wb + '/' + wd +
         '，求两人一共吃了这块蛋糕的几分之几，下面哪个列式正确？（  ）',
         answer: wexpr, options: exprOptionsFrac(rng, wexpr, wans),
-        explain: '求两人吃的总和，把两部分合起来用同分母加法：' + wexpr + ' = ' + fs(wans)
+        explain: '求两人吃的总和，把两部分合起来用同分母加法：' + wexpr + ' = ' + fstr(wans)
           + '，正确选项是「' + wexpr + '」。' };
     }
     return { prompt: '一块蛋糕，小明吃了这块蛋糕的 ' + wa + '/' + wd + '，小红吃了 ' + wb + '/' + wd +
-      '，两人一共吃了这块蛋糕的几分之几？列式 ' + wexpr + ' = ？', answer: fs(wans), options: null,
-      explain: '把两人吃的两部分合起来，同分母分数相加：' + wexpr + ' = ' + fs(wans) + '。' };
+      '，两人一共吃了这块蛋糕的几分之几？列式 ' + wexpr + ' = ？', answer: fstr(wans), options: null,
+      explain: '把两人吃的两部分合起来，同分母分数相加：' + wexpr + ' = ' + fstr(wans) + '。' };
   }
 
   if (sub === 'addsub') {
@@ -204,10 +207,13 @@ function arithmeticTyped(sub, qt, rng, nr) {
       var ae = a + '/' + d + ' + ' + b + '/' + d, aa = simp(a + b, d);
       if (qt === 'calc') return calcItem(ae, aa, null,
         '同分母分数相加，分母不变、分子相加：');
-      if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + a + '/' + d + ' + ____ = ' + (a + b) + '/' + d,
-        answer: b + '/' + d, options: null,
-        explain: '和减去已知加数等于未知加数：' + (a + b) + '/' + d + ' − ' + a + '/' + d
-          + ' = ' + b + '/' + d + '，所以填 ' + b + '/' + d + '。' };
+      if (qt === 'fill') {
+        var bR = sfs(b, d);
+        return { prompt: '在 ____ 里填上合适的分数：' + a + '/' + d + ' + ____ = ' + (a + b) + '/' + d,
+          answer: bR, options: null,
+          explain: '和减去已知加数等于未知加数：' + (a + b) + '/' + d + ' − ' + a + '/' + d
+            + ' = ' + bR + '，所以填 ' + bR + '。' };
+      }
       if (qt === 'choice') return choiceExprItem(rng,ae, aa);
       return applyItem('一根彩带，第一次用去这根彩带的 ' + a + '/' + d + '，第二次又用去 ' + b + '/' + d +
         '，列式求两次一共用去这根彩带的几分之几', ae, aa);
@@ -222,10 +228,13 @@ function arithmeticTyped(sub, qt, rng, nr) {
     var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
     if (qt === 'calc') return calcItem(se, sa, null,
       '同分母分数相减，分母不变、分子相减：');
-    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + hi + '/' + d + ' − ____ = ' + (hi - lo) + '/' + d,
-      answer: lo + '/' + d, options: null,
-      explain: '被减数减去差等于减数：' + hi + '/' + d + ' − ' + (hi - lo) + '/' + d
-        + ' = ' + lo + '/' + d + '，所以填 ' + lo + '/' + d + '。' };
+    if (qt === 'fill') {
+      var loR = sfs(lo, d);
+      return { prompt: '在 ____ 里填上合适的分数：' + hi + '/' + d + ' − ____ = ' + (hi - lo) + '/' + d,
+        answer: loR, options: null,
+        explain: '被减数减去差等于减数：' + hi + '/' + d + ' − ' + (hi - lo) + '/' + d
+          + ' = ' + loR + '，所以填 ' + loR + '。' };
+    }
     if (qt === 'choice') return choiceExprItem(rng, se, sa);
     return applyItem('一根彩带长是单位「1」，先用去这根彩带的 ' + hi + '/' + d + '，又用去 ' + lo + '/' + d +
       '，列式求还剩这根彩带的几分之几', se, sa);
@@ -239,7 +248,7 @@ function arithmeticTyped(sub, qt, rng, nr) {
     var tongfen = '先通分：分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm +
       '，' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '，' + s2.n2 + '/' + s2.d2 +
       ' = ' + c2 + '/' + s2.lcm + '；再按同分母相加：' + c1 + '/' + s2.lcm + ' + ' + c2 + '/' + s2.lcm +
-      ' = ' + cnum + '/' + s2.lcm + (da.d !== s2.lcm ? '，约分得 ' + fs(da) : '');
+      ' = ' + cnum + '/' + s2.lcm + (da.d !== s2.lcm ? '，约分得 ' + fstr(da) : '');
     // P40-Q-07：课标分数竖式（异分母先通分再笔算）——仅挂意图无图授权行（分数行
     // intent.graphicRole 全 null，与 Q-06 定稿口径一致）；结果留白框（resultBox '?'）
     // 防泄题，与 segment 遮蔽同口径；validator 按 isVerticalSupportGraphic（type=calculation
@@ -252,15 +261,15 @@ function arithmeticTyped(sub, qt, rng, nr) {
       '异分母分数相加，' + tongfen + '。', fracG);
     if (qt === 'fill') {
       return { prompt: '先通分再填空：' + s2.n1 + '/' + s2.d1 + ' = ____/' + s2.lcm,
-        answer: c1 + '/' + s2.lcm, options: null,
+        answer: String(c1), options: null,
         explain: '异分母分数先通分，分母 ' + s2.d1 + ' 和 ' + s2.d2 + ' 的最小公倍数是 ' + s2.lcm
           + '，分子也要乘相同的数：' + s2.n1 + '/' + s2.d1 + ' = ' + c1 + '/' + s2.lcm + '。' };
     }
     if (qt === 'choice') return choiceExprItem(rng, de, da, null,
-      '四个选项中只有「' + de + '」的得数是 ' + fs(da) + '。计算它要' + tongfen + '，所以选「' + de + '」。');
+      '四个选项中只有「' + de + '」的得数是 ' + fstr(da) + '。计算它要' + tongfen + '，所以选「' + de + '」。');
     return applyItem('修路队第一天修了这条路的 ' + s2.n1 + '/' + s2.d1 + '，第二天修了 ' + s2.n2 + '/' + s2.d2 +
       '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da,
-      '把两天修的部分合起来用加法：' + de + '，' + tongfen + '，两天一共修了这条路的 ' + fs(da) + '。');
+      '把两天修的部分合起来用加法：' + de + '，' + tongfen + '，两天一共修了这条路的 ' + fstr(da) + '。');
   }
 
   if (sub === 'mix') {
@@ -269,10 +278,13 @@ function arithmeticTyped(sub, qt, rng, nr) {
     var me = m1 + '/' + md + ' + ' + m2 + '/' + md + ' + ' + m3 + '/' + md, ma = simp(m1 + m2 + m3, md);
     if (qt === 'calc') return calcItem(me, ma, null,
       '同分母分数连加，分母不变、分子连加：');
-    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + m1 + '/' + md + ' + ' + m2 + '/' + md +
-      ' + ____ = ' + (m1 + m2 + m3) + '/' + md, answer: m3 + '/' + md, options: null,
-      explain: '同分母连加分母不变，用和的分子减去前两个分子：' + (m1 + m2 + m3) + ' − '
-        + (m1 + m2) + ' = ' + m3 + '，所以填 ' + m3 + '/' + md + '。' };
+    if (qt === 'fill') {
+      var m3R = sfs(m3, md);
+      return { prompt: '在 ____ 里填上合适的分数：' + m1 + '/' + md + ' + ' + m2 + '/' + md +
+        ' + ____ = ' + (m1 + m2 + m3) + '/' + md, answer: m3R, options: null,
+        explain: '同分母连加分母不变，用和的分子减去前两个分子：' + (m1 + m2 + m3) + ' − '
+          + (m1 + m2) + ' = ' + m3 + '，所以填 ' + m3R + '。' };
+    }
     if (qt === 'choice') return choiceExprItem(rng, me, ma);
     return applyItem('看一本书，第一天看了全书的 ' + m1 + '/' + md + '，第二天看了 ' + m2 + '/' + md +
       '，第三天看了 ' + m3 + '/' + md + '，列式求三天一共看了全书的几分之几', me, ma);
@@ -287,10 +299,13 @@ function arithmeticTyped(sub, qt, rng, nr) {
     var de2 = dv.expr, da2 = dv.ans;
     if (qt === 'calc') return calcItem(de2, da2, null,
       '除以一个不为零的分数，等于乘这个分数的倒数：');
-    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：____ ÷ ' + dv.n2 + '/' + dv.d2 + ' = ' + fs(da2),
-      answer: dv.n1 + '/' + dv.d1, options: null,
-      explain: '被除数 = 商 × 除数，除以一个分数等于乘它的倒数：' + fs(da2) + ' × '
-        + dv.n2 + '/' + dv.d2 + ' = ' + dv.n1 + '/' + dv.d1 + '。' };
+    if (qt === 'fill') {
+      var dvR = sfs(dv.n1, dv.d1);
+      return { prompt: '在 ____ 里填上合适的分数：____ ÷ ' + dv.n2 + '/' + dv.d2 + ' = ' + fstr(da2),
+        answer: dvR, options: null,
+        explain: '被除数 = 商 × 除数，除以一个分数等于乘它的倒数：' + fstr(da2) + ' × '
+          + dv.n2 + '/' + dv.d2 + ' = ' + dvR + '。' };
+    }
     if (qt === 'choice') return choiceExprItem(rng, de2, da2);
     return applyItem('把 ' + dv.n1 + '/' + dv.d1 + ' 米长的彩带剪成每段 ' + dv.n2 + '/' + dv.d2 +
       ' 米的小段，列式求能剪多少段', de2, da2);
@@ -298,9 +313,9 @@ function arithmeticTyped(sub, qt, rng, nr) {
   var di = fracDivInt(rng, nr), ie = di.expr, ia = di.ans;
   if (qt === 'calc') return calcItem(ie, ia, null,
     '分数除以一个不为零的整数，等于分数乘这个整数的倒数：');
-  if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + di.n + '/' + di.d + ' ÷ ____ = ' + fs(ia),
+  if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + di.n + '/' + di.d + ' ÷ ____ = ' + fstr(ia),
     answer: String(di.k), options: null,
-    explain: '除数 = 被除数 ÷ 商：' + di.n + '/' + di.d + ' ÷ ' + fs(ia) + ' = ' + di.k + '。' };
+    explain: '除数 = 被除数 ÷ 商：' + di.n + '/' + di.d + ' ÷ ' + fstr(ia) + ' = ' + di.k + '。' };
   if (qt === 'choice') return choiceExprItem(rng, ie, ia);
   return applyItem('把 ' + di.n + '/' + di.d + ' 升果汁平均分给 ' + di.k + ' 个小朋友，列式求每人分得多少升', ie, ia);
 }
@@ -311,19 +326,20 @@ function conceptTyped(sub, qt, rng, nr, name) {
   if (sub === 'meaning') {
     var d0 = riC(rng, 4, 9, nr), n0 = riC(rng, 2, d0 - 2, nr);
     if (qt === 'calc') {
+      var mc = sfs(3, d0);
       return { prompt: '分数单位累加，列式：1/' + d0 + ' + 1/' + d0 + ' + 1/' + d0 + ' = ？',
-        answer: '3/' + d0, options: null,
-        explain: '3 个分数单位 1/' + d0 + ' 合起来，分子相加、分母不变，等于 3/' + d0 + '。' };
+        answer: mc, options: null,
+        explain: '3 个分数单位 1/' + d0 + ' 合起来，分子相加、分母不变，等于 ' + mc + '。' };
     }
     if (qt === 'fill') return { prompt: '把一个圆平均分成 ' + d0 + ' 份，每份是它的 1/____',
       answer: String(d0), options: null,
       explain: '把整体平均分成 ' + d0 + ' 份，每份就是它的 1/' + d0 + '，所以分母填 ' + d0 + '。' };
     if (qt === 'choice') {
-      var optsM = Rng.shuffle(rng, [n0 + '/' + d0, (n0 + 1) + '/' + d0, '1/' + d0, d0 + '/' + n0]);
+      var optsM = Rng.shuffle(rng, [sfs(n0, d0), sfs(n0 + 1, d0), '1/' + d0, sfs(d0, n0)]);
       return { prompt: '把一个圆平均分成 ' + d0 + ' 份，取其中 ' + n0 + ' 份，下面哪个分数表示涂色部分？（  ）',
-        answer: n0 + '/' + d0, options: optsM,
-        explain: '平均分成 ' + d0 + ' 份、取 ' + n0 + ' 份，用分数 ' + n0 + '/' + d0
-          + ' 表示，正确选项是「' + n0 + '/' + d0 + '」。' };
+        answer: sfs(n0, d0), options: optsM,
+        explain: '平均分成 ' + d0 + ' 份、取 ' + n0 + ' 份，用分数 ' + sfs(n0, d0)
+          + ' 表示，正确选项是「' + sfs(n0, d0) + '」。' };
     }
     return { prompt: '把一个蛋糕平均分给 ' + d0 + ' 个小朋友，每人得到这个蛋糕的几分之几？',
       answer: '1/' + d0, options: null,
@@ -338,8 +354,8 @@ function conceptTyped(sub, qt, rng, nr, name) {
       // gcd(ca,cb)>1 时（6/12：g2=2，simp→1/2）写出假等式「6 ÷ 2 = 1」（真值 6÷2=3）。
       // gcd(ca,cb)=1 时 cr.n===ca，输出逐字节不变。
       return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + ca + '）：' +
-        cn + '/' + cd + ' = ？', answer: fs(cr), options: null,
-        explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fs(cr) + '。' };
+        cn + '/' + cd + ' = ？', answer: fstr(cr), options: null,
+        explain: '约分分子分母同时除以公因数 ' + g2 + '：' + cn + '/' + cd + ' = ' + fstr(cr) + '。' };
     }
     if (qt === 'fill') {
       var bd = riC(rng, 3, 8, nr), bk = riC(rng, 2, 5, nr);
@@ -363,7 +379,7 @@ function conceptTyped(sub, qt, rng, nr, name) {
     if (qt === 'choice') {
       var g3 = riC(rng, 2, 4, nr), rn3 = riC(rng, 1, 4, nr), rd3 = rn3 + riC(rng, 1, 3, nr);
       var en = g3 * rn3, ed = g3 * rd3, rr = simp(en, ed);
-      var optsN = Rng.shuffle(rng, [fs(rr), (en + 1) + '/' + ed, en + '/' + (ed + 1), (rr.n + 1) + '/' + rr.d]);
+      var optsN = Rng.shuffle(rng, [fs(rr), sfs(en + 1, ed), sfs(en, ed + 1), sfs(rr.n + 1, rr.d)]);
       return { prompt: '下面哪个分数与 ' + en + '/' + ed + ' 大小相等？（  ）', answer: fs(rr), options: optsN,
         explain: en + '/' + ed + ' 的分子分母同除以公因数 ' + g3 + '，约成 ' + fs(rr)
           + '，正确选项是「' + fs(rr) + '」。' };
@@ -371,8 +387,8 @@ function conceptTyped(sub, qt, rng, nr, name) {
     var ag = riC(rng, 2, 5, nr), ab = ag + riC(rng, 1, 3, nr), an = ag * riC(rng, 1, ab - 1, nr);
     var ar = simp(an, ab * ag);
     return { prompt: '合唱队有 ' + (ab * ag) + ' 人，其中男生 ' + an + ' 人，列式求男生占全队人数的几分之几（约成最简分数）：' +
-      an + '/' + (ab * ag) + ' = ？', answer: fs(ar), options: null,
-      explain: '男生人数除以全队人数得到占比，再约分：' + an + '/' + (ab * ag) + ' = ' + fs(ar) + '。' };
+      an + '/' + (ab * ag) + ' = ？', answer: fstr(ar), options: null,
+      explain: '男生人数除以全队人数得到占比，再约分：' + an + '/' + (ab * ag) + ' = ' + fstr(ar) + '。' };
   }
 
   if (sub === 'compare') {
@@ -380,8 +396,8 @@ function conceptTyped(sub, qt, rng, nr, name) {
     var lf = clo + '/' + cd2, hf = chi + '/' + cd2;
     if (qt === 'calc') {
       return { prompt: '列式比一比：' + hf + ' − ' + lf + ' = ？（差大于 0，说明同分母时分子大的分数大）',
-        answer: fs(simp(chi - clo, cd2)), options: null,
-        explain: '同分母分数，分子大的分数大：' + hf + ' − ' + lf + ' = ' + fs(simp(chi - clo, cd2))
+        answer: fstr(simp(chi - clo, cd2)), options: null,
+        explain: '同分母分数，分子大的分数大：' + hf + ' − ' + lf + ' = ' + fstr(simp(chi - clo, cd2))
           + '，差大于 0，所以 ' + hf + ' > ' + lf + '。' };
     }
     if (qt === 'fill') return { prompt: '比较大小，在 ____ 里填上 >、< 或 =：' + lf + ' ____ ' + hf,
@@ -401,7 +417,7 @@ function conceptTyped(sub, qt, rng, nr, name) {
 
   if (sub === 'relation') {
     var rn1 = riC(rng, 2, 6, nr), rd1 = rn1 + riC(rng, 1, 4, nr);
-    var relationExpr = rn1 + ' ÷ ' + rd1, relationAns = rn1 + '/' + rd1;
+    var relationExpr = rn1 + ' ÷ ' + rd1, relationAns = sfs(rn1, rd1);
     if (qt === 'calc') return { prompt: '用分数表示除法的商，列式：' + relationExpr + ' = ？',
       answer: relationAns, options: null,
       explain: '分数与除法的关系：被除数作分子、除数作分母，' + relationExpr + ' = ' + relationAns + '。' };
@@ -446,22 +462,23 @@ function conceptTyped(sub, qt, rng, nr, name) {
     }
     if (qt === 'choice') {
       var bd3 = riC(rng, 4, 7, nr), impN = bd3 + riC(rng, 1, 3, nr);
-      var impFrac = impN + '/' + bd3;
-      var optsP = Rng.shuffle(rng, ['1/' + bd3, '2/' + bd3, '3/' + bd3, impFrac]);
+      var impFrac = sfs(impN, bd3);
+      var optsP = Rng.shuffle(rng, ['1/' + bd3, sfs(2, bd3), sfs(3, bd3), impFrac]);
       return { prompt: '下面四个分数中，哪个是假分数？（  ）', answer: impFrac, options: optsP,
         explain: '假分数的分子大于或等于分母，' + impFrac + ' 的分子 ' + impN + ' 大于分母 '
           + bd3 + '，正确选项是「' + impFrac + '」。' };
     }
     var pg = riC(rng, 2, 6, nr), qg = pg + riC(rng, 1, 3, nr);
+    var pr = sfs(pg, qg);
     return { prompt: '把 ' + pg + ' 个同样大的面包平均分给 ' + qg + ' 个小组，每个小组分得多少个面包？（用分数表示）',
-      answer: pg + '/' + qg, options: null,
+      answer: pr, options: null,
       explain: '把 ' + pg + ' 个面包平均分给 ' + qg + ' 个小组，用除法：' + pg + ' ÷ ' + qg
-        + ' = ' + pg + '/' + qg + '（个）。' };
+        + ' = ' + pr + '（个）。' };
   }
 
   // reciprocal
   var ra = riC(rng, 2, 7, nr), rb = ra + riC(rng, 1, 3, nr);
-  var orig = ra + '/' + rb, recip = rb + '/' + ra;
+  var orig = sfs(ra, rb), recip = sfs(rb, ra);
   if (qt === 'calc') {
     return { prompt: '写出 ' + orig + ' 的倒数，再列式检验乘积：' + orig + ' × ' + recip + ' = ？',
       answer: '1', options: null,
@@ -471,7 +488,7 @@ function conceptTyped(sub, qt, rng, nr, name) {
     answer: recip, options: null,
     explain: '乘积是 1 的两个数互为倒数，把 ' + orig + ' 的分子分母交换，得到 ' + recip + '。' };
   if (qt === 'choice') {
-    var optsRc = Rng.shuffle(rng, [recip, orig, '1', (rb + 1) + '/' + ra]);
+    var optsRc = Rng.shuffle(rng, [recip, orig, '1', sfs(rb + 1, ra)]);
     return { prompt: '下面哪个数是 ' + orig + ' 的倒数？（  ）', answer: recip, options: optsRc,
       explain: '乘积是 1 的两个数互为倒数，' + orig + ' 交换分子分母得到 ' + recip
         + '，正确选项是「' + recip + '」。' };

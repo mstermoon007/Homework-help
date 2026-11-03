@@ -35,6 +35,7 @@ var Rng = require('../core/rng.js');
 var SemanticParameters = require('../core/semantic-parameters.js');
 var SemanticEvidence = require('../core/semantic-evidence.js');
 var VariationApply = require('../core/variation-apply.js');
+var Distractors = require('../core/distractors.js');
 
 var QTYPES = ['calc', 'fill', 'apply', 'choice', 'geometry'];
 
@@ -130,10 +131,8 @@ function finishChoice(q, rng, correct, wrongs, explanation) {
     o = String(o);
     if (!seen[o]) { seen[o] = 1; pool.push(o); }
   });
-  while (pool.length < 4) {
-    var filler = '都不对（' + pool.length + '）';
-    if (!seen[filler]) { seen[filler] = 1; pool.push(filler); }
-  }
+  // P45-10（X3）：真实干扰项不足 4 时按答案形态派生；无可派生形态保留 3 项（不凑位、不编短语）。
+  if (pool.length < 4) pool = pool.concat(Distractors.deriveDistractors(pool, correct, 4 - pool.length));
   pool = pool.slice(0, 4);
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
@@ -469,7 +468,7 @@ function makeScaleCalc(plan, context, i) {
     }
   });
   return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
-    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。列式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
+    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。算式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
     s.next, [String(s.next)],
     (s.enlarge ? '放大到 ' + s.k + ' 倍：' : '缩小到 1/' + s.k + '：')
       + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next + ' 厘米');
@@ -597,7 +596,7 @@ function makePropCalc(plan, context, i) {
     }
   });
   return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
-    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？列式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',
+    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？算式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',
     b * unit, [String(b * unit)],
     '先求单价（归一）：' + (a * unit) + ' ÷ ' + a + ' = ' + unit + ' 元；'
       + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
@@ -749,7 +748,7 @@ function makeInversePropTyped(plan, context, i) {
   });
   if (qt === 'calc') {
     return finish(q, '列式计算：一批货物共 ' + c[0] + ' 吨，用载重 ' + c[1] + ' 吨的卡车运，正好 '
-      + c[2] + ' 次运完。如果改用载重 ' + c[3] + ' 吨的卡车运，要运多少次？列式：' + c[0] + ' ÷ ' + c[3]
+      + c[2] + ' 次运完。如果改用载重 ' + c[3] + ' 吨的卡车运，要运多少次？算式：' + c[0] + ' ÷ ' + c[3]
       + ' = ？（次）', timesB, [String(timesB)],
       '货物总量一定，每辆载重与运的次数成反比例：' + c[0] + ' ÷ ' + c[3] + ' = ' + timesB + '（次）');
   }
@@ -918,7 +917,7 @@ function makeRatioCalc(plan, context, i) {
       subTopic: 'ratio-basics', aspect: 'property'
     });
     return finish(q1, '列式计算：在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d
-      + ' 中，两个外项的积是多少？列式：' + e.a + ' × ' + e.d + ' = ？',
+      + ' 中，两个外项的积是多少？算式：' + e.a + ' × ' + e.d + ' = ？',
       e.a * e.d, [String(e.a * e.d)],
       '外项积 = 内项积：' + e.a + ' × ' + e.d + ' = ' + e.b + ' × ' + e.c + ' = ' + (e.a * e.d));
   }

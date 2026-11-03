@@ -489,6 +489,22 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
   var prompt = '图中共有几个' + shapeMeta.meta.name + '？';
   var answer = String(count); var answerObj = { value: answer, acceptable: [],
     explanation: '按一定顺序逐个点数，做到不重复、不遗漏，图中共有 ' + count + ' 个' + shapeMeta.meta.name + '。' };
+  // P45-01（A 类）：计数题图文同源——描述符按 count 渲染 N 个同类图元，
+  // 使学生点数到的图元数恒等于答案。只改图元构造，不改题干问法/题型/答案数值。
+  var countGraphic = {
+    type: 'geometry',
+    subtype: 'count',
+    role: 'quantity-correspondence',
+    params: {
+      shape: shapeMeta.subtype,
+      count: count,
+      size: 2,
+      angle: 60,
+      unit: 'cm',
+      unitPx: 25,
+      gap: 18
+    }
+  };
 
   return {
     knowledgePointId: pkp(plan),
@@ -503,8 +519,9 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
     data: {
       mode: 'fill',
       steps: 1,
-      graphic: graphic,
+      graphic: countGraphic,
       targetCount: count,
+      figureCount: count,
       shapeName: shapeMeta.meta.name
     }
   };
@@ -1787,21 +1804,114 @@ function graphicLabelOf(d) {
   return names.length ? '从' + names.join('、') + '看到的形状' : null;
 }
 
-function themedItemMeta(item, qMeta, plan, rng) {
-  if (!item || !item.shape) return null;
+// P45-04（D 类 D1/D3）：flat 族取样时按题面派生图形（题面主问对象优先于随机取样）。
+// D3：KP 名只给泛称「图形」（getShapeMeta → flat，随机取到平行四边形/圆），而题面是
+//     「长方形长 7 厘米、宽 3 厘米」「正方形边长 6 厘米」——须配同名、同尺寸图形；
+// D1：题面给出两端刻度读数（「一端对着刻度 2，另一端对着刻度 10」）——须配刻度尺。
+// 原先仅在 KP 名为泛称（flat 族）时生效；P45-09（D2，用户授权）起，KP 名已给出具体图形
+// 但题面点名了另一个具体图形（如「长方形……」的 KP 名含「正方形」）时同样按题面派生，
+// 落到 themedItemMeta 内判定；不改题干、答案、题型、数量、难度。
+var STEM_SHAPE_WORDS = [
+  ['正方体', 'cube'], ['长方体', 'cuboid'], ['正方形', 'square'], ['长方形', 'rectangle'],
+  ['三角形', 'triangle'], ['平行四边形', 'parallelogram'], ['梯形', 'trapezoid'],
+  ['圆柱', 'cylinder'], ['圆锥', 'cone'], ['圆形', 'circle'], ['圆', 'circle']
+];
+
+/** 题面中最早出现的具体图形词（「一个长方形和一个正方形」取长方形，不按正则表顺序误判） */
+function stemShapeType(stem) {
+  var s = String(stem || '');
+  var best = null, bestAt = -1;
+  for (var i = 0; i < STEM_SHAPE_WORDS.length; i++) {
+    var at = s.indexOf(STEM_SHAPE_WORDS[i][0]);
+    if (at < 0) continue;
+    if (bestAt < 0 || at < bestAt) { best = STEM_SHAPE_WORDS[i][1]; bestAt = at; }
+  }
+  return best;
+}
+
+/** 题面已述边长（长/宽/边长 + 单位）；「周长」不是边长，先剔除避免被误当「长」 */
+function stemLengths(stem) {
+  var s = String(stem || '').replace(/周长[^，。；、]*/g, '');
+  var out = {};
+  var unitRe = '(厘米|分米|毫米|米)';
+  var m = s.match(new RegExp('长\\s*(\\d+(?:\\.\\d+)?)\\s*' + unitRe));
+  if (m) out.length = Number(m[1]);
+  m = s.match(new RegExp('宽\\s*(\\d+(?:\\.\\d+)?)\\s*' + unitRe));
+  if (m) out.width = Number(m[1]);
+  m = s.match(new RegExp('边长\\s*(\\d+(?:\\.\\d+)?)\\s*' + unitRe));
+  if (m) out.edge = Number(m[1]);
+  return out;
+}
+
+/** 题面 → 图形描述符（刻度尺读数优先；其次题面点名的具体图形）；无信号返回 null */
+function stemGraphicPlan(stem, nr, rng) {
+  var s = String(stem || '');
+  var rm = s.match(/刻度\s*(\d+(?:\.\d+)?)[^\d]{0,12}刻度\s*(\d+(?:\.\d+)?)/);
+  if (rm) {
+    var from = Number(rm[1]), to = Number(rm[2]);
+    if (to > from) {
+      return { subtype: 'ruler', name: '刻度尺', role: 'quantity-correspondence',
+        params: { from: from, to: to, unit: 'cm', unitPx: 25 } };
+    }
+  }
+  var type = stemShapeType(s);
+  if (!type || !SHAPE_FEATURES[type]) return null;
+  var graphic = generateGraphicParams(type, nr, rng);
+  var dims = stemLengths(s);
+  if (type === 'rectangle' && (dims.length != null || dims.width != null)) {
+    // 尺寸与题面已述条件一一对应；不标直角（避免直接标出「几个直角」类答案）
+    graphic.params = {
+      width: dims.length != null ? dims.length : graphic.params.width,
+      height: dims.width != null ? dims.width : graphic.params.height,
+      labelSides: true, rightAngle: false, unit: 'cm', unitPx: 25
+    };
+  } else if (type === 'square' && dims.edge != null) {
+    graphic.params = { size: dims.edge, labelSides: true, rightAngle: false, unit: 'cm', unitPx: 25 };
+  }
+  return { subtype: type, name: SHAPE_FEATURES[type].name, role: graphic.role, params: graphic.params };
+}
+
+/** stemGraphicPlan → 纯 graphic descriptor + label 统一入口
+ *  D18：收敛原 L1881 themedItemMeta + L2018 apply 分支两处直接调用；
+ *  输入 stem 为题面 prompt，nr/rng 随机派生参数；无图形信号返回 null。
+ *  返回 { descriptor: {type,subtype,role,params}, label: string }——
+ *  label 保留 stemGraphicPlan 硬编码（如 ruler→'刻度尺'），不依赖 SHAPE_FEATURES 二次查找。 */
+function resolveShapeDescriptor(stem, nr, rng) {
+  var p = stemGraphicPlan(stem, nr, rng);
+  if (!p) return null;
+  return {
+    descriptor: { type: 'geometry', subtype: p.subtype, role: p.role, params: p.params },
+    label: p.name
+  };
+}
+
+function themedItemMeta(item, qMeta, plan, rng, flatSampled) {
+  if (!item) return null;
+  // P45-09（D2，用户授权）：题面点名的图形优先于 KP 名首命中（「长方形……」配 rectangle，
+  // 不再因 KP 名含「正方」先命中而配 square）。题面无图形词/刻度读数时 stemGraphicPlan
+  // 返回 null（且不消耗随机数），保持 KP 派生图，既有非图形词条目产出不变。
+  // （flatSampled 仍用于区分「KP 名为泛称 → 必按题面派生」的既有 D1/D3 口径。）
+  if (!item.shape) {
+    // D18：经 resolveShapeDescriptor 统一入口获取 pure descriptor + label
+    var r = resolveShapeDescriptor(item.q, nrOf(plan), rng);
+    if (r) {
+      // D18-CLEAN：外层包装缩为 { graphic, label }——legacyType/subtype/category 无消费者
+      return { graphic: r.descriptor, label: r.label };
+    }
+    if (!flatSampled) return null;
+  }
   // P35-CLOSE-01：nums 第 4 元可直接给完整 descriptor 对象（定制图形，如视图卡片 view-cards、
   // 去标注 cube）——深拷贝直通（避免多题共享引用被下游改写），不再经 generateGraphicParams 随机派生；
   // 图形标签由 descriptor 自身语义推导（graphicLabelOf），缺标签时沿用 KP 名。
-  if (typeof item.shape === 'object') {
+  if (item.shape && typeof item.shape === 'object') {
     var d = JSON.parse(JSON.stringify(item.shape));
-    return { legacyType: qMeta.legacyType, subtype: d.subtype, category: qMeta.category,
-      meta: { name: graphicLabelOf(d) || (SHAPE_FEATURES[d.subtype] && SHAPE_FEATURES[d.subtype].name) || qMeta.meta.name },
-      graphic: d };
+    return { graphic: d,
+      label: graphicLabelOf(d) || (SHAPE_FEATURES[d.subtype] && SHAPE_FEATURES[d.subtype].name) || qMeta.meta.name };
   }
   if (!SHAPE_FEATURES[item.shape] || item.shape === qMeta.subtype) return null;
-  var m = { legacyType: item.shape, subtype: item.shape, category: qMeta.category, meta: SHAPE_FEATURES[item.shape] };
-  m.graphic = generateGraphicParams(item.shape, nrOf(plan), rng);
-  return m;
+  // P35 路径：条目自声明 shape 字符串 + KP 名不一致——派生图 + 特征名标签
+  return { graphic: generateGraphicParams(item.shape, nrOf(plan), rng),
+    label: SHAPE_FEATURES[item.shape].name };
 }
 
 // P34-H1（人工数据请求 H6，用户 2026-10-08 签批）：三视图/搭建推算 3 KP 的题面由文字
@@ -1818,7 +1928,7 @@ var NO_GRAPHIC_VIEW_KPS = {
   'math-g5-down-u01-k002': 1   // 根据平面视图搭建立体图形
 };
 
-function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
+function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme, flatSampled) {
   var qt = plan.questionTypeId;
   var kpId = pkp(plan);
   var noGraphic = !!NO_GRAPHIC_VIEW_KPS[kpId];
@@ -1846,7 +1956,7 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
 
   if (qt === 'choice') {
     var cItem = nums[v % nums.length];
-    var cMeta = themedItemMeta(cItem, qMeta, plan, rng);
+    var cMeta = themedItemMeta(cItem, qMeta, plan, rng, flatSampled);
     // P38：noGraphic 只拦 KP 派生兜底图；条目自声明 descriptor（H6 KP 的 view-cards 等）放行
     if (cMeta && (!noGraphic || typeof cItem.shape === 'object')) data.graphic = cMeta.graphic;
     var options = Rng.shuffle(rng, [cItem.a].concat(numDistractors(cItem.n)));
@@ -1878,7 +1988,7 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     answerMode = 'judge';
   } else if (qt === 'fill') {
     var fItem = nums[v % nums.length];
-    var fMeta = themedItemMeta(fItem, qMeta, plan, rng);
+    var fMeta = themedItemMeta(fItem, qMeta, plan, rng, flatSampled);
     // P38：noGraphic 只拦 KP 派生兜底图；条目自声明 descriptor（H6 KP 的 view-cards 等）放行
     if (fMeta && (!noGraphic || typeof fItem.shape === 'object')) data.graphic = fMeta.graphic;
     data.operands = [fItem.n];
@@ -1895,10 +2005,10 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
       prompt = '想一想，填一填：' + gItem.q;
       answer = { value: gItem.a, acceptable: [], explanation: themedExpl(gItem.q, gItem.a) };
     } else {
-      var gMeta = themedItemMeta(gItem, qMeta, plan, rng);
+      var gMeta = themedItemMeta(gItem, qMeta, plan, rng, flatSampled);
       if (gMeta) data.graphic = gMeta.graphic;
       data.operands = [gItem.n];
-      var graphicName = (gMeta ? gMeta.meta.name : qMeta.meta.name);
+      var graphicName = (gMeta ? gMeta.label : qMeta.meta.name);
       if (qMeta.legacyType === 'symmetry' || qMeta.legacyType === 'solid') {
         var gFeat = SHAPE_FEATURES[(data.graphic && data.graphic.subtype) || 'rectangle'];
         graphicName = (gFeat && gFeat.name) || graphicName;
@@ -1916,6 +2026,13 @@ function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
     var sItem = sList[v % sList.length];
     // P40-Q-08：场景自带图形（scenes 第 3 元 g 槽）优先于主题原材料图——场景图与题设情境逐条呼应
     if (sItem.g) data.graphic = JSON.parse(JSON.stringify(sItem.g));
+    // P45-09（D2）：apply 场景未自声明图形时，同样按题面主问对象派生（如「长方形菜地」配 rectangle，
+    // 不再因 KP 名含「正方」首命中而配 square）；题面无图形词则保持 KP 派生图与原产出不变。
+    if (!theme.applyGraphic && !sItem.g) {
+      // D18：经 resolveShapeDescriptor 统一入口——与 themedItemMeta 同源同逻辑
+      var aDesc = resolveShapeDescriptor(sItem.t, nrOf(plan), rng);
+      if (aDesc) data.graphic = aDesc.descriptor;
+    }
     data.steps = 2;
     prompt = sItem.t;
     // scenes 的答案本身是解题过程陈述（如「8 个，都在顶点处」），直接用作解析；
@@ -1995,7 +2112,8 @@ function createShapeGenerator(spec) {
         var themedId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
         var themed = SHAPE_THEME[themedId];
         if (themed && ['choice', 'judge', 'fill', 'geometry', 'apply'].indexOf(qt) !== -1) {
-          questions.push(makeThemedShapeQuestion(plan, context, i, qMeta, graphic, themed));
+          questions.push(makeThemedShapeQuestion(plan, context, i, qMeta, graphic, themed,
+            shapeMeta.legacyType === 'flat'));
           continue;
         }
         if (qt === 'choice') {

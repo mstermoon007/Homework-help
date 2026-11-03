@@ -3,14 +3,14 @@
 | 项 | 值 |
 |---|---|
 | 任务 | P28-09 Generator Registry 收口：23 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status（P28-HOLLOW-01 后 23 个） |
-| 执行日期 | 2026-10-13 |
+| 执行日期 | 2026-11-02 |
 | 判定规则 | R1 覆盖 / R2 题型=registry / R3 声明完整 / R4 产出⊆声明 / R5 状态一致 / R6 无 legacy（统一门禁 `node dev/p28/check-generator-matrix.js`） |
 
 ## 1. 收口结论
 
 **23 个 Generator · PRODUCTION=20 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=0 —— 收口冻结 ✅**
 
-冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = 1570；旧 31-id 全量测试与 `migration/excel-raw/*` 提取档案均已清除（后者 P28-CLEANUP-02），历史使用证据仅留 kbl 冻结产物。
+冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = 1566；旧 31-id 全量测试与 `migration/excel-raw/*` 提取档案均已清除（后者 P28-CLEANUP-02），历史使用证据仅留 kbl 冻结产物。
 
 ## 2. GENERATOR_MATRIX（逐 Generator 7 项声明）
 

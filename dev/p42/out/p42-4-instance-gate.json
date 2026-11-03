@@ -11,12 +11,18 @@
     "diffWarnN": 0,
     "qPass": 1550,
     "qWatch": 16,
-    "qFail": 0
+    "qFail": 0,
+    "instanceFailN": 0,
+    "fractionFailN": 0
   },
   "qualityDist": {
-    "1": 938,
-    "0.75": 612,
+    "1": 937,
+    "0.75": 613,
     "0.5": 16
+  },
+  "vGates": {
+    "instanceFailN": 0,
+    "fractionFailN": 0
   },
   "fails": [],
   "watch": [

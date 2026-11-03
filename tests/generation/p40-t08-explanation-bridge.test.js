@@ -8,7 +8,7 @@
  *     无编造、无改写；
  *   ②无前序不硬加（upstream 缺失 / name 相同 → 原样返回 current）；
  *   ③resolve().upstream 逐字取自 canonical（前序 KP name + semantic.concept）；
- *   ④端到端：有同族前序的 KP，concept-meaning 解析被前置桥接句（逐字引用 canonical 前序）。
+ *   ④端到端（P45-10 X4 修正）：已有本题解析不再前置跨 KP 桥接句；桥接模板仅空解析兜底。
  */
 
 const { test } = require('node:test');
@@ -64,7 +64,7 @@ test('P40-T-08 resolve().upstream 逐字取自 canonical', () => {
   assert.ok(checked >= 20, '应覆盖足量有前序 KP（实得 ' + checked + '）');
 });
 
-test('P40-T-08 端到端：concept-meaning 解析前置桥接句且逐字引 canonical 前序', () => {
+test('P40-T-08 端到端：已有本题解析时不再前置跨 KP 桥接句（P45-10 X4）', () => {
   const kpId = 'math-g3-down-u04-k001'; // 面积的认识（同族前序：常用长度单位）
   const sp = RESOLVER.resolve(kpId, 'judge');
   assert.ok(sp.upstream, '样本 KP 应有同族前序');
@@ -79,8 +79,16 @@ test('P40-T-08 端到端：concept-meaning 解析前置桥接句且逐字引 can
   const out = gen.generate(plan, { seed: 'p40t08' });
   assert.ok(out.length >= 1, '应产出题目');
   const ex = String(out[0].answer.explanation || '');
-  assert.ok(ex.indexOf('我们之前学过〈' + upName + '〉') === 0,
-    '解析应以 canonical 前序桥接句开头：' + ex.slice(0, 40));
-  assert.ok(ex.indexOf('结合起来看：') !== -1, '含 bridge 段');
-  assert.ok(ex.indexOf('依据') !== -1, '保留 current 段（本题解析）');
+  assert.ok(ex.length > 0, '本题解析必须保留');
+  assert.equal(ex.indexOf('我们之前学过〈' + upName + '〉'), -1,
+    '已有本题解析不得再前置桥接句：' + ex.slice(0, 60));
+});
+
+test('P40-T-08 空解析兜底：仅引用前序，不拼接悬空桥接句（P45-10 X4）', () => {
+  const out = SP.composeExplanation({
+    upstream: { name: '认识小数', definition: '像0.1、0.5这样带有小数点的数叫小数' },
+    name: '小数的大小比较',
+    current: ''
+  });
+  assert.equal(out, '我们之前学过〈认识小数〉（像0.1、0.5这样带有小数点的数叫小数）。');
 });

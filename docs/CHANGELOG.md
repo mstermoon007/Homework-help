@@ -2,6 +2,57 @@
 
 > 阶段报告全文见 `docs/archive/phases/`；此处为按版本聚合的变更摘要。
 
+## v5.2.1 — P45 单题质量缺陷修复收口（2026-11-03）
+
+### P40 质量深度审计（战役一/二）
+
+- **P40-Q01~Q19 + P40-T07~T14**：34 任务完成，覆盖题目质量全维度（概念正确性、可变性、必要构造、年级适配、迷思干扰项、跨 KP 关系、分数化简、竖式呈现、解析结构、上下文题、定义题等）。
+- 概念族模型正式化：`CONCEPT_FAMILIES` 14 主干族 + `EXTRA_FAMILIES` 11 扩展族 + `R-REL-03` 44 条带 `evolution{op}` 的主干链；每 KP 得 `{familyId, stageOrder}` 回填 `capability.json`（375/375）。
+- ALLOW 矩阵 1570→1566（P44/H9：源 Excel 改判「数与代数」）；Relations 373→407（P44/H10-A fam_negative +1、H10-B fam_observation +3、H10-C fam_direction +28）。
+- 门禁 31→34 项（新增 6g 答案防泄露、23 实例级质量）；测试 762→937 用例。
+
+### P41 Generator/Strategy 边界收口
+
+- 四轴 Z1-Z4 禁令实装；TypeContract 契约化；冻结执行链 Generator→Validator→SemanticQuestion 单入口。
+
+### P42 真值体系（Truth + Participation Gate）
+
+- Truth-Verifier + Participation-Checker 接入 Validator；instance gate 23 覆盖 1566 行；fraction simplify 真值断言；golden-truth gate 接入生产门禁。
+
+### P45 单题质量缺陷修复（16 类硬缺陷 + 挂起项解冻）
+
+**审计来源**：`audit/single-question-quality-20261031/`，1566 道真实生成题，16 类硬缺陷 / 51 行命中，全部根因在 Generator 层。
+
+| 缺陷类 | 修复任务 | 根因 | 修复位置 |
+|---|---|---|---|
+| A1/A2 图形数量 ≠ 答案（正方形/角） | P45-01 | 计数题图元描述符只有 1 个，答案却是 N | `shape.js::makeCountQuestion` + 描述符构造 |
+| B1/B2/B3 条形图设问-答案-选项三口径不一致 | P45-02 | 「多多少」fill 答非所问、choice 无差值选项 | `stats.js` 条形图题族 `BAR_Q` + choice 分支 |
+| C1~C5 分数输出未统一既约格式化 | P45-03 | 答案/解析/填空/内部四处格式化口径不一 | `fraction.js` 统一格式化入口（含 div-fill 模板） |
+| D1/D3/D4/D5 图文不符（刻度尺配圆、周长配平行四边形、8×5 配 8×3、单位换算挂装饰图） | P45-04/P45-05 | 主题图形题走 flat 随机采样；度量题统一挂固定装饰矩形 | `shape.js::generate` 图形选择入口；`money.js::makeGraphicForMoney` |
+| D2 问长方形配正方形 | P45-09 | subtype 由 KP 名首命中派生，题面主问对象被忽略 | `shape.js::themedItemMeta` + apply 分支（题面主问对象优先） |
+| E1 判断题题干残留 `____` | P45-06 | judge 机械转换未解消 fill 空位 | `type-contract.js::finishJudge` + `money.js:325` 同源点 |
+| X3「以上说法都不对」凑位短语 | P45-10（解冻） | 两处 `finishChoice` 硬编凑位短语 | 新建 `core/distractors.js` 唯一派生点，按答案形态派生真实干扰项 |
+| X4 跨 KP 解析模板 | P45-10（解冻） | 已有解析前置悬空桥接句 | `semantic-parameters.js::composeExplanation` 仅空解析兜底 |
+| X9 语言格式残留 | P45-10（解冻） | 三处脚手架残留（参考标签/重复列式/标出 Ncm） | `concept-meaning.js`/`percent.js`/`semantic-relations.js`/`stats.js` 清理 |
+
+**Validator 实例级门禁（V-A~V-E）**：P45-07 接入 `answer-validator.js::validateInstanceConsistency`（V-A 图元计数、V-B 答案形态、V-D 描述符-题面同名、V-E judge 空位）+ `quality-scorer.js::checkFractionForm`（V-C 分数既约）；gate 23 对 1566 行零误报。
+
+**派生链同步修复**：P45-08（T2 锚随合法形态更新，变体采样扩单样本）；P45-09（D2 修复后 shape-recognition 43 行锚降级为存在性）；P45-12（`probeVaries` 前缀错位 bug 修复 + 36 条布尔标志 `field`→`fieldPresent` 降级）；P45-13（raw 探针统一经 `PracticeSession({skipValidation:true})` 单一路径）；P45-19（11 行质量族证据规则失效字段纯删除，5 个门禁 FAIL 收敛）；P45-NEXT-01/02/03（质量族规则补全、partial-sample 形态闭合判定、probeAgg 单套化）；P45-NEXT-04（shape.js 双入口收敛）；P45-20（死代码与无效文件清理）。
+
+**新增文件**：
+- `shared/generator/core/distractors.js`（唯一干扰项派生点，按答案形态派生真实干扰项）
+- `tests/generation/p45-01~10.test.js`、`tests/validator/p45-07-quality-gates.test.js`、`tests/generation/p40-t08-explanation-bridge.test.js`（X4 契约同步）
+
+**全量数据不变**：375 KP / 98 Units / 407 Relations / 1566 ALLOW / 23 Generator / 7 题型。P45 修复 Generator 产出形态，不改变 KBL/POL/Strategy/难度/题型决策链。
+
+### 门禁与测试（当前口径）
+
+- npm test **993/993** PASS（16 套件 / 110 测试文件；P40 +84、P42 +43、P45 +56 新增）。
+- check-all **34 项**：本地 33 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome SKIP）；CI 34 PASS / 0 FAIL / 0 SKIP。
+- 16 类硬缺陷 51 行清零；X 类挂起项全部解冻修复；P45-NEXT-01~05 全部处置完毕。
+
+---
+
 ## v5.2.0 — P34~P39 收口（2026-10-12）
 
 ### P34 数据正确性战役（波次 1/2/3）

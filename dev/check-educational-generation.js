@@ -136,7 +136,10 @@ function classify(sq, kpId) {
       try {
         var session = new PracticeSession({
           subject: 'math', grade: p.grade, count: 1,
-          knowledgePointId: p.kp, questionType: p.qt
+          knowledgePointId: p.kp, questionType: p.qt,
+          // P45-08：门禁抽样必须确定性——无 seed 时同一代码两次运行可得到不同产出形态
+          // （如实测 934/2 FAIL 与 936/0 PASS 交替），门禁不可复现。
+          seed: 'edu|' + p.kp + '|' + p.qt
         });
         await session.start();
         var qs = session.semanticQuestions || [];

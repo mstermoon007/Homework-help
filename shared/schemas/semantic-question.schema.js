@@ -56,8 +56,9 @@
   // 无入口）。v4.0.0（135ca55）历史存量，白名单收紧为「登记=可渲染+在产」，
   // 未来若产出这些子类型将正确触发 WARNING 而非静默放行。
   var GRAPHIC_SUBTYPES = {
+    // P45：登记 P45-01/P45-04 新增的在产子类型（均有真实渲染器：svg-geometry count/ruler）
     geometry: ['triangle', 'rectangle', 'circle', 'angle', 'position-grid',
-      'square', 'cube', 'cuboid', 'star', 'view-cards', 'segment'],
+      'square', 'cube', 'cuboid', 'star', 'view-cards', 'segment', 'count', 'ruler', 'weighing'],
     chart: ['bar', 'line', 'pie', 'scatter'],
     diagram: ['brace', 'segment', 'balance', 'scale', 'pattern', 'groups', 'ratio'],
     currency: ['rmb'],

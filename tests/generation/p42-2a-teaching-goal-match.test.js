@@ -118,8 +118,9 @@ test('P42-019 正向对照：同 KP calc/fill 保持 stem 双值语义不变', a
     const q = qs[0];
     const prompt = q.prompt || (q.content && q.content.stem) || '';
     assert.match(q.answer.value, / 和 /, qt + ' 答案应保持双值形态：' + q.answer.value);
-    // calc 题面为 stem（含「相邻的两个数」），fill 题面为 scaffold（参考：N − 1 = ____）
-    const m = /与 (\d+) 相邻/.exec(prompt) || /参考：(\d+) − 1/.exec(prompt);
+    // calc 题面为 stem（含「相邻的两个数」），fill 题面为 scaffold（N − 1 = ____；
+    // P45-10（X9）已去除「参考：」脚手架标签，断言随文案口径同步）
+    const m = /与 (\d+) 相邻/.exec(prompt) || /(\d+) − 1 = ____/.exec(prompt);
     assert.ok(m, '题面应含基准数：' + prompt);
     const cur = Number(m[1]);
     const pair = q.answer.value.split(' 和 ').map(Number).sort(function (a, b) { return a - b; });

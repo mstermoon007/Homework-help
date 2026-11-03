@@ -420,8 +420,7 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
     var tj = targets[v];
     var isTrue = v !== 1;
     var shownCount = isTrue ? tj.n : tj.n + 1;
-    prompt = name + '：看图，有人说' + tj.label + '表示 '
-      + shownCount + ' 个' + (tj.label === '第一段' ? '（标出 ' + shownCount + 'cm）' : '') + '。这个说法对吗？';
+    prompt = name + '：看图，有人说' + tj.label + '表示 ' + shownCount + ' 个。这个说法对吗？';
     answer = isTrue;
     mode = 'judge';
     explanation = isTrue
@@ -821,7 +820,10 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
     if (v === 0) target = hi;
     else if (v === 1) target = lo;
     else target = fri;
-    var opts = Rng.shuffle(rng, LINE_HIGH.map(function (s) { return s.label; }));
+    // P45-10（X3）：星期选项收敛为 4 项（正确项 + 3 个随机干扰星期），不再输出全部 7 天。
+    var otherWeekdays = LINE_HIGH.map(function (s) { return s.label; })
+      .filter(function (l) { return l !== target.label; });
+    var opts = Rng.shuffle(rng, [target.label].concat(Rng.shuffle(rng, otherWeekdays).slice(0, 3)));
     prompt = v === 2
       ? name + '：看折线统计图，最高气温是 ' + fri.value + '℃ 的是星期几？'
       : name + '：看折线统计图，' + (v === 0 ? '最高气温' : '最低气温') + '出现在星期几？';
@@ -1130,16 +1132,19 @@ function makeStatsQuestion(plan, context, i, kp) {
     series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
     var hiBar = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
     var loBar = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var barDiff = hiBar.value - loBar.value;
     var BAR_Q = [
-      { q: '哪个年级的人数最多？多多少？', a: hiBar.label + '，' + hiBar.value + '人' },
-      { q: '哪个年级的人数最少？少多少？', a: loBar.label + '，' + loBar.value + '人' },
-      { q: '人数最多的年级比最少的年级多多少人？', a: (hiBar.value - loBar.value) + '人' }
+      { q: '哪个年级的人数最多？比人数最少的年级多多少人？', a: hiBar.label + '，' + barDiff + '人' },
+      { q: '哪个年级的人数最少？比人数最多的年级少多少人？', a: loBar.label + '，' + barDiff + '人' },
+      { q: '人数最多的年级比最少的年级多多少人？', a: barDiff + '人' }
     ];
     var bq = BAR_Q[i % BAR_Q.length];
     var barLead = qt === 'choice' ? '看条形统计图，' : (qt === 'fill' ? '读条形图填空：' : '根据条形图回答：');
     var barQ = qt === 'fill' ? fillStem(bq.q) : bq.q;
     prompt = name + '：' + barLead + barQ;
     answer = bq.a; steps = 1;
+    // P45-02：设问意图 → 答案形态声明（V-B 门禁消费；P45-07 接通）
+    data.answerForm = (i % BAR_Q.length === 2) ? 'difference' : 'label-difference';
     graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
 
     // P25-07 题型形态适配：choice/judge/calc 计划下产出对应教育形态
@@ -1147,13 +1152,19 @@ function makeStatsQuestion(plan, context, i, kp) {
     if (plan.questionTypeId === 'choice') {
       var chOpts, chAns;
       if (i % 3 === 2) {
-        var diffV = hiBar.value - loBar.value;
-        chAns = diffV + '人';
-        chOpts = [chAns, (diffV + 1) + '人', (diffV - 1) + '人', (diffV + 2) + '人'];
+        chAns = barDiff + '人';
+        chOpts = [chAns, (barDiff + 1) + '人', (barDiff + 2) + '人', (barDiff + 3) + '人'];
+        data.answerForm = 'difference';
       } else {
         var targetC = (i % 3 === 0) ? hiBar : loBar;
-        chAns = targetC.label + '，' + targetC.value + '人';
-        chOpts = series.map(function (s) { return s.label + '，' + s.value + '人'; });
+        var otherC = (i % 3 === 0) ? loBar : hiBar;
+        chAns = targetC.label + '，' + barDiff + '人';
+        // P45-02 B3：选项集必须覆盖「哪一年级 + 多/少多少」设问（原选项全为「年级+人数」，无差值选项）
+        chOpts = [chAns,
+          otherC.label + '，' + barDiff + '人',
+          targetC.label + '，' + (barDiff + 1) + '人',
+          targetC.label + '，' + (barDiff + 2) + '人'];
+        data.answerForm = 'label-difference';
       }
       chOpts = Rng.shuffle(rng, chOpts);
       prompt = name + '：看条形统计图，' + bq.q;
@@ -1161,10 +1172,11 @@ function makeStatsQuestion(plan, context, i, kp) {
       data.choiceForm = true;
       nativeExpl = (i % 3 === 2)
         ? '人数最多的' + hiBar.label + '有 ' + hiBar.value + ' 人，最少的' + loBar.label + '有 '
-          + loBar.value + ' 人，相差 ' + hiBar.value + '－' + loBar.value + '＝' + (hiBar.value - loBar.value)
+          + loBar.value + ' 人，相差 ' + hiBar.value + '－' + loBar.value + '＝' + barDiff
           + ' 人，正确选项是「' + chAns + '」。'
         : '柱子最' + (i % 3 === 0 ? '高' : '矮') + '的是' + targetC.label + '，有 '
-          + targetC.value + ' 人，正确选项是「' + chAns + '」。';
+          + targetC.value + ' 人；比最' + (i % 3 === 0 ? '少' : '多') + '的' + otherC.label
+          + (i % 3 === 0 ? '多 ' : '少 ') + barDiff + ' 人，正确选项是「' + chAns + '」。';
     } else if (plan.questionTypeId === 'judge') {
       var targetJ = (i % 3 === 0) ? hiBar : loBar;
       var isTrueJ = rng() < 0.5;
@@ -1172,6 +1184,7 @@ function makeStatsQuestion(plan, context, i, kp) {
       var shownJ = isTrueJ ? targetJ.value : targetJ.value + deltaJ;
       prompt = name + '：根据条形图判断：「' + targetJ.label + '有 ' + shownJ + ' 人」——对还是错？';
       answer = isTrueJ;
+      data.answerForm = 'boolean';
       judgeExplanation = isTrueJ
         ? '条形图中' + targetJ.label + '对应的人数就是 ' + targetJ.value + ' 人，说法正确。'
         : '条形图中' + targetJ.label + '对应的人数是 ' + targetJ.value + ' 人，不是 ' + shownJ + ' 人，说法错误。';
@@ -1183,7 +1196,8 @@ function makeStatsQuestion(plan, context, i, kp) {
       // 列式计算形态：问法收敛为「最多 − 最少」差值，题干内嵌可求值算式
       prompt = name + '：根据条形图列式计算，人数最多的年级比最少的年级多多少人？'
         + '列式：' + hiBar.value + ' − ' + loBar.value + ' = ？';
-      answer = hiBar.value - loBar.value;
+      answer = barDiff;
+      data.answerForm = 'difference';
       data.calcForm = true;
     } else if (i % 3 === 0) {
       nativeExpl = '条形图中柱子最高的是' + hiBar.label + '，有 ' + hiBar.value + ' 人；'

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "p26-evidence.3",
-  "note": "P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（312 KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。派生真值源：dev/p25/reports/evidence-derive-report.json（真实生成产出字段稳定性 + KBL 语义事实跨家族守卫），派生脚本 dev/p25/derive-evidence-candidates.js，合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind：A 类仅 field/fieldNot/relation/relationNot；B/C 类另有 relationAny/constructAny（算法类型∈允许集正面断言）。required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。P44-H9：--refresh-stale 按锚点漂移原子替换失效行（不改 B/C 行、不手编语义）。",
+  "note": "P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（312 KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。派生真值源：dev/p25/reports/evidence-derive-report.json（真实生成产出字段稳定性 + KBL 语义事实跨家族守卫），派生脚本 dev/p25/derive-evidence-candidates.js，合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind：A 类仅 field/fieldNot/relation/relationNot；B/C 类另有 relationAny/constructAny（算法类型∈允许集正面断言）。required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。四态不变：skip=无规则行 / warn=有规则未声明（过渡期）/ pass=声明齐且 required 全满足 / fail=required 缺或 forbidden 命中。P44-H9：--refresh-stale 按锚点漂移原子替换失效行（不改 B/C 行、不手编语义）。P45-08：--refresh-value-drift=<gen...> 按派生器 counter-sample-downgraded 实证，把非结构恒定量的 field 值断言原位降级为 fieldPresent（其余断言不动）。P45-19：--prune-stale-fields=<gen...> 只删除候选已不存在的 required 字段断言（不整行替换、不新增断言），用于确定性产出空间 < N 的合法行。P45-NEXT-01：--refresh-incomplete=<gen...> 在既有 required 为候选严格子集且样本充分时整行替换（纯追加断言）。",
   "assertionKinds": {
     "required": [
       "field(path,value): sq 字段断言（路径相对 sq 根，如 data.operation）",
@@ -3882,6 +3882,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -3911,6 +3921,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -3940,6 +3960,20 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "fieldPresent",
+          "path": "data.graphic.params.op"
         }
       ],
       "forbidden": []
@@ -3969,6 +4003,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -3998,6 +4042,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -4027,6 +4081,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -4056,6 +4120,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -4085,6 +4159,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -4114,6 +4198,16 @@
           "kind": "field",
           "path": "data.graphic.type",
           "value": "currency"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.subtype",
+          "value": "rmb"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
         }
       ],
       "forbidden": []
@@ -5077,9 +5171,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -5148,9 +5241,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -5219,9 +5311,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -5372,9 +5463,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -5444,9 +5534,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -5515,9 +5604,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -5586,9 +5674,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "cuboid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -16105,13 +16192,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "line-segment"
-        },
-        {
           "kind": "fieldPresent",
-          "path": "data.graphic.params.length"
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -16176,13 +16258,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "line-segment"
-        },
-        {
           "kind": "fieldPresent",
-          "path": "data.graphic.params.length"
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -16247,13 +16324,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "line-segment"
-        },
-        {
           "kind": "fieldPresent",
-          "path": "data.graphic.params.length"
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -19253,9 +19325,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -19324,9 +19395,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -19395,9 +19465,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -19466,9 +19535,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -19924,9 +19992,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -19996,9 +20063,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -20067,9 +20133,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -20138,9 +20203,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -21092,9 +21156,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -21164,9 +21227,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -21235,9 +21297,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -21306,9 +21367,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "square"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -27570,18 +27630,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "相差 ? 千克"
         }
       ],
       "forbidden": [
@@ -27642,18 +27712,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -27714,18 +27794,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -27786,18 +27876,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -27858,18 +27958,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "相差 ? 千克"
         }
       ],
       "forbidden": [
@@ -27930,18 +28040,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -28002,18 +28122,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -28074,18 +28204,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": [
@@ -28146,18 +28286,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "sub"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "相差 ? 千克"
         }
       ],
       "forbidden": []
@@ -28185,18 +28335,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": []
@@ -28224,18 +28384,28 @@
         },
         {
           "kind": "field",
+          "path": "data.operation",
+          "value": "conversion"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.type",
           "value": "geometry"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": "cm"
+          "path": "data.graphic.subtype",
+          "value": "weighing"
         },
         {
           "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.hint",
+          "value": "单位换算"
         }
       ],
       "forbidden": []
@@ -38856,9 +39026,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -38927,9 +39096,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -38998,9 +39166,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -39069,9 +39236,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -42512,6 +42678,20 @@
         },
         {
           "kind": "field",
+          "path": "data.graphic.role",
+          "value": "angle-measure"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.rayLength",
+          "value": 2
+        },
+        {
+          "kind": "fieldPresent",
+          "path": "data.graphic.params.labelAngle"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.params.unit",
           "value": "cm"
         },
@@ -42524,10 +42704,6 @@
           "kind": "field",
           "path": "data.shapeName",
           "value": "角"
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.angle"
         }
       ],
       "forbidden": [
@@ -42653,9 +42829,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "angle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -43262,6 +43437,20 @@
         },
         {
           "kind": "field",
+          "path": "data.graphic.role",
+          "value": "angle-measure"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.rayLength",
+          "value": 2
+        },
+        {
+          "kind": "fieldPresent",
+          "path": "data.graphic.params.labelAngle"
+        },
+        {
+          "kind": "field",
           "path": "data.graphic.params.unit",
           "value": "cm"
         },
@@ -43274,10 +43463,6 @@
           "kind": "field",
           "path": "data.shapeName",
           "value": "角"
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.angle"
         }
       ],
       "forbidden": [
@@ -43403,9 +43588,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "angle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -44905,9 +45089,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "trapezoid"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -52636,13 +52819,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
           "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -52707,9 +52885,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -52778,9 +52955,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -52849,9 +53025,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -62649,8 +62824,23 @@
           "value": "trapezoid"
         },
         {
+          "kind": "field",
+          "path": "data.graphic.role",
+          "value": "quantity-correspondence"
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.topBase",
+          "value": 1
+        },
+        {
+          "kind": "field",
+          "path": "data.graphic.params.bottomBase",
+          "value": 2
+        },
+        {
           "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
+          "path": "data.graphic.params.showHeight"
         },
         {
           "kind": "field",
@@ -64018,9 +64208,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -64057,9 +64246,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64095,9 +64283,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64138,9 +64325,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -64177,9 +64363,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64215,9 +64400,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64258,9 +64442,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64301,9 +64484,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64339,9 +64521,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64382,9 +64563,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "field",
@@ -64421,9 +64601,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",
@@ -64459,9 +64638,8 @@
           "value": "geometry"
         },
         {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
+          "kind": "fieldPresent",
+          "path": "data.graphic.subtype"
         },
         {
           "kind": "fieldPresent",

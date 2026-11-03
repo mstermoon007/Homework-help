@@ -79,6 +79,62 @@ function generateQuestions(plan, options) {
     return Promise.reject(new Error('Generator 实例化失败: ' + selection.record.id));
   }
 
+  // D16（P45-13）：skipValidation 短路——直接调 generator.generate，不经 RetryLoop/Pipeline。
+  // 注意：RetryLoop 内部无论 validatorEnabled 真假都强制跑 Pipeline.runPipelineBatch（含
+  // kpSemantic 证据过滤），会把「另一合法形态」（如立体图形 KP 的正方体）按当前证据规则
+  // 过滤掉，导致派生期 raw 探针误判 data.graphic.* 为结构恒定量。raw 探针需要看到全部
+  // 合法形态才能正确降级字段断言。仅 dev 派生期使用（evidence-rules 锚点对账），生产 UI
+  // 不传此标志。
+  if (skipValidation) {
+    return Promise.resolve(generator.generate(plan)).then(function (rawQs) {
+      var qs = Array.isArray(rawQs) ? rawQs : [rawQs];
+      var Dup = require('../validator/duplicate-validator.js');
+      var pSeed = plan.seed;
+      var semanticQuestions = qs.map(function (q, i) {
+        if (!q) return null;
+        var sq = SQ.normalizeSemanticQuestion(Object.assign({}, q, {
+          generator: selection.record.id,
+          generatorVersion: selection.record.version || '1.0.0',
+          seed: q.seed || pSeed,
+          index: i
+        }));
+        if (sq && !sq.questionFingerprint && Dup && typeof Dup.buildQuestionFingerprint === 'function') {
+          sq.questionFingerprint = Dup.buildQuestionFingerprint(sq);
+        }
+        return sq;
+      }).filter(function (q) { return !!q; });
+
+      Metrics.recordGenerationSuccess({ generator: selection.record.id, subject: plan.subject, grade: plan.grade });
+      semanticQuestions.forEach(function (sq) {
+        logger.logQuestionValidation({
+          questionId: sq.id,
+          knowledgePointId: sq.knowledgePoint,
+          generator: selection.record.id,
+          generatorVersion: selection.record.version || '1.0.0',
+          seed: sq.metadata && sq.metadata.seed,
+          retryCount: 0,
+          validationResult: 'pass',
+          errorCodes: [],
+          score: 0,
+          planId: plan.planId,
+          questionType: sq.questionType,
+          difficulty: sq.difficulty
+        });
+      });
+
+      return {
+        questions: semanticQuestions,
+        semanticQuestions: semanticQuestions,
+        validationResults: [],
+        batchResult: { valid: true, errors: [] },
+        qualitySummary: { average: 1 },
+        retries: 0,
+        status: 'SUCCESS',
+        generator: selection.record.id
+      };
+    });
+  }
+
   // 3. 生成 + 验证 + 重试
   var genPromise = RetryLoop.generateWithRetry(
     function (p) { return generator.generate(p); },

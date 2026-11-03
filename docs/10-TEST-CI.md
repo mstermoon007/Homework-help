@@ -15,12 +15,12 @@ npm test   # node --test tests/**/*.test.js
 
 | 目录 | 覆盖领域 |
 |---|---|
-| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染（44 文件） |
+| `tests/generation/` | 生成器契约、注册表、教育语义、金题集、覆盖率、变式/迷思剖面、图形渲染、P41/P42 真值回归、P45 单题质量缺陷修复（60 文件） |
 | `tests/orchestration/` | POL 编排、题型、难度、数量、配额、查重、KBL 边界（23 文件） |
 | `tests/presentation/` | 渲染、排版 plan、SVG 契约与安全、页面契约（8 文件） |
 | `tests/adaptive/` | 自适应策略（4 文件） |
 | `tests/source/` | 随机源 / 权重分配 / 随机分布 / KBL rootHash / 知识页漂移（6 文件） |
-| `tests/validator/` | 答案验证器（含安全）（4 文件） |
+| `tests/validator/` | 答案验证器（含安全）+ P45 实例级门禁 V-A~V-E（5 文件） |
 | `tests/core/` | core 基础（1 文件） |
 | `tests/semantic/` | 语义治理（KBL 文档对齐、概念族地基）（3 文件） |
 
@@ -56,8 +56,8 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 2 | KBL | `dev/check-kbl-quality.js` | KBL 数据质量门禁（含释放包 rootHash 复算） |
 | 3 | Lint | `dev/lint-check.js` | 静态质量 |
 | 4 | Syntax | `dev/check-syntax.js` | 全项目 JS 语法（342 文件） |
-| 5 | Unit | `npm test` | 全链测试（936/936） |
-| 6a | Generation | `dev/check-allow-generation.js` | 1570 真实生成 |
+| 5 | Unit | `npm test` | 全链测试（993/993） |
+| 6a | Generation | `dev/check-allow-generation.js` | 1566 真实生成 |
 | 6b | Generation | `dev/p28/check-generation-matrix-freeze.js` | 矩阵冻结 |
 | 6c | Generation | `dev/p28/check-generator-matrix.js` | Generator Registry |
 | 6d | Generation | `dev/p28/check-generator-noninterference.js` | 四轴不夺权 |
@@ -82,7 +82,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**
 | 20 | Doc | `dev/p28/check-doc-consistency.js` | 历史数字扫描 |
 | 21 | Dead Code | `dev/p28/check-dead-code.js` | 死代码矩阵 |
 | 22 | Legacy | `dev/p28/check-legacy-matrix.js` | Legacy 治理矩阵 |
-| 23 | Instance | `dev/p42/check-instance-gates.js` | 实例级难度完整性（P42-028）+ 解析质量分级底线（P42-029：硬 0.5 / watch 0.6），1570 面重放 |
+| 23 | Instance | `dev/p42/check-instance-gates.js` | 实例级难度完整性（P42-028）+ 解析质量分级底线（P42-029：硬 0.5 / watch 0.6）+ **P45 实例一致性门禁 V-A~V-E**（图元计数/答案形态/分数既约/图文同名/judge 空位），1566 面重放 |
 | FINAL-91 | Readonly | `dev/check-all.js` 内建 | 运行前后 hash 快照，CI 不得修改源码/测试/冻结文件 |
 
 ## 3. 专项门禁脚本（`dev/p28/`）

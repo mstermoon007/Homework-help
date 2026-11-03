@@ -126,10 +126,10 @@ test('P40-Q-07 通分后可约分时解析含「约分得」', () => {
       const ex = q.answer.explanation || '';
       if (/约分得/.test(ex)) {
         found = true;
-        // 约分句形态：cnum/lcm 约分得 n/d（d < lcm）
-        const m = ex.match(/约分得 (\d+)\/(\d+)/);
-        assert.ok(m, '约分句应为「约分得 n/d」形态');
-        assert.equal(m[1] + '/' + m[2], q.answer.value, '约分结果必须等于答案');
+        // 约分句形态：cnum/lcm 约分得 n/d；P45-03 起分母 1 折叠为整数，故同时接受两种形态
+        const m = ex.match(/约分得 (\d+(?:\/\d+)?)/);
+        assert.ok(m, '约分句应为「约分得 n/d」或整数形态');
+        assert.equal(m[1], q.answer.value, '约分结果必须等于答案');
       }
     });
   }

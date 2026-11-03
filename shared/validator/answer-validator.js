@@ -21,6 +21,213 @@ function coerceString(v) { return v == null ? '' : String(v); }
 function coerceNumber(v) { if (v == null) return null; var n = Number(v); return isNaN(n) ? null : n; }
 function safeTrim(v) { return coerceString(v).trim(); }
 
+/* ================================================================
+ * P45-07（V-A / V-B / V-D / V-E）：实例一致性门禁
+ *   只做「答案/题面 + 生成器已声明字段」的一致性比对，不重算题、不改题。
+ *   信号来源单一：data.figureCount（A 类）、data.answerForm（B 类）、
+ *   data.graphic（D 类）、prompt 空位形态（E 类），均为既有 Generator 产出。
+ * ================================================================ */
+var JUDGE_BLANK_RE = /____/;              // 填空式空位（E1）
+var INNER_PAREN_RE = /[（(]\s*[）)]/;      // 题干内部空括号（E1）
+
+// V-D 图文同名（D2）：题面点名的具体图形 → 描述符 subtype。
+// 长名词优先（「圆柱」先于「圆」，防「圆」吞「圆柱」）；按字符占位避免重复命中。
+var SHAPE_NOUNS = [
+  { noun: '正方体', subtype: 'cube' },
+  { noun: '长方体', subtype: 'cuboid' },
+  { noun: '圆柱', subtype: 'cylinder' },
+  { noun: '圆锥', subtype: 'cone' },
+  { noun: '平行四边形', subtype: 'parallelogram' },
+  { noun: '长方形', subtype: 'rectangle' },
+  { noun: '正方形', subtype: 'square' },
+  { noun: '三角形', subtype: 'triangle' },
+  { noun: '梯形', subtype: 'trapezoid' },
+  { noun: '线段', subtype: 'line-segment' },
+  // 「球」是常用构词成分（乒乓球/羽毛球/足球/地球仪…），这些词里不是图形对象，跳过该次命中。
+  { noun: '球', subtype: 'sphere', skipPrefix: /(乒乓|羽毛|网|足|篮|排|皮|气|地|眼|台|棒|铅|垒|高尔夫)$/ },
+  { noun: '圆', subtype: 'circle' }
+];
+var SHAPE_SUBTYPES = SHAPE_NOUNS.map(function (n) { return n.subtype; });
+
+/** 题面提及的全部具体图形 subtype（同名去重，长名词优先占位） */
+function allShapeSubtypes(prompt) {
+  var p = coerceString(prompt);
+  var out = [];
+  if (!p) return out;
+  var used = [];
+  var i, k;
+  for (i = 0; i < p.length; i++) used.push(false);
+  SHAPE_NOUNS.forEach(function (n) {
+    var from = 0;
+    while (true) {
+      var idx = p.indexOf(n.noun, from);
+      if (idx === -1) break;
+      var overlap = false;
+      for (k = idx; k < idx + n.noun.length; k++) { if (used[k]) { overlap = true; break; } }
+      // 构词成分（如「羽毛球」的「球」）不计为图形名
+      var isCompound = !!(n.skipPrefix && n.skipPrefix.test(p.slice(Math.max(0, idx - 6), idx)));
+      if (!overlap && !isCompound) {
+        for (k = idx; k < idx + n.noun.length; k++) used[k] = true;
+        if (out.indexOf(n.subtype) === -1) out.push(n.subtype);
+      }
+      from = idx + n.noun.length;
+    }
+  });
+  return out;
+}
+
+/** 题面中「主对象位置」出现的具体图形 subtype 列表（同名去重）
+ *  只认两类位置：① 指示词（图中/下图/如图/看图/这个/下面）后 12 字内；
+ *  ② 图形名紧跟「有」或「的」。命题文本中作单位/举例提到的图形名（如
+ *  「小正方形可以拼成」「线段、射线、直线」「平行四边形面积相等」）不计入。
+ */
+function primaryShapeSubtypes(prompt) {
+  var p = coerceString(prompt);
+  var out = [];
+  if (!p) return out;
+  var used = [];
+  var i, k;
+  for (i = 0; i < p.length; i++) used.push(false);
+  SHAPE_NOUNS.forEach(function (n) {
+    var from = 0;
+    while (true) {
+      var idx = p.indexOf(n.noun, from);
+      if (idx === -1) break;
+      var overlap = false;
+      for (k = idx; k < idx + n.noun.length; k++) { if (used[k]) { overlap = true; break; } }
+      if (!overlap) {
+        for (k = idx; k < idx + n.noun.length; k++) used[k] = true;
+        var before = p.slice(Math.max(0, idx - 12), idx);
+        var after = p.slice(idx + n.noun.length, idx + n.noun.length + 6);
+        var byDeictic = /(图中|下图|上图|如图|看图|这个|这些|下面)/.test(before);
+        var bySubject = /^(有|的)/.test(after);
+        if ((byDeictic || bySubject) && out.indexOf(n.subtype) === -1) out.push(n.subtype);
+      }
+      from = idx + n.noun.length;
+    }
+  });
+  return out;
+}
+// judge 末尾的「（  ）」是标准作答括号（学生填 √/×），不是空位——不计入 V-E，
+// 与 P45-06 变更记录口径一致（该处曾被误判，测试已收窄为只判 ____）。
+function stripTrailingJudgeBracket(p) {
+  return coerceString(p).replace(/[（(]\s*[）)]\s*$/, '');
+}
+
+/**
+ * 实例一致性校验（供 validateAnswer 与门禁 23 复用）
+ * @param {Object} sq SemanticQuestion
+ * @returns {Array<Object>} errors（ERROR 级）
+ */
+function validateInstanceConsistency(sq) {
+  var errors = [];
+  if (!sq || !sq.answer) return errors;
+  var data = sq.data || {};
+  var answerObj = sq.answer;
+  var qType = sq.questionType || sq.type || 'calc';
+  var prompt = coerceString(sq.prompt || (sq.content && sq.content.prompt) || '');
+
+  // V-A 图元计数一致：计数题答案必须等于描述符实际图元数（Generator 显式写 data.figureCount）
+  if (data.figureCount != null) {
+    var fcAnswer = coerceNumber(answerObj.value);
+    if (fcAnswer == null || fcAnswer !== Number(data.figureCount)) {
+      errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'answer.value',
+        'V-A 图元计数与答案不一致：figureCount=' + data.figureCount + '，答案=' + coerceString(answerObj.value),
+        SEVERITY.ERROR));
+    }
+  }
+
+  // V-B 设问-答案形态一致：Generator 已声明 data.answerForm 时，差值形态答案必须含差值数值
+  var form = data.answerForm;
+  if (form === 'difference' || form === 'label-difference') {
+    if (!/[0-9]/.test(coerceString(answerObj.value))) {
+      errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'answer.value',
+        'V-B 设问问差值，答案不含数值：answerForm=' + form + '，答案=' + coerceString(answerObj.value),
+        SEVERITY.ERROR));
+    }
+    if (qType === 'choice') {
+      var opts = Array.isArray(data.options) ? data.options
+        : (Array.isArray(sq.distractors) ? sq.distractors.map(function (d) { return d && d.value; }) : []);
+      var hasNumericOption = opts.some(function (o) { return /[0-9]/.test(coerceString(o)); });
+      if (!opts.length || !hasNumericOption) {
+        errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'data.options',
+          'V-B 设问问差值，选项集无任何数值项：' + opts.join('/'), SEVERITY.ERROR));
+      }
+    }
+  }
+
+  // V-D 描述符-题面一致
+  var g = data.graphic;
+  if (g && g.type) {
+    var params = g.params || {};
+    // D5 装饰指纹：P45-05 前的固定装饰矩形（8×3、不标注边长）；已是禁止形态
+    if (g.type === 'geometry' && g.subtype === 'rectangle' &&
+        params.width === 8 && params.height === 3 && params.labelSides === false) {
+      errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'data.graphic.params',
+        'V-D 禁止固定装饰矩形（8×3、labelSides=false）', SEVERITY.ERROR));
+    }
+    // D1 刻度尺：题面两处刻度读数 = 描述符 from/to
+    var rm = prompt.match(/刻度\s*(\d+(?:\.\d+)?)[^\d]{0,12}刻度\s*(\d+(?:\.\d+)?)/);
+    if (rm && g.subtype === 'ruler' &&
+        (Number(params.from) !== Number(rm[1]) || Number(params.to) !== Number(rm[2]))) {
+      errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'data.graphic.params',
+        'V-D 刻度尺 from/to ' + params.from + '/' + params.to + ' ≠ 题面读数 ' + rm[1] + '/' + rm[2],
+        SEVERITY.ERROR));
+    }
+    // D3 题面点名的长方形/正方形尺寸 = 描述符 params。
+    //   只在描述符「声明了尺寸」时比对：labelSides !== false（图上限标边长）且参数是
+    //   该图形自有尺寸（rectangle: 有 height、无通用 size；square: 有 size、无通用 width）。
+    //   主题图标（params 同时带 width+size、尺寸为归一化值）不宣称题面边长，不纳入比对
+    //   ——否则会把「KP 名首命中 → 主题图标」的 R5 议题（用户裁决搁置）误判为本门禁命中。
+    var rect = prompt.match(/长方形长\s*(\d+(?:\.\d+)?)\s*厘米[、，,]\s*宽\s*(\d+(?:\.\d+)?)\s*厘米/);
+    if (rect && g.subtype === 'rectangle' && params.labelSides !== false &&
+        params.height != null && params.size == null &&
+        (Number(params.width) !== Number(rect[1]) || Number(params.height) !== Number(rect[2]))) {
+      errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'data.graphic.params',
+        'V-D 长方形 params ' + params.width + '×' + params.height + ' ≠ 题面 ' + rect[1] + '×' + rect[2],
+        SEVERITY.ERROR));
+    }
+    var sqm = prompt.match(/正方形边长\s*(\d+(?:\.\d+)?)\s*厘米/);
+    if (sqm && g.subtype === 'square' && params.labelSides !== false &&
+        params.size != null && params.width == null &&
+        Number(params.size) !== Number(sqm[1])) {
+      errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'data.graphic.params',
+        'V-D 正方形 params.size ' + params.size + ' ≠ 题面边长 ' + sqm[1], SEVERITY.ERROR));
+    }
+    // D2 图文同名：题面唯一命名的具体图形必须与描述符同名（count 取 params.shape）。
+    //   作用域：仅具体图形 subtype；主题图标（params 同时带 width+size，归一化尺寸）与
+    //   复合描述符（view-cards/segment/ruler 等）不宣称单一图形名，跳过。
+    //   题面提及多个图形（如「平行四边形、长方形、正方形都有…」）属比较/拼组/推导题，
+    //   不做单一归属判定；仅单图形且处于主对象位置（指示词邻近或后接「有/的」）才比对。
+    //   judge 题干是命题文本（如「圆有无数条对称轴」），不宣称配图对象，不纳入同名比对；
+    //   其空位/结构仍由 V-E 覆盖。
+    var named = (qType === 'judge' || qType === 'true-false') ? [] : (function () {
+      var allShapes = allShapeSubtypes(prompt);
+      return allShapes.length === 1 ? primaryShapeSubtypes(prompt) : [];
+    })();
+    if (named.length === 1) {
+      var actualSub = g.subtype === 'count' ? params.shape : g.subtype;
+      var isThemeIcon = params.width != null && params.size != null;
+      if (actualSub && SHAPE_SUBTYPES.indexOf(actualSub) !== -1 && !isThemeIcon && actualSub !== named[0]) {
+        errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'data.graphic.subtype',
+          'V-D 题面图形名与描述符不符：题面 ' + named[0] + '，描述符 ' + actualSub, SEVERITY.ERROR));
+      }
+    }
+  }
+
+  // V-E judge 无空位：题干不得含 ____ / 内部空括号（末尾作答括号除外）
+  if (qType === 'judge' || qType === 'true-false') {
+    var stripped = stripTrailingJudgeBracket(prompt);
+    if (JUDGE_BLANK_RE.test(stripped) || INNER_PAREN_RE.test(stripped)) {
+      errors.push(createError(ERROR_CODES.STRUCTURE_INVALID, 'prompt',
+        'V-E 判断题题干残留空位：' + coerceString(prompt).slice(0, 80), SEVERITY.ERROR));
+    }
+  }
+
+  return errors;
+}
+
+
 /**
   * 计算标准算式的正确答案（安全解析器，无 eval/new Function）
   * 支持：number, + - * / ( ), % (postfix percent), decimal
@@ -558,6 +765,10 @@ function validateAnswer(sq) {
     }
   }
 
+  // P45-07：实例一致性门禁（V-A / V-B / V-D / V-E）——与题型分派正交，
+  // 任何题型产出都必须满足（失败属 Generation 面硬失败，触发重生成）。
+  errors.push.apply(errors, validateInstanceConsistency(sq));
+
   var valid = errors.length === 0;
   return { valid: valid, errors: errors, warnings: warnings, info: info, score: valid ? 1 : 0.5, checks: { answer: valid ? 'pass' : 'fail' } };
 }
@@ -572,5 +783,6 @@ module.exports = {
   validateRemainderAnswer: validateRemainderAnswer,
   validateChoiceAnswer: validateChoiceAnswer,
   validateJudgeAnswer: validateJudgeAnswer,
-  validateTextAnswer: validateTextAnswer
+  validateTextAnswer: validateTextAnswer,
+  validateInstanceConsistency: validateInstanceConsistency
 };

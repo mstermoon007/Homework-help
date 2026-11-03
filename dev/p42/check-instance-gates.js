@@ -28,6 +28,8 @@ var KCV = require(path.join(ROOT, 'shared', 'capability', 'knowledge-capability-
 var QTR = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
 var DI = require(path.join(ROOT, 'shared', 'validator', 'difficulty-integrity-validator.js'));
 var QS = require(path.join(ROOT, 'shared', 'validator', 'quality-scorer.js'));
+// P45-07：实例一致性门禁（V-A / V-B / V-D / V-E）与分数形态（V-C）全量证据
+var AV = require(path.join(ROOT, 'shared', 'validator', 'answer-validator.js'));
 
 // ── 阈值（P42-4 裁决：0.5 硬底线 + 0.6 watch 目标，P42-3 分级阈值先例）──
 var QUALITY_FLOOR = 0.5;   // < 0.5 → FAIL
@@ -37,13 +39,20 @@ var QUALITY_TARGET = 0.6;  // [0.5, 0.6) → watch
 function classifyQuestion(q) {
   var d = DI.validateDifficultyIntegrity(q, {});
   var s = QS.scoreExplanationQuality(q);
+  // P45-07：V-A/V-B/V-D/V-E（实例一致性）+ V-C（分数形态）
+  var inst = (AV && typeof AV.validateInstanceConsistency === 'function') ? AV.validateInstanceConsistency(q) : [];
+  var frac = QS.checkFractionForm(q);
   return {
     diffFail: !!(d.errors && d.errors.length),
     diffErrN: (d.errors || []).length,
     diffMsg: d.errors && d.errors.length ? String(d.errors[0].message || d.errors[0]).slice(0, 160) : null,
     diffWarn: !!(d.warnings && d.warnings.length),
     quality: s,
-    qualityGate: s < QUALITY_FLOOR ? 'fail' : (s < QUALITY_TARGET ? 'watch' : 'pass')
+    qualityGate: s < QUALITY_FLOOR ? 'fail' : (s < QUALITY_TARGET ? 'watch' : 'pass'),
+    instanceN: (inst || []).length,
+    instanceMsg: (inst && inst.length) ? String(inst[0].message || '').slice(0, 160) : null,
+    fractionN: (frac || []).length,
+    fractionMsg: (frac && frac.length) ? String(frac[0]).slice(0, 160) : null
   };
 }
 
@@ -63,7 +72,7 @@ function enumeratePairs() {
 function main() {
   var PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
   var pairs = enumeratePairs();
-  var stats = { total: 0, genErr: 0, diffFailN: 0, diffWarnN: 0, qPass: 0, qWatch: 0, qFail: 0 };
+  var stats = { total: 0, genErr: 0, diffFailN: 0, diffWarnN: 0, qPass: 0, qWatch: 0, qFail: 0, instanceFailN: 0, fractionFailN: 0 };
   var fails = [], watch = [];
   var qualityDist = {};
   var done = 0;
@@ -94,6 +103,15 @@ function main() {
           stats.qWatch++;
           if (watch.length < 200) watch.push({ kp: p.kp, qt: p.qt, quality: c.quality });
         } else stats.qPass++;
+        // P45-07：V 门禁（实例一致性 + 分数形态），任一违规即 FAIL
+        if (c.instanceN) {
+          stats.instanceFailN++;
+          if (fails.length < 40) fails.push({ kp: p.kp, qt: p.qt, kind: 'instance-consistency', msg: c.instanceMsg });
+        }
+        if (c.fractionN) {
+          stats.fractionFailN++;
+          if (fails.length < 40) fails.push({ kp: p.kp, qt: p.qt, kind: 'fraction-form', msg: c.fractionMsg });
+        }
       } catch (e) {
         stats.genErr++;
         if (fails.length < 40) fails.push({ kp: p.kp, qt: p.qt, kind: 'generation', msg: String((e && e.message) || e).slice(0, 160) });
@@ -103,11 +121,13 @@ function main() {
     }
     process.stdout.write('\r  进度 ' + done + '/' + pairs.length + '          \n');
 
-    var failTotal = stats.genErr + stats.diffFailN + stats.qFail;
+    var failTotal = stats.genErr + stats.diffFailN + stats.qFail + stats.instanceFailN + stats.fractionFailN;
     console.log('P42-4 实例级质量门禁面：' + stats.total + ' 题（生成异常 ' + stats.genErr + '）');
     console.log('  A. 难度完整性（P42-028）：errors=' + stats.diffFailN + '，warnings=' + stats.diffWarnN);
     console.log('  B. 解析质量（P42-029）  ：pass=' + stats.qPass + '，watch=' + stats.qWatch + '，fail=' + stats.qFail
       + '（分布 ' + JSON.stringify(qualityDist) + '，硬底线 ' + QUALITY_FLOOR + '，目标 ' + QUALITY_TARGET + '）');
+    console.log('  V. P45-07 实例一致性（V-A/V-B/V-D/V-E）：fail=' + stats.instanceFailN
+      + '；分数形态（V-C）：fail=' + stats.fractionFailN);
 
     var outDir = path.join(__dirname, 'out');
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
@@ -116,6 +136,8 @@ function main() {
       thresholds: { qualityFloor: QUALITY_FLOOR, qualityTarget: QUALITY_TARGET },
       stats: stats,
       qualityDist: qualityDist,
+      // P45-07：V 门禁（instance-consistency = V-A/V-B/V-D/V-E；fraction-form = V-C）
+      vGates: { instanceFailN: stats.instanceFailN, fractionFailN: stats.fractionFailN },
       fails: fails,
       watch: watch
     }, null, 2));

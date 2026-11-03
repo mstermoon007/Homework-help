@@ -510,6 +510,8 @@
     var up = parts.upstream, name = parts.name;
     if (!up || !up.name || !name || up.name === name) return current;
     var defCite = up.definition ? ('（' + up.definition + '）') : '';
+    // P45-10（X4）：current 为空时只作兜底引用前序，不拼接悬空桥接句。
+    if (!current.trim()) return '我们之前学过〈' + up.name + '〉' + defCite + '。';
     return '我们之前学过〈' + up.name + '〉' + defCite + '。把〈' + up.name + '〉和〈' + name + '〉结合起来看：' + current;
   }
 

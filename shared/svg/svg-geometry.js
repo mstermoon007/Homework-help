@@ -467,6 +467,142 @@
     return finish(inner, o);
   }
 
+  /**
+   * P45-01（A 类）：图元计数图——在同一张图中渲染 count 个同类图元，使「数一数」
+   * 类计数题的答案与图中实际图元数同源。描述符：
+   *   { type:'geometry', subtype:'count', params:{ shape, count, size, angle, unit, unitPx, gap } }
+   * 只复用本模块基础图元；不标边长、不画直角符号，保证一个图元恰好对应一个可数图元。
+   * @param {Object} o { shape, count, size(单位), angle(度), unitPx, gap }
+   */
+  function countShapes(o) {
+    o = o || {};
+    var n = Math.max(1, Math.floor(Number(o.count) || 1));
+    var shape = o.shape || 'rectangle';
+    var u = Number(o.unitPx) || 30;
+    var size = px(o.size != null ? o.size : 2, { unitPx: u });
+    var gap = Number(o.gap) || 16;
+    var ang = Number(o.angle) || 60;
+
+    // 单图元外接尺寸：矩形类宽略大于高，其余按 size 计。
+    var w = size, h = size;
+    if (shape === 'rectangle') { w = Math.round(size * 1.25); }
+    else if (shape === 'parallelogram' || shape === 'trapezoid') { h = Math.round(size * 0.65); }
+    else if (shape === 'line-segment') { h = 0; }
+
+    var cols = Math.min(n, 3);
+    var rows = Math.ceil(n / cols);
+    var cellW = w + gap, cellH = (h || 8) + gap;
+    var inner = '';
+
+    function figureAt(x, y) {
+      switch (shape) {
+        case 'square':
+          return U.svgRect(x, y, w, h, { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'rectangle':
+          return U.svgRect(x, y, w, h, { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'triangle':
+          return U.svgPolygon([[x, y + h], [x + w, y + h], [x + w / 2, y]],
+            { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'parallelogram':
+          return U.svgPolygon([[x + w * 0.2, y], [x + w, y], [x + w * 0.8, y + h], [x, y + h]],
+            { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'trapezoid':
+          return U.svgPolygon([[x + w * 0.2, y], [x + w * 0.8, y], [x + w, y + h], [x, y + h]],
+            { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'circle':
+          return U.svgCircle(x + w / 2, y + h / 2, w / 2,
+            { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+        case 'angle': {
+          var vx = x, vy = y + h;
+          var rad = ang * Math.PI / 180;
+          var p2x = vx + w * Math.cos(rad), p2y = vy - w * Math.sin(rad);
+          var arc = U.svgPath('M ' + (vx + 14) + ' ' + vy + ' A 14 14 0 0 0 ' +
+            (vx + 14 * Math.cos(rad)) + ' ' + (vy - 14 * Math.sin(rad)),
+            { strokeWidth: 1.5 });
+          return U.svgLine(vx, vy, vx + w, vy, { strokeWidth: 2 }) +
+            U.svgLine(vx, vy, p2x, p2y, { strokeWidth: 2 }) + arc;
+        }
+        case 'line-segment':
+          return U.svgLine(x, y + 8, x + w, y + 8, { strokeWidth: 2 });
+        default:
+          return U.svgRect(x, y, w, h, { fill: '#eef3fb', stroke: '#27324a', strokeWidth: 2 });
+      }
+    }
+
+    for (var i = 0; i < n; i++) {
+      var c = i % cols, r = Math.floor(i / cols);
+      inner += figureAt(c * cellW, r * cellH);
+    }
+    return finish(inner, { width: o.width, wrap: { padding: 12 } });
+  }
+
+  /**
+   * P45-04（D 类 D1）：刻度尺——表达「一端对着刻度 a、另一端对着刻度 b」的测量语义。
+   * 描述符 { type:'geometry', subtype:'ruler', params:{ from,to,unit,unitPx } }
+   * 尺身自 0 画到 to+1，刻度位置与读数一一对应；不画被测物体（被测物只出现在题干，
+   * 画出来会直接给出长度）。两处读数刻度加长着色，提示题面已述的两端。
+   */
+  function ruler(o) {
+    var from = Number(o.from != null ? o.from : 0);
+    var to = Number(o.to != null ? o.to : from + 1);
+    if (!(to > from)) return '';
+    var unit = o.unit || 'cm';
+    var unitPx = Number(o.unitPx) || 25;
+    var hi = Math.ceil(to) + 1;
+    var x0 = 14, y0 = 10, bodyH = 30;
+    var inner = '';
+    inner += U.svgRect(x0, y0, hi * unitPx, bodyH, { fill: '#fdf6e3', stroke: '#27324a', strokeWidth: 1.5, rx: 3 });
+    for (var v = 0; v <= hi; v++) {
+      var x = x0 + v * unitPx;
+      var major = (v % 5 === 0);
+      inner += U.svgLine(x, y0, x, y0 + (major ? 12 : 8), { strokeWidth: major ? 1.6 : 1, stroke: '#27324a' });
+      inner += U.svgText(x, y0 + bodyH - 6, String(v), { fontSize: 10, fill: D.textColor, 'text-anchor': 'middle' });
+    }
+    // 题面已述的两端读数（红），不标注被测物本体
+    [from, to].forEach(function (t) {
+      var tx = x0 + t * unitPx;
+      inner += U.svgLine(tx, y0 - 8, tx, y0, { strokeWidth: 2, stroke: '#e05252' });
+    });
+    inner += U.svgText(x0 + hi * unitPx / 2, y0 + bodyH + 16, '（单位：' + unit + '）',
+      { fontSize: 11, fill: '#8a97ad', 'text-anchor': 'middle' });
+    return finish(inner, o);
+  }
+
+  /**
+   * P45-05（D 类 D5）：称重示意图——天平两盘各放一件物品，盘下标注题干给出的重量。
+   * 描述符 { type:'geometry', subtype:'weighing', params:{ leftLabel,rightLabel,hint } }
+   * 只呈现题面已述的数量（比较题两盘各标重量、换算题左盘标原值右盘标目标单位），
+   * 答案由 Generator 决定，图形不给出结果。
+   */
+  function weighing(o) {
+    var leftLabel = o.leftLabel != null ? String(o.leftLabel) : '';
+    var rightLabel = o.rightLabel != null ? String(o.rightLabel) : '';
+    var hint = o.hint != null ? String(o.hint) : '';
+    var W = 300, H = 170;
+    var cx = W / 2, beamY = 42, panY = 92, panW = 96, panH = 12, armX = 104;
+    var inner = '';
+    // 支架与底座
+    inner += U.svgLine(cx, beamY, cx, H - 34, { stroke: '#27324a', strokeWidth: 3 });
+    inner += U.svgLine(cx - 30, H - 34, cx + 30, H - 34, { stroke: '#27324a', strokeWidth: 3 });
+    // 横梁、吊绳与托盘
+    inner += U.svgLine(cx - armX, beamY, cx + armX, beamY, { stroke: '#27324a', strokeWidth: 3 });
+    [cx - armX, cx + armX].forEach(function (bx) {
+      inner += U.svgLine(bx, beamY, bx, panY, { stroke: '#8a97ad', strokeWidth: 1.4 });
+      inner += U.svgRect(bx - panW / 2, panY, panW, panH,
+        { fill: '#f4f6fb', stroke: '#27324a', strokeWidth: 1.6, rx: 4 });
+    });
+    // 盘下标注：题面已述重量（左）与目标/待求项（右）
+    inner += U.svgText(cx - armX, panY + panH + 24, leftLabel,
+      { fontSize: 14, fill: '#3f6fd1', 'text-anchor': 'middle', fontWeight: 700 });
+    inner += U.svgText(cx + armX, panY + panH + 24, rightLabel,
+      { fontSize: 14, fill: '#c77b30', 'text-anchor': 'middle', fontWeight: 700 });
+    if (hint) {
+      inner += U.svgText(cx, H - 8, hint,
+        { fontSize: 12, fill: '#8a97ad', 'text-anchor': 'middle' });
+    }
+    return finish(inner, o);
+  }
+
   // ============ 导出 ============
   var SVGGeometry = {
     rectangle: rectangle, square: square, triangle: triangle,
@@ -480,6 +616,9 @@
     viewCards: viewCards,
     symmetryGrid: symmetryGrid,
     star: star,
+    count: countShapes,
+    ruler: ruler,
+    weighing: weighing,
     _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
 

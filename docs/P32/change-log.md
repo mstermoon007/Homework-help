@@ -30,6 +30,13 @@
 
 ## 记录（新 → 旧）
 
+### P32-AS-18-补充｜P45-03/P45-04 首产答案防泄露白名单登记（2026-11-01）
+- modified: `dev/p32/check-answer-leak.js` WHITELIST 注册表——①`math-g5-down-u06-k002 fill` 条目 token 由 `5/6` 收敛为 `5`（P45-03 填空答案只填分子，题面 `5/6 = ____/6` 的已知分子即所填值，reason 已随口径更新）；②新增 `math-g6-up-u03-k001 calc` token `1`（L1/B-OPERAND，P45-03 倒数答案分母 1 折叠为整数，题面 `1/2` 为已知算式操作数）；③新增 `math-g2-up-u05-k002` fill/choice/geometry token `8` 共 3 行（L2/GRAPHIC-TICK，P45-04 D1 起刻度尺图标注 0–11 全部刻度编号，答案 8 为两端刻度差读数，起止刻度为题面已知量）；④新增 `math-g4-up-u05-k004 choice` token `2`（L2/GRAPHIC-COINCIDENCE，P45-04 D 类按题面派生平行四边形后随机边长 `2cm` 与答案「2 组对边」数值巧合）。冻结 seed 口径（`p28-v1` / d3）与门禁同源，未改任何扫描规则、未放宽 L1–L4 判定。
+- deleted: 无（原 `5/6` 条目为同一行 token 口径收敛，非删除条目）。
+- reason: 用户裁决「登记白名单（推荐）」（2026-11-01，P45-04 门禁取证后）。按本门禁既定机制（未登记命中 = FAIL，须人工裁决后更新注册表）与既有 `C-FRACTION-PART` / `GRAPHIC-COINCIDENCE` 分类同口径登记，属有意决策，不构成降低判定标准：L1–L4 规则、token 边界匹配、自判回放均未改动。
+- tests: ①`node dev/p32/check-answer-leak.js` → **PASS**（L1 命中 135 / 白名单 135 / 未登记 0；L2 渲染 651 SUCCESS 651，text 命中 30 / 未登记 0；L3/L4 PASS；自判回放 TRUE 1481 / FALSE 0 / NULL 85）；②`node dev/check-all.js` 第 6g 项由 FAIL 转 PASS。
+- risk: ①注册以 `(kp,qt,token,layer)` 为键，freeze 口径下可复现；若后续 P45 任务再次改变该行答案/题面口径，须重新裁决并追加记录，不得默认沿用；②`GRAPHIC-TICK` 为本轮新增桶名，仅用于刻度尺图标注，新桶须在同一记录中说明语义，不得泛指放宽图形文本扫描；③375/98/407/23/7 口径未触，未改生产代码，未重冻任何矩阵。
+
 ### P32-AS-21｜最终冻结（2026-10-08）
 - modified: `docs/P32/P32-TASK-BOOK.md`（状态行更新「P32 战役最终冻结：AS-21 已完成」+ AS-21 范围与验收矩阵；§6 AS-21 范围追加"包含 AS-20 risk④ 销账与 D 端点断链修复扩展"说明）。
 - deleted: 无。

@@ -428,6 +428,17 @@
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop' };
     var generationId = 'g-' + Date.now().toString(36) + '-' + (++_seq).toString(36);
 
+    // D16（P45-13）：skipValidation 为派生期 raw 探针专用——需看到 Generator 的全部合法形态
+    // （含同指纹重复、跨 cell 合并）才能正确判定 data.graphic.* 字段是否结构恒定。
+    // 此时跳过 POL 的 cell 拆分 + 跨 cell 指纹去重，直连 executeInline→build→runPlans→
+    // generateQuestions(skipValidation) 单链。生产路径（skipValidation 缺省 false）不变。
+    if (options.skipValidation) {
+      return execute(request, options).then(function (r) {
+        if (r && !r.generationId) r.generationId = generationId;
+        return r;
+      });
+    }
+
     return plan(request, options).then(function (p) {
       if (!p.active) {
         return execute(request, options).then(function (r) {
@@ -495,9 +506,14 @@
                     acc.outOfScopeDropped = (acc.outOfScopeDropped || 0) + 1;
                     return;
                   }
-                  var fp = q && q.questionFingerprint;
-                  if (fp && acc.seenKeys.has(fp)) return;
-                  if (fp) acc.seenKeys.add(fp);
+                  // D16（P45-13）：skipValidation 为派生期 raw 探针专用——需看到 Generator 的
+                  // 全部合法形态（含同指纹重复）才能正确判定 data.graphic.* 字段是否结构恒定。
+                  // 生产路径（skipValidation 缺省为 false）仍执行跨 cell 指纹去重。
+                  if (!options.skipValidation) {
+                    var fp = q && q.questionFingerprint;
+                    if (fp && acc.seenKeys.has(fp)) return;
+                    if (fp) acc.seenKeys.add(fp);
+                  }
                   newOnes.push(q);
                 });
                 if (add && add.seenKeys) add.seenKeys.forEach(function (k) { acc.seenKeys.add(k); });

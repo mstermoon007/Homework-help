@@ -33,6 +33,7 @@ var Rng = require('../core/rng.js');
 var SemanticParameters = require('../core/semantic-parameters.js');
 var SemanticEvidence = require('../core/semantic-evidence.js');
 var VariationApply = require('../core/variation-apply.js');
+var Distractors = require('../core/distractors.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -106,17 +107,8 @@ function finishChoice(q, rng, correct, wrongs, explanation, provenance) {
     o = String(o);
     if (!seen[o]) { seen[o] = 1; pool.push(o); }
   });
-  // P34-04：凑位选项用中性固定短语（正确项必在池内，两短语恒为假命题），
-  // 取代「都不是（3）」式编号占位文案；保持去重，两短语耗尽即止（4 项去重最少 2 项，必够）
-  var FILLERS = ['以上说法都不对', '以上都对'];
-  while (pool.length < 4) {
-    var filler = null;
-    for (var fi = 0; fi < FILLERS.length; fi++) {
-      if (!seen[FILLERS[fi]]) { filler = FILLERS[fi]; break; }
-    }
-    if (!filler) break;
-    seen[filler] = 1; pool.push(filler);
-  }
+  // P45-10（X3）：真实干扰项不足 4 时按答案形态派生；无可派生形态保留 3 项（不凑位、不编短语）。
+  if (pool.length < 4) pool = pool.concat(Distractors.deriveDistractors(pool, correct, 4 - pool.length));
   pool = pool.slice(0, 4);
   var options = Rng.shuffle(rng, pool);
   q.data.options = options;
@@ -789,7 +781,7 @@ function buildNumberConceptItem(rng, name, nr) {
     // FINAL-139：位值用「几个十几个一」语言 + 整十数加一位数（G1 已学），不用未教学的 ×10
     var tens = riC(rng, 1, 9, nr), ones = riC(rng, 1, 9, nr);
     var num0 = tens * 10 + ones;
-    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
+    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
       // P40-Q-03（#85/#88）：choice 不再回退空壳问句（独立设问，数字位值语境与 apply 计数器语境互异）；
       // fill 不再走 extractSupport 错位分支（原「80 + 2 = ____」配答案「十位」）——
@@ -801,7 +793,7 @@ function buildNumberConceptItem(rng, name, nr) {
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
     var cur = riC(rng, 11, 88, nr);
-    return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
+    return { stem: '与 ' + cur + ' 相邻的两个数是多少？（' + cur + ' − 1 = ' + (cur - 1) + '）',
       answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
       // P42-2A（P42-019）：apply 只问「后一个数」却复用 stem 双值答案（题答不一致），
       // 且解析列式取题面内嵌的后向参考式「cur − 1」，与所问的前向结论矛盾。
@@ -816,7 +808,7 @@ function buildNumberConceptItem(rng, name, nr) {
   if (name.indexOf('比较') !== -1) {
     var a0 = riC(rng, 12, 98, nr), b0 = a0 + riC(rng, 1, 9, nr) * (rng() < 0.5 ? 1 : -1);
     if (b0 <= 10) b0 = a0 + 5;
-    return { stem: '比较大小：' + Math.min(a0, b0) + ' ○ ' + Math.max(a0, b0) + '（参考：' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '）',
+    return { stem: '比较大小：' + Math.min(a0, b0) + ' ○ ' + Math.max(a0, b0) + '（' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '）',
       answer: '<', options: ['>', '<', '='],
       apply: '一年级有 ' + Math.min(a0, b0) + ' 人，二年级有 ' + Math.max(a0, b0) + ' 人，' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '，哪个年级人数多（填 > 或 <）？' };
   }
@@ -906,14 +898,14 @@ function buildNegativeItem(rng, name, nr) {
   }
   if (name.indexOf('比较') !== -1) {
     var a1 = riC(rng, 2, 8, nr), b1 = a1 + riC(rng, 1, 5, nr);
-    return { stem: '比较大小：−' + b1 + ' ○ −' + a1 + '（参考：' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，负号后越大数越小）',
+    return { stem: '比较大小：−' + b1 + ' ○ −' + a1 + '（' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，负号后越大数越小）',
       answer: '<', options: ['>', '<', '='],
       apply: '哈尔滨 −' + b1 + '℃，北京 −' + a1 + '℃，' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，哪里更冷，即 −' + b1 + ' ○ −' + a1 + '？' };
   }
   // 读写/认识 —— P34-06：读写分离。choice 问读法（answer「负五」，补第 4 个合理干扰项「减五」——
   // 把「−」读成「减」是真实迷思）；fill/calc 问数值（input 答案 −5，不再以读法问句配读法答案
   // 或以读法句充当列式题），fillAnswer/calcAnswer 与 makeByItem 的 applyAnswer 同型分型答案机制。
-  return { stem: '读出下面的数：−5 与 +8（参考：0 − 5 = −5），−5 读作什么？',
+  return { stem: '读出下面的数：−5 与 +8（0 − 5 = −5），−5 读作什么？',
     answer: '负五', options: ['负五', '正五', '五', '减五'],
     // P40-Q-03（#143）：choice 独立设问（读法问句），不再回退空壳「下面哪个选项正确」；
     // 骨架与 apply（存折情境全句）互异。
@@ -939,7 +931,7 @@ function buildMultDivRelationItem(rng, name, nr) {
 
 function buildAlgebraLetterItem(rng, name, nr) {
   if (name.indexOf('数量关系') !== -1) {
-    return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（参考：80 × 2 = 160）',
+    return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（80 × 2 = 160）',
       answer: 's = v × t', options: ['s = v × t', 's = v + t', 's = v − t'],
       fill: '速度 × 时间 = 路程，用字母表示为 ____',
       apply: '汽车每小时行 v 千米，行了 t 小时（如 80 × 2 = 160），路程 s 用字母怎样表示？' };
@@ -1294,12 +1286,14 @@ function createConceptMeaningGenerator(spec) {
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
       var applied = VariationApply.applyToAll(out, plan);
-      // P40-T-08：承上启下三段模板——有同族前序锚时，把前序 canonical 名/定义要点接到本题解析前。
+      // P40-T-08 / P45-10（X4）：承上启下模板仅作空解析兜底——已有本题解析不再前置跨 KP 通用模板。
       var upstream = params && params.upstream;
       if (upstream && upstream.name) {
         applied.forEach(function (q) {
-          if (q && q.answer && typeof q.answer.explanation === 'string' && q.answer.explanation) {
-            q.answer.explanation = SemanticParameters.composeExplanation({ upstream: upstream, name: params.name, current: q.answer.explanation });
+          if (!q || !q.answer) return;
+          var cur = typeof q.answer.explanation === 'string' ? q.answer.explanation.trim() : '';
+          if (!cur) {
+            q.answer.explanation = SemanticParameters.composeExplanation({ upstream: upstream, name: params.name, current: '' });
           }
         });
       }

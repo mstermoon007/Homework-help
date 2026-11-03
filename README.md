@@ -12,11 +12,11 @@
 
 | 项 | 值 |
 |---|---|
-| 版本 | **5.2.0** |
+| 版本 | **5.2.1** |
 | KP / Units / Relations / ALLOW | **375 / 98 / 407 / 1566** |
 | Canonical 题型 | **7 类**（calc / fill / choice / judge / geometry / classify / apply） |
 | Generator | **23**（PRODUCTION 20 / COMBINE-ONLY 1 / DORMANT-CARRIER 2） |
-| 测试 | **102 文件 / 937 用例 / 0 FAIL** |
+| 测试 | **110 文件 / 993 用例 / 0 FAIL** |
 | 门禁 | **34 项**：本地 33 PASS / 0 FAIL / 1 SKIP（#15 无 Chrome）；CI 设 `CHROME_BIN` 为 34/0/0 |
 | Sitemap | **382 URL**（6 公共页 + 375 KP 页 + 1 索引页） |
 
@@ -28,7 +28,7 @@
 
 ```bash
 npm run verify          # M0 聚合门禁（8 步）
-npm test                # 全链测试（937/937）
+npm test                # 全链测试（993/993）
 node dev/check-all.js   # 全量门禁（34 项）
 ```
 

@@ -343,7 +343,9 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
       kind: kind,
       operation: 'conversion',
       fromUnit: fromUnit.unit,
-      toUnit: toUnit.unit
+      toUnit: toUnit.unit,
+      // P45-05：换算题的原值与题面同源写入 data，供图形描述符标注（不改答案/题面）
+      value: baseValue
     }
   };
   // P25-08：choice 提供数值选项
@@ -541,7 +543,7 @@ function makeWordProblemQuestion(plan, context, i, meta) {
         explanation: (useCut ? '绳子总长减去剪去的长度：' : '小明身高减去小红矮的部分：')
           + a + ' − ' + b + ' = ' + (a - b) + '（厘米）。' },
       answerMode: 'input',
-      data: { mode: 'apply', steps: 2, kind: 'length', operation: 'sub' }
+      data: { mode: 'apply', steps: 2, kind: 'length', operation: 'sub', total: a, part: b }
     };
   }
   if (kind === 'area') {
@@ -555,7 +557,8 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       answer: { value: String(w * h), acceptable: [],
         explanation: '长方形的面积 = 长 × 宽：' + w + ' × ' + h + ' = ' + (w * h) + '（平方厘米）。' },
       answerMode: 'input',
-      data: { mode: 'apply', steps: 2, kind: 'area', operation: 'mul' }
+      // P45-05 D4：长宽与题面同源写入 data，供 makeGraphicForMoney 派生描述符尺寸
+      data: { mode: 'apply', steps: 2, kind: 'area', operation: 'mul', width: w, height: h }
     };
   }
   if (kind === 'mass') {
@@ -569,7 +572,7 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       answer: { value: String(m1 - m2), acceptable: [],
         explanation: '求一个量比另一个量重多少用减法：' + m1 + ' − ' + m2 + ' = ' + (m1 - m2) + '（千克）。' },
       answerMode: 'input',
-      data: { mode: 'apply', steps: 2, kind: 'mass', operation: 'sub' }
+      data: { mode: 'apply', steps: 2, kind: 'mass', operation: 'sub', m1: m1, m2: m2 }
     };
   }
   if (kind === 'time') {
@@ -603,7 +606,7 @@ function makeWordProblemQuestion(plan, context, i, meta) {
   return makeRMBConversionQuestion(plan, context, i, meta);
 }
 
-function makeGraphicForMoney(meta, difficulty) {
+function makeGraphicForMoney(meta, difficulty, data) {
   if (meta.kind === 'rmb') {
     return {
       type: 'calculation',
@@ -616,13 +619,83 @@ function makeGraphicForMoney(meta, difficulty) {
       }
     };
   }
-  // 其他度量类型使用通用图形
-  return {
-    type: 'geometry',
-    subtype: 'rectangle',
-    role: 'quantity-correspondence',
-    params: { width: 8, height: 3, labelSides: false, unit: 'cm', unitPx: 30 }
-  };
+  // P45-05 D4：面积应用题按题干长宽参数化配图（题设尺寸 → 描述符尺寸，标出边长）。
+  // 唯一来源为 data.width/height（makeWordProblemQuestion 面积分支与题面同源写入）。
+  if (meta.kind === 'area') {
+    if (data && data.operation === 'mul' && data.width != null && data.height != null) {
+      return {
+        type: 'geometry',
+        subtype: 'rectangle',
+        role: 'quantity-correspondence',
+        params: {
+          width: Number(data.width),
+          height: Number(data.height),
+          labelSides: true,
+          unit: 'cm',
+          unitPx: 30
+        }
+      };
+    }
+    // P45-05：面积单位换算必须配图——按题述面积值画标注条带（数值/单位与题面同源）
+    if (data && data.operation === 'conversion' && data.value != null && data.fromUnit) {
+      return {
+        type: 'geometry',
+        subtype: 'rectangle',
+        role: 'quantity-correspondence',
+        params: {
+          width: Number(data.value),
+          height: 1,
+          labelSides: { width: true, height: false },
+          unit: data.fromUnit,
+          unitPx: 30
+        }
+      };
+    }
+    return null;
+  }
+  // P45-05：质量（称重实践/质量单位）必须配图——天平两盘标注重量。
+  // 质量单位随题面变化（克/千克/吨），不写固定 unit/unitPx；单位全部在 leftLabel/rightLabel 文案里。
+  if (meta.kind === 'mass' && data) {
+    var massParams = {};
+    if (data.operation === 'conversion' && data.value != null && data.fromUnit && data.toUnit) {
+      massParams.leftLabel = String(data.value) + data.fromUnit;
+      massParams.rightLabel = '? ' + data.toUnit;
+      massParams.hint = '单位换算';
+    } else if (data.m1 != null && data.m2 != null) {
+      massParams.leftLabel = '大米 ' + data.m1 + ' 千克';
+      massParams.rightLabel = '面粉 ' + data.m2 + ' 千克';
+      massParams.hint = '相差 ? 千克';
+    } else {
+      return null;
+    }
+    return {
+      type: 'geometry',
+      subtype: 'weighing',
+      role: 'quantity-correspondence',
+      params: massParams
+    };
+  }
+  // P45-05：长度题挂刻度尺（题述长度 → 刻度范围），替代与题无关的固定装饰矩形。
+  if (meta.kind === 'length' && data) {
+    var rulerTo = data.operation === 'conversion' ? Number(data.value) : Number(data.total);
+    if (isFinite(rulerTo) && rulerTo > 0) {
+      return {
+        type: 'geometry',
+        subtype: 'ruler',
+        role: 'quantity-correspondence',
+        params: {
+          from: 0,
+          to: rulerTo,
+          unit: data.operation === 'conversion' ? data.fromUnit : '厘米',
+          unitPx: 25
+        }
+      };
+    }
+    return null;
+  }
+  // 容量/时间族当前无绑定 KP（网关注册表内 12 个 KP 仅 rmb/length/area/mass），
+  // 缺数据时不挂图，由检验层按 needs-review 口径处理。
+  return null;
 }
 
 function createMoneyGenerator(spec) {
@@ -682,7 +755,12 @@ function createMoneyGenerator(spec) {
         }
 
         // P28-GEO-NATIVE-03：geometry 题已在 maker 内绑定语义图形，跳过通用图形覆盖
-        if (qt !== 'geometry') q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
+        // P45-05 D5：描述符为 null 时不挂载（无图形需求的行保持零 graphic）
+        if (qt !== 'geometry') {
+          var moneyGraphic = makeGraphicForMoney(meta, plan.difficulty, q.data);
+          if (moneyGraphic) q.data.graphic = moneyGraphic;
+          else delete q.data.graphic;
+        }
         // 人民币轨：发真实 currency/rmb 描述符（按题干实际金额画币值图标）
         if (qt !== 'geometry' && meta.kind === 'rmb' && q.data) {
           var amounts = null;
