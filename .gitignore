@@ -26,6 +26,13 @@ release/
 # 本地 AI 辅助工具记忆（不属于源码）
 .workbuddy/
 .trae/
+.trae-html-share-packages/
+
+# 一次性审计报告产物（不入库，本地可保留）
+audit/
+
+# dev 脚本的输出产物（由脚本再生，门禁不依赖，与 dev/reports/ 惯例一致）
+dev/*/out/
 
 # 本地生成的检查报告（由各 verify/check 门禁再生）
 dev/reports/
