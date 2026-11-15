@@ -2,7 +2,8 @@
 
 > 定位：面向全项目的**当前**设计总览——产品、技术栈、架构、数据、生成链路、表达、安全、离线、构建发布。
 > 依据：冻结文档 `docs/00-BASELINE.md` ~ `docs/11-SECURITY.md` + **真实代码**（本报告为综合说明，非新的事实源；凡冲突以冻结文档与门禁实测为准）。
-> 版本：5.2.1 ｜ 生成：2026-11-03 ｜ 关联：`docs/maintenance/AUDIT-LOG.md`（本次审计）。
+> 版本：5.3.0 ｜ 生成：2026-11-03（P46 增量更新：2026-11-15）｜ 关联：`docs/maintenance/AUDIT-LOG.md`（本次审计）。
+> P46 增量：产品呈现由单页混合选择改为**家庭 / 试卷 / 教师三模式**（选择页 + 练习页），详见 `docs/P46/` 与 `docs/CHANGELOG.md` v5.3.0；本文其余章节的三模式以外设计不变。
 
 ---
 
@@ -222,13 +223,13 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 
 ---
 
-## 15. 当前状态摘要（2026-10-14，P41 审计后）
+## 15. 当前状态摘要（2026-11-15，P46 三模式收口后）
 
 | 项 | 值 |
 |---|---|
-| 版本 | 5.2.1（`VERSION`=`package.json`=`version.js`=`sw.js CACHE` 四方一致） |
-| 基线 commit | 当前（P45 收口后） |
-| 门禁 | `check-all` 33 PASS / 0 FAIL / 1 SKIP（34 项；#15 无 Chrome SKIP；CI 设 `CHROME_BIN` 为 34/34 含真实 Chrome E2E 9/9），`npm test` 993/993 |
+| 版本 | 5.3.0（`VERSION`=`package.json`=`version.js`=`sw.js CACHE` 四方一致） |
+| 基线 commit | 当前（P46 三模式收口后） |
+| 门禁 | `check-all` 34 PASS / 0 FAIL / 0 SKIP（34 项；本机设 `CHROME_BIN` 后含真实 Chrome E2E 三模式 + 9 步全 PASS），`npm test` 1064/1064（114 文件） |
 | KBL | 375 / 98 / 407 / 1566 |
 | 线上 | VERSION 5.2.0（发布时）；dev/tests/kbl 不可达 |
 
@@ -238,9 +239,26 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 
 - **已修复**：competition 难度合成的 `ReferenceError`（P1）；隔离目录文档漂移（P2）；`registry-facade` 死三元（P3）；P41-A1 `checkQuestionType` 题型字段口径（生产恒 no-op）；P41-A2 `attachMeta` 异常路径 `ReferenceError`；P41-B1 rootHash 单一权威；P41-B2 知识页 `--check` 真实漂移检测；P41-B3 随机分布测试确定化。
 - **已决策**：P41-C 难度锚点权威冲突 → 选项 C（双表并存 + 显式命名），生产公式与 KBL 数据零变更（记录 `docs/maintenance/P41-C-difficulty-anchor-decision.md`）。
-- **未决（BLOCKED）**：线上缺失 HSTS/安全响应头（P3，需服务器授权；仓库无 nginx 配置、无 SSH）；Browser E2E（本机无 Chrome/Chromium）。
+- **未决（BLOCKED）**：线上缺失 HSTS/安全响应头（P3，需服务器授权；仓库无 nginx 配置、无 SSH）。
+- **已解除**：Browser E2E「本机无 Chrome/Chromium」——本机 Chrome 已就绪，`CHROME_BIN` 指向 `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` 可跑通 34 PASS / 0 FAIL / 0 SKIP（P46-09）；CI 仍需显式配置 `CHROME_BIN`。
 - **暂缓（O2/O3）**：题型谓词四处统一化（触及打包源 + bundle 重建，现由 P41-D 契约测试冻结）；`strategy-engine.js` 拆分 request-schema；gcd/`MODE_ALIAS`/常量表/标题/KP-id 解析 helper 收敛；`logger` 死 transport 清理；`version.js BUILD_DATE` 确定性；E2E 冷启动 `DevToolsActivePort` 等待窗口。
 - **不建议实施**：bridge/session 合并；intent 读取点合并（会击穿 `check-intent-authority` A3b）。
+
+### 16.1 P46 三模式遗留 / 债务登记（2026-11-15）
+
+> 口径：**已收口** = P46-01~10 全部交付、门禁通过；**遗留** = 已登记但本轮不处理；**债务** = 需后续专门任务偿还。
+
+| 类别 | 项 | 状态 | 说明 / 归属 |
+|---|---|---|---|
+| 遗留 | 门禁项数文档漂移 | 登记不处理 | `docs/P31/p31-layout-rules.md` 写 30 项、P30 规则写 27 项，均属历史冻结（append-only）；当前事实 **34 项**，以 `docs/00-BASELINE.md` 为准 |
+| 遗留 | 共享样式零消费者 | 登记不处理 | `shared/styles/components.css` `.type-card.competition`、`shared/styles/pages.css` `.quick-switch`：无 HTML/JS 消费者，但三方证据不足（§11.3），不强行删除 |
+| 遗留 | 编排层内部模式 | 保留 | `shared/strategy` / `shared/generation` / `question-type-registry` 内 quick/teacher/competition 为编排内部能力，有生产消费者，非产品模式 |
+| 遗留 | 单单元册别无真实样本 | 登记 | 真实数据中不存在「单元数 = 1」的册别，期中 `slice(0, ceil(n/2))` 在该边界退化为整册，未被真实样本覆盖 |
+| 遗留 | 试卷小样本 PARTIAL | 事实，非缺陷 | 3 KP 样本下 40 题只够 39 题，页面已有「本次已生成 39 / 40 题」可见提示 |
+| 债务 | 家庭专项判定为关键词规则 | 待后续 | `select.html` `FOCUS_RULES` 依据 KP 名称/单元名关键词匹配（零 KP ID 硬编码），非教学语义标注；G5/G6 六专项全空属数据事实 |
+| 债务 | `version.js BUILD_DATE` 非确定性 | 沿用旧债 | `new Date().toISOString()` 参与构建，影响可复现性（见「暂缓 O2/O3」） |
+| 债务 | CI 未配置 `CHROME_BIN` | 待配置 | 本地可跑 34/0/0；CI 未设环境变量时第 15 项 SKIP（33/0/1） |
+| 发布 | 线上版本滞后 | 未执行 | 仓库版本已升 **5.3.0**（四方一致）；线上仍为 5.2.0，发布需单独授权 |
 
 ---
 

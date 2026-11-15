@@ -2,6 +2,30 @@
 
 > 阶段报告全文见 `docs/archive/phases/`；此处为按版本聚合的变更摘要。
 
+## v5.3.0 — P46 三模式交互升级（2026-11-15）
+
+### 产品形态
+
+- 选择页与练习页统一为三模式：**家庭 home / 试卷 exam / 教师 teacher**。
+  - 家庭：计算题 / 应用题两大类 + 五项计算专项（凑十法、破十法、加减法口算、四则运算口算、竖式计算），支持单元多选；无能力专项置灰不绑点击。
+  - 试卷：单元测试 / 期中测试 / 期末测试；**固定 40 题**（POL 试卷模板 calc12/fill8/choice6/judge4/geometry4/classify2/apply4，不可行题型按 calc→fill→choice→judge→apply→geometry→classify 重分配）；期中取前半册 `ceil(n/2)`。
+  - 教师：按课本顺序（`unitNo`）章节 + KP 多选 + 七题型 + 配比。
+- 请求契约新增 `mode / practiceKind / practiceFocus / examType / unitIds`；`examType` 为规划级，仅 POL 消费，不进 Generator。
+- 练习页试卷模式题量与分题型只读、标题显示试卷类型；PARTIAL 容量不足时显示「本次已生成 N / 40 题」可见提示（P46-09 修复逐块渲染覆盖提示的静默少题缺陷）。
+
+### 架构与清理
+
+- `KnowledgeContext.uiKp` 投影新增 `unitId / unitNo / knowledgeNo / sourceIndex`，新增 `parseKnowledgeNo` 等课本顺序排序工具（P46-01）。
+- `PracticeOrchestrator` 新增 `EXAM_TEMPLATE / examAllocation / quotaAdjustments`，合法 `examType` 强制 40 题（P46-02）。
+- `PracticeBridge.sessionConfig` 与 `PracticeSession` 透传 `examType`（P46-03）。
+- 物理删除 select 页旧 `stageQuick / stageCompetition` 双阶段、三个开始按钮、`.module-card` 死 CSS；E2E 不再使用 `mode=quick`（P46-04/08）。
+
+### 质量
+
+- 测试 993 → **1064 用例**（114 文件 / 0 FAIL）；门禁 **34 项**（本地 33/0/1，CI 34/0/0）。
+- KBL 375 / 98 / 407 / 1566 不变；七题型、Generator 23、难度公式、冻结执行链全程未改。
+- 版本号 `5.2.1 → 5.3.0`（`VERSION` = `package.json` = `version.js` = `sw.js CACHE` 四方一致）。
+
 ## v5.2.1 — P45 单题质量缺陷修复收口（2026-11-03）
 
 ### P40 质量深度审计（战役一/二）

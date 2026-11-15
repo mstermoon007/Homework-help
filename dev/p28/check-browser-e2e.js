@@ -5,7 +5,7 @@
  * dev/p28/check-browser-e2e.js — FINAL-12 Browser E2E 门禁 wrapper
  *
  * 语义（exit code）：
- *   0  PASS     浏览器可用 → 真实运行 dev/e2e/browser-e2e.js final-12（9 步路径），全 PASS
+ *   0  PASS     浏览器可用 → 真实运行 dev/e2e/browser-e2e.js final-12（三模式 + 9 步路径），全 PASS
  *   1  FAIL     运行失败 / 发布环境（REQUIRE_BROWSER_E2E=1）下浏览器不可用
  *   2  SKIPPED  浏览器不可用（非发布环境）——不得冒充 PASS
  *

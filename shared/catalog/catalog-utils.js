@@ -144,6 +144,19 @@
     var book = (request.scope && request.scope.book) || request.book;
     if (book && book !== 'all') parts.push('book=' + encodeURIComponent(book));
 
+    // P46-04：单元稳定 ID（展示与范围摘要，不替代 kps 作为生成范围）
+    var unitIds = (request.scope && Array.isArray(request.scope.unitIds) && request.scope.unitIds.length)
+      ? request.scope.unitIds
+      : (Array.isArray(request.unitIds) ? request.unitIds : null);
+    if (unitIds && unitIds.length) {
+      parts.push('unitIds=' + encodeURIComponent(unitIds.join(',')));
+    }
+
+    // P46-04：家庭/试卷产品元数据
+    if (request.practiceKind) parts.push('practiceKind=' + encodeURIComponent(request.practiceKind));
+    if (request.practiceFocus) parts.push('practiceFocus=' + encodeURIComponent(request.practiceFocus));
+    if (request.examType) parts.push('examType=' + encodeURIComponent(request.examType));
+
     return parts.join('&');
   }
 
@@ -238,7 +251,9 @@ function renderModuleCard(opts) {
     return PO.plan({
       subject: args.subject, grade: args.grade,
       knowledgePointIds: pool, questionTypes: types,
-      count: args.count || 20, difficulty: args.difficulty
+      count: args.count || 20, difficulty: args.difficulty,
+      // P46-07：试卷类型透传（规划级），使预览与真实生成共用同一 POL 配额模板
+      examType: args.examType || null
     }).then(function (plan) {
       if (!plan || plan.active !== true || !plan.eligibleKpsForType) return { ready: false };
       // 题型 → KP 反查为 KP → 题型（供 UI 逐 KP 提示 / 过滤）
@@ -260,7 +275,11 @@ function renderModuleCard(opts) {
         plannedTotal: plan.plannedTotal,
         coverageStatus: plan.coverageStatus,
         reason: plan.reason || null,
-        requestedCount: plan.requestedCount
+        requestedCount: plan.requestedCount,
+        // P46-07：试卷固定 40 题时的容量重分配明细 + 试卷类型 + 目标总量
+        quotaAdjustments: (plan.quotaAdjustments || []).slice(),
+        examType: plan.examType || null,
+        targetTotal: plan.targetTotal != null ? plan.targetTotal : null
       };
     }).catch(function () { return { ready: false }; });
   }

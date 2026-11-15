@@ -91,6 +91,9 @@
       seed: options.seed != null ? options.seed : null,
       // C1：combine 合并出题标志必须进入 config（_buildGenerationRequest 读取 this.config.combine）
       combine: options.combine === true,
+      // P46-03：试卷类型（unit/midterm/final）透传至 POL 模板分配；
+      // 规划级字段，仅 POL 消费，不进入 cell/Generator（由 POL cellReq 白名单保证）。
+      examType: options.examType != null ? options.examType : null,
       // D16（P45-13）：派生器 raw 探针单一路径——经 PracticeSession 暴露跳过证据/批验证的
       // 原始生成输出，替代原 StrategyEngine.plan + GeneratorSelector + gen.generate 并行调用链。
       // 仅 dev 派生期使用（evidence-rules 锚点对账），生产 UI 不传此标志。
@@ -349,6 +352,10 @@
     // FINAL-13：显式 seed 透传至生成链（POL cellReq → Strategy Plan → RetryLoop）；
     // 未指定时不带 seed，下游沿用 auto seed（生产 UI 行为不变）。
     if (this.config.seed != null) req.seed = this.config.seed;
+
+    // P46-03：试卷类型透传至 POL 规划层；POL 在 cellReq 白名单中排除该字段，
+    // 保证它不进入 Strategy/Generator。
+    if (this.config.examType != null) req.examType = this.config.examType;
 
     return req;
   };

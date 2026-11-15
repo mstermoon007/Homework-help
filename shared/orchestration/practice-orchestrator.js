@@ -24,6 +24,7 @@
  *
  *   [规划上下文 Planning Context] cell 不得继承（只属于多 KP 合并/计划级语义）：
  *     combine / planLevel / typeCounts（父级预算）/ perTypeCount / count（父级总预算）
+ *     examType（P46-02：试卷模板开关，只决定 POL 配额模板与总量，不进入 cell/Generator）
  *
  *   [选区收窄] cell 是编排单元：knowledgePointIds = [cell.kpId]、questionTypes = [cell.questionType]、
  *     count = cell.count；所有 cell 必须落在 selectedKPs × selectedTypes 内（范围由 plan() 保证）。
@@ -46,6 +47,128 @@
 
   var MAX_RECOVERY_ROUNDS = 3;
   var _seq = 0;
+
+  // ---------- P46-02：试卷模板配额（仅 POL 规划层，不进 Generator） ----------
+  var EXAM_TYPES = ['unit', 'midterm', 'final'];
+  // 七题型基准配额，合计 40。单元/期中/期末共用同一模板，差异来自知识范围。
+  var EXAM_TEMPLATE = [
+    { questionType: 'calc', base: 12 },
+    { questionType: 'fill', base: 8 },
+    { questionType: 'choice', base: 6 },
+    { questionType: 'judge', base: 4 },
+    { questionType: 'geometry', base: 4 },
+    { questionType: 'classify', base: 2 },
+    { questionType: 'apply', base: 4 }
+  ];
+  var EXAM_TOTAL = 40;
+  // 剩余配额重分配优先级（循环每次补 1 题，避免全部塞给第一个题型导致失衡）
+  var EXAM_REALLOC_PRIORITY = ['calc', 'fill', 'choice', 'judge', 'apply', 'geometry', 'classify'];
+
+  /**
+   * 试卷模板分配：固定 40 题 + 七题型基准配额 + 不可行/容量不足题型确定性重分配。
+   *
+   * 规则：
+   *   1. 可行题型先取 min(基准配额, 容量)；
+   *   2. 不可行或容量不足产生的缺口进入剩余池；
+   *   3. 按 EXAM_REALLOC_PRIORITY 循环，每次给仍有容量的可行题型补 1 题；
+   *   4. 剩余池为 0 或整轮无进展则停止；
+   *   5. plannedTotal = Σ typeCounts，不得用占位题或重复题补齐到 40。
+   *
+   * 试卷视为显式组合（explicitCombo），recovery 不跨题型补齐，保持题型配额权威。
+   *
+   * @param {string[]} feasibleTypes 能力判定后的可行题型
+   * @param {Object} typeCaps 各题型容量上限（缺失按 Infinity）
+   * @returns {Object} { typeCounts, plannedTotal, coverageStatus, reason, skipped, quotaAdjustments, typeCaps, isExam }
+   */
+  function examAllocation(feasibleTypes, typeCaps) {
+    var capOf = function (t) {
+      var c = typeCaps ? typeCaps[t] : null;
+      if (c == null) return Infinity;
+      c = Number(c);
+      return (isFinite(c) && c >= 0) ? c : Infinity;
+    };
+    var feasible = {};
+    (feasibleTypes || []).forEach(function (t) { feasible[t] = true; });
+
+    var typeCounts = {};
+    var adjustments = [];
+    var deficit = 0;
+    var anyInfeasible = false;
+    var anyCapped = false;
+
+    EXAM_TEMPLATE.forEach(function (entry) {
+      var t = entry.questionType;
+      var base = entry.base;
+      if (!feasible[t]) {
+        anyInfeasible = true;
+        adjustments.push({ from: t, to: null, count: base, reason: 'infeasible' });
+        deficit += base;
+        typeCounts[t] = 0;
+        return;
+      }
+      var cap = capOf(t);
+      if (base > cap) {
+        anyCapped = true;
+        var give = Math.floor(cap);
+        adjustments.push({ from: t, to: null, count: base - give, reason: 'capacity-capped' });
+        deficit += base - give;
+        typeCounts[t] = give;
+      } else {
+        typeCounts[t] = base;
+      }
+    });
+
+    var priority = EXAM_REALLOC_PRIORITY.filter(function (t) { return feasible[t]; });
+    var madeProgress = true;
+    while (deficit > 0 && madeProgress) {
+      madeProgress = false;
+      for (var i = 0; i < priority.length && deficit > 0; i++) {
+        var t = priority[i];
+        var cap = capOf(t);
+        if (typeCounts[t] < cap) {
+          typeCounts[t] += 1;
+          deficit -= 1;
+          madeProgress = true;
+          adjustments.push({ from: null, to: t, count: 1, reason: 'realloc' });
+        }
+      }
+    }
+
+    var out = [];
+    var total = 0;
+    EXAM_TEMPLATE.forEach(function (entry) {
+      var t = entry.questionType;
+      var c = typeCounts[t] || 0;
+      out.push({ questionType: t, count: c });
+      total += c;
+    });
+
+    var plannedTotal = total;
+    var coverageStatus;
+    if (plannedTotal === EXAM_TOTAL && !anyInfeasible && !anyCapped) coverageStatus = 'OK';
+    else if (plannedTotal === EXAM_TOTAL) coverageStatus = 'TYPE_COVERAGE_INFEASIBLE';
+    else coverageStatus = 'CAPACITY_LIMITED';
+
+    var reason = null;
+    if (anyInfeasible || anyCapped || plannedTotal < EXAM_TOTAL) {
+      var parts = [];
+      if (anyInfeasible) parts.push('部分题型在当前范围不可行，配额已按试卷规则重新分配');
+      if (anyCapped) parts.push('部分题型受容量封顶');
+      if (plannedTotal < EXAM_TOTAL) parts.push('当前范围最多可计划 ' + plannedTotal + ' 题');
+      reason = parts.join('；');
+    }
+
+    return {
+      typeCounts: out,
+      plannedTotal: plannedTotal,
+      coverageStatus: coverageStatus,
+      reason: reason,
+      skipped: EXAM_TEMPLATE.filter(function (e) { return !feasible[e.questionType]; }).map(function (e) { return e.questionType; }),
+      quotaAdjustments: adjustments,
+      typeCaps: typeCaps || {},
+      isExam: true
+    };
+  }
 
   // ---------- 依赖获取（浏览器全局 / Node require 兜底） ----------
   function getRequestNormalize() {
@@ -209,8 +332,13 @@
       return Promise.resolve({ active: false, reason: 'comprehensive' });
     }
 
+    // P46-02：试卷类型为规划级开关，合法值 unit/midterm/final；非法值忽略，不破坏非试卷路径。
+    var examType = (req.examType && EXAM_TYPES.indexOf(req.examType) !== -1) ? req.examType : null;
+
     var count = req.count != null ? req.count : (req.volume != null ? req.volume : 20);
     count = Math.max(1, Math.floor(Number(count) || 20));
+    // 试卷模式强制固定总量 40，忽略外部 count，防止 URL 篡改绕过模板约束。
+    if (examType) count = EXAM_TOTAL;
 
     // 仅对「显式候选 KP + 题型」路径介入（即 v4.3.0 二级/三级页与知识点深链的实际链路）。
     // 池模式（无显式 KP）：POL 经 KnowledgeContext 展开年级/单元池（KBL Runtime 唯一事实源），
@@ -340,9 +468,18 @@
       // 可行题型 = 能力判定（eligible），不是容量（P0-03）；容量仅作预算封顶。
       var ev = eligibleTypesFor(kpIds, qts);
       var feasibleTypes = ev.feasible;
-      var explicitAlloc = explicitTypeCounts(req, feasibleTypes, count, typeCaps);
-      var alloc = explicitAlloc ||
-        BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: feasibleTypes, typeCaps: typeCaps });
+      var explicitAlloc = null;
+      var alloc;
+      if (examType) {
+        // P46-02：试卷模板优先；忽略外部显式 typeCounts/perTypeCount，确保固定试卷不可绕过。
+        alloc = examAllocation(feasibleTypes, typeCaps);
+        // 试卷视为显式组合：recovery 不跨题型补齐，题型配额权威。
+        explicitAlloc = alloc;
+      } else {
+        explicitAlloc = explicitTypeCounts(req, feasibleTypes, count, typeCaps);
+        alloc = explicitAlloc ||
+          BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: feasibleTypes, typeCaps: typeCaps });
+      }
       // Type Budget + KP Budget → GenerationTask[]（P0-05）
       var kpBudget = BudgetAllocation.allocateKpTypeBudget({
         typeCounts: alloc.typeCounts,
@@ -377,10 +514,13 @@
         difficulty: difficulty,
         difficultyContext: difficultyContext,
         plannedTotal: alloc.plannedTotal,
-        // 显式题型组合（typeCounts/perTypeCount）权威：总量以计划为准，不得被 recovery 补齐到 count
+        // 显式题型组合 / 试卷模板权威：总量以计划为准，不得被 recovery 补齐到 count
         targetTotal: explicitAlloc ? alloc.plannedTotal : count,
         coverageStatus: alloc.coverageStatus,
-        reason: alloc.reason
+        reason: alloc.reason,
+        // P46-02：试卷配额调整明细（仅预览，不进 cell/Generator）
+        quotaAdjustments: alloc.quotaAdjustments || [],
+        examType: examType
       };
     });
   }
@@ -671,6 +811,10 @@
   var API = {
     plan: plan,
     orchestrate: orchestrate,
+    examAllocation: examAllocation,
+    EXAM_TEMPLATE: EXAM_TEMPLATE,
+    EXAM_TOTAL: EXAM_TOTAL,
+    EXAM_TYPES: EXAM_TYPES,
     MAX_RECOVERY_ROUNDS: MAX_RECOVERY_ROUNDS
   };
 

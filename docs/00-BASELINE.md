@@ -10,10 +10,12 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 版本号 | **5.2.1** | `VERSION` / `package.json` / `shared/catalog/version.js` |
-| SW 缓存名 | `hw-help-5.2.1` | `sw.js` |
+| 版本号 | **5.3.0** | `VERSION` / `package.json` / `shared/catalog/version.js` |
+| SW 缓存名 | `hw-help-5.3.0` | `sw.js` |
 | 形态 | 纯前端静态站，零运行时依赖 | — |
 | 浏览器 + Node 双环境兼容 | ✓ | — |
+| 产品模式 | **家庭 home / 试卷 exam / 教师 teacher**（P46；URL `mode` + `practiceKind`/`practiceFocus`/`examType`/`unitIds`） | `shared/request/request-normalize.js` |
+| 试卷题量 | **固定 40 题**（POL 试卷模板；页面题量与分题型只读，容量不足时显示 PARTIAL 提示） | `shared/orchestration/practice-orchestrator.js` |
 
 三方一致：`VERSION` = `package.json.version` = `shared/catalog/version.js` = `sw.js CACHE`。
 

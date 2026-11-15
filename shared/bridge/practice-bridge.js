@@ -23,9 +23,11 @@
  *     subject, grade,            // 科目 / 年级
  *     count,                     // 总题量
  *     difficulty,                // 难度 1-10
- *     mode,                      // quick / teacher / competition / adaptive / multi-kp
+ *     mode,                      // 产品三模式：home / exam / teacher（P46）；内部编排模式另见 PracticeOrchestrator
+ *     practiceKind, practiceFocus, // 家庭模式大类（calc/apply）与计算专项（P46-07，标题与状态）
+ *     examType,                  // 试卷类型 unit/midterm/final（P46，规划级，POL 唯一消费）
  *     knowledgePointId,          // 单知识点（单选）
- *     knowledgePoints,           // 多知识点（多选 / 快速模式）
+ *     knowledgePoints,           // 多知识点（多选 / multi-kp 编排模式）
  *     perTypeCount,              // 统一分题型数量（双量控制；与 count 互锁守恒）
  *     typeCounts,                // 逐题型数量 [{questionType, count}]（权威；Σ = count）
  *     questionType, subtype,     // 题型（可空）
@@ -123,6 +125,8 @@
         pluginIds: ui.pluginIds || st.pluginIds || null,
         // C1：combine 合并出题标志透传（多 KP 合并为一套卷）
         combine: ui.combine === true || st.combine === true,
+        // P46-07：试卷类型透传（页面 state.examType → profile → sessionConfig）
+        examType: ui.examType || st.examType || null,
         raw: ui.raw || null
       };
 
@@ -147,7 +151,9 @@
         adaptive: !!profile.adaptive,
         learnerProfile: profile.learnerProfile || null,
         titleType: profile.titleType || null,
-        combine: profile.combine === true
+        combine: profile.combine === true,
+        // P46-03：试卷类型透传至 PracticeSession → POL（规划级，不进 cell）
+        examType: profile.examType != null ? profile.examType : null
       };
       return config;
     }

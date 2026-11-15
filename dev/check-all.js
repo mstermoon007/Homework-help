@@ -182,9 +182,9 @@ run('14a. Crawl       (AI Agent 抓取 375/375)', 'node dev/p28/check-ai-agent-c
 run('14b. Crawl       (爬虫健康)', 'node dev/check-crawl-health.js');
 
 // ── 15. Browser/E2E ──
-// 真实浏览器 9 步路径（首页→快速→教师→KP→7类→生成→重生成→刷新→打印）；
+// 真实浏览器三模式 + 9 步路径（select 三模式 → 首页 → 家庭 → 试卷 → 教师 → KP → 7类 → 重生成 → 刷新 → 打印）；
 // 浏览器不可用 → SKIPPED（不得冒充 PASS）；发布环境（REQUIRE_BROWSER_E2E=1）强制真实执行，不可用即 FAIL。
-run('15. Browser/E2E  (真实浏览器 9 步路径)', 'node dev/p28/check-browser-e2e.js', { timeout: 300000 });
+run('15. Browser/E2E  (真实浏览器 三模式 + 9 步路径)', 'node dev/p28/check-browser-e2e.js', { timeout: 300000 });
 
 // ── 16. Bundle（source==bundle，hash 一致）──
 run('16. Bundle       (source==bundle，hash 一致)', 'node dev/p28/check-bundle-determinism.js --mode bundle');

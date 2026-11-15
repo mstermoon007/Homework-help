@@ -19,8 +19,13 @@
   'use strict';
 
   var SUBJECTS = ['math', 'chinese', 'english'];
-  var MODES = ['quick', 'teacher', 'competition'];
+  // P46-04：产品模式收敛为家庭/试卷/教师；旧 quick/competition 不再作为产品模式。
+  var MODES = ['home', 'exam', 'teacher'];
   var GRADES = [1, 2, 3, 4, 5, 6];
+  // P46 家庭大类与计算专项、试卷类型（仅请求边界元数据，不进生成链）
+  var HOME_KINDS = ['calc', 'apply'];
+  var HOME_FOCUS = ['all', 'make-ten', 'break-ten', 'add-sub-oral', 'four-ops-oral', 'vertical'];
+  var EXAM_TYPES = ['unit', 'midterm', 'final'];
   // 跨环境：Node 走 require；浏览器（select.html 经典脚本）无全局 require，
   // QuestionTypeRegistry 由 strategy-engine.bundle.js 挂到 window（P24 修复：
   // 原先裸 require 在浏览器加载即抛 ReferenceError，致 RequestNormalize 整个未挂载、
@@ -101,7 +106,28 @@
   }
   function normalizeMode(m) {
     m = String(m == null ? '' : m).toLowerCase();
-    return MODES.indexOf(m) !== -1 ? m : 'quick';
+    return MODES.indexOf(m) !== -1 ? m : 'home';
+  }
+  // P46-04：家庭/试卷/教师字段归一（仅产品请求元数据，不参与生成语义）
+  function normalizeHomeKind(k) {
+    k = String(k == null ? '' : k).toLowerCase();
+    return HOME_KINDS.indexOf(k) !== -1 ? k : null;
+  }
+  function normalizeHomeFocus(f) {
+    f = String(f == null ? '' : f).toLowerCase();
+    return HOME_FOCUS.indexOf(f) !== -1 ? f : null;
+  }
+  function normalizeExamType(e) {
+    e = String(e == null ? '' : e).toLowerCase();
+    return EXAM_TYPES.indexOf(e) !== -1 ? e : null;
+  }
+  function normalizeUnitIds(arr) {
+    if (!Array.isArray(arr)) return [];
+    var out = [];
+    arr.forEach(function (u) {
+      if (u && out.indexOf(u) === -1) out.push(String(u));
+    });
+    return out;
   }
   function normalizeGrade(g) {
     g = Number(g);
@@ -129,16 +155,22 @@
 
   /**
    * 组装统一 PracticeRequest（所有页面出口的唯一结构）。
-   * @param {Object} opts { mode, subject, grade, book, moduleId, unit, knowledgePoints,
-   *                        tags, questionTypes, count, difficulty, adaptiveDelta }
+   * @param {Object} opts { mode, subject, grade, book, moduleId, unit, unitIds, knowledgePoints,
+   *                        tags, questionTypes, count, difficulty, adaptiveDelta,
+   *                        practiceKind, practiceFocus, examType }
    * @returns {Object} PracticeRequest
+   *
+   * P46-04：家庭/试卷字段仅作产品请求元数据，不进入生成链语义；
+   *   examType 由 practice.html → PracticeSession → POL 透传，驱动试卷模板。
    */
   function createPracticeRequest(opts) {
     opts = opts || {};
+    var mode = normalizeMode(opts.mode);
     var scope = {
       book: opts.book || 'all',
       moduleId: opts.moduleId || null,
       unit: opts.unit || null,
+      unitIds: normalizeUnitIds(opts.unitIds),
       knowledgePoints: toKpArray(opts.knowledgePoints),
       tags: Array.isArray(opts.tags) ? opts.tags.slice() : []
     };
@@ -146,8 +178,18 @@
     if (opts.vocabulary) scope.vocabulary = opts.vocabulary;
     if (opts.grammarPoints) scope.grammarPoints = opts.grammarPoints;
 
+    // 模式字段互斥归一
+    var practiceKind = null, practiceFocus = null, examType = null;
+    if (mode === 'home') {
+      practiceKind = normalizeHomeKind(opts.practiceKind) || 'calc';
+      practiceFocus = (practiceKind === 'calc') ? (normalizeHomeFocus(opts.practiceFocus) || 'all') : null;
+    } else if (mode === 'exam') {
+      examType = normalizeExamType(opts.examType) || 'unit';
+    }
+    // teacher 模式三者均为 null
+
     return {
-      mode: normalizeMode(opts.mode),
+      mode: mode,
       subject: normalizeSubject(opts.subject) || 'math',
       grade: normalizeGrade(opts.grade),
       scope: scope,
@@ -155,7 +197,11 @@
       count: Number(opts.count) > 0 ? Number(opts.count) : 20,
       difficulty: normalizeDifficulty(opts.difficulty),
       difficultyParam: normalizeDifficultyParam(opts.difficulty),
-      adaptiveDelta: Number(opts.adaptiveDelta) || 0
+      adaptiveDelta: Number(opts.adaptiveDelta) || 0,
+      // P46 产品元数据（标题/控件/试卷模板；非生成语义）
+      practiceKind: practiceKind,
+      practiceFocus: practiceFocus,
+      examType: examType
     };
   }
 
@@ -172,6 +218,13 @@
     normalizeDifficultyParam: normalizeDifficultyParam,
     normalizeSubject: normalizeSubject,
     normalizeMode: normalizeMode,
+    normalizeHomeKind: normalizeHomeKind,
+    normalizeHomeFocus: normalizeHomeFocus,
+    normalizeExamType: normalizeExamType,
+    normalizeUnitIds: normalizeUnitIds,
+    HOME_KINDS: HOME_KINDS,
+    HOME_FOCUS: HOME_FOCUS,
+    EXAM_TYPES: EXAM_TYPES,
     normalizeGrade: normalizeGrade,
     normalizeQuestionType: normalizeQuestionType,
     normalizeQuestionTypes: normalizeQuestionTypes,

@@ -240,6 +240,10 @@ async function runScenario(urlPath, opts) {
         notice: noticeEl ? noticeEl.textContent : '',
         printDisabled: !!(document.getElementById('printBtn') && document.getElementById('printBtn').disabled),
         title: (document.getElementById('sheetTitle') || {}).textContent || '',
+        countValue: (document.getElementById('customCount') || {}).value || '',
+        countReadOnly: !!(document.getElementById('customCount') && document.getElementById('customCount').readOnly),
+        ratioText: (document.getElementById('kpRatio') || {}).textContent || '',
+        ratioTotal: (document.getElementById('kpRatioTotal') || {}).textContent || '',
         genProgressHidden: !!(document.getElementById('genProgress') && document.getElementById('genProgress').hidden),
         genProgressText: (document.getElementById('genProgressText') || {}).textContent || ''
       }
@@ -677,6 +681,49 @@ async function main() {
       const T7 = 'calc,fill,choice,judge,geometry,classify,apply';
       const out = []; let failed = 0;
 
+      // Step 0: select 页三模式（P46-09：模式切换 / 阶段显隐 / 开始按钮门禁）
+      {
+        const tr = await httpJson('http://127.0.0.1:' + CDP_PORT + '/json/new?' + encodeURIComponent('about:blank'), 'PUT');
+        const c = cdpClient(tr.json.webSocketDebuggerUrl); await c.ready;
+        await c.send('Page.enable'); await c.send('Runtime.enable');
+        await c.send('Page.navigate', { url: 'http://127.0.0.1:' + HTTP_PORT + '/select.html?subject=math&grade=2' });
+        await waitFor(async () => c.evaluate('document.readyState === "complete"', false), 15000, 'select ready');
+        await sleep(600);
+        function pickMode(v) {
+          return c.evaluate(`(function(){var s=document.getElementById('modeSelect');s.value='${v}';s.dispatchEvent(new Event('change',{bubbles:true}));return true;})()`, false);
+        }
+        const visExpr = `(function(){function vis(id){var e=document.getElementById(id);return !!e&&getComputedStyle(e).display!=='none';}return {exam:vis('stageExam'),home:vis('stageHome'),teacher:vis('stageTeacher')};})()`;
+        const opts = await c.evaluate(`(function(){var s=document.getElementById('modeSelect');return s?Array.prototype.map.call(s.options,function(o){return o.value;}):[];})()`, false);
+        await pickMode('exam'); await sleep(200);
+        const vExam = await c.evaluate(visExpr, false);
+        const disabledBefore = await c.evaluate(`(function(){var s=document.getElementById('startBtnPractice');return !!(s&&s.classList.contains('disabled'));})()`, false);
+        const unitClicked = await c.evaluate(`(function(){var u=document.querySelector('#stageExam .type-card[data-unit]:not([disabled])');if(u){u.click();return true;}return false;})()`, false);
+        await sleep(200);
+        const href = await c.evaluate(`(function(){var s=document.getElementById('startBtnPractice');return s?s.getAttribute('href'):'';})()`, false);
+        await pickMode('teacher'); await sleep(200);
+        const vTeacher = await c.evaluate(visExpr, false);
+        await pickMode('home'); await sleep(200);
+        const vHome = await c.evaluate(visExpr, false);
+        const info = {
+          opts: opts,
+          examVisible: vExam.exam, homeHidden: !vExam.home,
+          disabledBefore: disabledBefore, unitClicked: unitClicked, href: href,
+          teacherVisible: vTeacher.teacher, homeVisible: vHome.home
+        };
+        const checks = {
+          '三模式选项 home/exam/teacher': ['home','exam','teacher'].every(function(v){return info.opts.indexOf(v)!==-1;}),
+          'exam 阶段显隐正确': info.examVisible === true && info.homeHidden === true,
+          'teacher 阶段可见': info.teacherVisible === true,
+          'home 阶段可见': info.homeVisible === true,
+          '未选单元时开始禁用': info.disabledBefore === true,
+          '选单元后 href 含 examType=unit 且 count=40': !!info.unitClicked && /examType=unit/.test(info.href) && /count=40/.test(info.href)
+        };
+        const ok = Object.keys(checks).every(function(k){return checks[k]===true;});
+        if (!ok) failed++;
+        out.push({step:'0 select 三模式', ok:ok, checks:checks, info:info});
+        c.close();
+      }
+
       // Step 1: 首页 index.html（无生成，仅断言入口）
       {
         const tr = await httpJson('http://127.0.0.1:' + CDP_PORT + '/json/new?' + encodeURIComponent('about:blank'), 'PUT');
@@ -698,19 +745,64 @@ async function main() {
         c.close();
       }
 
-      // Step 2: 快速练习 mode=quick + 生成
+      // Step 2: 家庭模式 mode=home（P46：原 quick 产品模式已物理删除）
       {
-        const data = await runScenario('/practice.html?subject=math&grade=2&mode=quick&kps=' + DOWN + '&types=calc&count=8&difficulty=5', {});
+        const data = await runScenario('/practice.html?subject=math&grade=2&mode=home&practiceKind=calc&practiceFocus=all&kps=' + DOWN + '&types=calc&count=8&difficulty=5', {});
         const r = (data.calls[0] || {}).result || {};
         const checks = {
-          '快速练习 生成结果': !!r.status,
+          '家庭练习 生成结果': !!r.status,
           '可交付 SUCCESS|PARTIAL': r.status === 'SUCCESS' || r.status === 'PARTIAL',
           'DOM cards>0': (data.dom && data.dom.cards) > 0,
           'no JS errors': (data.errors || []).length === 0
         };
         const ok = Object.keys(checks).every((k) => checks[k] === true);
         if (!ok) failed++;
-        out.push({ step: '2 快速练习', ok, checks, produced: (r.questions || []).length, status: r.status });
+        out.push({ step: '2 家庭练习', ok, checks, produced: (r.questions || []).length, status: r.status });
+      }
+
+      // Step 2b: 试卷模式（P46-09：单元/期中/期末标题 + 固定 40 + URL count 不生效）
+      {
+        const examCases = [
+          { examType: 'unit', label: '单元测试' },
+          { examType: 'midterm', label: '期中测试' },
+          { examType: 'final', label: '期末测试' }
+        ];
+        const results = [];
+        for (const ec of examCases) {
+          // 故意传 count=7：试卷模式必须归一为 40
+          const data = await runScenario('/practice.html?subject=math&grade=2&mode=exam&examType=' + ec.examType +
+            '&kps=' + KPS7 + '&types=' + T7 + '&count=7&difficulty=5', {});
+          const r = (data.calls[0] || {}).result || {};
+          const d = data.dom || {};
+          const produced = (r.questions || []).length;
+          results.push({
+            examType: ec.examType,
+            titleOk: String(d.title || '').indexOf(ec.label) !== -1,
+            countLocked: String(d.countValue) === '40' && d.countReadOnly === true,
+            status: r.status,
+            produced: produced,
+            // 固定 40 或明确容量不足（PARTIAL 且有产出）
+            okCount: r.status === 'SUCCESS' ? produced === 40 : (r.status === 'PARTIAL' && produced > 0),
+            ratioTotal: d.ratioTotal,
+            quotaText: /容量重分配/.test(d.ratioText || ''),
+            gp: { hidden: d.genProgressHidden, text: String(d.genProgressText || '') },
+            // 容量不足时必须有用户可见提示（notice 或 PARTIAL 进度提示，不得静默少题）
+            notice: String(d.notice || '').trim() ||
+              (!d.genProgressHidden ? String(d.genProgressText || '').trim() : ''),
+            errors: (data.errors || []).length
+          });
+        }
+        const checks = {
+          '三种试卷标题': results.every((x) => x.titleOk),
+          '题量锁定 40 且只读（URL count=7 不生效）': results.every((x) => x.countLocked),
+          '固定 40 或明确容量不足': results.every((x) => x.okCount),
+          '容量不足有可见提示': results.every((x) => x.status === 'SUCCESS' || x.notice.length > 0),
+          '总题量显示 40': results.every((x) => String(x.ratioTotal).indexOf('40') !== -1),
+          'no JS errors': results.every((x) => x.errors === 0)
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '2b 试卷模式(单元/期中/期末)', ok, checks, results });
       }
 
       // Step 3: 教师模式 mode=teacher

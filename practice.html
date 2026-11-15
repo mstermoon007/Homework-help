@@ -443,7 +443,8 @@
     startTime: 0,          // 开始时间戳
     answered: false,       // 是否已提交
     knowledgePointIds: null, // 合并后：交互选择的 KP id 列表（供错题本 / 难度 EMA；深链时回退 urlParams）
-    typeCountsEdited: false // P10：仅用户显式编辑分题型数量时才向请求传 typeCounts（否则由 POL 统一分配）
+    typeCountsEdited: false, // P10：仅用户显式编辑分题型数量时才向请求传 typeCounts（否则由 POL 统一分配）
+    examType: null           // P46-07：试卷类型（unit/midterm/final），非空时题量锁定 40
   };
 
   // ============ URL 参数解析 ============
@@ -462,6 +463,10 @@
     if (!(count >= 1 && count <= 50)) count = 20;
     var difficulty = Number(p.get('difficulty'));
     if (!(difficulty >= 1 && difficulty <= 10)) difficulty = 1;
+    // P46-07：试卷类型（规划级）——合法时题量固定 40，URL 的 count=1/50 均规划 40
+    var examType = (p.get('examType') || '').trim() || null;
+    if (['unit', 'midterm', 'final'].indexOf(examType) === -1) examType = null;
+    if (examType) count = 40;
     return {
       subject: canonSubjectForUI(p.get('subject')),
       grade: grade,
@@ -475,8 +480,13 @@
       types: (p.get('types') || '').trim() || null,
       // 上下册过滤（select 页快速/教师模式透传：up 上册 / down 下册；缺省全部）
       book: (p.get('book') || '').trim() || null,
-      // 模式：quick（快速）/ teacher（教师/专业）等（select 页传入，用于知识点占比展示形态）
+      // 模式：home（家庭）/ exam（试卷）/ teacher（教师）；select 页传入
       mode: (p.get('mode') || '').trim() || null,
+      // P46-07：家庭大类与计算专项（仅展示与标题，题型由 select 页 types 决定）
+      practiceKind: (p.get('practiceKind') || '').trim() || null,
+      practiceFocus: (p.get('practiceFocus') || '').trim() || null,
+      // P46-07：试卷类型（规划级，POL 唯一消费）
+      examType: examType,
       // P7: 直接打印参数
       print: p.get('print') === '1',
       // M6-R22：自适应模式（legacy|new|shadow），缺省由是否有学习数据决定
@@ -490,6 +500,8 @@
 
   // 专业（教师）模式：select 页 mode=teacher 进入时，知识点占比展示为「提醒 + 数量填空」
   var isTeacherMode = urlParams.mode === 'teacher';
+  // P46-07：试卷模式——题量只读锁定 40，分题型只读（由 POL 试卷模板分配）
+  var isExamMode = !!urlParams.examType;
 
   // ============ PracticeSession 实例（经关联层构造） ============
   var practiceSession = null;
@@ -507,6 +519,8 @@
       knowledgePointId: urlParams.kp,
       knowledgePoints: urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null,
       questionType: urlParams.qt,
+      // P46-07：试卷类型透传（PracticeBridge → PracticeSession → POL 规划）
+      examType: urlParams.examType,
       adaptive: urlParams.adaptiveMode === 'new', learnerProfile: initProfile, state: state
     });
   }
@@ -795,6 +809,9 @@
       // density-*/stem-*/options-*/graphic-* 类），渲染后不再改 DOM（原 fitColumns 二次排版已删）。
       // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
       updateCountTip();
+      // P46-09：逐块渲染完成会覆盖生成反馈阶段的 PARTIAL 提示，这里以最终态重放一次，
+      // 保证「试卷 40 题但容量不足」时有持久的用户可见说明（不得静默少题）
+      applyPartialNotice(null);
       // 回车快捷批改
       area.querySelectorAll('input[data-index], input[data-idx]').forEach(function (inp) {
         inp.addEventListener('keydown', function (e) {
@@ -1163,6 +1180,8 @@
 
   // ============ 题量（自定义数字，1~50 整数） ============
   function setCount(n) {
+    // P46-07：试卷题量由 POL 模板固定为 40，页面不可改
+    if (isExamMode) return;
     n = Math.round(Number(n));
     if (!(n >= 1 && n <= 50)) { showNotice('题量无效', '自定义题量请填写 1~50 之间的整数。'); return; }
     state.count = n;
@@ -1174,9 +1193,16 @@
   }
 
   // 题量唯一入口：自定义数字输入框（1~50），回填当前 state.count
+  // P46-07：试卷模式为只读矩阵（固定 40），家庭/教师保持可编辑
   function syncCountUI() {
     var customInp = $('customCount');
-    if (customInp) customInp.value = state.count;
+    if (customInp) {
+      customInp.value = state.count;
+      customInp.readOnly = isExamMode;
+      customInp.setAttribute('aria-readonly', isExamMode ? 'true' : 'false');
+      var hint = customInp.parentNode && customInp.parentNode.querySelector('.range-hint');
+      if (hint) hint.textContent = isExamMode ? '试卷固定 40' : '1~50';
+    }
     updateCountTip();
   }
 
@@ -1329,7 +1355,19 @@
     return all;
   }
   // 当前可选题型名（标题用）：入口推荐 > qt 语义 > 当前勾选模块 > 综合练习
+  // P46-07：试卷/家庭模式使用产品语义标题，屏幕与打印共用 buildTitle 保证一致
+  var EXAM_TITLE = { unit: '单元测试', midterm: '期中测试', final: '期末测试' };
+  var FOCUS_TITLE = {
+    'make-ten': '凑十法', 'break-ten': '破十法',
+    'add-sub-oral': '加减法口算', 'four-ops-oral': '四则运算口算', 'vertical': '竖式计算'
+  };
   function deriveTypeName() {
+    if (isExamMode) return EXAM_TITLE[urlParams.examType] || '测试卷';
+    if (urlParams.mode === 'home') {
+      if (urlParams.practiceKind === 'apply') return '应用题练习';
+      if (urlParams.practiceFocus && FOCUS_TITLE[urlParams.practiceFocus]) return FOCUS_TITLE[urlParams.practiceFocus];
+      return '计算练习';
+    }
     if (asmState.recommendType) return asmState.recommendType;
     var fromQt = urlParams.qt ? qtName(urlParams.qt) : null;
     if (fromQt) return fromQt;
@@ -1527,6 +1565,7 @@
     var types = perTypeOrder();
     var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id]; });
     var sig = 'ratio|' + state.subject + '|' + state.grade + '|' + (Number(state.count) || 20) + '|' +
+      (Number(state.difficulty) || 1) + '|' + (state.examType || '') + '|' +
       ids.slice().sort().join(',') + '|' + types.slice().sort().join(',');
     if (ratioPol.sig === sig) return ratioPol.data;   // 可能仍 pending（data=null）
     if (ratioPol.pending === sig) return null;
@@ -1537,7 +1576,9 @@
     window.CatalogUtils.capabilityPlanView({
       subject: state.subject, grade: state.grade,
       knowledgePointIds: ids, questionTypes: types,
-      count: Number(state.count) || 20, difficulty: state.difficulty
+      count: Number(state.count) || 20, difficulty: state.difficulty,
+      // P46-07：试卷类型参与预览（与真实生成共用同一 POL 模板）
+      examType: state.examType || null
     }).then(function (v) {
       if (ratioPol.pending !== sig) return;   // 选区已变化，丢弃过期结果
       ratioPol.data = v; ratioPol.pending = null;
@@ -1576,7 +1617,9 @@
       item.innerHTML =
         '<span class="nm" title="' + esc(typeDisplayName(t)) + '">' + esc(typeDisplayName(t)) + '</span>' +
         '<input type="number" class="kp-blank-num" data-pt="' + esc(t) + '" min="0" max="' + total + '" step="1" value="' + n + '" ' +
-          'aria-label="' + esc(typeDisplayName(t)) + ' 题量（可修改，其余题型守恒重分配）">' +
+          (isExamMode ? 'readonly aria-readonly="true" ' : '') +
+          'aria-label="' + esc(typeDisplayName(t)) + ' 题量（' +
+          (isExamMode ? '试卷模板分配，不可修改' : '可修改，其余题型守恒重分配') + '）">' +
         '<span class="kp-blank-unit">题</span>';
       list.appendChild(item);
     });
@@ -1586,6 +1629,22 @@
       (coverageReason ? ' title="' + esc(coverageReason) + '"' : '') + '>' + shownTotal + ' 题</span>' +
       (coverageReason ? '<span class="kp-blank-unit" title="' + esc(coverageReason) + '">· 部分题型受限</span>' : '');
     list.appendChild(sep);
+    // P46-07：试卷容量重分配明细（POL 在题型不可行/封顶时把缺口补到可行题型）
+    var adj = (isExamMode && view && view.ready && view.quotaAdjustments) ? view.quotaAdjustments : [];
+    if (adj.length) {
+      var adjMap = {};
+      adj.forEach(function (a) {
+        if (!a || !a.to) return;
+        adjMap[a.to] = (adjMap[a.to] || 0) + (a.count || 0);
+      });
+      var adjText = Object.keys(adjMap).map(function (t) {
+        return typeDisplayName(t) + ' +' + adjMap[t];
+      }).join('、');
+      var adjEl = document.createElement('div');
+      adjEl.className = 'kp-ratio-item';
+      adjEl.innerHTML = '<span class="nm">容量重分配</span><span class="kp-blank-unit">' + esc(adjText) + ' 题</span>';
+      list.appendChild(adjEl);
+    }
     wrap.innerHTML = '';
     wrap.appendChild(list);
     if ($('kpRatioEmpty')) $('kpRatioEmpty').style.display = 'none';
@@ -1595,6 +1654,8 @@
     if (!wrap) return;
     // change / Enter / ↑↓：该题型置为输入值，其余题型守恒重分配（Σ 恒 = 总数量，两量互锁）
     var onCommit = function (e) {
+      // P46-07：试卷分题型只读，不写入显式 typeCounts（typeCountsEdited 保持 false）
+      if (isExamMode) { renderKpRatio(); return; }
       var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num[data-pt]') : null;
       if (!inp || !state.perTypeCount) return;
       var t = inp.getAttribute('data-pt');
@@ -1700,9 +1761,11 @@
     state.grade = urlParams.grade;
     state.count = urlParams.count;
     state.difficulty = urlParams.difficulty;
+    // P46-07：试卷类型进入页面状态（题量已在 parseUrlParams 归一为 40）
+    state.examType = urlParams.examType;
 
-    // 恢复上次练习设置（仅当 URL 未显式覆盖）
-    if (savedState.lastPractice) {
+    // 恢复上次练习设置（仅当 URL 未显式覆盖且非试卷模式；试卷题量恒 40）
+    if (!isExamMode && savedState.lastPractice) {
       var ls = savedState.lastPractice.settings || {};
       if (!rawParams.has('count') && ls.count) state.count = ls.count;
       if (!rawParams.has('difficulty') && ls.difficulty) state.difficulty = ls.difficulty;

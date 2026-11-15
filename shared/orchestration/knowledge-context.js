@@ -76,16 +76,25 @@
    * UI 兼容视图（目录/选择页）：canonical → legacy 字段名。
    * 与 adaptKp 同属本文件的转换边界，仅供页面 UI 消费，不进入生成链。
    * 契约：所有键恒存在；缺失值统一为 null（不出现 undefined）。
+   *
+   * P46-01：新增课本顺序只读投影字段（unitId/unitNo/knowledgeNo/sourceIndex）。
+   *   - unitNo = 单元序号（runtime emitted canonical 平铺字段，等价 canonical.unit.unitOrdinal）
+   *   - knowledgeNo = 单元内 KP 序号字符串（如 "1"、"2.1"）
+   *   - sourceIndex = uiListForGrade 数组中的稳定原始下标，用于同号 tie-break
+   * 这些字段只服务 UI 排序，不写入 KBL、不进入生成链。
    */
-  function uiKp(kp) {
+  function uiKp(kp, sourceIndex) {
     if (!kp || typeof kp !== 'object') return null;
     var qts = (kp.assessment && kp.assessment.questionTypes) || [];
     var anno = kp.difficultyAnnotation || {};
     return {
-      id: kp.knowledgeId,
+      id: kp.knowledgeId != null ? kp.knowledgeId : null,
       name: kp.name != null ? kp.name : null,
       moduleId: kp.module != null ? kp.module : null,
       unit: kp.unitName != null ? kp.unitName : null,
+      unitId: kp.unitId != null ? kp.unitId : null,
+      unitNo: kp.unitNo != null ? kp.unitNo : null,
+      knowledgeNo: kp.knowledgeNo != null ? kp.knowledgeNo : null,
       book: kp.book != null ? kp.book : null,
       grade: toN(kp.grade),
       weight: kp.weight != null ? kp.weight : null,
@@ -100,13 +109,75 @@
       }),
       difficulty: anno.seedDifficulty != null ? anno.seedDifficulty : null,
       cognitive_level: anno.cognitiveLevel != null ? anno.cognitiveLevel : null,
-      status: kp.status != null ? kp.status : null
+      status: kp.status != null ? kp.status : null,
+      sourceIndex: sourceIndex != null ? Number(sourceIndex) : null
     };
   }
 
-  /** UI 视图列表（年级） */
+  // ---------- P46-01：课本顺序纯函数（仅供 UI 消费，不进生成链） ----------
+  var BOOK_ORDER = { up: 0, down: 1, mixed: 2, advance: 3 };
+
+  /**
+   * "1.10" → [1, 10]；"2.1" → [2, 1]；缺失/空 → []。
+   * 非数字段记 0，保证确定性。
+   */
+  function parseKnowledgeNo(knowledgeNo) {
+    if (knowledgeNo == null) return [];
+    return String(knowledgeNo).split('.').map(function (s) {
+      var n = parseInt(s, 10);
+      return isNaN(n) ? 0 : n;
+    });
+  }
+
+  /** 按点分段数值比较 knowledgeNo：5.1 < 5.10；2.2 < 2.10 */
+  function compareKnowledgeNo(a, b) {
+    var pa = parseKnowledgeNo(a);
+    var pb = parseKnowledgeNo(b);
+    var len = Math.max(pa.length, pb.length);
+    for (var i = 0; i < len; i++) {
+      var da = i < pa.length ? pa[i] : 0;
+      var db = i < pb.length ? pb[i] : 0;
+      if (da !== db) return da - db;
+    }
+    return 0;
+  }
+
+  /**
+   * 课本顺序比较器：
+   *   册别(up→down→mixed→advance) → 单元序号 unitNo → knowledgeNo 数值 → sourceIndex
+   * 只依赖 uiKp 投影字段，无 DOM、无 KBL 写回。
+   */
+  function compareByTextbookOrder(a, b) {
+    if (!a || !b) return 0;
+    var ab = BOOK_ORDER[a.book] != null ? BOOK_ORDER[a.book] : 99;
+    var bb = BOOK_ORDER[b.book] != null ? BOOK_ORDER[b.book] : 99;
+    if (ab !== bb) return ab - bb;
+    var an = a.unitNo, bn = b.unitNo;
+    if (an != null && bn != null && an !== bn) return an - bn;
+    if (an != null && bn == null) return -1;
+    if (an == null && bn != null) return 1;
+    var c = compareKnowledgeNo(a.knowledgeNo, b.knowledgeNo);
+    if (c !== 0) return c;
+    if (a.sourceIndex != null && b.sourceIndex != null) return a.sourceIndex - b.sourceIndex;
+    return 0;
+  }
+
+  /** 返回按课本顺序排序的新数组；原数组不变。 */
+  function sortByTextbookOrder(list) {
+    return (list || []).slice().sort(compareByTextbookOrder);
+  }
+
+  /**
+   * UI 视图列表（年级）。
+   * P46-01：返回前按课本顺序排序，并注入 sourceIndex（原始下标）。
+   * 排序只影响 UI 展示顺序，不改变 runtime 数据顺序。
+   */
   function uiListForGrade(subject, grade) {
-    return kpsForGrade(subject, grade).map(uiKp).filter(Boolean);
+    return sortByTextbookOrder(
+      kpsForGrade(subject, grade).map(function (kp, idx) {
+        return uiKp(kp, idx);
+      }).filter(Boolean)
+    );
   }
 
   // ---------- 读取（全部经 App.KNOWLEDGE） ----------
@@ -353,6 +424,10 @@
     adaptKp: adaptKp,
     uiKp: uiKp,
     uiListForGrade: uiListForGrade,
+    parseKnowledgeNo: parseKnowledgeNo,
+    compareKnowledgeNo: compareKnowledgeNo,
+    compareByTextbookOrder: compareByTextbookOrder,
+    sortByTextbookOrder: sortByTextbookOrder,
     get: get,
     strategyView: strategyView,
     strategyViewFor: strategyViewFor,

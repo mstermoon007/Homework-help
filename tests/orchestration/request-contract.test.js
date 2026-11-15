@@ -26,7 +26,7 @@ test('R02 createPracticeRequest：统一外壳 + 默认值', () => {
   const r = RN.createPracticeRequest({ subject: 'math', grade: 3, questionTypes: ['calc', 'judge'] });
   assert.strictEqual(r.subject, 'math');
   assert.strictEqual(r.grade, 3);
-  assert.strictEqual(r.mode, 'quick');
+  assert.strictEqual(r.mode, 'home');
   assert.strictEqual(r.count, 20);
   assert.strictEqual(r.difficulty, 6, '难度默认归一为数值 6（normal）');
   assert.deepStrictEqual(r.questionTypes, ['calc', 'judge']);
@@ -50,11 +50,11 @@ test('R11 难度边界归一：UI 用语 → 引擎 1-10 整数', () => {
 
 test('R03 buildPracticeUrl：统一输出（kps / types / count / difficulty / book）', () => {
   const url = CU.buildPracticeUrl({
-    mode: 'quick', subject: 'math', grade: 3,
+    mode: 'home', subject: 'math', grade: 3,
     scope: { book: 'up', knowledgePoints: ['math-g3-m1-x', 'math-g3-m1-y'] },
     questionTypes: ['calc', 'judge'], count: 30, difficulty: 'hard'
   });
-  assert.ok(url.startsWith('practice.html?subject=math&grade=3&mode=quick'), '基础段');
+  assert.ok(url.startsWith('practice.html?subject=math&grade=3&mode=home'), '基础段');
   assert.ok(url.indexOf('kps=math-g3-m1-x%2Cmath-g3-m1-y') !== -1, 'kps csv');
   assert.ok(url.indexOf('qt=calc') !== -1, '主题型 qt');
   assert.ok(url.indexOf('types=calc%2Cjudge') !== -1, '题型白名单 types');
