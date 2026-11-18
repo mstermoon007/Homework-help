@@ -48,7 +48,7 @@
 - 修改文件：服务器 `/etc/nginx/sites-available/home.modouyu.top`（443 块插入 1 行 include）、新增 `/etc/nginx/snippets/security-headers.conf`；仓库无改动（不含 nginx 配置）。
 - 修复内容：新增片段 `security-headers.conf`（nosniff / `X-Frame-Options SAMEORIGIN` / `Referrer-Policy strict-origin-when-cross-origin` / `HSTS max-age=300`，全部带 `always`），在 443 server 块 `error_log` 行后 include。用片段而非内联 `add_header`，便于统一维护与被覆盖后快速恢复；HSTS 沿用 P28 FINAL-133 的 `max-age=300` 小值起步，未加 `includeSubDomains`/`preload`。`X-Frame-Options` 取 SAMEORIGIN 而非 api 站的 DENY，避免未来同源打印预览 iframe 被阻断。
 - 验证结果（2026-11-18 实测）：`nginx -t` 语法 OK（仅既有 `protocol options redefined` warn）→ reload 成功 → `/`（200）与 `__nope__`（404）**均携带四头**（验证 `always` 生效）；8 条关键路径回归 **8/8 200**、`/VERSION` 仍为 5.3.0。回滚：`/root/home.modouyu.top.bak-20261118` + reload。
-- 复发防护：`certbot renew` 后须复跑一次四头检查（续期会重写 server 块）；已在该文件头保留 include 行便于核对。
+- 复发防护（2026-11-18 已落地，见 P46-15）：`/usr/local/sbin/ensure-security-headers.sh` 幂等自愈脚本（snippet 缺失→重建；include 被删/被注释→重插；`nginx -t` 失败→回滚备份并退出 1；四头实测带 3 次重试）。触发两处：`security-headers-check.timer` 每日 04:17 + `/etc/letsencrypt/renewal-hooks/deploy/security-headers.sh`（续期成功后立即执行）。日志 `/var/log/nginx/security-headers-check.log`；自愈前配置备份为 `/root/home.modouyu.top.bak-autofix-<时间戳>`。
 
 ### 3. 架构与优化空间
 

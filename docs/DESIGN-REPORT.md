@@ -239,7 +239,7 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 
 - **已修复**：competition 难度合成的 `ReferenceError`（P1）；隔离目录文档漂移（P2）；`registry-facade` 死三元（P3）；P41-A1 `checkQuestionType` 题型字段口径（生产恒 no-op）；P41-A2 `attachMeta` 异常路径 `ReferenceError`；P41-B1 rootHash 单一权威；P41-B2 知识页 `--check` 真实漂移检测；P41-B3 随机分布测试确定化。
 - **已决策**：P41-C 难度锚点权威冲突 → 选项 C（双表并存 + 显式命名），生产公式与 KBL 数据零变更（记录 `docs/maintenance/P41-C-difficulty-anchor-decision.md`）。
-- **已修复（2026-11-18）**：线上 HSTS/安全响应头缺失（P3）——根因为 Certbot 重写 `home.modouyu.top` server 块时抹掉人工 `add_header`；已改为 `/etc/nginx/snippets/security-headers.conf` 片段 include（HSTS `max-age=300` + nosniff + X-Frame-Options SAMEORIGIN + Referrer-Policy），200/404 均实测携带四头，详见 `docs/maintenance/AUDIT-LOG.md` P3。续期后需复验。
+- **已修复（2026-11-18）**：线上 HSTS/安全响应头缺失（P3）——根因为 Certbot 重写 `home.modouyu.top` server 块时抹掉人工 `add_header`；已改为 `/etc/nginx/snippets/security-headers.conf` 片段 include（HSTS `max-age=300` + nosniff + X-Frame-Options SAMEORIGIN + Referrer-Policy），200/404 均实测携带四头；并加幂等自愈脚本 `ensure-security-headers.sh`（每日 04:17 timer + certbot deploy hook 双触发，漂移自动恢复、`nginx -t` 失败自动回滚）。详见 `docs/maintenance/AUDIT-LOG.md` P3 与 P46-15。
 - **已解除**：Browser E2E「本机无 Chrome/Chromium」——本机 Chrome 已就绪，`CHROME_BIN` 指向 `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` 可跑通 34 PASS / 0 FAIL / 0 SKIP（P46-09）；CI 仍需显式配置 `CHROME_BIN`。
 - **暂缓（O2/O3）**：题型谓词四处统一化（触及打包源 + bundle 重建，现由 P41-D 契约测试冻结）；`strategy-engine.js` 拆分 request-schema；gcd/`MODE_ALIAS`/常量表/标题/KP-id 解析 helper 收敛；`logger` 死 transport 清理；`version.js BUILD_DATE` 确定性；E2E 冷启动 `DevToolsActivePort` 等待窗口。
 - **不建议实施**：bridge/session 合并；intent 读取点合并（会击穿 `check-intent-authority` A3b）。

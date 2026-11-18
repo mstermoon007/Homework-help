@@ -3,6 +3,18 @@
 > 规则：最新记录在上，append-only；每任务登记 modified / deleted / reason / tests / risk。
 > 阶段任务与验收口径见 `docs/P46/P46-TASK-BOOK.md`；每阶段过门须用户确认。
 
+## P46-15｜安全响应头防复发自动化：幂等自愈脚本 + systemd timer + certbot deploy hook（2026-11-18）
+
+- **modified**：服务器新增 `/usr/local/sbin/ensure-security-headers.sh`（755 root，幂等自愈）；`/etc/systemd/system/security-headers-check.service`、`/etc/systemd/system/security-headers-check.timer`（每日 04:17，`Persistent=true`，随机延迟 ≤120s）；`/etc/letsencrypt/renewal-hooks/deploy/security-headers.sh`（续期成功即执行）；`docs/maintenance/AUDIT-LOG.md` P3「复发防护」行改写为已落地机制；`docs/DESIGN-REPORT.md` §16「已修复」行补自愈机制说明。仓库生产代码零改动。
+- **deleted**：无。自愈前配置自动备份为 `/root/home.modouyu.top.bak-autofix-<时间戳>`，不覆盖 P46-14 的 `/root/home.modouyu.top.bak-20261118`。
+- **reason**：用户显式指令对 P46-14 的复发风险做彻底防护。根因是 `certbot renew` 会重写 server 块并可能抹掉 include 行，仅靠文档提醒不可靠。脚本设计取舍：①**检测「生效的 include」而非字面匹配**（被注释掉的 include 也判定为缺失，`grep -E '^[[:space:]]*include…'`）；②snippet 四行逐条校验，任一缺失即整体重建；③修改后先 `nginx -t`，失败自动回滚最近备份并以 exit 1 告警，成功才 reload；④四头实测加 3 次重试，规避 reload 与 worker 切换的短暂窗口（首轮实测即因该窗口误报 exit 1，已修正）；⑤锚点行 `error_log …warn;` 不存在时不做盲目改写，直接 exit 1 要求人工介入。未做开机 hook，因真实风险来自 server 块被重写（snippet 目录不被 Certbot 触碰），每日 timer + 续期 hook 已覆盖。
+- **tests**（服务器实测，三场景）：
+  - 场景 A 正常态：`exit=0`、`changed=0`（幂等，无副作用）
+  - 场景 B include 行被删：漂移后四头 **0** → 执行脚本 `exit=0`、`changed=1` → 四头恢复 **4**，配置 `include` 行回到第 8 行
+  - 场景 C snippet 文件被移走：`nginx -t` 拦截坏配置、旧 worker 继续服务（头仍 4、站点不中断）→ 脚本重建 snippet 并 reload，`exit=0`
+  - `systemctl start security-headers-check.service` → `status=0/SUCCESS`；`list-timers` 显示 NEXT 为次日 04:17；线上四头实测 4/4。
+- **risk**：低。①脚本幂等，正常态零变更；②任何改写前自动备份、`nginx -t` 不过即回滚，不会把站点改挂；③timer 日志写入 `/var/log/nginx/security-headers-check.log`，长期累积需按现有日志轮转策略处理（量级为每日 1-7 行）；④仅覆盖 `home.modouyu.top` 站点，`api.modouyu.top` 未被纳入（其四头为内联配置，本次未改动、未纳入自愈，属有意收敛范围）。
+
 ## P46-14｜线上安全响应头修复（HSTS + nosniff + X-Frame-Options + Referrer-Policy）（2026-11-18）
 
 - **modified**：服务器 `/etc/nginx/sites-available/home.modouyu.top`（443 server 块 `error_log` 行后插入 `include /etc/nginx/snippets/security-headers.conf;` 1 行）；新增服务器 `/etc/nginx/snippets/security-headers.conf`（四头，全部 `always`）；`docs/maintenance/AUDIT-LOG.md` P3 条目由「未修复·BLOCKED」更新为「已修复 · 2026-11-18 复测通过」并补根因实测与复发防护；`docs/DESIGN-REPORT.md` §16「未决（BLOCKED）」改为「已修复（2026-11-18）」。仓库生产代码零改动。
