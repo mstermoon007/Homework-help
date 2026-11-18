@@ -3,6 +3,14 @@
 > 规则：最新记录在上，append-only；每任务登记 modified / deleted / reason / tests / risk。
 > 阶段任务与验收口径见 `docs/P46/P46-TASK-BOOK.md`；每阶段过门须用户确认。
 
+## P46-12｜遗留项低成本清理：规则文档基线指针 + FOCUS_RULES 维护注释（2026-11-15）
+
+- **modified**：`.trae/rules/p31-layout-rules.md`、`.trae/rules/p30-repair-rules.md` 顶部「上位文件效力顺序」后各加一行「口径提示」：本文件门禁项数/基线数字为立项当日快照，当前实际以 `docs/00-BASELINE.md` 为准，历史数字不改写（不重复具体数字，避免 Doc 门禁扫描风险）。`select.html` `FOCUS_RULES` 上方注释由 1 行扩为 6 行维护说明（规则来源、KP 改名时的同步要求、空命中自动置灰、新增专项步骤、禁止 KP ID 硬编码）。`docs/DESIGN-REPORT.md` §16.1 对应两行状态更新为「已加基线指针（P46-12）」「已补维护注释（P46-12）」。
+- **deleted**：无。
+- **reason**：用户显式指令执行「立即可做」的两项低成本清理：① 消除 P31/P30 规则文档与基线的口径误读；② 给家庭专项关键词规则补维护说明，降低后续维护失配风险。两项均为注释/文档级改动，不触生产逻辑。
+- **tests**：`node --test tests/presentation/select-page-contract.test.js` 全 PASS；`npm test` 1064 PASS / 0 FAIL；`CHROME_BIN=… node dev/check-all.js` 34 PASS / 0 FAIL / 0 SKIP（含 20 Doc 历史数字扫描，验证口径提示未触发扫描）。
+- **risk**：仅注释与文档变更；规则文档历史数字未改（append-only）；select.html 仅注释扩充，无行为变化。注意 `.trae/` 目录被 `.gitignore` 忽略，两处规则文档「口径提示」仅存于本地，不入库、不进发布包。未 git commit。
+
 ## P46-11｜版本升级 5.3.0 与全项目文档一致性收口（2026-11-15）
 
 - **modified**：版本四方 `VERSION` / `package.json` / `shared/catalog/version.js` / `sw.js CACHE` 由 5.2.1 → **5.3.0**；`docs/00-BASELINE.md` 版本号与 SW 缓存名；`README.md` 版本号、测试实际数（110 文件/993 用例 → **114 文件/1064 用例**）、首段产品描述补三模式；`docs/CHANGELOG.md` 顶部新增「v5.3.0 — P46 三模式交互升级」；`docs/DESIGN-REPORT.md` 版本行与增量说明、§15 当前状态摘要（日期/门禁 34-0-0/测试 1064）、§16「Browser E2E 本机无 Chrome」改为**已解除**、新增 §16.1「P46 三模式遗留 / 债务登记」表（9 项）。

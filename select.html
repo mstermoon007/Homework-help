@@ -1088,7 +1088,12 @@ body.select-page{
     { key: 'vertical', label: '竖式计算' }
   ];
 
-  // 专项关键词规则：name + unit 合并判定（仅 UI 范围筛选，不进入生成链）
+  // 专项关键词规则（P46-05）：name + unit 合并判定，仅 UI 范围筛选，不进入生成链。
+  // 维护说明：
+  //   - 规则基于 KP 名称/单元名的关键词匹配，非 KBL teaching 语义标注（标注化属长期债务）。
+  //   - 若 Root Excel 中的 KP 名称或单元名变更，需同步核对本表关键词是否仍命中；
+  //     命中为空的专项会自动置灰（见 renderHome），不会错误放行。
+  //   - 新增专项 = 在 FOCUS_DEFS 加条目 + 在本表加规则，禁止引入 KP ID 硬编码。
   var FOCUS_RULES = {
     'make-ten': function (text) { return /凑十/.test(text); },
     'break-ten': function (text) { return /破十|平十/.test(text); },

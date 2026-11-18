@@ -250,12 +250,12 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 
 | 类别 | 项 | 状态 | 说明 / 归属 |
 |---|---|---|---|
-| 遗留 | 门禁项数文档漂移 | 登记不处理 | `docs/P31/p31-layout-rules.md` 写 30 项、P30 规则写 27 项，均属历史冻结（append-only）；当前事实 **34 项**，以 `docs/00-BASELINE.md` 为准 |
+| 遗留 | 门禁项数文档漂移 | 已加基线指针（P46-12） | P31/P30 规则文档顶部已加「当前实际以 `docs/00-BASELINE.md` 为准」口径提示，历史数字不改写 |
 | 遗留 | 共享样式零消费者 | 登记不处理 | `shared/styles/components.css` `.type-card.competition`、`shared/styles/pages.css` `.quick-switch`：无 HTML/JS 消费者，但三方证据不足（§11.3），不强行删除 |
 | 遗留 | 编排层内部模式 | 保留 | `shared/strategy` / `shared/generation` / `question-type-registry` 内 quick/teacher/competition 为编排内部能力，有生产消费者，非产品模式 |
 | 遗留 | 单单元册别无真实样本 | 登记 | 真实数据中不存在「单元数 = 1」的册别，期中 `slice(0, ceil(n/2))` 在该边界退化为整册，未被真实样本覆盖 |
 | 遗留 | 试卷小样本 PARTIAL | 事实，非缺陷 | 3 KP 样本下 40 题只够 39 题，页面已有「本次已生成 39 / 40 题」可见提示 |
-| 债务 | 家庭专项判定为关键词规则 | 待后续 | `select.html` `FOCUS_RULES` 依据 KP 名称/单元名关键词匹配（零 KP ID 硬编码），非教学语义标注；G5/G6 六专项全空属数据事实 |
+| 债务 | 家庭专项判定为关键词规则 | 已补维护注释（P46-12）；标注化仍属长期债务 | `select.html` `FOCUS_RULES` 已补维护说明（规则来源、KP 改名时的同步要求、新增专项步骤、禁止 KP ID 硬编码）；G5/G6 六专项全空属数据事实 |
 | 债务 | `version.js BUILD_DATE` 非确定性 | 沿用旧债 | `new Date().toISOString()` 参与构建，影响可复现性（见「暂缓 O2/O3」） |
 | 债务 | CI 未配置 `CHROME_BIN` | 待配置 | 本地可跑 34/0/0；CI 未设环境变量时第 15 项 SKIP（33/0/1） |
 | 发布 | 线上版本滞后 | 未执行 | 仓库版本已升 **5.3.0**（四方一致）；线上仍为 5.2.0，发布需单独授权 |
