@@ -26,6 +26,12 @@
 - KBL 375 / 98 / 407 / 1566 不变；七题型、Generator 23、难度公式、冻结执行链全程未改。
 - 版本号 `5.2.1 → 5.3.0`（`VERSION` = `package.json` = `version.js` = `sw.js CACHE` 四方一致）。
 
+### 发布
+
+- 2026-11-18 已发布至 `home.modouyu.top`（白名单包 566 文件 / SHA256 `32938be6…` / 原子切换 / 备份 `/root/Homework-help.bak-20261118.tar.gz`）。
+- 线上验证：20/21 路径 200（`/feedback/` 目录 403 为既有行为，实际页 `/feedback/feedback.html` 200）、`/VERSION`=5.3.0、`sw.js`=`hw-help-5.3.0`、线上↔HEAD 8/8 MATCH、sitemap 382。
+- 详细留痕：`release/RELEASE-MANIFEST-5.3.0.md`（gitignored）。
+
 ## v5.2.1 — P45 单题质量缺陷修复收口（2026-11-03）
 
 ### P40 质量深度审计（战役一/二）

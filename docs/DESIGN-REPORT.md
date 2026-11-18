@@ -231,7 +231,7 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 | 基线 commit | 当前（P46 三模式收口后） |
 | 门禁 | `check-all` 34 PASS / 0 FAIL / 0 SKIP（34 项；本机设 `CHROME_BIN` 后含真实 Chrome E2E 三模式 + 9 步全 PASS），`npm test` 1064/1064（114 文件） |
 | KBL | 375 / 98 / 407 / 1566 |
-| 线上 | VERSION 5.2.0（发布时）；dev/tests/kbl 不可达 |
+| 线上 | VERSION 5.3.0（2026-11-18 发布，`home.modouyu.top`）；dev/tests/kbl 不可达 |
 
 ---
 
@@ -258,7 +258,7 @@ migration/ release/ feedback/   辅助/历史目录（不部署）
 | 债务 | 家庭专项判定为关键词规则 | 已补维护注释（P46-12）；标注化仍属长期债务 | `select.html` `FOCUS_RULES` 已补维护说明（规则来源、KP 改名时的同步要求、新增专项步骤、禁止 KP ID 硬编码）；G5/G6 六专项全空属数据事实 |
 | 债务 | `version.js BUILD_DATE` 非确定性 | 沿用旧债 | `new Date().toISOString()` 参与构建，影响可复现性（见「暂缓 O2/O3」） |
 | 债务 | CI 未配置 `CHROME_BIN` | 待配置 | 本地可跑 34/0/0；CI 未设环境变量时第 15 项 SKIP（33/0/1） |
-| 发布 | 线上版本滞后 | 未执行 | 仓库版本已升 **5.3.0**（四方一致）；线上仍为 5.2.0，发布需单独授权 |
+| 发布 | 线上版本 | **已完成（P46-13）** | 2026-11-18 已发布 5.3.0 至 `home.modouyu.top`：566 文件 / SHA256 `32938be6…` / 原子切换 / 线上↔HEAD 8/8 MATCH / sitemap 382；回滚点 `/root/Homework-help.bak-20261118.tar.gz` |
 
 ---
 

@@ -3,6 +3,14 @@
 > 规则：最新记录在上，append-only；每任务登记 modified / deleted / reason / tests / risk。
 > 阶段任务与验收口径见 `docs/P46/P46-TASK-BOOK.md`；每阶段过门须用户确认。
 
+## P46-13｜v5.3.0 正式发布：白名单出包 + 服务器原子切换 + 线上验证（2026-11-18）
+
+- **modified**：`release/RELEASE-MANIFEST-5.3.0.md` 新增（gitignored，含 pathspec / 组成对账 / 命令级留痕 / 验证证据，可复现）；`docs/CHANGELOG.md` v5.3.0 节新增「发布」小节。
+- **deleted**：服务器 `/var/www/Homework-help.old-swap`、`/tmp/homework-help-5.3.0.tar.gz`；本地 `/tmp/pkg53` 临时解包。
+- **reason**：用户显式指令「提交，且更新到服务器中的该项目文件夹」。流程沿用 `RELEASE-MANIFEST-5.2.1.md` 白名单口径：①白名单出包 **611 tar 条目 / 566 文件 / 3.6M**，禁含项 **0**，组成与 5.2.1 完全一致（P46 为 UI 层改造，未增删发布文件）；②解包↔HEAD hash **14/14 MATCH**（含 knowledge-index html+json、manifest、robots、llms、CNAME、key）；③服务器备份 `/root/Homework-help.bak-20261118.tar.gz`（3,788,270 字节 / 611 条目）→ scp（SHA256 两侧一致 `32938be6…`）→ 暂存解压（566 文件 / VERSION=5.3.0 / SW=hw-help-5.3.0 / key 正确 / .DS_Store=0）→ **原子切换** → chown www-data:www-data → 线上验证。
+- **tests**：线上实测——路径电池 **20/21 200**（`/feedback/` 目录 403 属 nginx autoindex off 既有行为，5.2.1 线上同样无 `index.html`；实际页 `/feedback/feedback.html`=200，非本次回归）；`/VERSION`=**5.3.0**；`sw.js` CACHE=**hw-help-5.3.0**；线上↔HEAD **8/8 MATCH**；sitemap `<loc>`=**382**（冻结口径不变）；服务器终态 **566 文件 / .DS_Store 0 / 无包外文件**。
+- **risk**：①SW 缓存键变更，已部署客户端首次访问触发缓存重建（预期）；②`/root/Homework-help.bak-20261118.tar.gz` 为唯一回滚点，回滚 = `sudo tar -xzf … -C /var/www` 后原子换回；③线上 HSTS/安全响应头缺失为既有挂账（P3），本次未复测修复；④发布包与 MANIFEST 均 gitignored，留痕仅存本地。
+
 ## P46-12｜遗留项低成本清理：规则文档基线指针 + FOCUS_RULES 维护注释（2026-11-15）
 
 - **modified**：`.trae/rules/p31-layout-rules.md`、`.trae/rules/p30-repair-rules.md` 顶部「上位文件效力顺序」后各加一行「口径提示」：本文件门禁项数/基线数字为立项当日快照，当前实际以 `docs/00-BASELINE.md` 为准，历史数字不改写（不重复具体数字，避免 Doc 门禁扫描风险）。`select.html` `FOCUS_RULES` 上方注释由 1 行扩为 6 行维护说明（规则来源、KP 改名时的同步要求、空命中自动置灰、新增专项步骤、禁止 KP ID 硬编码）。`docs/DESIGN-REPORT.md` §16.1 对应两行状态更新为「已加基线指针（P46-12）」「已补维护注释（P46-12）」。
