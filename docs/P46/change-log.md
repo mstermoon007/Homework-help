@@ -3,6 +3,14 @@
 > 规则：最新记录在上，append-only；每任务登记 modified / deleted / reason / tests / risk。
 > 阶段任务与验收口径见 `docs/P46/P46-TASK-BOOK.md`；每阶段过门须用户确认。
 
+## P46-14｜线上安全响应头修复（HSTS + nosniff + X-Frame-Options + Referrer-Policy）（2026-11-18）
+
+- **modified**：服务器 `/etc/nginx/sites-available/home.modouyu.top`（443 server 块 `error_log` 行后插入 `include /etc/nginx/snippets/security-headers.conf;` 1 行）；新增服务器 `/etc/nginx/snippets/security-headers.conf`（四头，全部 `always`）；`docs/maintenance/AUDIT-LOG.md` P3 条目由「未修复·BLOCKED」更新为「已修复 · 2026-11-18 复测通过」并补根因实测与复发防护；`docs/DESIGN-REPORT.md` §16「未决（BLOCKED）」改为「已修复（2026-11-18）」。仓库生产代码零改动。
+- **deleted**：无（服务器侧原配置备份为 `/root/home.modouyu.top.bak-20261118`）。
+- **reason**：用户显式指令修复线上 HSTS/安全响应头缺失。SSH 实测根因：`home.modouyu.top` 443 server 块内 `add_header` 全部丢失（文件 mtime `2026-10-07 16:23:27`，仅剩 Certbot 管理行），同机 `api.modouyu.top` 四头完好 → 判定为 Certbot 重写 server 块抹掉人工 `add_header`；`server_tokens off` 在全局 http 块故保留。改用 snippet include 便于被覆盖后快速恢复，HSTS 沿用 P28 FINAL-133 的 `max-age=300` 小值起步，未加 `includeSubDomains`/`preload`；`X-Frame-Options` 取 `SAMEORIGIN`（非 api 站的 `DENY`），避免未来同源打印预览 iframe 被阻断。
+- **tests**：`nginx -t` 语法 OK（仅既有 `protocol options redefined` warn）→ `systemctl reload nginx` 成功、`is-active=active`；线上实测 `/`（200）与 `/__nope__`（404）**均携带** `strict-transport-security: max-age=300` / `x-content-type-options: nosniff` / `x-frame-options: SAMEORIGIN` / `referrer-policy: strict-origin-when-cross-origin`（`always` 生效）；8 条关键路径回归 **8/8 200**、`/VERSION` = 5.3.0、`sw.js` 未变。仓库侧无改动故未重跑 check-all。
+- **risk**：低。①仅 nginx 配置，静态站无应用逻辑依赖；②HSTS `max-age=300` 影响窗口 5 分钟，异常自然过期；③`certbot renew` 会重写 server 块，**续期后须复验四头**（已在 AUDIT-LOG 登记）；④回滚 = `sudo cp /root/home.modouyu.top.bak-20261118 /etc/nginx/sites-available/home.modouyu.top && sudo nginx -t && sudo systemctl reload nginx`。
+
 ## P46-13｜v5.3.0 正式发布：白名单出包 + 服务器原子切换 + 线上验证（2026-11-18）
 
 - **modified**：`release/RELEASE-MANIFEST-5.3.0.md` 新增（gitignored，含 pathspec / 组成对账 / 命令级留痕 / 验证证据，可复现）；`docs/CHANGELOG.md` v5.3.0 节新增「发布」小节。

@@ -42,12 +42,13 @@
 - 修复内容：等价简化为 `BaseRecords = null;`（零行为变化）。
 - 验证结果：`check-all` 第 21/22 项（死代码/Legacy）PASS。
 
-**P3｜含义：线上 HSTS 响应头缺失（对比 P28 FINAL-133 已闭合记录属回归）【未修复·BLOCKED】**
+**P3｜含义：线上 HSTS 响应头缺失（对比 P28 FINAL-133 已闭合记录属回归）【已修复 · 2026-11-18 复测通过】**
 - 问题：`https://home.modouyu.top/` 响应无 `Strict-Transport-Security`（亦无 X-Content-Type-Options / X-Frame-Options / CSP / Referrer-Policy）。P28 记录 FINAL-133 曾加 `max-age=300` 并验证在；`server_tokens off` 仍在（Server 仅 `nginx`）。
-- 根因：疑似站点 server 块（sites-available/home.modouyu.top）在后续部署中被替换，丢失 `add_header` 行；全局 http 块（server_tokens）未受影响。
-- 修改文件：无（仓库不含 nginx 配置）。
-- 修复内容：需服务器侧恢复 `add_header Strict-Transport-Security "max-age=300" always;`（建议同时加 nosniff/X-Frame-Options）。
-- 验证结果：无法验证——无 SSH 权限，标记 BLOCKED，待授权。
+- 根因（2026-11-18 SSH 实测确认）：`/etc/nginx/sites-available/home.modouyu.top` 的 443 server 块内 `add_header` **一条不剩**（文件 mtime `2026-10-07 16:23:27`，全文只剩 root/index/日志/acme-challenge/try_files + 4 行 Certbot 管理行）。同机 `api.modouyu.top` 第 49-52 行保留完整四头。判定为 Certbot 重写 server 块时抹掉人工 `add_header`；`nginx.conf:21` 的 `server_tokens off` 在全局 http 块故未受影响。
+- 修改文件：服务器 `/etc/nginx/sites-available/home.modouyu.top`（443 块插入 1 行 include）、新增 `/etc/nginx/snippets/security-headers.conf`；仓库无改动（不含 nginx 配置）。
+- 修复内容：新增片段 `security-headers.conf`（nosniff / `X-Frame-Options SAMEORIGIN` / `Referrer-Policy strict-origin-when-cross-origin` / `HSTS max-age=300`，全部带 `always`），在 443 server 块 `error_log` 行后 include。用片段而非内联 `add_header`，便于统一维护与被覆盖后快速恢复；HSTS 沿用 P28 FINAL-133 的 `max-age=300` 小值起步，未加 `includeSubDomains`/`preload`。`X-Frame-Options` 取 SAMEORIGIN 而非 api 站的 DENY，避免未来同源打印预览 iframe 被阻断。
+- 验证结果（2026-11-18 实测）：`nginx -t` 语法 OK（仅既有 `protocol options redefined` warn）→ reload 成功 → `/`（200）与 `__nope__`（404）**均携带四头**（验证 `always` 生效）；8 条关键路径回归 **8/8 200**、`/VERSION` 仍为 5.3.0。回滚：`/root/home.modouyu.top.bak-20261118` + reload。
+- 复发防护：`certbot renew` 后须复跑一次四头检查（续期会重写 server 块）；已在该文件头保留 include 行便于核对。
 
 ### 3. 架构与优化空间
 
